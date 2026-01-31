@@ -14,17 +14,7 @@ export default function Footer() {
                         <p className="text-text-secondary max-w-sm mb-10 font-bold leading-relaxed">
                             Bridging the gap between physical interactions and digital data. The world's fastest offline-to-online visitor capture platform.
                         </p>
-                        <div className="flex gap-4">
-                            {[
-                                { n: 'FB', i: 'facebook' },
-                                { n: 'TW', i: 'X' },
-                                { n: 'LN', i: 'LinkedIn' }
-                            ].map((social, i) => (
-                                <a key={i} href="#" className="size-12 rounded-full bg-gray-50 flex items-center justify-center hover:bg-primary hover:text-white transition-all shadow-sm">
-                                    <span className="text-[10px] font-black uppercase tracking-widest">{social.n}</span>
-                                </a>
-                            ))}
-                        </div>
+
                     </div>
                     <div>
                         <h4 className="font-bold text-lg mb-8 font-display">Product</h4>
@@ -33,21 +23,22 @@ export default function Footer() {
                             <li><Link href="/features" className="hover:text-primary transition-colors">Features</Link></li>
                             <li><Link href="/solutions" className="hover:text-primary transition-colors">Solutions</Link></li>
                             <li><Link href="/pricing" className="hover:text-primary transition-colors">Pricing</Link></li>
-                            <li><Link href="/#faq" className="hover:text-primary transition-colors">FAQ</Link></li>
+                            <li><Link href="/testimonials" className="hover:text-primary transition-colors">Testimonials</Link></li>
+                            <li><Link href="/faq" className="hover:text-primary transition-colors">FAQ</Link></li>
                         </ul>
                     </div>
                     <div>
                         <h4 className="font-bold text-lg mb-8 font-display">Resources</h4>
                         <ul className="space-y-4 text-text-secondary font-bold text-sm">
-                            <li><Link href="#" className="hover:text-primary transition-colors">Documentation</Link></li>
-                            <li><Link href="#" className="hover:text-primary transition-colors">API Reference</Link></li>
-                            <li><Link href="#" className="hover:text-primary transition-colors">Security Center</Link></li>
-                            <li><Link href="#" className="hover:text-primary transition-colors">Contact Support</Link></li>
+                            <li><Link href="/faq" className="hover:text-primary transition-colors">Documentation</Link></li>
+                            <li><Link href="/support" className="hover:text-primary transition-colors">API Reference</Link></li>
+                            <li><Link href="/status" className="hover:text-primary transition-colors">Security Center</Link></li>
+                            <li><Link href="/support" className="hover:text-primary transition-colors">Contact Support</Link></li>
                         </ul>
                     </div>
                 </div>
                 <div className="pt-10 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
-                    <p>© 2026 LaTap Inc. All rights reserved.</p>
+                    <p>© {new Date().getFullYear()} LaTap Inc. All rights reserved.</p>
                     <div className="flex gap-8 mt-6 md:mt-0">
                         <Link href="/privacy" className="hover:text-text-main transition-colors">Privacy Policy</Link>
                         <Link href="/terms" className="hover:text-text-main transition-colors">Terms of Service</Link>

@@ -136,12 +136,12 @@ export default function HowItWorks() {
                         <p className="text-xl opacity-70 mb-12 max-w-2xl mx-auto">
                             Join thousands of businesses using LaTap to bridge the gap between their physical visits and digital data.
                         </p>
-                        <div className="flex justify-center gap-4">
+                        <div className="flex flex-col sm:flex-row justify-center gap-4">
                             <Link href="/get-started" className="bg-primary text-white font-bold px-10 py-4 rounded-full hover:bg-primary-hover transition-all">
                                 Signup Now
                             </Link>
-                            <Link href="/login" className="bg-white/10 text-white font-bold px-10 py-4 rounded-full hover:bg-white/20 transition-all border border-white/20">
-                                Login
+                            <Link href="/user-step" className="bg-white text-text-main font-bold px-10 py-4 rounded-full hover:bg-gray-100 transition-all">
+                                Try Customer Demo
                             </Link>
                         </div>
                     </div>

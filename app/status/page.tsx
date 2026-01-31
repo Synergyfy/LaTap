@@ -23,7 +23,7 @@ export default function StatusPage() {
             <main className="pt-48 pb-24 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-5xl mx-auto">
                     {/* Status Overview */}
-                    <div className="bg-emerald-50 border border-emerald-100 p-8 md:p-12 rounded-[2.5rem] mb-16 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
+                    <div className="bg-emerald-50 border border-emerald-100 p-8 md:p-12 rounded-2xl mb-16 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
                         <div className="absolute top-0 right-0 p-8">
                             <span className="material-icons-round text-emerald-500 text-7xl opacity-10">check_circle</span>
                         </div>

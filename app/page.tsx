@@ -6,6 +6,7 @@ import Features from '@/components/landing/Features';
 import Pricing from '@/components/landing/Pricing';
 import MobileExperience from '@/components/landing/MobileExperience';
 import AutomationCTA from '@/components/landing/AutomationCTA';
+import Testimonials from '@/components/landing/Testimonials';
 import FAQ from '@/components/landing/FAQ';
 import Footer from '@/components/layout/Footer';
 
@@ -18,6 +19,7 @@ export default function LandingPage() {
       <Features />
       <Pricing />
       <MobileExperience />
+      <Testimonials />
       <AutomationCTA />
       <FAQ />
       <Footer />

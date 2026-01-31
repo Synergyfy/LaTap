@@ -1,0 +1,118 @@
+'use client';
+
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
+
+export default function ForgotPasswordPage() {
+    const [submitted, setSubmitted] = useState(false);
+    const [email, setEmail] = useState('');
+
+    return (
+        <div className="min-h-screen bg-white flex overflow-hidden font-sans">
+            {/* Left Side: Form */}
+            <div className="w-full lg:w-[60%] flex flex-col p-8 md:p-16 lg:p-24 overflow-y-auto">
+                <Link href="/" className="flex items-center gap-2 mb-24">
+                    <span className="material-icons-round text-primary text-2xl">nfc</span>
+                    <span className="font-display font-semibold text-xl tracking-tight text-text-main">LaTap</span>
+                </Link>
+
+                <div className="max-w-md w-full mx-auto lg:mx-0">
+                    <AnimatePresence mode="wait">
+                        {!submitted ? (
+                            <motion.div
+                                key="form"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                className="space-y-8"
+                            >
+                                <div>
+                                    <h1 className="text-3xl font-display font-bold text-text-main mb-3 leading-tight tracking-tight">Recover access</h1>
+                                    <p className="text-sm text-text-secondary font-medium leading-relaxed">Enter your business email and we'll send you a link to reset your password instantly.</p>
+                                </div>
+
+                                <div className="space-y-6">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Email Address</label>
+                                        <div className="relative">
+                                            <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">mail</span>
+                                            <input
+                                                type="email"
+                                                placeholder="name@company.com"
+                                                className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
+                                                value={email}
+                                                onChange={(e) => setEmail(e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        onClick={() => setSubmitted(true)}
+                                        className="w-full h-12 bg-text-main text-white font-bold rounded-xl shadow-lg hover:bg-black transition-all flex items-center justify-center gap-2 text-sm mt-4"
+                                    >
+                                        Send Recovery Link
+                                        <span className="material-icons-round text-lg">send</span>
+                                    </button>
+
+                                    <Link href="/login" className="flex items-center justify-center gap-2 text-primary text-[11px] font-black uppercase tracking-widest hover:underline pt-2">
+                                        <span className="material-icons-round text-sm">arrow_back</span>
+                                        Back to login
+                                    </Link>
+                                </div>
+                            </motion.div>
+                        ) : (
+                            <motion.div
+                                key="success"
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="text-center lg:text-left space-y-8"
+                            >
+                                <div className="size-20 bg-primary/10 rounded-full flex items-center justify-center text-primary mx-auto lg:mx-0">
+                                    <span className="material-icons-round text-4xl">mark_email_read</span>
+                                </div>
+                                <div>
+                                    <h1 className="text-3xl font-display font-bold text-text-main mb-3">Check your inbox</h1>
+                                    <p className="text-sm text-text-secondary font-medium leading-relaxed">
+                                        We've sent a password reset link to <span className="text-primary font-bold">{email}</span>. The link will expire in 1 hour.
+                                    </p>
+                                </div>
+                                <div className="space-y-4 pt-2">
+                                    <button
+                                        onClick={() => setSubmitted(false)}
+                                        className="w-full h-12 bg-gray-50 text-text-main border border-gray-200 font-bold rounded-xl hover:bg-white transition-all text-sm"
+                                    >
+                                        Try another email
+                                    </button>
+                                    <Link href="/login" className="flex items-center justify-center lg:justify-start gap-2 text-primary text-[11px] font-black uppercase tracking-widest hover:underline px-1">
+                                        <span className="material-icons-round text-sm">arrow_back</span>
+                                        Back to login
+                                    </Link>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+            </div>
+
+            {/* Right Side: Shared Mockup Image */}
+            <div className="hidden lg:block lg:w-[40%] bg-gray-50 relative overflow-hidden h-screen">
+                <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-black/5 opacity-50"></div>
+                <div className="absolute inset-0 flex items-center justify-center p-12">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 1 }}
+                        className="relative w-full aspect-square max-w-lg rounded-3xl overflow-hidden shadow-2xl border border-white"
+                    >
+                        <img
+                            src="onboarding_mockup_side_1769837048919.png"
+                            alt="Mockup"
+                            className="w-full h-full object-cover"
+                        />
+                    </motion.div>
+                </div>
+            </div>
+        </div>
+    );
+}

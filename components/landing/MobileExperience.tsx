@@ -15,13 +15,14 @@ export default function MobileExperience() {
                                         <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-primary/30">
                                             <span className="material-icons-round text-white">bolt</span>
                                         </div>
-                                        <h4 className="font-display font-bold text-gray-900">Welcome to Launch Event</h4>
+                                        <h4 className="font-display font-bold text-gray-900">Welcome to LaTap</h4>
                                     </div>
                                     <div className="p-6 space-y-5">
                                         {[
                                             { label: 'Full Name', icon: 'person' },
+                                            { label: 'Phone Number', icon: 'phone' },
                                             { label: 'Email Address', icon: 'email' },
-                                            { label: 'Company', icon: 'business' }
+
                                         ].map((f, i) => (
                                             <div key={i} className="space-y-1.5">
                                                 <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">{f.label}</label>

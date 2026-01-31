@@ -20,7 +20,7 @@ export default function Navbar() {
                         <Link className="hover:text-primary transition-colors" href="/solutions">Solutions</Link>
                         <Link className="hover:text-primary transition-colors" href="/features">Features</Link>
                         <Link className="hover:text-primary transition-colors" href="/pricing">Pricing</Link>
-                        <Link className="hover:text-primary transition-colors" href="/how-it-works">How it Works</Link>
+                        <Link className="hover:text-primary transition-colors" href="/support">Support</Link>
                     </div>
 
                     <div className="hidden md:flex items-center gap-3">
@@ -41,7 +41,7 @@ export default function Navbar() {
                 </nav>
             </div>
 
-            <div className={`fixed inset-0 z-[100] transition-opacity duration-300 md:hidden ${isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+            <div className={`fixed inset-0 z-100 transition-opacity duration-300 md:hidden ${isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
                 <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setIsMenuOpen(false)}></div>
                 <div className={`absolute right-0 top-0 bottom-0 w-[80%] max-w-sm bg-white shadow-2xl transition-transform duration-500 transform ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} p-8 flex flex-col`}>
                     <div className="flex justify-between items-center mb-12">

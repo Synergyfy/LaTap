@@ -18,6 +18,7 @@ export const metadata: Metadata = {
 };
 
 import QueryProvider from "./providers/QueryProvider";
+import CookieBanner from "@/components/shared/CookieBanner";
 
 export default function RootLayout({
     children,
@@ -29,12 +30,14 @@ export default function RootLayout({
             <head>
                 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
                 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+                <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
             </head>
             <body
                 className={`${inter.variable} ${outfit.variable} antialiased`}
             >
                 <QueryProvider>
                     {children}
+                    <CookieBanner />
                 </QueryProvider>
             </body>
         </html>
