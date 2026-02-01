@@ -3,7 +3,17 @@
 import React from 'react';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
-import DataTable from '@/components/dashboard/DataTable';
+import DataTable, { Column } from '@/components/dashboard/DataTable';
+
+interface StaffMember {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+    status: string;
+    lastActive: string;
+}
+
 
 export default function StaffManagementPage() {
     const staff = [
@@ -13,10 +23,10 @@ export default function StaffManagementPage() {
         { id: '4', name: 'Waitress Chioma', email: 'chioma.w@example.com', role: 'Staff Member', status: 'Inactive', lastActive: '1 week ago' },
     ];
 
-    const columns = [
+    const columns: Column<StaffMember>[] = [
         {
             header: 'Staff Member',
-            accessor: (item: any) => (
+            accessor: (item: StaffMember) => (
                 <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-text-secondary font-bold text-xs uppercase">
                         {item.name.split(' ').map((n: string) => n[0]).join('')}
@@ -30,7 +40,7 @@ export default function StaffManagementPage() {
         },
         {
             header: 'Role',
-            accessor: (item: any) => (
+            accessor: (item: StaffMember) => (
                 <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider ${item.role === 'Business Owner' ? 'bg-primary/10 text-primary' : 'bg-gray-100 text-gray-700'
                     }`}>
                     {item.role}
@@ -39,14 +49,14 @@ export default function StaffManagementPage() {
         },
         {
             header: 'Status',
-            accessor: (item: any) => (
+            accessor: (item: StaffMember) => (
                 <div className="flex items-center gap-2">
                     <div className={`size-1.5 rounded-full ${item.status === 'Active' ? 'bg-green-500' : 'bg-gray-300'}`}></div>
                     <span className="text-sm font-medium">{item.status}</span>
                 </div>
             )
         },
-        { header: 'Last Active', accessor: (item: any) => item.lastActive },
+        { header: 'Last Active', accessor: (item: StaffMember) => item.lastActive },
         {
             header: 'Actions',
             accessor: () => (

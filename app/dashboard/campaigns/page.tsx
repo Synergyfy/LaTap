@@ -4,8 +4,19 @@ import React from 'react';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import StatsCard from '@/components/dashboard/StatsCard';
-import DataTable from '@/components/dashboard/DataTable';
+import DataTable, { Column } from '@/components/dashboard/DataTable';
 import EmptyState from '@/components/dashboard/EmptyState';
+
+interface Campaign {
+    id: string;
+    name: string;
+    type: string;
+    audience: string;
+    status: string;
+    sent: number;
+    delivered: string;
+    clicks: number;
+}
 
 export default function AllCampaignsPage() {
     const campaigns = [
@@ -22,10 +33,10 @@ export default function AllCampaignsPage() {
         { label: 'Active Campaigns', value: '3', icon: 'campaign', color: 'yellow', trend: { value: '0', isUp: true } },
     ];
 
-    const columns = [
+    const columns: Column<Campaign>[] = [
         {
             header: 'Campaign Name',
-            accessor: (item: any) => (
+            accessor: (item: Campaign) => (
                 <div>
                     <p className="font-bold text-text-main">{item.name}</p>
                     <p className="text-xs text-text-secondary">{item.audience}</p>
@@ -34,7 +45,7 @@ export default function AllCampaignsPage() {
         },
         {
             header: 'Channel',
-            accessor: (item: any) => (
+            accessor: (item: Campaign) => (
                 <div className="flex items-center gap-2">
                     <span className="material-icons-round text-lg text-text-secondary">
                         {item.type === 'WhatsApp' ? 'chat' : item.type === 'SMS' ? 'textsms' : 'email'}
@@ -47,11 +58,11 @@ export default function AllCampaignsPage() {
         { header: 'Delivery', accessor: 'delivered' },
         {
             header: 'Status',
-            accessor: (item: any) => (
+            accessor: (item: Campaign) => (
                 <span className={`inline-flex px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${item.status === 'Active' ? 'bg-green-100 text-green-700' :
-                        item.status === 'Scheduled' ? 'bg-blue-100 text-blue-700' :
-                            item.status === 'Recurring' ? 'bg-purple-100 text-purple-700' :
-                                'bg-gray-100 text-gray-700'
+                    item.status === 'Scheduled' ? 'bg-blue-100 text-blue-700' :
+                        item.status === 'Recurring' ? 'bg-purple-100 text-purple-700' :
+                            'bg-gray-100 text-gray-700'
                     }`}>
                     {item.status}
                 </span>

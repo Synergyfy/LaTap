@@ -4,8 +4,18 @@ import React, { useState } from 'react';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import StatsCard from '@/components/dashboard/StatsCard';
-import DataTable from '@/components/dashboard/DataTable';
+import DataTable, { Column } from '@/components/dashboard/DataTable';
 import EmptyState from '@/components/dashboard/EmptyState';
+
+interface Visitor {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    visits: number;
+    lastVisit: string;
+    status: string;
+}
 
 export default function AllVisitorsPage() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -27,10 +37,10 @@ export default function AllVisitorsPage() {
         { label: 'VIP Guests', value: '84', icon: 'stars', color: 'yellow', trend: { value: '+8%', isUp: true } },
     ];
 
-    const columns = [
+    const columns: Column<Visitor>[] = [
         {
             header: 'Visitor',
-            accessor: (item: any) => (
+            accessor: (item: Visitor) => (
                 <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
                         {item.name.split(' ').map((n: string) => n[0]).join('')}
@@ -45,19 +55,19 @@ export default function AllVisitorsPage() {
         { header: 'Phone Number', accessor: 'phone' },
         {
             header: 'Total Visits',
-            accessor: (item: any) => (
+            accessor: (item: Visitor) => (
                 <span className="font-bold text-text-main">{item.visits}</span>
             )
         },
         { header: 'Last Visit', accessor: 'lastVisit' },
         {
             header: 'Status',
-            accessor: (item: any) => (
+            accessor: (item: Visitor) => (
                 <span className={`inline-flex px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${item.status === 'VIP' ? 'bg-yellow-100 text-yellow-700' :
-                        item.status === 'New' ? 'bg-green-100 text-green-700' :
-                            item.status === 'Active' ? 'bg-blue-100 text-blue-700' :
-                                item.status === 'Returning' ? 'bg-purple-100 text-purple-700' :
-                                    'bg-gray-100 text-gray-700'
+                    item.status === 'New' ? 'bg-green-100 text-green-700' :
+                        item.status === 'Active' ? 'bg-blue-100 text-blue-700' :
+                            item.status === 'Returning' ? 'bg-purple-100 text-purple-700' :
+                                'bg-gray-100 text-gray-700'
                     }`}>
                     {item.status}
                 </span>

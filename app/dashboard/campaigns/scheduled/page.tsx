@@ -3,8 +3,17 @@
 import React from 'react';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
-import DataTable from '@/components/dashboard/DataTable';
+import DataTable, { Column } from '@/components/dashboard/DataTable';
 import EmptyState from '@/components/dashboard/EmptyState';
+
+interface ScheduledCampaign {
+    id: string;
+    name: string;
+    type: string;
+    audience: string;
+    scheduledFor: string;
+    status: string;
+}
 
 export default function ScheduledCampaignsPage() {
     const campaigns = [
@@ -13,10 +22,10 @@ export default function ScheduledCampaignsPage() {
         { id: '3', name: 'Monthly Royalty Points Update', type: 'WhatsApp', audience: 'All Customers', scheduledFor: 'Nov 01, 2024 - 09:00 AM', status: 'Recurring' },
     ];
 
-    const columns = [
+    const columns: Column<ScheduledCampaign>[] = [
         {
             header: 'Campaign Name',
-            accessor: (item: any) => (
+            accessor: (item: ScheduledCampaign) => (
                 <div>
                     <p className="font-bold text-text-main">{item.name}</p>
                     <p className="text-xs text-text-secondary">{item.audience}</p>
@@ -25,7 +34,7 @@ export default function ScheduledCampaignsPage() {
         },
         {
             header: 'Channel',
-            accessor: (item: any) => (
+            accessor: (item: ScheduledCampaign) => (
                 <div className="flex items-center gap-2">
                     <span className="material-icons-round text-lg text-text-secondary">
                         {item.type === 'WhatsApp' ? 'chat' : 'textsms'}
@@ -37,7 +46,7 @@ export default function ScheduledCampaignsPage() {
         { header: 'Scheduled For', accessor: 'scheduledFor' },
         {
             header: 'Status',
-            accessor: (item: any) => (
+            accessor: (item: ScheduledCampaign) => (
                 <span className={`inline-flex px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${item.status === 'Scheduled' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'
                     }`}>
                     {item.status}

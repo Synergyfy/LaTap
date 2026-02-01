@@ -4,8 +4,18 @@ import React from 'react';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import StatsCard from '@/components/dashboard/StatsCard';
-import DataTable from '@/components/dashboard/DataTable';
+import DataTable, { Column } from '@/components/dashboard/DataTable';
 import EmptyState from '@/components/dashboard/EmptyState';
+
+interface NewVisitor {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    joined: string;
+    source: string;
+    status: string;
+}
 
 export default function NewVisitorsPage() {
     const newVisitors = [
@@ -22,10 +32,10 @@ export default function NewVisitorsPage() {
         { label: 'Wait Time', value: '2m', icon: 'timer', color: 'yellow', trend: { value: '-30s', isUp: true } },
     ];
 
-    const columns = [
+    const columns: Column<NewVisitor>[] = [
         {
             header: 'Visitor',
-            accessor: (item: any) => (
+            accessor: (item: NewVisitor) => (
                 <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-green-50 flex items-center justify-center text-green-600 font-bold text-xs border border-green-100">
                         {item.name.split(' ').map((n: string) => n[0]).join('')}

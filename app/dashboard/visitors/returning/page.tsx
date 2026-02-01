@@ -4,8 +4,19 @@ import React from 'react';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import StatsCard from '@/components/dashboard/StatsCard';
-import DataTable from '@/components/dashboard/DataTable';
+import DataTable, { Column } from '@/components/dashboard/DataTable';
 import EmptyState from '@/components/dashboard/EmptyState';
+
+interface ReturningVisitor {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    totalVisits: number;
+    frequency: string;
+    lastVisit: string;
+    status: string;
+}
 
 export default function ReturningVisitorsPage() {
     const returningVisitors = [
@@ -22,10 +33,10 @@ export default function ReturningVisitorsPage() {
         { label: 'Churn Risk', value: '12', icon: 'warning', color: 'red', trend: { value: '-2', isUp: true } },
     ];
 
-    const columns = [
+    const columns: Column<ReturningVisitor>[] = [
         {
             header: 'Visitor',
-            accessor: (item: any) => (
+            accessor: (item: ReturningVisitor) => (
                 <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 font-bold text-xs border border-blue-100">
                         {item.name.split(' ').map((n: string) => n[0]).join('')}
@@ -37,15 +48,15 @@ export default function ReturningVisitorsPage() {
                 </div>
             )
         },
-        { header: 'Visit Count', accessor: (item: any) => <span className="font-bold">{item.totalVisits}</span> },
+        { header: 'Visit Count', accessor: (item: ReturningVisitor) => <span className="font-bold">{item.totalVisits}</span> },
         { header: 'Frequency', accessor: 'frequency' },
         { header: 'Last Visit', accessor: 'lastVisit' },
         {
             header: 'Level',
-            accessor: (item: any) => (
+            accessor: (item: ReturningVisitor) => (
                 <span className={`inline-flex px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${item.status === 'VIP' ? 'bg-yellow-100 text-yellow-700' :
-                        item.status === 'Returning' ? 'bg-purple-100 text-purple-700' :
-                            'bg-blue-100 text-blue-700'
+                    item.status === 'Returning' ? 'bg-purple-100 text-purple-700' :
+                        'bg-blue-100 text-blue-700'
                     }`}>
                     {item.status}
                 </span>
