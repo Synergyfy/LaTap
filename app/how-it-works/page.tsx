@@ -146,8 +146,9 @@ export default function HowItWorks() {
                             <Link href="/get-started" className="bg-primary text-white font-bold px-10 py-4 rounded-full hover:bg-primary-hover transition-all">
                                 Signup Now
                             </Link>
-                            <Link href="/user-step" className="bg-white text-text-main font-bold px-10 py-4 rounded-full hover:bg-gray-100 transition-all">
-                                Try Customer Demo
+                            <Link href="/tap/AZURE-BISTRO/DEMO-UNIT" className="bg-white text-primary font-bold px-10 py-4 rounded-full hover:bg-gray-50 transition-all flex items-center justify-center gap-2 border-2 border-primary/10 shadow-xl shadow-primary/5 group">
+                                <span className="material-icons-round text-primary group-hover:animate-bounce transition-all">contactless</span>
+                                Tap Now (Live Demo)
                             </Link>
                         </div>
                     </div>

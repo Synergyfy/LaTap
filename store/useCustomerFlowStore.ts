@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export type CustomerStep = 
     | 'SELECT_TYPE'
@@ -84,24 +85,41 @@ interface CustomerFlowState {
     showFeedback: boolean;
     userData: {
         name: string;
-        email: string;
-        phone: string;
+        email?: string;
+        phone?: string;
         uniqueId?: string;
     } | null;
     isReturningUser: boolean;
     
+    // Dynamic Customization
+    businessId: string | null;
+    customWelcomeMessage: string | null;
+    customSuccessMessage: string | null;
+    customPrivacyMessage: string | null;
+    customRewardMessage: string | null;
+    
     // Actions
     setStep: (step: CustomerStep) => void;
-    setUserData: (data: { name: string; email: string; phone: string }) => void;
+    setUserData: (data: { name: string; email?: string; phone?: string }) => void;
     resetFlow: () => void;
     toggleFeedback: (show: boolean) => void;
     setRewardSetup: (has: boolean) => void;
     simulateReturningUser: (visits?: number) => void;
     setBusinessType: (type: BusinessType) => void;
     getBusinessConfig: () => BusinessConfig;
+    initializeFromBusiness: (business: any) => void;
+    updateCustomSettings: (settings: {
+        welcomeMessage?: string;
+        successMessage?: string;
+        privacyMessage?: string;
+        rewardMessage?: string;
+        rewardEnabled?: boolean;
+    }) => void;
 }
 
-export const useCustomerFlowStore = create<CustomerFlowState>((set, get) => ({
+export const useCustomerFlowStore = create<CustomerFlowState>()(
+    persist(
+        (set, get) => ({
     currentStep: 'SELECT_TYPE',
     serialNumber: 'LT-8829-X',
     storeName: 'LaTap Venue',
@@ -111,6 +129,12 @@ export const useCustomerFlowStore = create<CustomerFlowState>((set, get) => ({
     showFeedback: false,
     userData: null,
     isReturningUser: false,
+    
+    businessId: null,
+    customWelcomeMessage: null,
+    customSuccessMessage: null,
+    customPrivacyMessage: null,
+    customRewardMessage: null,
 
     setStep: (step) => set({ currentStep: step }),
     setUserData: (data) => {
@@ -122,7 +146,12 @@ export const useCustomerFlowStore = create<CustomerFlowState>((set, get) => ({
         userData: null, 
         isReturningUser: false,
         visitCount: 1,
-        showFeedback: false
+        showFeedback: false,
+        businessId: null,
+        customWelcomeMessage: null,
+        customSuccessMessage: null,
+        customPrivacyMessage: null,
+        customRewardMessage: null
     }),
     toggleFeedback: (show) => set({ showFeedback: show }),
     setRewardSetup: (has) => set({ hasRewardSetup: has }),
@@ -143,4 +172,22 @@ export const useCustomerFlowStore = create<CustomerFlowState>((set, get) => ({
     },
     setBusinessType: (type) => set({ businessType: type, storeName: businessConfigs[type].storeName }),
     getBusinessConfig: () => businessConfigs[get().businessType],
-}));
+    initializeFromBusiness: (business) => set({
+        businessId: business.id,
+        storeName: business.name,
+        businessType: business.type,
+        customWelcomeMessage: business.welcomeMessage,
+        customSuccessMessage: business.successMessage,
+        customPrivacyMessage: business.privacyMessage,
+        customRewardMessage: business.rewardMessage,
+        hasRewardSetup: business.rewardEnabled,
+        currentStep: 'SCANNING'
+    }),
+    updateCustomSettings: (settings) => set((state) => ({
+        customWelcomeMessage: settings.welcomeMessage ?? state.customWelcomeMessage,
+        customSuccessMessage: settings.successMessage ?? state.customSuccessMessage,
+        customPrivacyMessage: settings.privacyMessage ?? state.customPrivacyMessage,
+        customRewardMessage: settings.rewardMessage ?? state.customRewardMessage,
+        hasRewardSetup: settings.rewardEnabled ?? state.hasRewardSetup
+    })),
+}), { name: 'customer-flow-storage' }));

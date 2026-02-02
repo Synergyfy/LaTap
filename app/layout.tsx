@@ -14,14 +14,14 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
     title: {
-        default: "EntryConnect - Offline-to-Online Data Capture",
-        template: "%s | EntryConnect"
+        default: "LaTap - Offline-to-Online Data Capture",
+        template: "%s | LaTap"
     },
     description: "Seamless offline-to-online visitor data capture. Turn physical foot traffic into digital leads instantly with our NFC-powered platform.",
     keywords: ["NFC data capture", "offline to online", "lead generation", "visitor management", "digital marketing"],
-    authors: [{ name: "EntryConnect Team" }],
-    creator: "EntryConnect",
-    publisher: "EntryConnect",
+    authors: [{ name: "LaTap Team" }],
+    creator: "LaTap",
+    publisher: "LaTap",
     formatDetection: {
         email: false,
         address: false,
@@ -30,22 +30,22 @@ export const metadata: Metadata = {
     openGraph: {
         type: "website",
         locale: "en_GB",
-        url: "https://entryconect.com",
-        siteName: "EntryConnect",
-        title: "EntryConnect - Offline-to-Online Data Capture",
+        url: "https://la-tap.vercel.app/",
+        siteName: "LaTap",
+        title: "LaTap - Offline-to-Online Data Capture",
         description: "Seamless offline-to-online visitor data capture. Turn physical foot traffic into digital leads instantly with our NFC-powered platform.",
         images: [
             {
                 url: "/logo.png",
                 width: 800,
                 height: 600,
-                alt: "EntryConnect Logo",
+                alt: "LaTap Logo",
             },
         ],
     },
     twitter: {
         card: "summary_large_image",
-        title: "EntryConnect - Offline-to-Online Data Capture",
+        title: "LaTap - Offline-to-Online Data Capture",
         description: "Seamless offline-to-online visitor data capture. Turn physical foot traffic into digital leads instantly with our NFC-powered platform.",
         images: ["/logo.png"],
     },
