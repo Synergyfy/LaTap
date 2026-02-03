@@ -8,11 +8,13 @@ import { Visitor } from '@/lib/store/mockDashboardStore';
 import toast from 'react-hot-toast';
 import {
     Users, UserPlus, Repeat, Calendar, TrendingUp, TrendingDown,
-    ChevronDown, Trash, Send, Nfc, Download, Gift
+    ChevronDown, Trash, Send, Nfc, Download, Gift, ArrowRight
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function DashboardPage() {
     const queryClient = useQueryClient();
+    const router = useRouter();
 
     // Fetch Dashboard Data
     const { data, isLoading } = useQuery({
@@ -193,51 +195,52 @@ export default function DashboardPage() {
                             <button
                                 onClick={handleSimulateVisitor}
                                 disabled={addVisitorMutation.isPending}
-                                className="w-full flex items-center gap-3 p-4 bg-primary text-white rounded-xl hover:bg-primary-hover transition-colors shadow-lg shadow-primary/25 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full h-[68px] flex items-center justify-between p-4 bg-primary text-white rounded-xl hover:bg-primary-hover transition-all shadow-lg shadow-primary/20 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed group"
                             >
-                                {addVisitorMutation.isPending ? (
-                                    <>
-                                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                        <span className="font-bold text-sm">Adding...</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <UserPlus size={20} />
-                                        <span className="font-bold text-sm">Simulate Check-in</span>
-                                    </>
-                                )}
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
+                                        {addVisitorMutation.isPending ? (
+                                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                        ) : (
+                                            <UserPlus size={20} />
+                                        )}
+                                    </div>
+                                    <div className="text-left">
+                                        <p className="font-bold text-sm leading-none mb-1">Simulate Check-in</p>
+                                        <p className="text-[10px] text-white/70 font-medium tracking-tight">Generate a test visit</p>
+                                    </div>
+                                </div>
+                                <ArrowRight size={18} className="opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                             </button>
 
-                            <button
-                                onClick={() => {
-                                    toast.success('Campaign feature coming soon!');
-                                    console.log('New Campaign clicked');
-                                }}
-                                className="w-full flex items-center gap-3 p-4 bg-gray-50 text-text-main rounded-xl hover:bg-gray-100 transition-colors"
-                            >
-                                <Send size={20} />
-                                <span className="font-bold text-sm">New Campaign</span>
-                            </button>
-                            <button
-                                onClick={() => {
-                                    toast.success('Device management coming soon!');
-                                    console.log('Add Device clicked');
-                                }}
-                                className="w-full flex items-center gap-3 p-4 bg-gray-50 text-text-main rounded-xl hover:bg-gray-100 transition-colors"
-                            >
-                                <Nfc size={20} />
-                                <span className="font-bold text-sm">Add Device</span>
-                            </button>
-                            <button
-                                onClick={() => {
-                                    toast.success('Exporting data...');
-                                    console.log('Export Data clicked');
-                                }}
-                                className="w-full flex items-center gap-3 p-4 bg-gray-50 text-text-main rounded-xl hover:bg-gray-100 transition-colors"
-                            >
-                                <Download size={20} />
-                                <span className="font-bold text-sm">Export Data</span>
-                            </button>
+                            {[
+                                { label: 'Manual Entry', desc: 'Add visitor manually', icon: UserPlus, route: '/dashboard/visitors/all', color: 'bg-orange-50 text-orange-600', hover: 'hover:border-orange-200' },
+                                { label: 'New Campaign', desc: 'Reach your customers', icon: Send, route: '/dashboard/campaigns', color: 'bg-indigo-50 text-indigo-600', hover: 'hover:border-indigo-200' },
+                                { label: 'Add Device', desc: 'Setup NFC terminal', icon: Nfc, route: '/dashboard/settings/devices', color: 'bg-blue-50 text-blue-600', hover: 'hover:border-blue-200' },
+                                { label: 'Export Data', desc: 'Download CSV reports', icon: Download, route: '/dashboard/visitors/all', color: 'bg-green-50 text-green-600', hover: 'hover:border-green-200' }
+                            ].map((action, i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => {
+                                        if (action.label === 'Manual Entry') {
+                                            toast.success('Navigate to All Visitors to add manually');
+                                        }
+                                        router.push(action.route);
+                                    }}
+                                    className={`w-full flex items-center justify-between p-4 bg-white border border-gray-100 rounded-xl transition-all group ${action.hover}`}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className={`w-10 h-10 rounded-lg ${action.color} flex items-center justify-center transition-colors`}>
+                                            <action.icon size={20} />
+                                        </div>
+                                        <div className="text-left">
+                                            <p className="font-bold text-sm text-text-main leading-none mb-1">{action.label}</p>
+                                            <p className="text-[10px] text-text-secondary font-medium tracking-tight">{action.desc}</p>
+                                        </div>
+                                    </div>
+                                    <ArrowRight size={18} className="text-gray-300 group-hover:text-primary transition-colors group-hover:translate-x-1" />
+                                </button>
+                            ))}
                         </div>
                     </div>
                 </div>

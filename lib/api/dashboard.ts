@@ -88,6 +88,11 @@ export const dashboardApi = {
     return true;
   },
 
+  clearNotifications: async () => {
+    useMockDashboardStore.getState().clearNotifications();
+    return true;
+  },
+
   // Campaign Actions
   createCampaign: async (campaign: any) => {
     await delay(1000);

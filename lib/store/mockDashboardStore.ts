@@ -6,7 +6,7 @@ export interface Visitor {
   name: string;
   phone: string;
   time: string;
-  timestamp: number; // to sort or filter
+  timestamp: number;
   status: 'new' | 'returning';
 }
 
@@ -64,6 +64,7 @@ export interface DashboardState {
   addNotification: (notification: Notification) => void;
   markNotificationRead: (id: string) => void;
   markAllNotificationsRead: () => void;
+  clearNotifications: () => void;
   addCampaign: (campaign: Campaign) => void;
   deleteCampaign: (id: string) => void;
   updateCampaignStatus: (id: string, status: Campaign['status']) => void;
@@ -166,6 +167,8 @@ export const useMockDashboardStore = create<DashboardState>()(
         notifications: state.notifications.map(n => ({ ...n, read: true }))
       })),
 
+      clearNotifications: () => set({ notifications: [] }),
+
       addCampaign: (campaign) => set((state) => ({ campaigns: [campaign, ...state.campaigns] })),
       deleteCampaign: (id) => set((state) => ({ campaigns: state.campaigns.filter(c => c.id !== id) })),
       updateCampaignStatus: (id, status) => set((state) => ({
@@ -183,7 +186,7 @@ export const useMockDashboardStore = create<DashboardState>()(
         }),
     }),
     {
-      name: 'dashboard-storage', 
+      name: 'dashboard-storage-v2', 
       storage: createJSONStorage(() => localStorage),
     }
   )

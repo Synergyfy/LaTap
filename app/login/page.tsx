@@ -26,18 +26,6 @@ export default function LoginPage() {
         setError('');
         setIsLoading(true);
 
-        // Hack for customer login demo since it is not fully supported in the mocked store logic yet
-        if (formData.email === 'customer@latap.com' && formData.password === 'customer123') {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            useAuthStore.setState({
-                user: { id: 'cust_1', name: 'Daniel Customer', email: 'customer@latap.com', role: 'customer' },
-                isAuthenticated: true
-            });
-            notify.success('Welcome back, Daniel!');
-            router.push('/customer/dashboard');
-            return;
-        }
-
         const result = await login(formData.email, formData.password);
 
         if (result.success) {
@@ -45,6 +33,8 @@ export default function LoginPage() {
             const user = useAuthStore.getState().user;
             if (user?.role === 'admin') {
                 router.push('/admin/dashboard');
+            } else if (user?.role === 'customer') {
+                router.push('/customer/dashboard');
             } else {
                 router.push('/dashboard');
             }
@@ -76,91 +66,49 @@ export default function LoginPage() {
                             </div>
 
                             {/* Demo Credentials */}
-                            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-                                <p className="text-xs font-bold text-blue-900 mb-3 uppercase tracking-wider flex items-center gap-2">
-                                    <span className="material-icons-round text-sm">info</span>
-                                    Demo Accounts - Click to Login
+                            <div className="bg-primary/5 border border-primary/10 rounded-2xl p-6 shadow-sm overflow-hidden relative group">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full translate-x-10 -translate-y-10 blur-2xl group-hover:bg-primary/20 transition-all"></div>
+
+                                <p className="text-[10px] font-black underline decoration-primary/30 underline-offset-4 text-primary mb-5 uppercase tracking-[0.15em] flex items-center gap-2">
+                                    <span className="material-icons-round text-sm">explore</span>
+                                    Instant Quick Access Demo
                                 </p>
-                                <div className="grid grid-cols-3 gap-2">
-                                    <button
-                                        type="button"
-                                        onClick={async () => {
-                                            setFormData({
-                                                email: 'business@latap.com',
-                                                password: 'business123',
-                                                rememberMe: false
-                                            });
-                                            setError('');
-                                            setIsLoading(true);
-                                            const result = await login('business@latap.com', 'business123');
-                                            if (result.success) {
-                                                router.push('/dashboard');
-                                            } else {
-                                                setError(result.error || 'Login failed');
-                                            }
-                                            setIsLoading(false);
-                                        }}
-                                        disabled={isLoading}
-                                        className="px-2 py-3 bg-white border border-blue-200 rounded-lg text-xs font-bold text-blue-700 hover:bg-blue-50 transition-colors flex flex-col items-center justify-center gap-1 disabled:opacity-50"
-                                    >
-                                        <span className="material-icons-round text-base">store</span>
-                                        <span>Business</span>
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={async () => {
-                                            setFormData({
-                                                email: 'admin@latap.com',
-                                                password: 'admin123',
-                                                rememberMe: false
-                                            });
-                                            setError('');
-                                            setIsLoading(true);
-                                            const result = await login('admin@latap.com', 'admin123');
-                                            if (result.success) {
-                                                router.push('/admin/dashboard');
-                                            } else {
-                                                setError(result.error || 'Login failed');
-                                            }
-                                            setIsLoading(false);
-                                        }}
-                                        disabled={isLoading}
-                                        className="px-2 py-3 bg-white border border-blue-200 rounded-lg text-xs font-bold text-blue-700 hover:bg-blue-50 transition-colors flex flex-col items-center justify-center gap-1 disabled:opacity-50"
-                                    >
-                                        <span className="material-icons-round text-base">admin_panel_settings</span>
-                                        <span>Admin</span>
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={async () => {
-                                            const custEmail = 'customer@latap.com';
-                                            const custPass = 'customer123';
-                                            setFormData({
-                                                email: custEmail,
-                                                password: custPass,
-                                                rememberMe: false
-                                            });
-                                            setError('');
-                                            setIsLoading(true);
 
-                                            // Direct handling for customer since store might not have it
-                                            await new Promise(resolve => setTimeout(resolve, 1000));
-                                            useAuthStore.setState({
-                                                user: { id: 'cust_1', name: 'Daniel Customer', email: custEmail, role: 'customer' },
-                                                isAuthenticated: true
-                                            });
-                                            notify.success('Welcome back, Daniel!');
-                                            router.push('/customer/dashboard');
-
-                                            setIsLoading(false);
-                                        }}
-                                        disabled={isLoading}
-                                        className="px-2 py-3 bg-white border border-blue-200 rounded-lg text-xs font-bold text-blue-700 hover:bg-blue-50 transition-colors flex flex-col items-center justify-center gap-1 disabled:opacity-50"
-                                    >
-                                        <span className="material-icons-round text-base">person</span>
-                                        <span>Customer</span>
-                                    </button>
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 relative z-10">
+                                    {[
+                                        { id: 'business', label: 'Business Owner', icon: 'storefront', email: 'business@latap.com', pass: 'business123', route: '/dashboard' },
+                                        { id: 'customer', label: 'Loyal Customer', icon: 'person', email: 'customer@latap.com', pass: 'customer123', route: '/customer/dashboard' },
+                                        { id: 'admin', label: 'Main Admin', icon: 'admin_panel_settings', email: 'admin@latap.com', pass: 'admin123', route: '/admin/dashboard' }
+                                    ].map((demo) => (
+                                        <button
+                                            key={demo.id}
+                                            type="button"
+                                            onClick={async () => {
+                                                setFormData({ email: demo.email, password: demo.pass, rememberMe: true });
+                                                setError('');
+                                                setIsLoading(true);
+                                                const result = await login(demo.email, demo.pass);
+                                                if (result.success) {
+                                                    router.push(demo.route);
+                                                    notify.success(`Logged in as ${demo.label}`);
+                                                } else {
+                                                    setError(result.error || 'Demo login failed');
+                                                }
+                                                setIsLoading(false);
+                                            }}
+                                            disabled={isLoading}
+                                            className="group/btn flex flex-col items-center justify-center gap-2 p-4 bg-white border border-gray-100 rounded-xl hover:border-primary/30 hover:shadow-md transition-all disabled:opacity-50"
+                                        >
+                                            <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center group-hover/btn:bg-primary/10 transition-colors">
+                                                <span className="material-icons-round text-xl text-gray-500 group-hover/btn:text-primary">{demo.icon}</span>
+                                            </div>
+                                            <span className="text-[11px] font-bold text-text-main group-hover/btn:text-primary">{demo.label}</span>
+                                        </button>
+                                    ))}
                                 </div>
+                                <p className="text-[10px] text-text-secondary text-center mt-4 font-medium italic opacity-70">
+                                    Click any card to start a live demo session
+                                </p>
                             </div>
 
                             <form onSubmit={handleLogin} className="space-y-6">
