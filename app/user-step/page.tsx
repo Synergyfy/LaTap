@@ -11,6 +11,7 @@ import { useAuthStore } from '@/store/useAuthStore';
 import Link from 'next/link';
 import Script from 'next/script';
 import { jwtDecode } from 'jwt-decode';
+import defaultLogo from '@/assets/logos/logo.png';
 
 const visitorSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
@@ -208,38 +209,7 @@ export default function UserStepPage() {
                 <div className="absolute -bottom-[10%] left-[20%] size-[50%] rounded-full bg-blue-400/5 blur-[120px] animate-pulse" />
             </div>
 
-            {currentStep !== 'SELECT_TYPE' && (
-                <div className="fixed top-20 left-1/2 -translate-x-1/2 w-full max-w-xs px-6 flex gap-1.5 z-50">
-                    {[1, 2, 3, 4].map((i) => {
-                        const stepsMap: Record<CustomerStep, number> = {
-                            'SELECT_TYPE': 0,
-                            'SCANNING': 1,
-                            'IDENTIFYING': 1,
-                            'WELCOME_BACK': 2,
-                            'FORM': 2,
-                            'OUTCOME': 3,
-                            'FINAL_SUCCESS': 4,
-                            'SUCCESS_LINKED': 3,
-                            'ERROR_NOT_FOUND': 1,
-                            'WELCOME': 2,
-                            'PRIVACY': 2
-                        };
-                        const activeIndex = stepsMap[currentStep] || 0;
-                        return (
-                            <div key={i} className="flex-1 h-1.5 rounded-full bg-gray-200/50 backdrop-blur-md overflow-hidden shadow-sm">
-                                <motion.div
-                                    initial={false}
-                                    animate={{
-                                        width: activeIndex >= i ? '100%' : '0%',
-                                        backgroundColor: activeIndex >= i ? '#2563eb' : 'rgba(229, 231, 235, 0.2)'
-                                    }}
-                                    className="h-full"
-                                />
-                            </div>
-                        );
-                    })}
-                </div>
-            )}
+
 
             <main className="grow flex items-center justify-center w-full max-w-2xl relative">
                 <AnimatePresence mode="wait">
@@ -326,24 +296,30 @@ export default function UserStepPage() {
                                 </div>
                             )}
 
-                            <span className={presets.subtitle}>Digital Profile</span>
-
-                            {logoUrl && (
-                                <div className="mb-8 flex justify-center">
-                                    <div className="size-24 rounded-full bg-white shadow-xl shadow-primary/5 border-4 border-white overflow-hidden flex items-center justify-center">
-                                        <img
-                                            src={logoUrl}
-                                            alt={storeName}
-                                            className="w-full h-full object-contain"
-                                        />
-                                    </div>
+                            {/* Header: Logo + Business Name Row */}
+                            <div className="flex items-center gap-4 mb-10">
+                                <div className="size-16 rounded-2xl bg-white shadow-xl shadow-primary/5 border border-gray-100 overflow-hidden flex items-center justify-center p-2">
+                                    <img
+                                        src={logoUrl || defaultLogo.src}
+                                        alt={storeName}
+                                        className="w-full h-full object-contain"
+                                    />
                                 </div>
-                            )}
+                                <div className="flex-1 min-w-0">
+                                    <h2 className="text-xl font-black text-text-main truncate tracking-tight">{storeName}</h2>
+                                    <span className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] block">Verified Business</span>
+                                </div>
+                            </div>
 
-                            <h1 className={`${getStoreNameStyle(customWelcomeMessage || storeName)} text-text-main tracking-tight leading-tight mb-2`}>
-                                {customWelcomeMessage || `Welcome to ${storeName}`}
-                            </h1>
-                            <p className={`${presets.body} mt-3 mb-8`}>Complete your profile to claim your rewards.</p>
+                            <div className="mb-8">
+                                <span className="text-[10px] font-black text-primary mb-3 uppercase tracking-[0.4em] block">Welcome</span>
+                                <h1 className="text-2xl md:text-3xl font-black text-text-main tracking-tight leading-tight mb-3">
+                                    {customWelcomeMessage || "We're glad to have you here."}
+                                </h1>
+                                <p className="text-sm font-medium text-gray-500 leading-relaxed">
+                                    Quickly finalize your setup to unlock exclusive rewards and offers.
+                                </p>
+                            </div>
 
                             {isDeviceSynced && (
                                 <div className="mb-8 p-4 rounded-xl bg-blue-50/50 border border-blue-100/50 flex items-center justify-between">
@@ -423,34 +399,30 @@ export default function UserStepPage() {
 
                     {currentStep === 'WELCOME_BACK' && (
                         <motion.div key="welcome-back" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className={presets.card + " text-center"}>
-                            <motion.div
-                                initial={{ scale: 0.9, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                className="flex justify-center mb-10"
-                            >
-                                <div className="relative">
-                                    <div className="size-28 rounded-full bg-white shadow-2xl shadow-primary/10 border-4 border-white overflow-hidden flex items-center justify-center z-10 relative">
-                                        <img
-                                            src={logoUrl || ''}
-                                            alt={storeName}
-                                            className="w-full h-full object-contain p-2"
-                                        />
-                                    </div>
-                                    <motion.div
-                                        animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.2, 0.5] }}
-                                        transition={{ duration: 3, repeat: Infinity }}
-                                        className="absolute -inset-2 bg-primary/10 rounded-full -z-10 blur-xl"
+                            {/* Header: Logo + Business Name Row */}
+                            <div className="flex items-center gap-4 mb-10 text-left">
+                                <div className="size-16 rounded-2xl bg-white shadow-xl shadow-primary/5 border border-gray-100 overflow-hidden flex items-center justify-center p-2">
+                                    <img
+                                        src={logoUrl || defaultLogo.src}
+                                        alt={storeName}
+                                        className="w-full h-full object-contain"
                                     />
                                 </div>
-                            </motion.div>
+                                <div className="flex-1 min-w-0">
+                                    <h2 className="text-xl font-black text-text-main truncate tracking-tight">{storeName}</h2>
+                                    <span className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] block">Welcome Back</span>
+                                </div>
+                            </div>
 
-                            <span className="text-[10px] font-bold text-primary mb-3 uppercase tracking-[0.3em] block">Welcome Back</span>
-                            <h1 className={`${getStoreNameStyle(userData?.name || storedIdentity?.name || 'Guest')} text-text-main tracking-tight font-black leading-tight mb-3 text-4xl`}>
-                                Hi, <span className="text-primary">{userData?.name?.split(' ')[0] || storedIdentity?.name?.split(' ')[0] || 'there'}!</span>
-                            </h1>
-                            <p className="text-gray-500 font-medium text-sm leading-relaxed mb-10">
-                                It's great to see you again, <span className="text-primary font-bold">{userData?.name || storedIdentity?.name || 'Guest'}</span>.
-                            </p>
+                            <div className="text-left mb-10">
+                                <span className="text-[10px] font-black text-primary mb-3 uppercase tracking-[0.4em] block">Welcome</span>
+                                <h1 className="text-3xl font-black text-text-main tracking-tight leading-tight mb-3">
+                                    Hi, <span className="text-primary">{userData?.name?.split(' ')[0] || storedIdentity?.name?.split(' ')[0] || 'there'}!</span>
+                                </h1>
+                                <p className="text-base font-medium text-gray-500 leading-relaxed">
+                                    {customWelcomeMessage || `It's great to see you again at ${storeName}.`}
+                                </p>
+                            </div>
 
                             {hasRewardSetup && (
                                 <div className="mb-10 p-6 rounded-2xl bg-gray-50/50 border border-gray-100 text-left relative overflow-hidden group">
