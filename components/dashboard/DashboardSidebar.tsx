@@ -312,7 +312,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                                     </div>
                                     <div className="p-3 border-t border-gray-100 text-center">
                                         <Link
-                                            href="/dashboard/settings/notifications"
+                                            href="/dashboard/notifications"
                                             className="text-xs font-bold text-primary hover:text-primary-hover"
                                             onClick={() => setShowNotifications(false)}
                                         >
