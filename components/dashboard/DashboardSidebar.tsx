@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useCustomerFlowStore } from '@/store/useCustomerFlowStore';
-import logoUrl from '@/assets/logo.png';
+import defaultLogo from '@/assets/logo.png';
 
 interface SidebarProps {
     children: React.ReactNode;
@@ -15,7 +15,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
     const { user, logout } = useAuthStore();
-    const { storeName } = useCustomerFlowStore();
+    const { storeName, logoUrl: businessLogo } = useCustomerFlowStore();
     const [expandedMenus, setExpandedMenus] = useState<string[]>(['visitors']);
 
     const handleLogout = () => {
@@ -177,8 +177,12 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                 <div className="border-t border-gray-200 p-4">
                     <div className="flex items-center gap-3 mb-3">
                         <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden border border-gray-100">
-                            {logoUrl ? (
-                                <img src={logoUrl.src} alt={storeName} className="w-full h-full object-contain p-1" />
+                            {businessLogo || defaultLogo ? (
+                                <img
+                                    src={businessLogo || defaultLogo.src}
+                                    alt={storeName}
+                                    className="w-full h-full object-contain p-1"
+                                />
                             ) : (
                                 <span className="material-icons-round text-primary">person</span>
                             )}
