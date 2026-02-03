@@ -1,11 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import StatsCard from '@/components/dashboard/StatsCard';
 import DataTable, { Column } from '@/components/dashboard/DataTable';
 import EmptyState from '@/components/dashboard/EmptyState';
+import { UserPlus, Calendar, TrendingUp, Timer, Send, Hand } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 interface NewVisitor {
     id: string;
@@ -18,19 +20,33 @@ interface NewVisitor {
 }
 
 export default function NewVisitorsPage() {
-    const newVisitors = [
+    const [newVisitors, setNewVisitors] = useState<NewVisitor[]>([
         { id: '1', name: 'James Wilson', email: 'j.wilson@example.com', phone: '+234 810 123 4567', joined: '1 hour ago', source: 'Front Desk NFC', status: 'New' },
         { id: '2', name: 'Amaka Eze', email: 'amaka.e@example.com', phone: '+234 811 234 5678', joined: '3 hours ago', source: 'Table 4 NFC', status: 'New' },
         { id: '3', name: 'Robert Smith', email: 'r.smith@example.com', phone: '+234 812 345 6789', joined: 'Yesterday', source: 'Entrance NFC', status: 'New' },
         { id: '4', name: 'Chioma Okeke', email: 'chioma.o@example.com', phone: '+234 813 456 7890', joined: '2 days ago', source: 'Bar NFC', status: 'New' },
-    ];
+    ]);
 
     const stats = [
-        { label: 'New Today', value: '18', icon: 'person_add', color: 'green', trend: { value: '+20%', isUp: true } },
-        { label: 'New This Week', value: '124', icon: 'calendar_today', color: 'blue', trend: { value: '+15%', isUp: true } },
-        { label: 'Conversion Rate', value: '68%', icon: 'trending_up', color: 'purple', trend: { value: '+2%', isUp: true } },
-        { label: 'Wait Time', value: '2m', icon: 'timer', color: 'yellow', trend: { value: '-30s', isUp: true } },
+        { label: 'New Today', value: '18', icon: UserPlus, color: 'green' as const, trend: { value: '+20%', isUp: true } },
+        { label: 'New This Week', value: '124', icon: Calendar, color: 'blue' as const, trend: { value: '+15%', isUp: true } },
+        { label: 'Conversion Rate', value: '68%', icon: TrendingUp, color: 'purple' as const, trend: { value: '+2%', isUp: true } },
+        { label: 'Wait Time', value: '2m', icon: Timer, color: 'yellow' as const, trend: { value: '-30s', isUp: true } },
     ];
+
+    const handleWelcomeVisitor = (visitor: NewVisitor) => {
+        toast.success(`Welcome message sent to ${visitor.name}!`);
+        console.log('Sending welcome to:', visitor);
+    };
+
+    const handleSendWelcomeCampaign = () => {
+        if (newVisitors.length === 0) {
+            toast.error('No new visitors to send welcome campaign to');
+            return;
+        }
+        toast.success(`Welcome campaign sent to ${newVisitors.length} new visitors!`);
+        console.log('Sending welcome campaign to:', newVisitors);
+    };
 
     const columns: Column<NewVisitor>[] = [
         {
@@ -60,9 +76,15 @@ export default function NewVisitorsPage() {
         },
         {
             header: 'Actions',
-            accessor: () => (
-                <button className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white text-[10px] font-black uppercase tracking-wider rounded-lg hover:bg-primary-hover transition-colors">
-                    <span className="material-icons-round text-sm">waving_hand</span>
+            accessor: (item: NewVisitor) => (
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        handleWelcomeVisitor(item);
+                    }}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white text-[10px] font-black uppercase tracking-wider rounded-lg hover:bg-primary-hover transition-colors"
+                >
+                    <Hand size={14} />
                     Welcome
                 </button>
             )
@@ -76,8 +98,11 @@ export default function NewVisitorsPage() {
                     title="New Visitors"
                     description="Identify and welcome your first-time customers"
                     actions={
-                        <button className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20">
-                            <span className="material-icons-round text-lg">campaign</span>
+                        <button
+                            onClick={handleSendWelcomeCampaign}
+                            className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20"
+                        >
+                            <Send size={18} />
                             Send Welcome Campaign
                         </button>
                     }
@@ -85,13 +110,14 @@ export default function NewVisitorsPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     {stats.map((stat, index) => (
-                        <StatsCard key={index} {...stat as any} />
+                        <StatsCard key={index} {...stat} />
                     ))}
                 </div>
 
                 <DataTable
                     columns={columns}
                     data={newVisitors}
+                    onRowClick={(visitor) => console.log('Clicked visitor:', visitor)}
                     emptyState={
                         <EmptyState
                             icon="person_add"

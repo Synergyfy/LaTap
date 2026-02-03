@@ -1,11 +1,17 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import StatsCard from '@/components/dashboard/StatsCard';
 import DataTable, { Column } from '@/components/dashboard/DataTable';
 import EmptyState from '@/components/dashboard/EmptyState';
+import CreateRewardModal from '@/components/dashboard/CreateRewardModal';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { dashboardApi } from '@/lib/api/dashboard';
+import { Reward } from '@/lib/store/mockDashboardStore';
+import toast from 'react-hot-toast';
+import { Repeat, Users, Star, AlertTriangle, Gift, Award } from 'lucide-react';
 
 interface ReturningVisitor {
     id: string;
@@ -19,7 +25,38 @@ interface ReturningVisitor {
 }
 
 export default function ReturningVisitorsPage() {
-    const returningVisitors = [
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const queryClient = useQueryClient();
+
+    const { data } = useQuery({
+        queryKey: ['dashboard'],
+        queryFn: dashboardApi.fetchDashboardData,
+    });
+
+    const createRewardMutation = useMutation({
+        mutationFn: dashboardApi.createReward,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+            setIsCreateModalOpen(false);
+            toast.success('Reward created successfully');
+        }
+    });
+
+    const handleCreateReward = (rewardData: Omit<Reward, 'id' | 'active'>) => {
+        const newReward: Reward = {
+            id: Math.random().toString(36).substr(2, 9),
+            ...rewardData,
+            active: true
+        };
+        createRewardMutation.mutate(newReward);
+    };
+
+    const handleRewardVisitor = (visitor: ReturningVisitor) => {
+        toast.success(`Reward sent to ${visitor.name}!`);
+        console.log('Rewarding visitor:', visitor);
+    };
+
+    const returningVisitors: ReturningVisitor[] = [
         { id: '1', name: 'Bisi Adebowale', email: 'bisi.a@example.com', phone: '+234 804 567 8901', totalVisits: 24, frequency: 'Weekly', lastVisit: '3 hours ago', status: 'VIP' },
         { id: '2', name: 'Alex Johnson', email: 'alex.j@example.com', phone: '+234 801 234 5678', totalVisits: 12, frequency: 'Bi-weekly', lastVisit: '2 hours ago', status: 'Active' },
         { id: '3', name: 'David Okafor', email: 'd.okafor@example.com', phone: '+234 805 678 9012', totalVisits: 8, frequency: 'Monthly', lastVisit: '2 days ago', status: 'Returning' },
@@ -27,10 +64,10 @@ export default function ReturningVisitorsPage() {
     ];
 
     const stats = [
-        { label: 'Returning Rate', value: '74%', icon: 'loop', color: 'blue', trend: { value: '+4%', isUp: true } },
-        { label: 'Repeat Customers', value: '1,842', icon: 'people', color: 'green', trend: { value: '+12%', isUp: true } },
-        { label: 'VIP Members', value: '156', icon: 'stars', color: 'yellow', trend: { value: '+8%', isUp: true } },
-        { label: 'Churn Risk', value: '12', icon: 'warning', color: 'red', trend: { value: '-2', isUp: true } },
+        { label: 'Returning Rate', value: '74%', icon: Repeat, color: 'blue' as const, trend: { value: '+4%', isUp: true } },
+        { label: 'Repeat Customers', value: '1,842', icon: Users, color: 'green' as const, trend: { value: '+12%', isUp: true } },
+        { label: 'VIP Members', value: '156', icon: Star, color: 'yellow' as const, trend: { value: '+8%', isUp: true } },
+        { label: 'Churn Risk', value: '12', icon: AlertTriangle, color: 'red' as const, trend: { value: '-2', isUp: true } },
     ];
 
     const columns: Column<ReturningVisitor>[] = [
@@ -64,9 +101,15 @@ export default function ReturningVisitorsPage() {
         },
         {
             header: 'Actions',
-            accessor: () => (
-                <button className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white text-[10px] font-black uppercase tracking-wider rounded-lg hover:bg-primary-hover transition-colors">
-                    <span className="material-icons-round text-sm">redeem</span>
+            accessor: (item: ReturningVisitor) => (
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        handleRewardVisitor(item);
+                    }}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white text-[10px] font-black uppercase tracking-wider rounded-lg hover:bg-primary-hover transition-colors"
+                >
+                    <Award size={14} />
                     Reward
                 </button>
             )
@@ -80,22 +123,33 @@ export default function ReturningVisitorsPage() {
                     title="Returning Visitors"
                     description="Monitor loyalty and reward your repeat customers"
                     actions={
-                        <button className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20">
-                            <span className="material-icons-round text-lg">loyalty</span>
+                        <button
+                            onClick={() => setIsCreateModalOpen(true)}
+                            className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20"
+                        >
+                            <Gift size={18} />
                             Create Reward
                         </button>
                     }
                 />
 
+                <CreateRewardModal
+                    isOpen={isCreateModalOpen}
+                    onClose={() => setIsCreateModalOpen(false)}
+                    onSubmit={handleCreateReward}
+                    isLoading={createRewardMutation.isPending}
+                />
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     {stats.map((stat, index) => (
-                        <StatsCard key={index} {...stat as any} />
+                        <StatsCard key={index} {...stat} />
                     ))}
                 </div>
 
                 <DataTable
                     columns={columns}
                     data={returningVisitors}
+                    onRowClick={(visitor) => console.log('Clicked visitor:', visitor)}
                     emptyState={
                         <EmptyState
                             icon="loop"

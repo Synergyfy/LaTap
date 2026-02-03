@@ -96,12 +96,12 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
                     </div>
 
                     {/* Promo Card */}
-                    <div className="mt-8 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl p-4 text-white relative overflow-hidden">
+                    <div className="mt-8 bg-gradient-to-br from-primary to-blue-600 rounded-xl p-4 text-white relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full translate-x-10 -translate-y-10 blur-xl"></div>
                         <Star className="text-white mb-2 bg-white/20 p-2 rounded-lg backdrop-blur-sm" size={32} />
                         <h3 className="font-bold text-sm mb-1">Earn more points!</h3>
                         <p className="text-xs text-white/80 mb-3">Visit participating stores to unlock exclusive rewards.</p>
-                        <Link href="/customer/rewards" className="inline-block text-xs font-bold bg-white text-purple-600 px-3 py-1.5 rounded-lg hover:bg-purple-50 transition-colors">
+                        <Link href="/customer/rewards" className="inline-block text-xs font-bold bg-white text-primary px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors">
                             View Rewards
                         </Link>
                     </div>
