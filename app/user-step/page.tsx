@@ -22,15 +22,15 @@ const visitorSchema = z.object({
 type VisitorFormData = z.infer<typeof visitorSchema>;
 
 const presets = {
-    title: "text-2xl md:text-3xl font-display font-black text-text-main tracking-tight leading-tight",
-    subtitle: "text-[10px] font-black text-primary mb-6 uppercase tracking-[0.3em] block",
-    body: "text-sm md:text-base font-medium text-gray-500 leading-relaxed",
-    card: "w-full max-w-[420px] bg-white rounded-2xl p-8 md:p-12 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.06)] border border-gray-50 relative overflow-hidden",
-    button: "w-full h-14 rounded-2xl bg-primary text-white font-black uppercase tracking-widest text-xs shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-30 disabled:hover:scale-100 disabled:cursor-not-allowed",
-    input: "w-full h-12 px-5 bg-gray-50 border-none rounded-xl font-bold text-sm focus:ring-2 focus:ring-primary/10 transition-all outline-none",
-    label: "text-[9px] font-black uppercase text-gray-400 ml-1",
+    title: "text-2xl md:text-3xl font-display font-black text-slate-900 tracking-tight leading-tight",
+    tag: "text-[10px] font-black text-primary mb-3 uppercase tracking-[0.4em] block",
+    body: "text-sm md:text-base font-medium text-slate-500 leading-relaxed",
+    card: "w-full max-w-[420px] bg-white rounded-tl-[4rem] rounded-br-[4rem] rounded-tr-[1rem] rounded-bl-[1rem] p-8 md:p-10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-slate-100 relative overflow-hidden",
+    button: "w-full h-14 rounded-2xl bg-primary hover:bg-primary-dark text-white font-black uppercase tracking-widest text-xs shadow-xl shadow-primary/25 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed group",
+    input: "w-full h-14 pl-12 pr-5 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-sm text-slate-900 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none placeholder:text-slate-400/70",
+    label: "text-slate-700 text-[10px] font-black uppercase tracking-widest mb-1.5 ml-1 block",
     error: "text-[10px] font-bold text-red-500 mt-1 ml-1",
-    secondaryButton: "w-full h-14 rounded-2xl bg-gray-50 text-text-main font-black uppercase tracking-widest text-xs hover:bg-gray-100 active:scale-95 transition-all flex items-center justify-center gap-2"
+    secondaryButton: "w-full h-14 rounded-2xl bg-slate-50 text-slate-900 font-black uppercase tracking-widest text-xs hover:bg-slate-100 active:scale-95 transition-all flex items-center justify-center gap-2"
 };
 
 export default function UserStepPage() {
@@ -297,8 +297,8 @@ export default function UserStepPage() {
                             )}
 
                             {/* Header: Logo + Business Name Row */}
-                            <div className="flex items-center gap-4 mb-10">
-                                <div className="size-16 rounded-2xl bg-white shadow-xl shadow-primary/5 border border-gray-100 overflow-hidden flex items-center justify-center p-2">
+                            <div className="flex items-center gap-4 mb-8">
+                                <div className="size-14 rounded-2xl bg-white shadow-lg shadow-primary/5 border border-slate-100 overflow-hidden flex items-center justify-center p-1.5">
                                     <img
                                         src={logoUrl || defaultLogo.src}
                                         alt={storeName}
@@ -306,18 +306,18 @@ export default function UserStepPage() {
                                     />
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <h2 className="text-xl font-black text-text-main truncate tracking-tight">{storeName}</h2>
-                                    <span className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] block">Verified Business</span>
+                                    <h2 className="text-lg font-black text-slate-900 truncate tracking-tight">{storeName}</h2>
+                                    <span className="text-[9px] font-bold text-primary uppercase tracking-[0.2em] block">Verified Partner</span>
                                 </div>
                             </div>
 
-                            <div className="mb-8">
-                                <span className="text-[10px] font-black text-primary mb-3 uppercase tracking-[0.4em] block">Welcome</span>
-                                <h1 className="text-2xl md:text-3xl font-black text-text-main tracking-tight leading-tight mb-3">
-                                    {customWelcomeMessage || "We're glad to have you here."}
+                            <div className="mb-6">
+                                <span className={presets.tag}>Welcome</span>
+                                <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-tight mb-2">
+                                    {customWelcomeMessage || "Just a few details"}
                                 </h1>
-                                <p className="text-sm font-medium text-gray-500 leading-relaxed">
-                                    Quickly finalize your setup to unlock exclusive rewards and offers.
+                                <p className="text-sm font-medium text-slate-500 leading-relaxed">
+                                    We'll use this to send your reward and keep you updated.
                                 </p>
                             </div>
 
@@ -339,37 +339,52 @@ export default function UserStepPage() {
                             <form className="space-y-4" onSubmit={handleSubmit(onFormSubmit)}>
                                 <div className="space-y-1">
                                     <label htmlFor="name" className={presets.label}>Full Name</label>
-                                    <input
-                                        id="name"
-                                        type="text"
-                                        {...register('name')}
-                                        placeholder="Enter your name"
-                                        className={`${presets.input} ${errors.name ? 'ring-2 ring-red-500/20' : ''}`}
-                                    />
+                                    <div className="relative group">
+                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
+                                            <span className="material-symbols-outlined text-[20px]">person</span>
+                                        </div>
+                                        <input
+                                            id="name"
+                                            type="text"
+                                            {...register('name')}
+                                            placeholder="Enter your name"
+                                            className={`${presets.input} ${errors.name ? 'border-red-500 ring-2 ring-red-500/10' : ''}`}
+                                        />
+                                    </div>
                                     {errors.name && <p className={presets.error}>{errors.name.message}</p>}
                                 </div>
 
                                 <div className="space-y-1">
                                     <label htmlFor="phone" className={presets.label}>Phone Number</label>
-                                    <input
-                                        id="phone"
-                                        type="tel"
-                                        {...register('phone')}
-                                        placeholder="Phone"
-                                        className={`${presets.input} ${errors.phone ? 'ring-2 ring-red-500/20' : ''}`}
-                                    />
+                                    <div className="relative group">
+                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
+                                            <span className="material-symbols-outlined text-[20px]">smartphone</span>
+                                        </div>
+                                        <input
+                                            id="phone"
+                                            type="tel"
+                                            {...register('phone')}
+                                            placeholder="Phone number"
+                                            className={`${presets.input} ${errors.phone ? 'border-red-500 ring-2 ring-red-500/10' : ''}`}
+                                        />
+                                    </div>
                                     {errors.phone && <p className={presets.error}>{errors.phone.message}</p>}
                                 </div>
 
                                 <div className="space-y-1">
-                                    <label htmlFor="email" className={presets.label}>Email Address <span className="text-[8px] opacity-40 lowercase font-medium">(for receipt)</span></label>
-                                    <input
-                                        id="email"
-                                        type="email"
-                                        {...register('email')}
-                                        placeholder="Optional email"
-                                        className={`${presets.input} ${errors.email ? 'ring-2 ring-red-500/20' : ''}`}
-                                    />
+                                    <label htmlFor="email" className={presets.label}>Email Address</label>
+                                    <div className="relative group">
+                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
+                                            <span className="material-symbols-outlined text-[20px]">mail</span>
+                                        </div>
+                                        <input
+                                            id="email"
+                                            type="email"
+                                            {...register('email')}
+                                            placeholder="Optional email"
+                                            className={`${presets.input} ${errors.email ? 'border-red-500 ring-2 ring-red-500/10' : ''}`}
+                                        />
+                                    </div>
                                     {errors.email && <p className={presets.error}>{errors.email.message}</p>}
                                 </div>
 
@@ -391,17 +406,18 @@ export default function UserStepPage() {
                                 </div>
 
                                 <button type="submit" disabled={!hasConsented || !isValid} className={presets.button}>
-                                    Finalize Setup
+                                    <span>Check-in & Get Reward</span>
+                                    <span className="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
                                 </button>
                             </form>
                         </motion.div>
                     )}
 
                     {currentStep === 'WELCOME_BACK' && (
-                        <motion.div key="welcome-back" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className={presets.card + " text-center"}>
+                        <motion.div key="welcome-back" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className={presets.card}>
                             {/* Header: Logo + Business Name Row */}
-                            <div className="flex items-center gap-4 mb-10 text-left">
-                                <div className="size-16 rounded-2xl bg-white shadow-xl shadow-primary/5 border border-gray-100 overflow-hidden flex items-center justify-center p-2">
+                            <div className="flex items-center gap-4 mb-8">
+                                <div className="size-14 rounded-2xl bg-white shadow-lg shadow-primary/5 border border-slate-100 overflow-hidden flex items-center justify-center p-1.5">
                                     <img
                                         src={logoUrl || defaultLogo.src}
                                         alt={storeName}
@@ -409,17 +425,17 @@ export default function UserStepPage() {
                                     />
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <h2 className="text-xl font-black text-text-main truncate tracking-tight">{storeName}</h2>
-                                    <span className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] block">Welcome Back</span>
+                                    <h2 className="text-lg font-black text-slate-900 truncate tracking-tight">{storeName}</h2>
+                                    <span className="text-[9px] font-bold text-primary uppercase tracking-[0.2em] block">Returning Guest</span>
                                 </div>
                             </div>
 
-                            <div className="text-left mb-10">
-                                <span className="text-[10px] font-black text-primary mb-3 uppercase tracking-[0.4em] block">Welcome</span>
-                                <h1 className="text-3xl font-black text-text-main tracking-tight leading-tight mb-3">
+                            <div className="mb-10 text-left">
+                                <span className={presets.tag}>Welcome back</span>
+                                <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-tight mb-2">
                                     Hi, <span className="text-primary">{userData?.name?.split(' ')[0] || storedIdentity?.name?.split(' ')[0] || 'there'}!</span>
                                 </h1>
-                                <p className="text-base font-medium text-gray-500 leading-relaxed">
+                                <p className="text-sm font-medium text-slate-500 leading-relaxed">
                                     {customWelcomeMessage || `It's great to see you again at ${storeName}.`}
                                 </p>
                             </div>

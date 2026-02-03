@@ -19,7 +19,7 @@ const MOCK_BUSINESSES: BusinessProfile[] = [
         slug: 'AZURE-BISTRO',
         nfcId: 'MASTER-01',
         name: 'The Blue Azure Bistro',
-        welcomeMessage: 'Welcome to EntryConnects Blue Azure! Tap below to view our menu.',
+        welcomeMessage: '',
         successMessage: 'Thanks for visiting! Your table check-in is complete.',
         privacyMessage: 'We value your privacy. Your data is only used for check-in purposes.',
         rewardEnabled: true,
