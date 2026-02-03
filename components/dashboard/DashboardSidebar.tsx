@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useCustomerFlowStore } from '@/store/useCustomerFlowStore';
+import logoUrl from '@/assets/logo.png';
 
 interface SidebarProps {
     children: React.ReactNode;
@@ -177,7 +178,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                     <div className="flex items-center gap-3 mb-3">
                         <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden border border-gray-100">
                             {logoUrl ? (
-                                <img src={logoUrl} alt={storeName} className="w-full h-full object-contain p-1" />
+                                <img src={logoUrl.src} alt={storeName} className="w-full h-full object-contain p-1" />
                             ) : (
                                 <span className="material-icons-round text-primary">person</span>
                             )}
