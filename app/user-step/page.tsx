@@ -36,7 +36,7 @@ export default function UserStepPage() {
         currentStep, setStep, storeName, setUserData, resetFlow,
         getBusinessConfig, customWelcomeMessage, customSuccessMessage,
         customPrivacyMessage, customRewardMessage, hasRewardSetup,
-        setBusinessType, userData
+        setBusinessType, userData, logoUrl
     } = useCustomerFlowStore();
 
     const { user } = useAuthStore();
@@ -156,6 +156,14 @@ export default function UserStepPage() {
             link.click();
             document.body.removeChild(link);
         }, 2000);
+    };
+
+    const getStoreNameStyle = (name: string) => {
+        const length = name.length;
+        if (length < 15) return "text-4xl md:text-5xl font-black";
+        if (length < 25) return "text-3xl md:text-4xl font-black";
+        if (length < 35) return "text-2xl md:text-3xl font-black";
+        return "text-xl md:text-2xl font-black";
     };
 
     return (
@@ -317,7 +325,20 @@ export default function UserStepPage() {
                             )}
 
                             <span className={presets.subtitle}>Digital Profile</span>
-                            <h1 className={presets.title}>{customWelcomeMessage || `Welcome to ${storeName}`}</h1>
+
+                            {logoUrl && (
+                                <div className="mb-6 flex justify-center">
+                                    <img
+                                        src={logoUrl}
+                                        alt={storeName}
+                                        className="h-16 w-auto object-contain drop-shadow-sm"
+                                    />
+                                </div>
+                            )}
+
+                            <h1 className={`${getStoreNameStyle(customWelcomeMessage || storeName)} text-text-main tracking-tight leading-tight mb-2`}>
+                                {customWelcomeMessage || `Welcome to ${storeName}`}
+                            </h1>
                             <p className={`${presets.body} mt-3 mb-8`}>Complete your profile to claim your rewards.</p>
 
                             {isDeviceSynced && (
@@ -383,7 +404,7 @@ export default function UserStepPage() {
                                         <div>
                                             <p className="text-[9px] font-black uppercase tracking-widest text-text-main group-hover:text-primary">I Accept Privacy Terms</p>
                                             <p className="text-[10px] text-gray-400 font-medium leading-tight mt-1">
-                                                {customPrivacyMessage || "I agree to have my visits securely tracked for loyalty rewards."}
+                                                {customPrivacyMessage || "I agree to have my visits securely tracked and data collected just for feedback and loyalty rewards."}
                                             </p>
                                         </div>
                                     </label>
@@ -404,7 +425,7 @@ export default function UserStepPage() {
                             <span className={presets.subtitle}>Welcome Back</span>
                             <h1 className={presets.title}>Great to see you again!</h1>
                             <p className={`${presets.body} mt-4 mb-10`}>
-                                We recognized your device. Ready to continue your experience at <span className="text-primary font-bold">{storeName}</span>?
+                                We recognized your device. Ready to continue your experience at <span className="text-primary font-bold inline-block wrap-break-word">{storeName}</span>?
                             </p>
 
                             <div className="p-4 rounded-2xl bg-gray-50 mb-10 border border-gray-100 flex items-center gap-4 text-left">

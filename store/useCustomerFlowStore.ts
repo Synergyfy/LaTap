@@ -26,19 +26,21 @@ interface BusinessConfig {
     outcomeTitle: string;
     outcomeDesc: string;
     specificIcon: string;
+    logoUrl?: string;
 }
 
 export const businessConfigs: Record<BusinessType, BusinessConfig> = {
     RESTAURANT: {
         type: 'RESTAURANT',
         label: 'Restaurant',
-        storeName: 'The Azure Bistro',
+        storeName: 'The Azure Bistro & Fine Dining Experience', // Making it longer to test shrink logic
         icon: 'restaurant_menu',
         description: 'Instant menu access and table service.',
         actionLabel: 'Browse Digital Menu',
         outcomeTitle: 'Table 14 Linked',
         outcomeDesc: 'Our servers have been notified. You can now browse our full menu below.',
-        specificIcon: 'menu_book'
+        specificIcon: 'menu_book',
+        logoUrl: 'https://cdn-icons-png.flaticon.com/512/3448/3448609.png'
     },
     RETAIL: {
         type: 'RETAIL',
@@ -49,7 +51,8 @@ export const businessConfigs: Record<BusinessType, BusinessConfig> = {
         actionLabel: 'Start VIP Shopping',
         outcomeTitle: 'VIP Member Active',
         outcomeDesc: 'Your exclusive member rates have been applied to your session.',
-        specificIcon: 'loyalty'
+        specificIcon: 'loyalty',
+        logoUrl: 'https://cdn-icons-png.flaticon.com/512/3081/3081559.png'
     },
     GYM: {
         type: 'GYM',
@@ -60,7 +63,8 @@ export const businessConfigs: Record<BusinessType, BusinessConfig> = {
         actionLabel: 'Check Locker Status',
         outcomeTitle: 'Check-in Complete',
         outcomeDesc: 'Welcome back! Your locker #42 is ready. Have a great workout.',
-        specificIcon: 'lock_open'
+        specificIcon: 'lock_open',
+        logoUrl: 'https://cdn-icons-png.flaticon.com/512/2964/2964514.png'
     },
     EVENT: {
         type: 'EVENT',
@@ -71,7 +75,8 @@ export const businessConfigs: Record<BusinessType, BusinessConfig> = {
         actionLabel: 'Access Digital Pass',
         outcomeTitle: 'Pass Validated',
         outcomeDesc: 'You have full access to Stage A and the Networking Lounge.',
-        specificIcon: 'qr_code_2'
+        specificIcon: 'qr_code_2',
+        logoUrl: 'https://cdn-icons-png.flaticon.com/512/1037/1037803.png'
     }
 };
 
@@ -97,6 +102,7 @@ interface CustomerFlowState {
     customSuccessMessage: string | null;
     customPrivacyMessage: string | null;
     customRewardMessage: string | null;
+    logoUrl: string | null;
     
     // Actions
     setStep: (step: CustomerStep) => void;
@@ -114,6 +120,7 @@ interface CustomerFlowState {
         privacyMessage?: string;
         rewardMessage?: string;
         rewardEnabled?: boolean;
+        logoUrl?: string;
     }) => void;
 }
 
@@ -135,6 +142,7 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
     customSuccessMessage: null,
     customPrivacyMessage: null,
     customRewardMessage: null,
+    logoUrl: null,
 
     setStep: (step) => set({ currentStep: step }),
     setUserData: (data) => {
@@ -151,7 +159,8 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
         customWelcomeMessage: null,
         customSuccessMessage: null,
         customPrivacyMessage: null,
-        customRewardMessage: null
+        customRewardMessage: null,
+        logoUrl: null
     }),
     toggleFeedback: (show) => set({ showFeedback: show }),
     setRewardSetup: (has) => set({ hasRewardSetup: has }),
@@ -170,7 +179,11 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
             }
         });
     },
-    setBusinessType: (type) => set({ businessType: type, storeName: businessConfigs[type].storeName }),
+    setBusinessType: (type) => set({ 
+        businessType: type, 
+        storeName: businessConfigs[type].storeName,
+        logoUrl: businessConfigs[type].logoUrl || null 
+    }),
     getBusinessConfig: () => businessConfigs[get().businessType],
     initializeFromBusiness: (business) => set({
         businessId: business.id,
@@ -181,6 +194,7 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
         customPrivacyMessage: business.privacyMessage,
         customRewardMessage: business.rewardMessage,
         hasRewardSetup: business.rewardEnabled,
+        logoUrl: business.logoUrl,
         currentStep: 'SCANNING'
     }),
     updateCustomSettings: (settings) => set((state) => ({
@@ -188,6 +202,7 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
         customSuccessMessage: settings.successMessage ?? state.customSuccessMessage,
         customPrivacyMessage: settings.privacyMessage ?? state.customPrivacyMessage,
         customRewardMessage: settings.rewardMessage ?? state.customRewardMessage,
-        hasRewardSetup: settings.rewardEnabled ?? state.hasRewardSetup
+        hasRewardSetup: settings.rewardEnabled ?? state.hasRewardSetup,
+        logoUrl: settings.logoUrl ?? state.logoUrl
     })),
 }), { name: 'customer-flow-storage' }));
