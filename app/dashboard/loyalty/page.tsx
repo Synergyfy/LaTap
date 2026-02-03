@@ -15,6 +15,7 @@ import { Gift, DollarSign, Award, Star, Plus, Settings, Trash2 } from 'lucide-re
 
 export default function LoyaltyOverviewPage() {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [editingReward, setEditingReward] = useState<Reward | null>(null);
     const queryClient = useQueryClient();
 
     const { data, isLoading } = useQuery({
@@ -31,6 +32,16 @@ export default function LoyaltyOverviewPage() {
         }
     });
 
+    const updateRewardMutation = useMutation({
+        mutationFn: dashboardApi.updateReward,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+            setIsCreateModalOpen(false);
+            setEditingReward(null);
+            toast.success('Reward updated successfully');
+        }
+    });
+
     const deleteRewardMutation = useMutation({
         mutationFn: dashboardApi.deleteReward,
         onSuccess: () => {
@@ -39,13 +50,26 @@ export default function LoyaltyOverviewPage() {
         }
     });
 
-    const handleCreateReward = (data: Omit<Reward, 'id' | 'active'>) => {
-        const newReward: Reward = {
-            id: Math.random().toString(36).substr(2, 9),
-            ...data,
-            active: true
-        };
-        createRewardMutation.mutate(newReward);
+    const toggleMutation = useMutation({
+        mutationFn: ({ id, active }: { id: string, active: boolean }) =>
+            dashboardApi.updateReward({ id, updates: { active } }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+            toast.success('Reward status updated');
+        }
+    });
+
+    const handleCreateReward = (formData: Omit<Reward, 'id' | 'active'>) => {
+        if (editingReward) {
+            updateRewardMutation.mutate({ id: editingReward.id, updates: formData });
+        } else {
+            const newReward: Reward = {
+                id: Math.random().toString(36).substr(2, 9),
+                ...formData,
+                active: true
+            };
+            createRewardMutation.mutate(newReward);
+        }
     };
 
     const handleDeleteReward = (id: string) => {
@@ -147,13 +171,16 @@ export default function LoyaltyOverviewPage() {
                             <div key={reward.id} className="bg-white rounded-xl p-6 border border-gray-200 flex flex-col justify-between hover:shadow-lg transition-all group">
                                 <div>
                                     <div className="flex items-start justify-between mb-4">
-                                        <div className="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600">
+                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${reward.active ? 'bg-purple-50 text-purple-600' : 'bg-gray-50 text-gray-400'}`}>
                                             <Gift size={24} />
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <span className={`px-2 py-1 rounded-md text-[10px] uppercase font-bold tracking-wider ${reward.active ? 'bg-green-50 text-green-600' : 'bg-gray-100 text-gray-400'}`}>
+                                            <button
+                                                onClick={() => toggleMutation.mutate({ id: reward.id, active: !reward.active })}
+                                                className={`px-2 py-1 rounded-md text-[10px] uppercase font-bold tracking-wider transition-colors ${reward.active ? 'bg-green-50 text-green-600 hover:bg-green-100' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}
+                                            >
                                                 {reward.active ? 'Active' : 'Inactive'}
-                                            </span>
+                                            </button>
                                             <button
                                                 onClick={() => handleDeleteReward(reward.id)}
                                                 className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors"
@@ -162,15 +189,21 @@ export default function LoyaltyOverviewPage() {
                                             </button>
                                         </div>
                                     </div>
-                                    <h3 className="font-bold text-lg text-text-main mb-1">{reward.title}</h3>
-                                    <p className="text-sm text-text-secondary mb-4">{reward.description}</p>
+                                    <h3 className={`font-bold text-lg mb-1 ${reward.active ? 'text-text-main' : 'text-gray-400'}`}>{reward.title}</h3>
+                                    <p className="text-sm text-text-secondary mb-4 line-clamp-2">{reward.description}</p>
                                 </div>
                                 <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
-                                    <div className="flex items-center gap-1.5 text-orange-500">
+                                    <div className={`flex items-center gap-1.5 ${reward.active ? 'text-orange-500' : 'text-gray-400'}`}>
                                         <Star size={16} />
                                         <span className="text-sm font-bold">{reward.points} Pts</span>
                                     </div>
-                                    <button className="text-sm font-bold text-primary hover:underline">
+                                    <button
+                                        onClick={() => {
+                                            setEditingReward(reward);
+                                            setIsCreateModalOpen(true);
+                                        }}
+                                        className="text-sm font-bold text-primary hover:underline"
+                                    >
                                         Edit Details
                                     </button>
                                 </div>

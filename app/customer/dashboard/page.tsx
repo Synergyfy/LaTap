@@ -3,12 +3,27 @@
 import React from 'react';
 import CustomerSidebar from '@/components/customer/CustomerSidebar';
 import Link from 'next/link';
-import { 
+import {
     History, Star, PiggyBank, Coffee, Smartphone, Dumbbell,
-    QrCode, Scan 
+    QrCode, Scan
 } from 'lucide-react';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export default function CustomerDashboardPage() {
+    const { user, isAuthenticated } = useAuthStore();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!isAuthenticated || user?.role !== 'customer') {
+            router.push('/login');
+        }
+    }, [isAuthenticated, user, router]);
+
+    if (!isAuthenticated || user?.role !== 'customer') {
+        return null;
+    }
     const stats = [
         { label: 'Total Visits', value: '42', icon: History, color: 'blue' },
         { label: 'Reward Points', value: '1,250', icon: Star, color: 'primary' },
@@ -53,11 +68,10 @@ export default function CustomerDashboardPage() {
                         const IconComponent = stat.icon;
                         return (
                             <div key={index} className="bg-white p-6 rounded-lg border border-gray-100 shadow-sm flex items-center gap-4">
-                                <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
-                                    stat.color === 'blue' ? 'bg-blue-50 text-blue-600' :
+                                <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${stat.color === 'blue' ? 'bg-blue-50 text-blue-600' :
                                     stat.color === 'primary' ? 'bg-primary/10 text-primary' :
-                                    'bg-green-50 text-green-600'
-                                }`}>
+                                        'bg-green-50 text-green-600'
+                                    }`}>
                                     <IconComponent size={20} />
                                 </div>
                                 <div>

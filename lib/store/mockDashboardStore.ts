@@ -6,7 +6,7 @@ export interface Visitor {
   name: string;
   phone: string;
   time: string;
-  timestamp: number; // to sort or filter
+  timestamp: number;
   status: 'new' | 'returning';
 }
 
@@ -32,11 +32,44 @@ export interface Notification {
   type: 'info' | 'success' | 'warning';
 }
 
+export interface Campaign {
+  id: string;
+  name: string;
+  type: 'WhatsApp' | 'SMS' | 'Email';
+  audience: string;
+  status: 'Active' | 'Scheduled' | 'Recurring' | 'Completed' | 'Draft';
+  sent: number;
+  delivered: string;
+  clicks: number;
+  timestamp: number;
+}
+
+export interface Staff {
+  id: string;
+  name: string;
+  email: string;
+  role: 'Owner' | 'Manager' | 'Staff';
+  status: 'Active' | 'Inactive';
+  lastActive: string;
+}
+
+export interface Device {
+  id: string;
+  type: 'Card' | 'Sticker' | 'Fob';
+  assignedTo: string; // Business name or 'Unassigned'
+  lastActive: string;
+  status: 'active' | 'inactive';
+  battery: string;
+}
+
 export interface DashboardState {
   visitors: Visitor[];
   activityData: ActivityPoint[];
   rewards: Reward[];
   notifications: Notification[];
+  campaigns: Campaign[];
+  staffMembers: Staff[];
+  devices: Device[];
   stats: {
     totalVisitors: number;
     newVisitors: number;
@@ -46,11 +79,23 @@ export interface DashboardState {
   // Actions
   addVisitor: (visitor: Visitor) => void;
   addReward: (reward: Reward) => void;
+  updateReward: (id: string, reward: Partial<Reward>) => void;
   deleteReward: (id: string) => void;
   toggleReward: (id: string, active: boolean) => void;
   addNotification: (notification: Notification) => void;
   markNotificationRead: (id: string) => void;
   markAllNotificationsRead: () => void;
+  clearNotifications: () => void;
+  addCampaign: (campaign: Campaign) => void;
+  updateCampaign: (id: string, campaign: Partial<Campaign>) => void;
+  deleteCampaign: (id: string) => void;
+  updateCampaignStatus: (id: string, status: Campaign['status']) => void;
+  addStaff: (staff: Staff) => void;
+  updateStaffMember: (id: string, updates: Partial<Staff>) => void;
+  deleteStaff: (id: string) => void;
+  addDevice: (device: Device) => void;
+  updateDevice: (id: string, updates: Partial<Device>) => void;
+  deleteDevice: (id: string) => void;
   reset: () => void;
 }
 
@@ -83,6 +128,25 @@ const initialNotifications: Notification[] = [
   { id: '1', title: 'Welcome', message: 'Welcome to your new dashboard!', timestamp: Date.now(), read: false, type: 'info' },
 ];
 
+const initialCampaigns: Campaign[] = [
+  { id: '1', name: 'Weekend Coffee Special', type: 'WhatsApp', audience: 'All Customers', status: 'Active', sent: 1240, delivered: '98%', clicks: 156, timestamp: Date.now() - 86400000 },
+  { id: '2', name: 'Welcome Message', type: 'SMS', audience: 'New Customers', status: 'Recurring', sent: 412, delivered: '95%', clicks: 84, timestamp: Date.now() - 172800000 },
+  { id: '3', name: 'VIP Night Invitation', type: 'WhatsApp', audience: 'VIP Members', status: 'Scheduled', sent: 0, delivered: '0%', clicks: 0, timestamp: Date.now() + 86400000 },
+  { id: '4', name: 'October Newsletter', type: 'Email', audience: 'Newsletter Subs', status: 'Completed', sent: 2840, delivered: '92%', clicks: 312, timestamp: Date.now() - 604800000 },
+];
+
+const initialStaff: Staff[] = [
+    { id: '1', name: 'John Manager', email: 'john@greenterrace.com', role: 'Owner', status: 'Active', lastActive: 'Now' },
+    { id: '2', name: 'Sarah Supervisor', email: 'sarah.s@example.com', role: 'Manager', status: 'Active', lastActive: '2h ago' },
+    { id: '3', name: 'Michael Cashier', email: 'mike.c@example.com', role: 'Staff', status: 'Active', lastActive: '1d ago' },
+];
+
+const initialDevices: Device[] = [
+    { id: 'NFC-8392', type: 'Card', assignedTo: 'Green Terrace Cafe', lastActive: '2 mins ago', status: 'active', battery: 'Good' },
+    { id: 'NFC-9281', type: 'Sticker', assignedTo: 'Tech Hub Lagos', lastActive: '5 hours ago', status: 'active', battery: 'Good' },
+    { id: 'NFC-1928', type: 'Fob', assignedTo: 'Unassigned', lastActive: 'Never', status: 'inactive', battery: 'Full' },
+];
+
 const initialStats = {
   totalVisitors: 2847,
   newVisitors: 512,
@@ -97,15 +161,16 @@ export const useMockDashboardStore = create<DashboardState>()(
       activityData: initialActivityData,
       rewards: initialRewards,
       notifications: initialNotifications,
+      campaigns: initialCampaigns,
+      staffMembers: initialStaff,
+      devices: initialDevices,
       stats: initialStats,
 
       addVisitor: (visitor) =>
         set((state) => {
           const newVisitors = [visitor, ...state.visitors];
-          
-          // Update activity based on current hour (simplified)
           const currentHour = new Date().getHours();
-          const hourLabel = currentHour > 12 ? `${currentHour - 12} PM` : `${currentHour} AM`;
+          const hourLabel = currentHour > 12 ? `${currentHour - 12} PM` : `${currentHour === 0 ? 12 : currentHour} ${currentHour >= 12 ? 'PM' : 'AM'}`;
           
           const newActivity = [...state.activityData];
           const activityIndex = newActivity.findIndex(a => a.hour === hourLabel);
@@ -113,7 +178,6 @@ export const useMockDashboardStore = create<DashboardState>()(
              newActivity[activityIndex].visits += 1;
           }
 
-          // Update stats
           const newStats = { ...state.stats };
           newStats.totalVisitors += 1;
           newStats.todaysVisits += 1;
@@ -131,6 +195,9 @@ export const useMockDashboardStore = create<DashboardState>()(
         }),
 
       addReward: (reward) => set((state) => ({ rewards: [...state.rewards, reward] })),
+      updateReward: (id, updates) => set((state) => ({
+        rewards: state.rewards.map(r => r.id === id ? { ...r, ...updates } : r)
+      })),
       deleteReward: (id) => set((state) => ({ rewards: state.rewards.filter((r) => r.id !== id) })),
       toggleReward: (id, active) => set((state) => ({ rewards: state.rewards.map((r) => r.id === id ? { ...r, active } : r) })),
       
@@ -142,17 +209,43 @@ export const useMockDashboardStore = create<DashboardState>()(
         notifications: state.notifications.map(n => ({ ...n, read: true }))
       })),
 
+      clearNotifications: () => set({ notifications: [] }),
+
+      addCampaign: (campaign) => set((state) => ({ campaigns: [campaign, ...state.campaigns] })),
+      updateCampaign: (id, updates) => set((state) => ({
+        campaigns: state.campaigns.map(c => c.id === id ? { ...c, ...updates } : c)
+      })),
+      deleteCampaign: (id) => set((state) => ({ campaigns: state.campaigns.filter(c => c.id !== id) })),
+      updateCampaignStatus: (id, status) => set((state) => ({
+        campaigns: state.campaigns.map(c => c.id === id ? { ...c, status } : c)
+      })),
+
+      addStaff: (staff) => set((state) => ({ staffMembers: [...state.staffMembers, staff] })),
+      updateStaffMember: (id, updates) => set((state) => ({
+        staffMembers: state.staffMembers.map(s => s.id === id ? { ...s, ...updates } : s)
+      })),
+      deleteStaff: (id) => set((state) => ({ staffMembers: state.staffMembers.filter(s => s.id !== id) })),
+
+      addDevice: (device) => set((state) => ({ devices: [...state.devices, device] })),
+      updateDevice: (id, updates) => set((state) => ({
+        devices: state.devices.map(d => d.id === id ? { ...d, ...updates } : d)
+      })),
+      deleteDevice: (id) => set((state) => ({ devices: state.devices.filter(d => d.id !== id) })),
+
       reset: () =>
         set({
           visitors: initialVisitors,
           activityData: initialActivityData,
           rewards: initialRewards,
           notifications: initialNotifications,
+          campaigns: initialCampaigns,
+          staffMembers: initialStaff,
+          devices: initialDevices,
           stats: initialStats,
         }),
     }),
     {
-      name: 'dashboard-storage', 
+      name: 'dashboard-storage-v2', 
       storage: createJSONStorage(() => localStorage),
     }
   )

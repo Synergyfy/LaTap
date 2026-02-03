@@ -10,6 +10,7 @@ interface CreateRewardModalProps {
     onClose: () => void;
     onSubmit: (data: Omit<Reward, 'id' | 'active'>) => void;
     isLoading: boolean;
+    initialData?: Reward | null;
 }
 
 interface RewardFormData {
@@ -18,12 +19,32 @@ interface RewardFormData {
     description: string;
 }
 
-export default function CreateRewardModal({ isOpen, onClose, onSubmit, isLoading }: CreateRewardModalProps) {
-    const { register, handleSubmit, reset, formState: { errors } } = useForm<RewardFormData>();
+export default function CreateRewardModal({ isOpen, onClose, onSubmit, isLoading, initialData }: CreateRewardModalProps) {
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<RewardFormData>({
+        defaultValues: initialData ? {
+            title: initialData.title,
+            points: initialData.points,
+            description: initialData.description,
+        } : undefined
+    });
+
+    // Reset form when initialData changes (e.g. when opening modal for a new reward or a different edit)
+    React.useEffect(() => {
+        if (isOpen) {
+            reset(initialData ? {
+                title: initialData.title,
+                points: initialData.points,
+                description: initialData.description,
+            } : {
+                title: '',
+                points: 0,
+                description: '',
+            });
+        }
+    }, [isOpen, initialData, reset]);
 
     const handleFormSubmit = (data: RewardFormData) => {
         onSubmit(data);
-        reset();
     };
 
     if (!isOpen) return null;
@@ -65,7 +86,7 @@ export default function CreateRewardModal({ isOpen, onClose, onSubmit, isLoading
                             placeholder="e.g. 100"
                             className="w-full h-11 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm font-medium"
                         />
-                         {errors.points && <span className="text-xs text-red-500 mt-1">{errors.points.message}</span>}
+                        {errors.points && <span className="text-xs text-red-500 mt-1">{errors.points.message}</span>}
                     </div>
 
                     <div>
@@ -73,12 +94,12 @@ export default function CreateRewardModal({ isOpen, onClose, onSubmit, isLoading
                             Description
                         </label>
                         <textarea
-                             {...register('description', { required: 'Description is required' })}
+                            {...register('description', { required: 'Description is required' })}
                             placeholder="Describe what the customer gets..."
                             rows={3}
                             className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm font-medium resize-none"
                         ></textarea>
-                         {errors.description && <span className="text-xs text-red-500 mt-1">{errors.description.message}</span>}
+                        {errors.description && <span className="text-xs text-red-500 mt-1">{errors.description.message}</span>}
                     </div>
 
                     <div className="pt-4 flex gap-3">

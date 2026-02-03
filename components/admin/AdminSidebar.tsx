@@ -4,10 +4,14 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { dashboardApi } from '@/lib/api/dashboard';
+import { Notification } from '@/lib/store/mockDashboardStore';
 import {
     Home, Store, Users, Nfc, CreditCard, BarChart, MessageSquare,
-    Settings, ChevronDown, Shield, LogOut, Search, Bell, HelpCircle
+    Settings, ChevronDown, Shield, LogOut, LayoutGrid, Search, Bell, HelpCircle
 } from 'lucide-react';
+import Logo from '@/components/brand/Logo';
 
 interface AdminSidebarProps {
     children: React.ReactNode;
@@ -18,6 +22,31 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
     const router = useRouter();
     const { user, logout } = useAuthStore();
     const [expandedMenus, setExpandedMenus] = useState<string[]>(['businesses']);
+    const [showNotifications, setShowNotifications] = useState(false);
+    const queryClient = useQueryClient();
+
+    const { data } = useQuery({
+        queryKey: ['dashboard'],
+        queryFn: dashboardApi.fetchDashboardData,
+        refetchInterval: 5000,
+    });
+
+    const notifications = data?.notifications || [];
+    const unreadCount = notifications.filter((n: Notification) => !n.read).length;
+
+    const readNotificationMutation = useMutation({
+        mutationFn: dashboardApi.markNotificationRead,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+        }
+    });
+
+    const readAllMutation = useMutation({
+        mutationFn: dashboardApi.markAllNotificationsRead,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+        }
+    });
 
     const toggleMenu = (menu: string) => {
         setExpandedMenus(prev =>
@@ -100,11 +129,7 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
                 {/* Logo with Wordmark */}
                 <div className="h-16 flex items-center px-6 border-b border-gray-200">
                     <Link href="/admin/dashboard" className="flex items-center gap-2">
-                        <Shield className="text-primary" size={28} strokeWidth={2.5} />
-                        <div className="flex flex-col">
-                            <span className="font-display font-bold text-lg text-text-main leading-none">LaTap</span>
-                            <span className="text-[10px] text-text-secondary font-medium uppercase tracking-wider">Admin Panel</span>
-                        </div>
+                        <Logo iconSize={28} fontSize="text-lg" />
                     </Link>
                 </div>
 
@@ -201,11 +226,78 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
                             />
                         </div>
                     </div>
-                    <div className="flex items-center gap-4">
-                        <button className="relative p-2 text-text-secondary hover:text-text-main hover:bg-gray-50 rounded-lg transition-colors">
+                    <div className="flex items-center gap-4 relative">
+                        {/* Notification Button */}
+                        <button
+                            onClick={() => setShowNotifications(!showNotifications)}
+                            className="relative p-2 text-text-secondary hover:text-text-main hover:bg-gray-50 rounded-lg transition-colors"
+                        >
                             <Bell size={20} />
-                            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+                            {unreadCount > 0 && (
+                                <span className="absolute top-1.5 right-1.5 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full px-1">
+                                    {unreadCount > 9 ? '9+' : unreadCount}
+                                </span>
+                            )}
                         </button>
+
+                        {/* Notifications Dropdown */}
+                        {showNotifications && (
+                            <>
+                                <div
+                                    className="fixed inset-0 z-40"
+                                    onClick={() => setShowNotifications(false)}
+                                ></div>
+                                <div className="absolute right-0 top-12 w-80 bg-white rounded-xl shadow-xl border border-gray-200 z-50 overflow-hidden">
+                                    <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+                                        <h3 className="font-bold text-text-main text-sm">Notifications</h3>
+                                        <button
+                                            onClick={() => readAllMutation.mutate()}
+                                            className="text-xs text-primary font-bold hover:underline"
+                                        >
+                                            Mark all read
+                                        </button>
+                                    </div>
+                                    <div className="max-h-80 overflow-y-auto">
+                                        {notifications.length === 0 ? (
+                                            <div className="p-8 text-center text-text-secondary text-sm">
+                                                No notifications yet
+                                            </div>
+                                        ) : (
+                                            notifications.map((note: any) => (
+                                                <div
+                                                    key={note.id}
+                                                    onClick={() => !note.read && readNotificationMutation.mutate(note.id)}
+                                                    className={`p-4 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors ${!note.read ? 'bg-blue-50/30' : ''}`}
+                                                >
+                                                    <div className="flex items-start gap-3">
+                                                        <div className={`mt-1 w-2 h-2 rounded-full shrink-0 ${!note.read ? 'bg-primary' : 'bg-transparent'}`}></div>
+                                                        <div className="flex-1">
+                                                            <p className={`text-sm ${!note.read ? 'font-bold text-text-main' : 'text-text-secondary'}`}>
+                                                                {note.title}
+                                                            </p>
+                                                            <p className="text-xs text-text-secondary mt-1">{note.message}</p>
+                                                            <p className="text-[10px] text-gray-400 mt-2">
+                                                                {new Date(note.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+                                    <div className="p-3 border-t border-gray-100 text-center">
+                                        <Link
+                                            href="/admin/notifications"
+                                            className="text-xs font-bold text-primary hover:text-primary-hover"
+                                            onClick={() => setShowNotifications(false)}
+                                        >
+                                            View All Notifications
+                                        </Link>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+
                         <button className="p-2 text-text-secondary hover:text-text-main hover:bg-gray-50 rounded-lg transition-colors">
                             <HelpCircle size={20} />
                         </button>

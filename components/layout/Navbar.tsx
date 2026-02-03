@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Logo from '@/components/brand/Logo';
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,8 +12,7 @@ export default function Navbar() {
                 <nav className={`bg-white/80 text-text-main rounded-full py-3 px-6 flex items-center shadow-xl shadow-gray-200/20 border border-gray-200/50 max-w-5xl w-full justify-between backdrop-blur-xl transition-all duration-300`}>
                     <div className="flex items-center gap-2">
                         <Link href="/" className="flex items-center gap-2">
-                            <span className="material-icons-round text-primary text-2xl">nfc</span>
-                            <span className="font-display font-semibold text-lg tracking-tight">LaTap</span>
+                            <Logo iconSize={24} fontSize="text-lg" />
                         </Link>
                     </div>
 
@@ -46,8 +46,7 @@ export default function Navbar() {
                 <div className={`absolute right-0 top-0 bottom-0 w-[80%] max-w-sm bg-white shadow-2xl transition-transform duration-500 transform ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} p-8 flex flex-col`}>
                     <div className="flex justify-between items-center mb-12">
                         <div className="flex items-center gap-2">
-                            <span className="material-icons-round text-primary text-2xl">nfc</span>
-                            <span className="font-display font-semibold text-lg tracking-tight text-text-main">LaTap</span>
+                            <Logo iconSize={24} fontSize="text-lg" />
                         </div>
                         <button onClick={() => setIsMenuOpen(false)} className="size-10 rounded-full bg-gray-50 text-text-main flex items-center justify-center cursor-pointer">
                             <span className="material-icons-round">close</span>

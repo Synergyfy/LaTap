@@ -13,6 +13,9 @@ export const dashboardApi = {
       activityData: state.activityData,
       rewards: state.rewards,
       notifications: state.notifications,
+      campaigns: state.campaigns,
+      staffMembers: state.staffMembers,
+      devices: state.devices,
     };
   },
 
@@ -77,13 +80,106 @@ export const dashboardApi = {
 
   // Notification Actions
   markNotificationRead: async (id: string) => {
-      // Immediate optimistic update usually, but we can delay
       useMockDashboardStore.getState().markNotificationRead(id);
       return id;
   },
   
   markAllNotificationsRead: async () => {
-      useMockDashboardStore.getState().markAllNotificationsRead();
-      return true;
+    useMockDashboardStore.getState().markAllNotificationsRead();
+    return true;
+  },
+
+  clearNotifications: async () => {
+    useMockDashboardStore.getState().clearNotifications();
+    return true;
+  },
+
+  // Campaign Actions
+  createCampaign: async (campaign: any) => {
+    await delay(1000);
+    const id = Math.random().toString(36).substr(2, 9);
+    const newCampaign = {
+      ...campaign,
+      id,
+      sent: 0,
+      delivered: '0%',
+      clicks: 0,
+      timestamp: Date.now()
+    };
+    useMockDashboardStore.getState().addCampaign(newCampaign);
+    useMockDashboardStore.getState().addNotification({
+      id: Math.random().toString(36).substr(2, 9),
+      title: 'Campaign Created',
+      message: `Campaign "${campaign.name}" has been ${campaign.status === 'Active' ? 'launched' : 'scheduled'}.`,
+      timestamp: Date.now(),
+      read: false,
+      type: 'success'
+    });
+    return newCampaign;
+  },
+
+  updateCampaign: async ({ id, updates }: { id: string, updates: any }) => {
+    await delay(600);
+    useMockDashboardStore.getState().updateCampaign(id, updates);
+    return { id, updates };
+  },
+
+  deleteCampaign: async (id: string) => {
+    await delay(500);
+    useMockDashboardStore.getState().deleteCampaign(id);
+    return id;
+  },
+
+  updateCampaignStatus: async (id: string, status: any) => {
+    await delay(300);
+    useMockDashboardStore.getState().updateCampaignStatus(id, status);
+    return { id, status };
+  },
+
+  // Staff Actions
+  addStaff: async (staff: any) => {
+    await delay(800);
+    const id = Math.random().toString(36).substr(2, 9);
+    const newStaff = { ...staff, id, lastActive: 'Never', status: 'Active' };
+    useMockDashboardStore.getState().addStaff(newStaff);
+    return newStaff;
+  },
+
+  updateStaffMember: async ({ id, updates }: { id: string, updates: any }) => {
+    await delay(500);
+    useMockDashboardStore.getState().updateStaffMember(id, updates);
+    return { id, updates };
+  },
+
+  deleteStaff: async (id: string) => {
+    await delay(400);
+    useMockDashboardStore.getState().deleteStaff(id);
+    return id;
+  },
+
+  // Device Actions
+  addDevice: async (device: any) => {
+    await delay(800);
+    const newDevice = { ...device, lastActive: 'Never', status: 'inactive', battery: 'Full' };
+    useMockDashboardStore.getState().addDevice(newDevice);
+    return newDevice;
+  },
+
+  updateDevice: async ({ id, updates }: { id: string, updates: any }) => {
+    await delay(500);
+    useMockDashboardStore.getState().updateDevice(id, updates);
+    return { id, updates };
+  },
+
+  deleteDevice: async (id: string) => {
+    await delay(400);
+    useMockDashboardStore.getState().deleteDevice(id);
+    return id;
+  },
+
+  updateReward: async ({ id, updates }: { id: string, updates: any }) => {
+    await delay(500);
+    useMockDashboardStore.getState().updateReward(id, updates);
+    return { id, updates };
   }
 };

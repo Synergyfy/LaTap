@@ -13,6 +13,7 @@ import {
     Home, Users, Nfc, Send, Gift, BarChart, Users2, Settings,
     ChevronDown, LogOut, Bell, Search, HelpCircle
 } from 'lucide-react';
+import Logo from '@/components/brand/Logo';
 
 interface SidebarProps {
     children: React.ReactNode;
@@ -145,11 +146,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                 {/* Logo with Wordmark */}
                 <div className="h-16 flex items-center px-6 border-b border-gray-200">
                     <Link href="/dashboard" className="flex items-center gap-2">
-                        <Nfc className="text-primary" size={28} strokeWidth={2.5} />
-                        <div className="flex flex-col">
-                            <span className="font-display font-bold text-lg text-text-main leading-none">LaTap</span>
-                            <span className="text-[10px] text-text-secondary font-medium uppercase tracking-wider">Business</span>
-                        </div>
+                        <Logo iconSize={28} fontSize="text-lg" />
                     </Link>
                 </div>
 
@@ -298,7 +295,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                                                     className={`p-4 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors ${!note.read ? 'bg-blue-50/30' : ''}`}
                                                 >
                                                     <div className="flex items-start gap-3">
-                                                        <div className={`mt-1 w-2 h-2 rounded-full flex-shrink-0 ${!note.read ? 'bg-primary' : 'bg-transparent'}`}></div>
+                                                        <div className={`mt-1 w-2 h-2 rounded-full shrink-0 ${!note.read ? 'bg-primary' : 'bg-transparent'}`}></div>
                                                         <div className="flex-1">
                                                             <p className={`text-sm ${!note.read ? 'font-bold text-text-main' : 'text-text-secondary'}`}>
                                                                 {note.title}
@@ -315,7 +312,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                                     </div>
                                     <div className="p-3 border-t border-gray-100 text-center">
                                         <Link
-                                            href="/dashboard/settings/notifications"
+                                            href="/dashboard/notifications"
                                             className="text-xs font-bold text-primary hover:text-primary-hover"
                                             onClick={() => setShowNotifications(false)}
                                         >

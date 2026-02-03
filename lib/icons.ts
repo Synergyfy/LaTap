@@ -4,7 +4,7 @@
 import {
   Home, Users, UserPlus, Repeat, Calendar, TrendingUp, TrendingDown,
   Bell, Search, LogOut, Menu, X, ChevronDown, ChevronLeft, ChevronRight,
-  Plus, Settings, HelpCircle, Nfc, Mail, Phone, Check, CheckCircle,
+  Plus, Settings,  HelpCircle, Nfc, Mail, Phone, Check, CheckCircle,
   AlertCircle, AlertTriangle, Info, Download, Upload, Filter, MoreVertical,
   Eye, Edit, Trash2, Star, Gift, Target, Send, BarChart, PieChart,
   DollarSign, CreditCard, ShoppingBag, Package, Zap, Shield, Lock,
@@ -30,6 +30,7 @@ import {
   Percent, Slash, Asterisk, Equal, Minus, PlusCircle, MinusCircle,
   CheckCircle as CheckCircleIcon, XCircle, AlertCircle as AlertCircleIcon,
   HelpCircle as HelpCircleIcon, Info as InfoIcon, AlertTriangle as AlertTriangleIcon,
+  LogIn,
 } from 'lucide-react';
 
 export const icons = {

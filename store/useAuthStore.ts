@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export type UserRole = 'business' | 'admin' | null;
+export type UserRole = 'business' | 'admin' | 'customer' | null;
 
 interface User {
   email: string;
@@ -31,6 +31,12 @@ const MOCK_USERS = {
     password: 'admin123',
     name: 'Admin User',
     role: 'admin' as UserRole
+  },
+  customer: {
+    email: 'customer@latap.com',
+    password: 'customer123',
+    name: 'Jane Customer',
+    role: 'customer' as UserRole
   }
 };
 
@@ -54,6 +60,13 @@ export const useAuthStore = create<AuthState>()(
         // Check admin user
         if (email === MOCK_USERS.admin.email && password === MOCK_USERS.admin.password) {
           const { password: _, ...user } = MOCK_USERS.admin;
+          set({ user, isAuthenticated: true });
+          return { success: true };
+        }
+
+        // Check customer user
+        if (email === MOCK_USERS.customer.email && password === MOCK_USERS.customer.password) {
+          const { password: _, ...user } = MOCK_USERS.customer;
           set({ user, isAuthenticated: true });
           return { success: true };
         }
