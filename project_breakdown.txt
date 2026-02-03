@@ -81,3 +81,16 @@ Aggressive caching and data minimization to ensure the <3 second load time in lo
 Company Super-Admin Panel:
 
 Global dashboard for your team to monitor total platform revenue, active businesses, and support tickets.
+
+
+new task
+
+========================
+
+--only for feedback
+
+--bussiness logo
+
+--shorten name
+
+--fit in the name weither big or small

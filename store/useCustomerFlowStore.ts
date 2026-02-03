@@ -25,20 +25,24 @@ interface BusinessConfig {
     actionLabel: string;
     outcomeTitle: string;
     outcomeDesc: string;
+    finalSuccessMessage: string;
     specificIcon: string;
+    logoUrl?: string;
 }
 
 export const businessConfigs: Record<BusinessType, BusinessConfig> = {
     RESTAURANT: {
         type: 'RESTAURANT',
         label: 'Restaurant',
-        storeName: 'The Azure Bistro',
+        storeName: 'The Azure Bistro & Fine Dining Experience', // Making it longer to test shrink logic
         icon: 'restaurant_menu',
         description: 'Instant menu access and table service.',
         actionLabel: 'Browse Digital Menu',
         outcomeTitle: 'Table 14 Linked',
         outcomeDesc: 'Our servers have been notified. You can now browse our full menu below.',
-        specificIcon: 'menu_book'
+        finalSuccessMessage: 'Your table is now connected! Enjoy your meal at The Azure Bistro.',
+        specificIcon: 'menu_book',
+        logoUrl: '/azure-bistro-logo.png'
     },
     RETAIL: {
         type: 'RETAIL',
@@ -48,8 +52,10 @@ export const businessConfigs: Record<BusinessType, BusinessConfig> = {
         description: 'VIP pricing and personalized styling.',
         actionLabel: 'Start VIP Shopping',
         outcomeTitle: 'VIP Member Active',
-        outcomeDesc: 'Your exclusive member rates have been applied to your session.',
-        specificIcon: 'loyalty'
+        outcomeDesc: 'Unlock exclusive in-store discounts and earn points on every purchase.',
+        finalSuccessMessage: 'You are all set! Show this screen at the counter for your 5% member discount.',
+        specificIcon: 'shopping_bag',
+        logoUrl: 'https://cdn-icons-png.flaticon.com/512/3081/3081559.png'
     },
     GYM: {
         type: 'GYM',
@@ -59,8 +65,10 @@ export const businessConfigs: Record<BusinessType, BusinessConfig> = {
         description: 'Swift check-in and locker allocation.',
         actionLabel: 'Check Locker Status',
         outcomeTitle: 'Check-in Complete',
-        outcomeDesc: 'Welcome back! Your locker #42 is ready. Have a great workout.',
-        specificIcon: 'lock_open'
+        outcomeDesc: 'Access event schedules, maps, and exclusive digital content.',
+        finalSuccessMessage: 'Welcome to the event! Your digital pass is now active.',
+        specificIcon: 'confirmation_number',
+        logoUrl: 'https://cdn-icons-png.flaticon.com/512/2964/2964514.png'
     },
     EVENT: {
         type: 'EVENT',
@@ -70,8 +78,10 @@ export const businessConfigs: Record<BusinessType, BusinessConfig> = {
         description: 'Digital passes and stage schedules.',
         actionLabel: 'Access Digital Pass',
         outcomeTitle: 'Pass Validated',
-        outcomeDesc: 'You have full access to Stage A and the Networking Lounge.',
-        specificIcon: 'qr_code_2'
+        outcomeDesc: 'Track your workouts and get seamless entry with your digital tag.',
+        finalSuccessMessage: 'Access granted! Have a great workout session today.',
+        specificIcon: 'fitness_center',
+        logoUrl: 'https://cdn-icons-png.flaticon.com/512/1037/1037803.png'
     }
 };
 
@@ -81,6 +91,7 @@ interface CustomerFlowState {
     storeName: string;
     businessType: BusinessType;
     visitCount: number;
+    rewardVisitThreshold: number;
     hasRewardSetup: boolean;
     showFeedback: boolean;
     userData: {
@@ -97,6 +108,7 @@ interface CustomerFlowState {
     customSuccessMessage: string | null;
     customPrivacyMessage: string | null;
     customRewardMessage: string | null;
+    logoUrl: string | null;
     
     // Actions
     setStep: (step: CustomerStep) => void;
@@ -114,6 +126,8 @@ interface CustomerFlowState {
         privacyMessage?: string;
         rewardMessage?: string;
         rewardEnabled?: boolean;
+        logoUrl?: string;
+        rewardVisitThreshold?: number;
     }) => void;
 }
 
@@ -125,6 +139,7 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
     storeName: 'LaTap Venue',
     businessType: 'RESTAURANT',
     visitCount: 1,
+    rewardVisitThreshold: 5,
     hasRewardSetup: true,
     showFeedback: false,
     userData: null,
@@ -135,6 +150,7 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
     customSuccessMessage: null,
     customPrivacyMessage: null,
     customRewardMessage: null,
+    logoUrl: null,
 
     setStep: (step) => set({ currentStep: step }),
     setUserData: (data) => {
@@ -151,26 +167,33 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
         customWelcomeMessage: null,
         customSuccessMessage: null,
         customPrivacyMessage: null,
-        customRewardMessage: null
+        customRewardMessage: null,
+        logoUrl: null
     }),
     toggleFeedback: (show) => set({ showFeedback: show }),
     setRewardSetup: (has) => set({ hasRewardSetup: has }),
-    simulateReturningUser: (visits = 5) => {
+    simulateReturningUser: (visits = 3) => {
         const type = get().businessType;
+        const config = businessConfigs[type];
         set({ 
             isReturningUser: true, 
             currentStep: 'IDENTIFYING',
             visitCount: visits,
-            storeName: businessConfigs[type].storeName,
+            storeName: config.storeName,
+            logoUrl: config.logoUrl || null,
             userData: { 
                 name: 'Sarah Jordan', 
                 email: 'sarah@example.com', 
-                phone: '+44 7700 900000',
+                phone: '+234 801 234 5678',
                 uniqueId: 'LT-SARAH-99'
             }
         });
     },
-    setBusinessType: (type) => set({ businessType: type, storeName: businessConfigs[type].storeName }),
+    setBusinessType: (type) => set({ 
+        businessType: type, 
+        storeName: businessConfigs[type].storeName,
+        logoUrl: businessConfigs[type].logoUrl || null 
+    }),
     getBusinessConfig: () => businessConfigs[get().businessType],
     initializeFromBusiness: (business) => set({
         businessId: business.id,
@@ -181,6 +204,7 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
         customPrivacyMessage: business.privacyMessage,
         customRewardMessage: business.rewardMessage,
         hasRewardSetup: business.rewardEnabled,
+        logoUrl: business.logoUrl,
         currentStep: 'SCANNING'
     }),
     updateCustomSettings: (settings) => set((state) => ({
@@ -188,6 +212,8 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
         customSuccessMessage: settings.successMessage ?? state.customSuccessMessage,
         customPrivacyMessage: settings.privacyMessage ?? state.customPrivacyMessage,
         customRewardMessage: settings.rewardMessage ?? state.customRewardMessage,
-        hasRewardSetup: settings.rewardEnabled ?? state.hasRewardSetup
+        hasRewardSetup: settings.rewardEnabled ?? state.hasRewardSetup,
+        logoUrl: settings.logoUrl ?? state.logoUrl,
+        rewardVisitThreshold: settings.rewardVisitThreshold ?? state.rewardVisitThreshold
     })),
 }), { name: 'customer-flow-storage' }));

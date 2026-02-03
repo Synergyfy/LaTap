@@ -24,7 +24,7 @@ const MOCK_USERS = {
     password: 'business123',
     name: 'John Smith',
     role: 'business' as UserRole,
-    businessName: 'Green Terrace Cafe'
+    businessName: 'The Azure Bistro'
   },
   admin: {
     email: 'admin@latap.com',

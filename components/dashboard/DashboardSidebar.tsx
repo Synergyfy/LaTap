@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useCustomerFlowStore } from '@/store/useCustomerFlowStore';
+import defaultLogo from '@/assets/logos/logo.png';
 
 interface SidebarProps {
     children: React.ReactNode;
@@ -13,6 +15,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
     const { user, logout } = useAuthStore();
+    const { storeName, logoUrl: businessLogo } = useCustomerFlowStore();
     const [expandedMenus, setExpandedMenus] = useState<string[]>(['visitors']);
 
     const handleLogout = () => {
@@ -173,12 +176,20 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                 {/* User Profile */}
                 <div className="border-t border-gray-200 p-4">
                     <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                            <span className="material-icons-round text-primary">person</span>
+                        <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden border border-gray-100">
+                            {businessLogo || defaultLogo ? (
+                                <img
+                                    src={businessLogo || defaultLogo.src}
+                                    alt={storeName}
+                                    className="w-full h-full object-contain p-1"
+                                />
+                            ) : (
+                                <span className="material-icons-round text-primary">person</span>
+                            )}
                         </div>
                         <div className="flex-1 min-w-0">
                             <p className="text-sm font-bold text-text-main truncate">{user?.name || 'Business Owner'}</p>
-                            <p className="text-xs text-text-secondary truncate">{user?.businessName || 'Premium Plan'}</p>
+                            <p className="text-xs text-text-secondary truncate">{storeName || user?.businessName || 'Premium Plan'}</p>
                         </div>
                     </div>
                     <button

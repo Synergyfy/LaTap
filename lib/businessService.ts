@@ -10,6 +10,7 @@ export interface BusinessProfile {
     rewardMessage?: string;
     brandColor?: string;
     type: 'RESTAURANT' | 'RETAIL' | 'GYM' | 'EVENT';
+    logoUrl?: string;
 }
 
 const MOCK_BUSINESSES: BusinessProfile[] = [
@@ -23,7 +24,8 @@ const MOCK_BUSINESSES: BusinessProfile[] = [
         privacyMessage: 'We value your privacy. Your data is only used for check-in purposes.',
         rewardEnabled: true,
         rewardMessage: 'Show this screen for a free coffee!',
-        type: 'RESTAURANT'
+        type: 'RESTAURANT',
+        logoUrl: 'https://cdn-icons-png.flaticon.com/512/3448/3448609.png'
     },
     {
         id: 'B-456',
@@ -34,7 +36,8 @@ const MOCK_BUSINESSES: BusinessProfile[] = [
         successMessage: 'Profile created! Enjoy your VIP shopping experience.',
         rewardEnabled: true,
         rewardMessage: '10% OFF on your first purchase today!',
-        type: 'RETAIL'
+        type: 'RETAIL',
+        logoUrl: 'https://cdn-icons-png.flaticon.com/512/3081/3081559.png'
     }
 ];
 

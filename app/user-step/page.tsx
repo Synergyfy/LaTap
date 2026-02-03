@@ -28,7 +28,8 @@ const presets = {
     button: "w-full h-14 rounded-2xl bg-primary text-white font-black uppercase tracking-widest text-xs shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-30 disabled:hover:scale-100 disabled:cursor-not-allowed",
     input: "w-full h-12 px-5 bg-gray-50 border-none rounded-xl font-bold text-sm focus:ring-2 focus:ring-primary/10 transition-all outline-none",
     label: "text-[9px] font-black uppercase text-gray-400 ml-1",
-    error: "text-[10px] font-bold text-red-500 mt-1 ml-1"
+    error: "text-[10px] font-bold text-red-500 mt-1 ml-1",
+    secondaryButton: "w-full h-14 rounded-2xl bg-gray-50 text-text-main font-black uppercase tracking-widest text-xs hover:bg-gray-100 active:scale-95 transition-all flex items-center justify-center gap-2"
 };
 
 export default function UserStepPage() {
@@ -36,7 +37,7 @@ export default function UserStepPage() {
         currentStep, setStep, storeName, setUserData, resetFlow,
         getBusinessConfig, customWelcomeMessage, customSuccessMessage,
         customPrivacyMessage, customRewardMessage, hasRewardSetup,
-        setBusinessType, userData
+        setBusinessType, userData, logoUrl, visitCount, rewardVisitThreshold
     } = useCustomerFlowStore();
 
     const { user } = useAuthStore();
@@ -63,24 +64,24 @@ export default function UserStepPage() {
     } = useForm<VisitorFormData>({
         resolver: zodResolver(visitorSchema),
         defaultValues: {
-            name: storedIdentity?.name || user?.name || '',
-            email: storedIdentity?.email || user?.email || '',
-            phone: storedIdentity?.phone || ''
+            name: userData?.name || storedIdentity?.name || user?.name || '',
+            email: userData?.email || storedIdentity?.email || user?.email || '',
+            phone: userData?.phone || storedIdentity?.phone || ''
         },
         mode: 'onChange'
     });
 
     // Reactive form reset for late-loading data (e.g. from state store)
     useEffect(() => {
-        if (storedIdentity || user) {
-            setIsDeviceSynced(!!storedIdentity);
+        if (storedIdentity || user || userData) {
+            setIsDeviceSynced(!!storedIdentity || !!userData);
             reset({
-                name: storedIdentity?.name || user?.name || '',
-                email: storedIdentity?.email || user?.email || '',
-                phone: storedIdentity?.phone || ''
+                name: userData?.name || storedIdentity?.name || user?.name || '',
+                email: userData?.email || storedIdentity?.email || user?.email || '',
+                phone: userData?.phone || storedIdentity?.phone || ''
             });
         }
-    }, [storedIdentity, user, reset]);
+    }, [storedIdentity, user, userData, reset]);
 
     // Google Identity SDK Integration
     const handleCredentialResponse = (response: any) => {
@@ -100,6 +101,7 @@ export default function UserStepPage() {
             };
             localStorage.setItem('google_identity', JSON.stringify(identity));
             setIsDeviceSynced(true);
+            setUserData(identity);
 
             setTimeout(() => {
                 setIsSyncingReal(false);
@@ -120,18 +122,18 @@ export default function UserStepPage() {
 
         if (currentStep === 'IDENTIFYING') {
             // Background Google prompt
-            if ((window as any).google) {
+            if ((window as any).google && (window as any).google.accounts.id) {
                 (window as any).google.accounts.id.prompt();
             }
 
-            // Swift Exit: Move to form or welcome back regardless of sync status after 1.5s
+            // Swift Exit: Move to form or welcome back regardless of sync status after 2s (give google a bit more time)
             const syncTimeout = setTimeout(() => {
-                if (storedIdentity) {
+                if (storedIdentity || userData) {
                     setStep('WELCOME_BACK');
                 } else {
                     setStep('FORM');
                 }
-            }, 1500);
+            }, 2000);
 
             return () => clearTimeout(syncTimeout);
         }
@@ -156,6 +158,14 @@ export default function UserStepPage() {
             link.click();
             document.body.removeChild(link);
         }, 2000);
+    };
+
+    const getStoreNameStyle = (name: string) => {
+        const length = name.length;
+        if (length < 15) return "text-4xl md:text-5xl font-black";
+        if (length < 25) return "text-3xl md:text-4xl font-black";
+        if (length < 35) return "text-2xl md:text-3xl font-black";
+        return "text-xl md:text-2xl font-black";
     };
 
     return (
@@ -199,7 +209,7 @@ export default function UserStepPage() {
             </div>
 
             {currentStep !== 'SELECT_TYPE' && (
-                <div className="fixed top-24 w-full max-w-sm px-6 flex gap-1.5 z-50">
+                <div className="fixed top-20 left-1/2 -translate-x-1/2 w-full max-w-xs px-6 flex gap-1.5 z-50">
                     {[1, 2, 3, 4].map((i) => {
                         const stepsMap: Record<CustomerStep, number> = {
                             'SELECT_TYPE': 0,
@@ -216,12 +226,12 @@ export default function UserStepPage() {
                         };
                         const activeIndex = stepsMap[currentStep] || 0;
                         return (
-                            <div key={i} className="flex-1 h-1 rounded-full bg-gray-200/50 overflow-hidden">
+                            <div key={i} className="flex-1 h-1.5 rounded-full bg-gray-200/50 backdrop-blur-md overflow-hidden shadow-sm">
                                 <motion.div
                                     initial={false}
                                     animate={{
                                         width: activeIndex >= i ? '100%' : '0%',
-                                        backgroundColor: activeIndex >= i ? '#2563eb' : 'rgba(229, 231, 235, 0.5)'
+                                        backgroundColor: activeIndex >= i ? '#2563eb' : 'rgba(229, 231, 235, 0.2)'
                                     }}
                                     className="h-full"
                                 />
@@ -317,7 +327,22 @@ export default function UserStepPage() {
                             )}
 
                             <span className={presets.subtitle}>Digital Profile</span>
-                            <h1 className={presets.title}>{customWelcomeMessage || `Welcome to ${storeName}`}</h1>
+
+                            {logoUrl && (
+                                <div className="mb-8 flex justify-center">
+                                    <div className="size-24 rounded-full bg-white shadow-xl shadow-primary/5 border-4 border-white overflow-hidden flex items-center justify-center">
+                                        <img
+                                            src={logoUrl}
+                                            alt={storeName}
+                                            className="w-full h-full object-contain"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+                            <h1 className={`${getStoreNameStyle(customWelcomeMessage || storeName)} text-text-main tracking-tight leading-tight mb-2`}>
+                                {customWelcomeMessage || `Welcome to ${storeName}`}
+                            </h1>
                             <p className={`${presets.body} mt-3 mb-8`}>Complete your profile to claim your rewards.</p>
 
                             {isDeviceSynced && (
@@ -383,7 +408,7 @@ export default function UserStepPage() {
                                         <div>
                                             <p className="text-[9px] font-black uppercase tracking-widest text-text-main group-hover:text-primary">I Accept Privacy Terms</p>
                                             <p className="text-[10px] text-gray-400 font-medium leading-tight mt-1">
-                                                {customPrivacyMessage || "I agree to have my visits securely tracked for loyalty rewards."}
+                                                {customPrivacyMessage || "I agree to have my visits securely tracked and data collected just for feedback and loyalty rewards."}
                                             </p>
                                         </div>
                                     </label>
@@ -398,35 +423,81 @@ export default function UserStepPage() {
 
                     {currentStep === 'WELCOME_BACK' && (
                         <motion.div key="welcome-back" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className={presets.card + " text-center"}>
-                            <div className="size-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-8 border border-primary/20">
-                                <span className="material-symbols-outlined text-primary text-5xl">waving_hand</span>
-                            </div>
-                            <span className={presets.subtitle}>Welcome Back</span>
-                            <h1 className={presets.title}>Great to see you again!</h1>
-                            <p className={`${presets.body} mt-4 mb-10`}>
-                                We recognized your device. Ready to continue your experience at <span className="text-primary font-bold">{storeName}</span>?
+                            <motion.div
+                                initial={{ scale: 0.9, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                className="flex justify-center mb-10"
+                            >
+                                <div className="relative">
+                                    <div className="size-28 rounded-full bg-white shadow-2xl shadow-primary/10 border-4 border-white overflow-hidden flex items-center justify-center z-10 relative">
+                                        <img
+                                            src={logoUrl || ''}
+                                            alt={storeName}
+                                            className="w-full h-full object-contain p-2"
+                                        />
+                                    </div>
+                                    <motion.div
+                                        animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.2, 0.5] }}
+                                        transition={{ duration: 3, repeat: Infinity }}
+                                        className="absolute -inset-2 bg-primary/10 rounded-full -z-10 blur-xl"
+                                    />
+                                </div>
+                            </motion.div>
+
+                            <span className="text-[10px] font-bold text-primary mb-3 uppercase tracking-[0.3em] block">Welcome Back</span>
+                            <h1 className={`${getStoreNameStyle(userData?.name || storedIdentity?.name || 'Guest')} text-text-main tracking-tight font-black leading-tight mb-3 text-4xl`}>
+                                Hi, <span className="text-primary">{userData?.name?.split(' ')[0] || storedIdentity?.name?.split(' ')[0] || 'there'}!</span>
+                            </h1>
+                            <p className="text-gray-500 font-medium text-sm leading-relaxed mb-10">
+                                It's great to see you again, <span className="text-primary font-bold">{userData?.name || storedIdentity?.name || 'Guest'}</span>.
                             </p>
 
-                            <div className="p-4 rounded-2xl bg-gray-50 mb-10 border border-gray-100 flex items-center gap-4 text-left">
-                                <div className="size-12 bg-white rounded-xl flex items-center justify-center shadow-sm">
-                                    <span className="material-symbols-outlined text-primary">person</span>
+                            {hasRewardSetup && (
+                                <div className="mb-10 p-6 rounded-2xl bg-gray-50/50 border border-gray-100 text-left relative overflow-hidden group">
+                                    <div className="relative z-10">
+                                        <div className="flex justify-between items-end mb-4">
+                                            <div>
+                                                <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-1">Loyalty Progress</p>
+                                                <p className="text-lg font-black text-text-main tracking-tight">
+                                                    {visitCount} of {rewardVisitThreshold} Visits
+                                                </p>
+                                            </div>
+                                            <div className="size-10 bg-white rounded-xl shadow-sm flex items-center justify-center">
+                                                <span className="material-symbols-outlined text-primary text-xl">redeem</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="h-2 w-full bg-gray-200/50 rounded-full overflow-hidden">
+                                            <motion.div
+                                                initial={{ width: 0 }}
+                                                animate={{ width: `${Math.min((visitCount / rewardVisitThreshold) * 100, 100)}%` }}
+                                                className="h-full bg-primary"
+                                            />
+                                        </div>
+
+                                        <p className="mt-4 text-[11px] text-gray-400 font-medium">
+                                            {visitCount >= rewardVisitThreshold
+                                                ? "You've earned a reward! Tap continue to claim."
+                                                : `Just ${rewardVisitThreshold - visitCount} more visits to unlock your next reward.`}
+                                        </p>
+                                    </div>
+                                    <div className="absolute top-0 right-0 -mr-8 -mt-8 size-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors" />
                                 </div>
-                                <div>
-                                    <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest">Signed in as</p>
-                                    <p className="font-black text-text-main">{userData?.name || storedIdentity?.name}</p>
-                                </div>
-                            </div>
+                            )}
 
                             <div className="space-y-4">
-                                <button onClick={() => setStep('OUTCOME')} className={presets.button}>
-                                    Continue
+                                <button
+                                    onClick={() => setStep('OUTCOME')}
+                                    className="w-full h-14 rounded-2xl bg-primary text-white font-bold uppercase tracking-widest text-xs shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center"
+                                >
+                                    Continue to {getBusinessConfig().actionLabel || 'Experience'}
                                 </button>
                                 <button
                                     onClick={() => {
                                         localStorage.removeItem('google_identity');
                                         resetFlow();
                                     }}
-                                    className="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-red-500 transition-colors py-2 block w-full"
+                                    className="text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:text-red-500 transition-colors py-2 block w-full"
                                 >
                                     Not you? Clear Profile
                                 </button>
@@ -477,15 +548,17 @@ export default function UserStepPage() {
                     )}
 
                     {currentStep === 'FINAL_SUCCESS' && (
-                        <motion.div key="final" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className={presets.card + " text-center"}>
-                            <div className="size-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-10 shadow-2xl shadow-green-200">
-                                <span className="material-symbols-outlined text-white text-4xl font-black">celebration</span>
+                        <motion.div key="final-success" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className={presets.card + " text-center"}>
+                            <div className="size-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-green-500/20">
+                                <span className="material-symbols-outlined text-white text-4xl">check_circle</span>
                             </div>
-                            <h1 className={presets.title}>Task Achieved!</h1>
-                            <p className={`${presets.body} mt-4 mb-12 italic`}>
-                                Successfully interacted with <span className="text-primary font-bold">{storeName}</span> via LaTap.
+                            <h1 className={presets.title}>Successfully Linked!</h1>
+                            <p className={presets.body + " mt-4 mb-8"}>
+                                {customSuccessMessage || getBusinessConfig().finalSuccessMessage}
                             </p>
-                            <button onClick={resetFlow} className={presets.button}>Close & Return to Start</button>
+                            <button onClick={resetFlow} className={presets.secondaryButton}>
+                                Finish Process
+                            </button>
                         </motion.div>
                     )}
                 </AnimatePresence>

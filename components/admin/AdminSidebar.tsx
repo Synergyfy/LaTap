@@ -92,14 +92,14 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
     return (
         <div className="flex h-screen bg-gray-50 overflow-hidden">
             {/* Sidebar */}
-            <aside className="w-64 bg-linear-to-b from-gray-900 to-gray-800 flex flex-col">
+            <aside className="w-64 bg-white border-r border-gray-200 flex flex-col">
                 {/* Logo */}
-                <div className="h-16 flex items-center px-6 border-b border-gray-700">
+                <div className="h-16 flex items-center px-6 border-b border-gray-100">
                     <Link href="/admin/dashboard" className="flex items-center gap-2">
                         <span className="material-icons-round text-primary text-2xl">admin_panel_settings</span>
                         <div>
-                            <span className="font-display font-bold text-base text-white block">LaTap Admin</span>
-                            <span className="text-[10px] text-gray-400 font-medium">Control Panel</span>
+                            <span className="font-display font-bold text-base text-gray-900 block">LaTap Admin</span>
+                            <span className="text-[10px] text-gray-500 font-medium">Control Panel</span>
                         </div>
                     </Link>
                 </div>
@@ -113,8 +113,8 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
                                     <button
                                         onClick={() => toggleMenu(item.id)}
                                         className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isParentActive(item.submenu)
-                                            ? 'bg-primary/20 text-primary'
-                                            : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                                            ? 'bg-primary/10 text-primary'
+                                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                                             }`}
                                     >
                                         <div className="flex items-center gap-3">
@@ -134,7 +134,7 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
                                                     href={subItem.href}
                                                     className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive(subItem.href)
                                                         ? 'bg-primary text-white'
-                                                        : 'text-gray-400 hover:bg-gray-700 hover:text-white'
+                                                        : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
                                                         }`}
                                                 >
                                                     {subItem.label}
@@ -147,8 +147,8 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
                                 <Link
                                     href={item.href!}
                                     className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive(item.href!)
-                                        ? 'bg-primary/20 text-primary'
-                                        : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                                        ? 'bg-primary/10 text-primary'
+                                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                                         }`}
                                 >
                                     <span className="material-icons-round text-lg">{item.icon}</span>
@@ -160,14 +160,14 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
                 </nav>
 
                 {/* Admin Profile */}
-                <div className="border-t border-gray-700 p-4">
+                <div className="border-t border-gray-100 p-4">
                     <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                             <span className="material-icons-round text-primary">shield</span>
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-bold text-white truncate">{user?.name || 'Admin'}</p>
-                            <p className="text-xs text-gray-400 truncate">System Administrator</p>
+                            <p className="text-sm font-bold text-gray-900 truncate">{user?.name || 'Admin'}</p>
+                            <p className="text-xs text-gray-500 truncate">System Administrator</p>
                         </div>
                     </div>
                     <button
