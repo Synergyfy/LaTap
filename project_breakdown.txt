@@ -94,3 +94,11 @@ new task
 --shorten name
 
 --fit in the name weither big or small
+
+=======================================
+
+--white label pricing
+
+--showing a bussiness website
+
+--hardware pricing
