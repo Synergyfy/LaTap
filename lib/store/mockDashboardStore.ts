@@ -32,11 +32,24 @@ export interface Notification {
   type: 'info' | 'success' | 'warning';
 }
 
+export interface Campaign {
+  id: string;
+  name: string;
+  type: 'WhatsApp' | 'SMS' | 'Email';
+  audience: string;
+  status: 'Active' | 'Scheduled' | 'Recurring' | 'Completed' | 'Draft';
+  sent: number;
+  delivered: string;
+  clicks: number;
+  timestamp: number;
+}
+
 export interface DashboardState {
   visitors: Visitor[];
   activityData: ActivityPoint[];
   rewards: Reward[];
   notifications: Notification[];
+  campaigns: Campaign[];
   stats: {
     totalVisitors: number;
     newVisitors: number;
@@ -51,6 +64,9 @@ export interface DashboardState {
   addNotification: (notification: Notification) => void;
   markNotificationRead: (id: string) => void;
   markAllNotificationsRead: () => void;
+  addCampaign: (campaign: Campaign) => void;
+  deleteCampaign: (id: string) => void;
+  updateCampaignStatus: (id: string, status: Campaign['status']) => void;
   reset: () => void;
 }
 
@@ -83,6 +99,13 @@ const initialNotifications: Notification[] = [
   { id: '1', title: 'Welcome', message: 'Welcome to your new dashboard!', timestamp: Date.now(), read: false, type: 'info' },
 ];
 
+const initialCampaigns: Campaign[] = [
+  { id: '1', name: 'Weekend Coffee Special', type: 'WhatsApp', audience: 'All Customers', status: 'Active', sent: 1240, delivered: '98%', clicks: 156, timestamp: Date.now() - 86400000 },
+  { id: '2', name: 'Welcome Message', type: 'SMS', audience: 'New Customers', status: 'Recurring', sent: 412, delivered: '95%', clicks: 84, timestamp: Date.now() - 172800000 },
+  { id: '3', name: 'VIP Night Invitation', type: 'WhatsApp', audience: 'VIP Members', status: 'Scheduled', sent: 0, delivered: '0%', clicks: 0, timestamp: Date.now() + 86400000 },
+  { id: '4', name: 'October Newsletter', type: 'Email', audience: 'Newsletter Subs', status: 'Completed', sent: 2840, delivered: '92%', clicks: 312, timestamp: Date.now() - 604800000 },
+];
+
 const initialStats = {
   totalVisitors: 2847,
   newVisitors: 512,
@@ -97,6 +120,7 @@ export const useMockDashboardStore = create<DashboardState>()(
       activityData: initialActivityData,
       rewards: initialRewards,
       notifications: initialNotifications,
+      campaigns: initialCampaigns,
       stats: initialStats,
 
       addVisitor: (visitor) =>
@@ -142,12 +166,19 @@ export const useMockDashboardStore = create<DashboardState>()(
         notifications: state.notifications.map(n => ({ ...n, read: true }))
       })),
 
+      addCampaign: (campaign) => set((state) => ({ campaigns: [campaign, ...state.campaigns] })),
+      deleteCampaign: (id) => set((state) => ({ campaigns: state.campaigns.filter(c => c.id !== id) })),
+      updateCampaignStatus: (id, status) => set((state) => ({
+        campaigns: state.campaigns.map(c => c.id === id ? { ...c, status } : c)
+      })),
+
       reset: () =>
         set({
           visitors: initialVisitors,
           activityData: initialActivityData,
           rewards: initialRewards,
           notifications: initialNotifications,
+          campaigns: initialCampaigns,
           stats: initialStats,
         }),
     }),
