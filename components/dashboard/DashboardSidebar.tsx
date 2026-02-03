@@ -6,6 +6,13 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useCustomerFlowStore } from '@/store/useCustomerFlowStore';
 import defaultLogo from '@/assets/logos/logo.png';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { dashboardApi } from '@/lib/api/dashboard';
+import { Notification } from '@/lib/store/mockDashboardStore';
+import {
+    Home, Users, Nfc, Send, Gift, BarChart, Users2, Settings,
+    ChevronDown, LogOut, Bell, Search, HelpCircle
+} from 'lucide-react';
 
 interface SidebarProps {
     children: React.ReactNode;
@@ -17,6 +24,31 @@ export default function DashboardSidebar({ children }: SidebarProps) {
     const { user, logout } = useAuthStore();
     const { storeName, logoUrl: businessLogo } = useCustomerFlowStore();
     const [expandedMenus, setExpandedMenus] = useState<string[]>(['visitors']);
+    const [showNotifications, setShowNotifications] = useState(false);
+    const queryClient = useQueryClient();
+
+    const { data } = useQuery({
+        queryKey: ['dashboard'],
+        queryFn: dashboardApi.fetchDashboardData,
+        refetchInterval: 5000,
+    });
+
+    const notifications = data?.notifications || [];
+    const unreadCount = notifications.filter((n: Notification) => !n.read).length;
+
+    const readNotificationMutation = useMutation({
+        mutationFn: dashboardApi.markNotificationRead,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+        }
+    });
+
+    const readAllMutation = useMutation({
+        mutationFn: dashboardApi.markAllNotificationsRead,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+        }
+    });
 
     const handleLogout = () => {
         logout();
@@ -33,13 +65,13 @@ export default function DashboardSidebar({ children }: SidebarProps) {
         {
             id: 'overview',
             label: 'Dashboard',
-            icon: 'dashboard',
+            icon: Home,
             href: '/dashboard',
         },
         {
             id: 'visitors',
             label: 'Visitors',
-            icon: 'group',
+            icon: Users,
             submenu: [
                 { label: 'Overview', href: '/dashboard/visitors' },
                 { label: 'All Visitors', href: '/dashboard/visitors/all' },
@@ -50,7 +82,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
         {
             id: 'devices',
             label: 'Devices',
-            icon: 'nfc',
+            icon: Nfc,
             submenu: [
                 { label: 'Overview', href: '/dashboard/devices' },
                 { label: 'Device Settings', href: '/dashboard/settings/devices' },
@@ -59,7 +91,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
         {
             id: 'campaigns',
             label: 'Campaigns',
-            icon: 'campaign',
+            icon: Send,
             submenu: [
                 { label: 'All Campaigns', href: '/dashboard/campaigns' },
                 { label: 'Create New', href: '/dashboard/campaigns/new' },
@@ -70,13 +102,13 @@ export default function DashboardSidebar({ children }: SidebarProps) {
         {
             id: 'loyalty',
             label: 'Loyalty',
-            icon: 'loyalty',
+            icon: Gift,
             href: '/dashboard/loyalty',
         },
         {
             id: 'analytics',
             label: 'Analytics',
-            icon: 'analytics',
+            icon: BarChart,
             submenu: [
                 { label: 'Overview', href: '/dashboard/analytics' },
                 { label: 'Footfall', href: '/dashboard/analytics/footfall' },
@@ -86,13 +118,13 @@ export default function DashboardSidebar({ children }: SidebarProps) {
         {
             id: 'staff',
             label: 'Team',
-            icon: 'people',
+            icon: Users2,
             href: '/dashboard/staff',
         },
         {
             id: 'settings',
             label: 'Settings',
-            icon: 'settings',
+            icon: Settings,
             submenu: [
                 { label: 'Profile', href: '/dashboard/settings/profile' },
                 { label: 'Notifications', href: '/dashboard/settings/notifications' },
@@ -110,67 +142,73 @@ export default function DashboardSidebar({ children }: SidebarProps) {
         <div className="flex h-screen bg-gray-50 overflow-hidden">
             {/* Sidebar */}
             <aside className="w-64 bg-white border-r border-gray-200 flex flex-col">
-                {/* Logo */}
+                {/* Logo with Wordmark */}
                 <div className="h-16 flex items-center px-6 border-b border-gray-200">
                     <Link href="/dashboard" className="flex items-center gap-2">
-                        <span className="material-icons-round text-primary text-2xl">nfc</span>
-                        <span className="font-display font-bold text-lg text-text-main">LaTap</span>
+                        <Nfc className="text-primary" size={28} strokeWidth={2.5} />
+                        <div className="flex flex-col">
+                            <span className="font-display font-bold text-lg text-text-main leading-none">LaTap</span>
+                            <span className="text-[10px] text-text-secondary font-medium uppercase tracking-wider">Business</span>
+                        </div>
                     </Link>
                 </div>
 
                 {/* Navigation */}
                 <nav className="flex-1 overflow-y-auto py-6 px-3">
-                    {menuItems.map((item) => (
-                        <div key={item.id} className="mb-1">
-                            {item.submenu ? (
-                                <>
-                                    <button
-                                        onClick={() => toggleMenu(item.id)}
-                                        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isParentActive(item.submenu)
+                    {menuItems.map((item) => {
+                        const IconComponent = item.icon;
+                        return (
+                            <div key={item.id} className="mb-1">
+                                {item.submenu ? (
+                                    <>
+                                        <button
+                                            onClick={() => toggleMenu(item.id)}
+                                            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isParentActive(item.submenu)
+                                                ? 'bg-primary/5 text-primary'
+                                                : 'text-text-secondary hover:bg-gray-50 hover:text-text-main'
+                                                }`}
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <IconComponent size={18} />
+                                                <span>{item.label}</span>
+                                            </div>
+                                            <ChevronDown
+                                                size={16}
+                                                className={`transition-transform ${expandedMenus.includes(item.id) ? 'rotate-180' : ''}`}
+                                            />
+                                        </button>
+                                        {expandedMenus.includes(item.id) && (
+                                            <div className="mt-1 ml-9 space-y-1">
+                                                {item.submenu.map((subItem) => (
+                                                    <Link
+                                                        key={subItem.href}
+                                                        href={subItem.href}
+                                                        className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive(subItem.href)
+                                                            ? 'bg-primary text-white'
+                                                            : 'text-text-secondary hover:bg-gray-50 hover:text-text-main'
+                                                            }`}
+                                                    >
+                                                        {subItem.label}
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </>
+                                ) : (
+                                    <Link
+                                        href={item.href!}
+                                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive(item.href!)
                                             ? 'bg-primary/5 text-primary'
                                             : 'text-text-secondary hover:bg-gray-50 hover:text-text-main'
                                             }`}
                                     >
-                                        <div className="flex items-center gap-3">
-                                            <span className="material-icons-round text-lg">{item.icon}</span>
-                                            <span>{item.label}</span>
-                                        </div>
-                                        <span className={`material-icons-round text-sm transition-transform ${expandedMenus.includes(item.id) ? 'rotate-180' : ''
-                                            }`}>
-                                            expand_more
-                                        </span>
-                                    </button>
-                                    {expandedMenus.includes(item.id) && (
-                                        <div className="mt-1 ml-9 space-y-1">
-                                            {item.submenu.map((subItem) => (
-                                                <Link
-                                                    key={subItem.href}
-                                                    href={subItem.href}
-                                                    className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive(subItem.href)
-                                                        ? 'bg-primary text-white'
-                                                        : 'text-text-secondary hover:bg-gray-50 hover:text-text-main'
-                                                        }`}
-                                                >
-                                                    {subItem.label}
-                                                </Link>
-                                            ))}
-                                        </div>
-                                    )}
-                                </>
-                            ) : (
-                                <Link
-                                    href={item.href!}
-                                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive(item.href!)
-                                        ? 'bg-primary/5 text-primary'
-                                        : 'text-text-secondary hover:bg-gray-50 hover:text-text-main'
-                                        }`}
-                                >
-                                    <span className="material-icons-round text-lg">{item.icon}</span>
-                                    <span>{item.label}</span>
-                                </Link>
-                            )}
-                        </div>
-                    ))}
+                                        <IconComponent size={18} />
+                                        <span>{item.label}</span>
+                                    </Link>
+                                )}
+                            </div>
+                        );
+                    })}
                 </nav>
 
                 {/* User Profile */}
@@ -184,7 +222,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                                     className="w-full h-full object-contain p-1"
                                 />
                             ) : (
-                                <span className="material-icons-round text-primary">person</span>
+                                <Users className="text-primary" size={20} />
                             )}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -196,7 +234,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                         onClick={handleLogout}
                         className="w-full py-2 px-3 bg-gray-50 text-text-secondary rounded-lg text-sm font-bold hover:bg-gray-100 hover:text-text-main transition-colors flex items-center justify-center gap-2"
                     >
-                        <span className="material-icons-round text-sm">logout</span>
+                        <LogOut size={16} />
                         Logout
                     </button>
                 </div>
@@ -208,9 +246,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                 <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8">
                     <div className="flex-1">
                         <div className="relative max-w-md">
-                            <span className="material-icons-round absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">
-                                search
-                            </span>
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                             <input
                                 type="text"
                                 placeholder="Search visitors, campaigns..."
@@ -218,13 +254,80 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                             />
                         </div>
                     </div>
-                    <div className="flex items-center gap-4">
-                        <button className="relative p-2 text-text-secondary hover:text-text-main hover:bg-gray-50 rounded-lg transition-colors">
-                            <span className="material-icons-round">notifications</span>
-                            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+                    <div className="flex items-center gap-4 relative">
+                        {/* Notification Button */}
+                        <button
+                            onClick={() => setShowNotifications(!showNotifications)}
+                            className="relative p-2 text-text-secondary hover:text-text-main hover:bg-gray-50 rounded-lg transition-colors"
+                        >
+                            <Bell size={20} />
+                            {unreadCount > 0 && (
+                                <span className="absolute top-1.5 right-1.5 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full px-1">
+                                    {unreadCount > 9 ? '9+' : unreadCount}
+                                </span>
+                            )}
                         </button>
+
+                        {/* Notifications Dropdown */}
+                        {showNotifications && (
+                            <>
+                                <div
+                                    className="fixed inset-0 z-40"
+                                    onClick={() => setShowNotifications(false)}
+                                ></div>
+                                <div className="absolute right-0 top-12 w-80 bg-white rounded-xl shadow-xl border border-gray-200 z-50 overflow-hidden">
+                                    <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+                                        <h3 className="font-bold text-text-main text-sm">Notifications</h3>
+                                        <button
+                                            onClick={() => readAllMutation.mutate()}
+                                            className="text-xs text-primary font-bold hover:underline"
+                                        >
+                                            Mark all read
+                                        </button>
+                                    </div>
+                                    <div className="max-h-80 overflow-y-auto">
+                                        {notifications.length === 0 ? (
+                                            <div className="p-8 text-center text-text-secondary text-sm">
+                                                No notifications yet
+                                            </div>
+                                        ) : (
+                                            notifications.map((note: Notification) => (
+                                                <div
+                                                    key={note.id}
+                                                    onClick={() => !note.read && readNotificationMutation.mutate(note.id)}
+                                                    className={`p-4 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors ${!note.read ? 'bg-blue-50/30' : ''}`}
+                                                >
+                                                    <div className="flex items-start gap-3">
+                                                        <div className={`mt-1 w-2 h-2 rounded-full flex-shrink-0 ${!note.read ? 'bg-primary' : 'bg-transparent'}`}></div>
+                                                        <div className="flex-1">
+                                                            <p className={`text-sm ${!note.read ? 'font-bold text-text-main' : 'text-text-secondary'}`}>
+                                                                {note.title}
+                                                            </p>
+                                                            <p className="text-xs text-text-secondary mt-1">{note.message}</p>
+                                                            <p className="text-[10px] text-gray-400 mt-2">
+                                                                {new Date(note.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+                                    <div className="p-3 border-t border-gray-100 text-center">
+                                        <Link
+                                            href="/dashboard/settings/notifications"
+                                            className="text-xs font-bold text-primary hover:text-primary-hover"
+                                            onClick={() => setShowNotifications(false)}
+                                        >
+                                            View All Notifications
+                                        </Link>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+
                         <button className="p-2 text-text-secondary hover:text-text-main hover:bg-gray-50 rounded-lg transition-colors">
-                            <span className="material-icons-round">help_outline</span>
+                            <HelpCircle size={20} />
                         </button>
                     </div>
                 </header>

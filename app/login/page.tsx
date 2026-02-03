@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import AuthSidePanel from '@/components/auth/AuthSidePanel';
 import { useAuthStore } from '@/store/useAuthStore';
+import { notify } from '@/lib/notify';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -24,6 +25,18 @@ export default function LoginPage() {
         setError('');
         setIsLoading(true);
 
+        // Hack for customer login demo since it is not fully supported in the mocked store logic yet
+        if (formData.email === 'customer@latap.com' && formData.password === 'customer123') {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            useAuthStore.setState({
+                user: { id: 'cust_1', name: 'Daniel Customer', email: 'customer@latap.com', role: 'customer' },
+                isAuthenticated: true
+            });
+            notify.success('Welcome back, Daniel!');
+            router.push('/customer/dashboard');
+            return;
+        }
+
         const result = await login(formData.email, formData.password);
 
         if (result.success) {
@@ -39,22 +52,6 @@ export default function LoginPage() {
         }
 
         setIsLoading(false);
-    };
-
-    const fillDemoCredentials = (type: 'business' | 'admin') => {
-        if (type === 'business') {
-            setFormData({
-                email: 'business@latap.com',
-                password: 'business123',
-                rememberMe: false
-            });
-        } else {
-            setFormData({
-                email: 'admin@latap.com',
-                password: 'admin123',
-                rememberMe: false
-            });
-        }
     };
 
     return (
@@ -84,7 +81,7 @@ export default function LoginPage() {
                                     <span className="material-icons-round text-sm">info</span>
                                     Demo Accounts - Click to Login
                                 </p>
-                                <div className="flex gap-2">
+                                <div className="grid grid-cols-3 gap-2">
                                     <button
                                         type="button"
                                         onClick={async () => {
@@ -104,10 +101,10 @@ export default function LoginPage() {
                                             setIsLoading(false);
                                         }}
                                         disabled={isLoading}
-                                        className="flex-1 px-3 py-3 bg-white border border-blue-200 rounded-lg text-xs font-bold text-blue-700 hover:bg-blue-50 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                                        className="px-2 py-3 bg-white border border-blue-200 rounded-lg text-xs font-bold text-blue-700 hover:bg-blue-50 transition-colors flex flex-col items-center justify-center gap-1 disabled:opacity-50"
                                     >
                                         <span className="material-icons-round text-base">store</span>
-                                        <span>Business Owner</span>
+                                        <span>Business</span>
                                     </button>
                                     <button
                                         type="button"
@@ -128,10 +125,40 @@ export default function LoginPage() {
                                             setIsLoading(false);
                                         }}
                                         disabled={isLoading}
-                                        className="flex-1 px-3 py-3 bg-white border border-blue-200 rounded-lg text-xs font-bold text-blue-700 hover:bg-blue-50 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                                        className="px-2 py-3 bg-white border border-blue-200 rounded-lg text-xs font-bold text-blue-700 hover:bg-blue-50 transition-colors flex flex-col items-center justify-center gap-1 disabled:opacity-50"
                                     >
                                         <span className="material-icons-round text-base">admin_panel_settings</span>
                                         <span>Admin</span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={async () => {
+                                            const custEmail = 'customer@latap.com';
+                                            const custPass = 'customer123';
+                                            setFormData({
+                                                email: custEmail,
+                                                password: custPass,
+                                                rememberMe: false
+                                            });
+                                            setError('');
+                                            setIsLoading(true);
+
+                                            // Direct handling for customer since store might not have it
+                                            await new Promise(resolve => setTimeout(resolve, 1000));
+                                            useAuthStore.setState({
+                                                user: { id: 'cust_1', name: 'Daniel Customer', email: custEmail, role: 'customer' },
+                                                isAuthenticated: true
+                                            });
+                                            notify.success('Welcome back, Daniel!');
+                                            router.push('/customer/dashboard');
+
+                                            setIsLoading(false);
+                                        }}
+                                        disabled={isLoading}
+                                        className="px-2 py-3 bg-white border border-blue-200 rounded-lg text-xs font-bold text-blue-700 hover:bg-blue-50 transition-colors flex flex-col items-center justify-center gap-1 disabled:opacity-50"
+                                    >
+                                        <span className="material-icons-round text-base">person</span>
+                                        <span>Customer</span>
                                     </button>
                                 </div>
                             </div>

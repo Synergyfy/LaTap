@@ -4,6 +4,10 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
+import {
+    Home, Store, Users, Nfc, CreditCard, BarChart, MessageSquare,
+    Settings, ChevronDown, Shield, LogOut, Search, Bell, HelpCircle
+} from 'lucide-react';
 
 interface AdminSidebarProps {
     children: React.ReactNode;
@@ -30,13 +34,13 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
         {
             id: 'overview',
             label: 'Dashboard',
-            icon: 'dashboard',
+            icon: Home,
             href: '/admin/dashboard',
         },
         {
             id: 'businesses',
             label: 'Businesses',
-            icon: 'store',
+            icon: Store,
             submenu: [
                 { label: 'All Businesses', href: '/admin/businesses' },
                 { label: 'Pending Approval', href: '/admin/businesses/pending' },
@@ -46,13 +50,13 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
         {
             id: 'users',
             label: 'Users',
-            icon: 'people',
+            icon: Users,
             href: '/admin/users',
         },
         {
             id: 'devices',
             label: 'Devices',
-            icon: 'nfc',
+            icon: Nfc,
             submenu: [
                 { label: 'All Devices', href: '/admin/devices' },
                 { label: 'Active', href: '/admin/devices/active' },
@@ -62,25 +66,25 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
         {
             id: 'subscriptions',
             label: 'Subscriptions',
-            icon: 'credit_card',
+            icon: CreditCard,
             href: '/admin/subscriptions',
         },
         {
             id: 'analytics',
             label: 'Platform Analytics',
-            icon: 'analytics',
+            icon: BarChart,
             href: '/admin/analytics',
         },
         {
             id: 'support',
             label: 'Support Tickets',
-            icon: 'support_agent',
+            icon: MessageSquare,
             href: '/admin/support',
         },
         {
             id: 'settings',
             label: 'System Settings',
-            icon: 'settings',
+            icon: Settings,
             href: '/admin/settings',
         },
     ];
@@ -91,90 +95,93 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
 
     return (
         <div className="flex h-screen bg-gray-50 overflow-hidden">
-            {/* Sidebar */}
+            {/* Sidebar - Light theme matching business dashboard */}
             <aside className="w-64 bg-white border-r border-gray-200 flex flex-col">
-                {/* Logo */}
-                <div className="h-16 flex items-center px-6 border-b border-gray-100">
+                {/* Logo with Wordmark */}
+                <div className="h-16 flex items-center px-6 border-b border-gray-200">
                     <Link href="/admin/dashboard" className="flex items-center gap-2">
-                        <span className="material-icons-round text-primary text-2xl">admin_panel_settings</span>
-                        <div>
-                            <span className="font-display font-bold text-base text-gray-900 block">LaTap Admin</span>
-                            <span className="text-[10px] text-gray-500 font-medium">Control Panel</span>
+                        <Shield className="text-primary" size={28} strokeWidth={2.5} />
+                        <div className="flex flex-col">
+                            <span className="font-display font-bold text-lg text-text-main leading-none">LaTap</span>
+                            <span className="text-[10px] text-text-secondary font-medium uppercase tracking-wider">Admin Panel</span>
                         </div>
                     </Link>
                 </div>
 
                 {/* Navigation */}
                 <nav className="flex-1 overflow-y-auto py-6 px-3">
-                    {menuItems.map((item) => (
-                        <div key={item.id} className="mb-1">
-                            {item.submenu ? (
-                                <>
-                                    <button
-                                        onClick={() => toggleMenu(item.id)}
-                                        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isParentActive(item.submenu)
-                                            ? 'bg-primary/10 text-primary'
-                                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    {menuItems.map((item) => {
+                        const IconComponent = item.icon;
+                        return (
+                            <div key={item.id} className="mb-1">
+                                {item.submenu ? (
+                                    <>
+                                        <button
+                                            onClick={() => toggleMenu(item.id)}
+                                            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isParentActive(item.submenu)
+                                                ? 'bg-primary/5 text-primary'
+                                                : 'text-text-secondary hover:bg-gray-50 hover:text-text-main'
+                                                }`}
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <IconComponent size={18} />
+                                                <span>{item.label}</span>
+                                            </div>
+                                            <ChevronDown
+                                                size={16}
+                                                className={`transition-transform ${expandedMenus.includes(item.id) ? 'rotate-180' : ''}`}
+                                            />
+                                        </button>
+                                        {expandedMenus.includes(item.id) && (
+                                            <div className="mt-1 ml-9 space-y-1">
+                                                {item.submenu.map((subItem) => (
+                                                    <Link
+                                                        key={subItem.href}
+                                                        href={subItem.href}
+                                                        className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive(subItem.href)
+                                                            ? 'bg-primary text-white'
+                                                            : 'text-text-secondary hover:bg-gray-50 hover:text-text-main'
+                                                            }`}
+                                                    >
+                                                        {subItem.label}
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </>
+                                ) : (
+                                    <Link
+                                        href={item.href!}
+                                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive(item.href!)
+                                            ? 'bg-primary/5 text-primary'
+                                            : 'text-text-secondary hover:bg-gray-50 hover:text-text-main'
                                             }`}
                                     >
-                                        <div className="flex items-center gap-3">
-                                            <span className="material-icons-round text-lg">{item.icon}</span>
-                                            <span>{item.label}</span>
-                                        </div>
-                                        <span className={`material-icons-round text-sm transition-transform ${expandedMenus.includes(item.id) ? 'rotate-180' : ''
-                                            }`}>
-                                            expand_more
-                                        </span>
-                                    </button>
-                                    {expandedMenus.includes(item.id) && (
-                                        <div className="mt-1 ml-9 space-y-1">
-                                            {item.submenu.map((subItem) => (
-                                                <Link
-                                                    key={subItem.href}
-                                                    href={subItem.href}
-                                                    className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive(subItem.href)
-                                                        ? 'bg-primary text-white'
-                                                        : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
-                                                        }`}
-                                                >
-                                                    {subItem.label}
-                                                </Link>
-                                            ))}
-                                        </div>
-                                    )}
-                                </>
-                            ) : (
-                                <Link
-                                    href={item.href!}
-                                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive(item.href!)
-                                        ? 'bg-primary/10 text-primary'
-                                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                                        }`}
-                                >
-                                    <span className="material-icons-round text-lg">{item.icon}</span>
-                                    <span>{item.label}</span>
-                                </Link>
-                            )}
-                        </div>
-                    ))}
+                                        <IconComponent size={18} />
+                                        <span>{item.label}</span>
+                                    </Link>
+                                )}
+                            </div>
+                        );
+                    })}
                 </nav>
 
                 {/* Admin Profile */}
-                <div className="border-t border-gray-100 p-4">
+                <div className="border-t border-gray-200 p-4">
                     <div className="flex items-center gap-3 mb-3">
                         <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                            <span className="material-icons-round text-primary">shield</span>
+                            <Shield className="text-primary" size={20} />
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-bold text-gray-900 truncate">{user?.name || 'Admin'}</p>
-                            <p className="text-xs text-gray-500 truncate">System Administrator</p>
+                            <p className="text-sm font-bold text-text-main truncate">{user?.name || 'Admin'}</p>
+                            <p className="text-xs text-text-secondary truncate">System Administrator</p>
                         </div>
                     </div>
                     <button
                         onClick={handleLogout}
-                        className="w-full py-2 px-3 bg-red-500/10 text-red-400 rounded-lg text-sm font-bold hover:bg-red-500/20 transition-colors flex items-center justify-center gap-2"
+                        className="w-full py-2 px-3 bg-gray-50 text-text-secondary rounded-lg text-sm font-bold hover:bg-gray-100 hover:text-text-main transition-colors flex items-center justify-center gap-2"
                     >
-                        <span className="material-icons-round text-sm">logout</span>
+                        <LogOut size={16} />
                         Logout
                     </button>
                 </div>
@@ -186,9 +193,7 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
                 <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8">
                     <div className="flex-1">
                         <div className="relative max-w-md">
-                            <span className="material-icons-round absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">
-                                search
-                            </span>
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                             <input
                                 type="text"
                                 placeholder="Search businesses, users, devices..."
@@ -198,11 +203,11 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
                     </div>
                     <div className="flex items-center gap-4">
                         <button className="relative p-2 text-text-secondary hover:text-text-main hover:bg-gray-50 rounded-lg transition-colors">
-                            <span className="material-icons-round">notifications</span>
+                            <Bell size={20} />
                             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
                         </button>
                         <button className="p-2 text-text-secondary hover:text-text-main hover:bg-gray-50 rounded-lg transition-colors">
-                            <span className="material-icons-round">help_outline</span>
+                            <HelpCircle size={20} />
                         </button>
                     </div>
                 </header>

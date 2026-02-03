@@ -1,17 +1,64 @@
 'use client';
 
+import React, { useState } from 'react';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import StatsCard from '@/components/dashboard/StatsCard';
 import ChartCard from '@/components/dashboard/ChartCard';
 import DataTable, { Column } from '@/components/dashboard/DataTable';
+import CreateRewardModal from '@/components/dashboard/CreateRewardModal';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { dashboardApi } from '@/lib/api/dashboard';
+import { Reward } from '@/lib/store/mockDashboardStore';
+import toast from 'react-hot-toast';
+import { Gift, DollarSign, Award, Star, Plus, Settings, Trash2 } from 'lucide-react';
 
 export default function LoyaltyOverviewPage() {
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const queryClient = useQueryClient();
+
+    const { data, isLoading } = useQuery({
+        queryKey: ['dashboard'],
+        queryFn: dashboardApi.fetchDashboardData,
+    });
+
+    const createRewardMutation = useMutation({
+        mutationFn: dashboardApi.createReward,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+            setIsCreateModalOpen(false);
+            toast.success('Reward created successfully');
+        }
+    });
+
+    const deleteRewardMutation = useMutation({
+        mutationFn: dashboardApi.deleteReward,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+            toast.success('Reward deleted');
+        }
+    });
+
+    const handleCreateReward = (data: Omit<Reward, 'id' | 'active'>) => {
+        const newReward: Reward = {
+            id: Math.random().toString(36).substr(2, 9),
+            ...data,
+            active: true
+        };
+        createRewardMutation.mutate(newReward);
+    };
+
+    const handleDeleteReward = (id: string) => {
+        if (confirm('Are you sure you want to delete this reward?')) {
+            deleteRewardMutation.mutate(id);
+        }
+    }
+
     const loyaltyStats = [
-        { label: 'Active Members', value: '1,284', icon: 'loyalty', color: 'blue', trend: { value: '+8%', isUp: true } },
-        { label: 'Points Issued', value: '45.2k', icon: 'monetization_on', color: 'green', trend: { value: '+12%', isUp: true } },
-        { label: 'Redemptions', value: '312', icon: 'redeem', color: 'purple', trend: { value: '+5%', isUp: true } },
-        { label: 'Avg. Points/User', value: '352', icon: 'stars', color: 'yellow', trend: { value: '+15%', isUp: true } },
+        { label: 'Active Members', value: '1,284', icon: Gift, color: 'blue', trend: { value: '+8%', isUp: true } },
+        { label: 'Points Issued', value: '45.2k', icon: DollarSign, color: 'green', trend: { value: '+12%', isUp: true } },
+        { label: 'Redemptions', value: '312', icon: Award, color: 'purple', trend: { value: '+5%', isUp: true } },
+        { label: 'Avg. Points/User', value: '352', icon: Star, color: 'yellow', trend: { value: '+15%', isUp: true } },
     ];
 
     interface Member {
@@ -65,21 +112,85 @@ export default function LoyaltyOverviewPage() {
                     actions={
                         <div className="flex gap-3">
                             <button className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm shadow-sm">
-                                <span className="material-icons-round text-lg">settings</span>
+                                <Settings size={18} />
                                 Rules
                             </button>
-                            <button className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20">
-                                <span className="material-icons-round text-lg">add</span>
+                            <button
+                                onClick={() => setIsCreateModalOpen(true)}
+                                className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20"
+                            >
+                                <Plus size={18} />
                                 New Reward
                             </button>
                         </div>
                     }
                 />
 
+                <CreateRewardModal
+                    isOpen={isCreateModalOpen}
+                    onClose={() => setIsCreateModalOpen(false)}
+                    onSubmit={handleCreateReward}
+                    isLoading={createRewardMutation.isPending}
+                />
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     {loyaltyStats.map((stat, index) => (
                         <StatsCard key={index} {...stat as any} />
                     ))}
+                </div>
+
+                {/* Active Rewards Section */}
+                <div className="mb-8">
+                    <h2 className="text-xl font-display font-bold text-text-main mb-4">Active Rewards</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {data?.rewards.map((reward: Reward) => (
+                            <div key={reward.id} className="bg-white rounded-xl p-6 border border-gray-200 flex flex-col justify-between hover:shadow-lg transition-all group">
+                                <div>
+                                    <div className="flex items-start justify-between mb-4">
+                                        <div className="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600">
+                                            <Gift size={24} />
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <span className={`px-2 py-1 rounded-md text-[10px] uppercase font-bold tracking-wider ${reward.active ? 'bg-green-50 text-green-600' : 'bg-gray-100 text-gray-400'}`}>
+                                                {reward.active ? 'Active' : 'Inactive'}
+                                            </span>
+                                            <button
+                                                onClick={() => handleDeleteReward(reward.id)}
+                                                className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors"
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <h3 className="font-bold text-lg text-text-main mb-1">{reward.title}</h3>
+                                    <p className="text-sm text-text-secondary mb-4">{reward.description}</p>
+                                </div>
+                                <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
+                                    <div className="flex items-center gap-1.5 text-orange-500">
+                                        <Star size={16} />
+                                        <span className="text-sm font-bold">{reward.points} Pts</span>
+                                    </div>
+                                    <button className="text-sm font-bold text-primary hover:underline">
+                                        Edit Details
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                        {(!data?.rewards || data.rewards.length === 0) && (
+                            <div className="col-span-full py-12 flex flex-col items-center justify-center bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
+                                <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+                                    <Gift className="text-gray-400" size={32} />
+                                </div>
+                                <p className="text-text-secondary font-medium mb-4">No active rewards found</p>
+                                <button
+                                    onClick={() => setIsCreateModalOpen(true)}
+                                    className="text-primary font-bold text-sm hover:underline"
+                                >
+                                    Create your first reward
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
