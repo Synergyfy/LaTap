@@ -16,11 +16,16 @@ export default function Logo({
     iconSize = 24,
     fontSize = "text-xl",
     withText = true,
-    textClassName = "font-display font-semibold tracking-tight text-text-main"
+    textClassName = "font-display font-bold tracking-tight text-text-main"
 }: LogoProps) {
     return (
         <div className={className}>
-            <Nfc className="text-primary" size={iconSize} strokeWidth={2.5} />
+            <span
+                className="material-icons-round text-primary select-none"
+                style={{ fontSize: iconSize }}
+            >
+                nfc
+            </span>
             {withText && (
                 <span className={`${fontSize} ${textClassName}`}>LaTap</span>
             )}

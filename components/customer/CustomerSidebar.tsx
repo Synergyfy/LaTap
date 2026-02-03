@@ -91,7 +91,7 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
     return (
         <div className="flex h-screen bg-gray-50 overflow-hidden font-sans">
             {/* Sidebar */}
-            <aside className="w-64 bg-white border-r border-gray-200 hidden lg:flex flex-col">
+            <aside className="w-64 bg-white border-r border-gray-200 lg:flex hidden flex-col">
                 {/* Logo */}
                 <div className="h-20 flex items-center px-6 border-b border-gray-100">
                     <Link href="/customer/dashboard" className="flex items-center gap-2">

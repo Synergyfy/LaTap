@@ -161,7 +161,16 @@ export const dashboardApi = {
   // Device Actions
   addDevice: async (device: any) => {
     await delay(800);
-    const newDevice = { ...device, lastActive: 'Never', status: 'inactive', battery: 'Full' };
+    const id = Math.random().toString(36).substr(2, 9);
+    const newDevice = { 
+      ...device, 
+      id,
+      lastActive: 'Never', 
+      status: 'active', 
+      batteryLevel: 100,
+      totalScans: 0,
+      timestamp: Date.now()
+    };
     useMockDashboardStore.getState().addDevice(newDevice);
     return newDevice;
   },

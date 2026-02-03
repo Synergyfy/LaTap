@@ -55,11 +55,16 @@ export interface Staff {
 
 export interface Device {
   id: string;
+  name: string;
   type: 'Card' | 'Sticker' | 'Fob';
+  code: string;
+  location: string;
   assignedTo: string; // Business name or 'Unassigned'
   lastActive: string;
   status: 'active' | 'inactive';
-  battery: string;
+  batteryLevel: number;
+  totalScans: number;
+  timestamp: number;
 }
 
 export interface RedemptionRequest {
@@ -156,9 +161,9 @@ const initialStaff: Staff[] = [
 ];
 
 const initialDevices: Device[] = [
-    { id: 'NFC-8392', type: 'Card', assignedTo: 'Green Terrace Cafe', lastActive: '2 mins ago', status: 'active', battery: 'Good' },
-    { id: 'NFC-9281', type: 'Sticker', assignedTo: 'Tech Hub Lagos', lastActive: '5 hours ago', status: 'active', battery: 'Good' },
-    { id: 'NFC-1928', type: 'Fob', assignedTo: 'Unassigned', lastActive: 'Never', status: 'inactive', battery: 'Full' },
+    { id: '1', name: 'Main Entrance', type: 'Card', code: 'NFC-001', location: 'Front Door', assignedTo: 'Green Terrace Cafe', lastActive: '2 mins ago', status: 'active', batteryLevel: 85, totalScans: 1247, timestamp: Date.now() },
+    { id: '2', name: 'Table 5', type: 'Sticker', code: 'NFC-002', location: 'Dining Area', assignedTo: 'Tech Hub Lagos', lastActive: '15 mins ago', status: 'active', batteryLevel: 92, totalScans: 892, timestamp: Date.now() },
+    { id: '3', name: 'Checkout Counter', type: 'Fob', code: 'NFC-003', location: 'Cashier', assignedTo: 'Unassigned', lastActive: 'Never', status: 'inactive', batteryLevel: 0, totalScans: 2341, timestamp: Date.now() },
 ];
 
 const initialStats = {

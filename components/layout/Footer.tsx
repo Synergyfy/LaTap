@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Logo from '@/components/brand/Logo';
 
 export default function Footer() {
     return (
@@ -7,10 +8,9 @@ export default function Footer() {
             <div className="max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
                     <div className="col-span-1 md:col-span-2">
-                        <div className="flex items-center gap-2 mb-8">
-                            <span className="material-icons-round text-primary text-4xl">nfc</span>
-                            <span className="text-3xl font-display font-bold tracking-tight">LaTap</span>
-                        </div>
+                        <Link href="/" className="mb-8 block w-fit">
+                            <Logo iconSize={40} fontSize="text-3xl" />
+                        </Link>
                         <p className="text-text-secondary max-w-sm mb-10 font-bold leading-relaxed">
                             The easiest way to collect customer data instantly from your shop or event to your phone.
                         </p>
