@@ -1,5 +1,5 @@
 import React from 'react';
-import { Cpu, Shield, Zap, Tooltip, Palette, Printer } from 'lucide-react';
+import { Cpu, Shield, Zap, Palette, Printer } from 'lucide-react';
 
 export default function HardwarePricing() {
     const hardwareOptions = [

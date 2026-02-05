@@ -32,7 +32,7 @@ export default function GetStarted() {
     return (
         <div className="h-screen bg-white flex overflow-hidden font-sans">
             {/* Left Side: Form */}
-            <div className="w-full lg:w-[60%] flex flex-col overflow-y-auto">
+            <div className="w-full lg:w-1/2 flex flex-col overflow-y-auto">
                 <div className="p-8 md:p-16 lg:p-24">
                     <Link href="/" className="flex items-center gap-2 mb-16">
                         <span className="material-icons-round text-primary text-2xl">nfc</span>
@@ -316,7 +316,7 @@ export default function GetStarted() {
             </div>
 
             {/* Right Side: Mockup Image */}
-            <div className="hidden lg:block lg:w-[40%] relative overflow-hidden h-screen">
+            <div className="hidden lg:block lg:w-1/2 relative overflow-hidden h-screen">
                 <AuthSidePanel
                     features={
                         step === 1 ? [

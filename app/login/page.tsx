@@ -48,7 +48,7 @@ export default function LoginPage() {
     return (
         <div className="h-screen bg-white flex overflow-hidden font-sans">
             {/* Left Side: Login Form */}
-            <div className="w-full lg:w-[60%] flex flex-col overflow-y-auto">
+            <div className="w-full lg:w-1/2 flex flex-col overflow-y-auto">
                 <div className="p-8 md:p-12 lg:p-20 flex flex-col min-h-full">
                     <Link href="/" className="mb-12 md:mb-20 block w-fit">
                         <Logo iconSize={32} fontSize="text-2xl" />
@@ -136,7 +136,7 @@ export default function LoginPage() {
                                                 <input
                                                     type="email"
                                                     placeholder="name@company.com"
-                                                    className="w-full h-14 bg-gray-50 border border-gray-100 rounded-2xl pl-12 pr-5 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/30 focus:bg-white transition-all text-sm"
+                                                    className="w-full h-14 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/30 focus:bg-white transition-all text-sm"
                                                     value={formData.email}
                                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                                     required
@@ -154,7 +154,7 @@ export default function LoginPage() {
                                                 <input
                                                     type={showPassword ? "text" : "password"}
                                                     placeholder="••••••••"
-                                                    className="w-full h-14 bg-gray-50 border border-gray-100 rounded-2xl pl-12 pr-12 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/30 focus:bg-white transition-all text-sm"
+                                                    className="w-full h-14 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-12 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/30 focus:bg-white transition-all text-sm"
                                                     value={formData.password}
                                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                                     required
@@ -217,7 +217,7 @@ export default function LoginPage() {
             </div>
 
             {/* Right Side: Shared Mockup Image */}
-            <div className="hidden lg:block lg:w-[40%] relative overflow-hidden h-screen">
+            <div className="hidden lg:block lg:w-1/2 relative overflow-hidden h-screen">
                 <AuthSidePanel
                     features={[
                         {
