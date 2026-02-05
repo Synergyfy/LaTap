@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Pricing from '@/components/landing/Pricing';
+import HardwarePricing from '@/components/landing/HardwarePricing';
 import Footer from '@/components/layout/Footer';
 import { Metadata } from 'next';
 
@@ -23,6 +24,7 @@ export default function PricingPage() {
                 </p>
             </div>
             <Pricing />
+            <HardwarePricing />
             {/* FAQ or additional pricing info can go here */}
             <section className="py-24 bg-white border-t border-gray-50">
                 <div className="max-w-4xl mx-auto px-4 text-center">

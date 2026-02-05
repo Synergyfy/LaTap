@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
+import { notify } from '@/lib/notify';
 
 export default function AdminSettingsPage() {
     const [activeTab, setActiveTab] = useState('general');
@@ -15,14 +16,17 @@ export default function AdminSettingsPage() {
                         <h1 className="text-3xl font-display font-bold text-text-main mb-2">System Settings</h1>
                         <p className="text-text-secondary font-medium">Configure global platform parameters and preferences</p>
                     </div>
-                    <button className="px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-colors">
+                    <button
+                        onClick={() => notify.success('System settings updated successfully')}
+                        className="px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-colors shadow-lg shadow-primary/20 active:scale-95"
+                    >
                         Save Changes
                     </button>
                 </div>
 
                 <div className="flex flex-col lg:flex-row gap-8">
                     {/* Settings Navigation */}
-                    <div className="w-full lg:w-64 flex-shrink-0">
+                    <div className="w-full lg:w-64 shrink-0">
                         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
                             <nav className="flex flex-col">
                                 {[

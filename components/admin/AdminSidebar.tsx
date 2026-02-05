@@ -99,6 +99,12 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
             href: '/admin/subscriptions',
         },
         {
+            id: 'hardware',
+            label: 'Hardware & White-Label',
+            icon: Nfc,
+            href: '/admin/hardware',
+        },
+        {
             id: 'analytics',
             label: 'Platform Analytics',
             icon: BarChart,
