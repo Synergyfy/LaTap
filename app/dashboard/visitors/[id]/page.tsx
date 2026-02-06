@@ -1,14 +1,22 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import StatsCard from '@/components/dashboard/StatsCard';
 import ChartCard from '@/components/dashboard/ChartCard';
+import SendMessageModal from '@/components/dashboard/SendMessageModal';
+import EditVisitorModal from '@/components/dashboard/EditVisitorModal';
+import AddNoteModal from '@/components/dashboard/AddNoteModal';
+import { notify } from '@/lib/notify';
 
 export default function VisitorProfilePage({ params }: { params: { id: string } }) {
+    const [isEditOpen, setIsEditOpen] = useState(false);
+    const [isMsgOpen, setIsMsgOpen] = useState(false);
+    const [isNoteOpen, setIsNoteOpen] = useState(false);
+
     // Mock user data
-    const visitor = {
+    const [visitor, setVisitor] = useState({
         id: params.id,
         name: 'Bisi Adebowale',
         email: 'bisi.a@example.com',
@@ -19,6 +27,17 @@ export default function VisitorProfilePage({ params }: { params: { id: string } 
         status: 'VIP',
         points: 1250,
         tags: ['Regular', 'Coffee Lover', 'High Spender'],
+    });
+
+    const handleEditSubmit = (data: any) => {
+        setVisitor(prev => ({ ...prev, ...data }));
+        setIsEditOpen(false);
+        notify.success('Visitor profile updated successfully');
+    };
+
+    const handleNoteSubmit = (data: any) => {
+        setIsNoteOpen(false);
+        notify.success('Note added to visitor profile');
     };
 
     const timeline = [
@@ -37,11 +56,17 @@ export default function VisitorProfilePage({ params }: { params: { id: string } 
                     description={`Detailed information for ${visitor.name}`}
                     actions={
                         <div className="flex gap-3">
-                            <button className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm">
+                            <button
+                                onClick={() => setIsEditOpen(true)}
+                                className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm"
+                            >
                                 <span className="material-icons-round text-lg">edit</span>
                                 Edit Profile
                             </button>
-                            <button className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20">
+                            <button
+                                onClick={() => setIsMsgOpen(true)}
+                                className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20"
+                            >
                                 <span className="material-icons-round text-lg">message</span>
                                 Send Message
                             </button>
@@ -127,7 +152,10 @@ export default function VisitorProfilePage({ params }: { params: { id: string } 
 
                         <div className="mt-8">
                             <ChartCard title="Notes" actions={
-                                <button className="text-primary text-sm font-bold flex items-center gap-1">
+                                <button
+                                    onClick={() => setIsNoteOpen(true)}
+                                    className="text-primary text-sm font-bold flex items-center gap-1"
+                                >
                                     <span className="material-icons-round text-sm">add</span>
                                     Add Note
                                 </button>
@@ -145,6 +173,26 @@ export default function VisitorProfilePage({ params }: { params: { id: string } 
                         </div>
                     </div>
                 </div>
+
+                <EditVisitorModal
+                    isOpen={isEditOpen}
+                    onClose={() => setIsEditOpen(false)}
+                    visitor={visitor}
+                    onSubmit={handleEditSubmit}
+                />
+
+                <SendMessageModal
+                    isOpen={isMsgOpen}
+                    onClose={() => setIsMsgOpen(false)}
+                    recipientName={visitor.name}
+                    recipientPhone={visitor.phone}
+                />
+
+                <AddNoteModal
+                    isOpen={isNoteOpen}
+                    onClose={() => setIsNoteOpen(false)}
+                    onSubmit={handleNoteSubmit}
+                />
             </div>
         </DashboardSidebar>
     );

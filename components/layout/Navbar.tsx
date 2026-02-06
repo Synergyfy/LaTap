@@ -17,7 +17,32 @@ export default function Navbar() {
                     </div>
 
                     <div className="hidden md:flex items-center gap-8 text-sm font-bold text-text-secondary">
-                        <Link className="hover:text-primary transition-colors" href="/solutions">Solutions</Link>
+                        <div className="relative group">
+                            <button className="flex items-center gap-1 hover:text-primary transition-colors py-2">
+                                Solutions
+                                <span className="material-icons-round text-lg transition-transform group-hover:rotate-180">expand_more</span>
+                            </button>
+                            <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                                <Link href="/solutions/hardware" className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors">
+                                    <div className="size-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center">
+                                        <span className="material-icons-round">nfc</span>
+                                    </div>
+                                    <div>
+                                        <p className="text-text-main text-xs font-black uppercase tracking-wider">Hardware</p>
+                                        <p className="text-[10px] text-text-secondary font-medium">NFC Plates & Cards</p>
+                                    </div>
+                                </Link>
+                                <Link href="/solutions/software" className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors">
+                                    <div className="size-10 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center">
+                                        <span className="material-icons-round">dashboard</span>
+                                    </div>
+                                    <div>
+                                        <p className="text-text-main text-xs font-black uppercase tracking-wider">Software</p>
+                                        <p className="text-[10px] text-text-secondary font-medium">Merchant Dashboard</p>
+                                    </div>
+                                </Link>
+                            </div>
+                        </div>
                         <Link className="hover:text-primary transition-colors" href="/features">Features</Link>
                         <Link className="hover:text-primary transition-colors" href="/pricing">Pricing</Link>
                         <Link className="hover:text-primary transition-colors" href="/support">Support</Link>
@@ -55,10 +80,14 @@ export default function Navbar() {
 
                     <div className="flex flex-col gap-8 text-xl font-bold text-text-secondary">
                         <Link onClick={() => setIsMenuOpen(false)} className="hover:text-primary transition-colors" href="/">Home</Link>
+                        <div className="flex flex-col gap-4">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-text-secondary">Solutions</span>
+                            <Link onClick={() => setIsMenuOpen(false)} className="hover:text-primary transition-colors pl-4 border-l-2 border-gray-100" href="/solutions/hardware">Hardware</Link>
+                            <Link onClick={() => setIsMenuOpen(false)} className="hover:text-primary transition-colors pl-4 border-l-2 border-gray-100" href="/solutions/software">Software</Link>
+                        </div>
                         <Link onClick={() => setIsMenuOpen(false)} className="hover:text-primary transition-colors" href="/features">Features</Link>
-                        <Link onClick={() => setIsMenuOpen(false)} className="hover:text-primary transition-colors" href="/how-it-works">How it Works</Link>
-                        <Link onClick={() => setIsMenuOpen(false)} className="hover:text-primary transition-colors" href="/solutions">Solutions</Link>
                         <Link onClick={() => setIsMenuOpen(false)} className="hover:text-primary transition-colors" href="/pricing">Pricing</Link>
+                        <Link onClick={() => setIsMenuOpen(false)} className="hover:text-primary transition-colors" href="/support">Support</Link>
                     </div>
 
                     <div className="mt-auto flex flex-col gap-4">

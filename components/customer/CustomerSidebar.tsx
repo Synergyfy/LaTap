@@ -9,7 +9,7 @@ import { dashboardApi } from '@/lib/api/dashboard';
 import { Notification } from '@/lib/store/mockDashboardStore';
 import {
     LayoutGrid, History, Gift, User, Nfc, Bell,
-    LogOut, Menu, Star, BarChart3
+    LogOut, Menu, Star, BarChart3, LifeBuoy
 } from 'lucide-react';
 import Logo from '@/components/brand/Logo';
 
@@ -83,6 +83,12 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
             label: 'My Rewards',
             icon: Gift,
             href: '/customer/rewards',
+        },
+        {
+            id: 'support',
+            label: 'Support & Help',
+            icon: LifeBuoy,
+            href: '/customer/support',
         },
         {
             id: 'profile',
