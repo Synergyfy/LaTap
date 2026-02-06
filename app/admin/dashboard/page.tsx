@@ -1,11 +1,15 @@
 'use client';
 
+import React, { useState } from 'react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
-import { notify } from '@/lib/notify'; 
+import { notify } from '@/lib/notify';
 import { useRouter } from 'next/navigation';
+import Modal from '@/components/ui/Modal'; // Ensure Modal is imported
 
 export default function AdminDashboardPage() {
     const router = useRouter(); // Initialize router
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [selectedBusiness, setSelectedBusiness] = useState<any>(null);
     const platformStats = [
         {
             label: 'Total Businesses',
@@ -52,13 +56,15 @@ export default function AdminDashboardPage() {
     const handleQuickAction = (action: string) => {
         switch (action) {
             case 'Add Business':
-                router.push('/admin/businesses/new');
+                // For simplicity in this overview, we can redirect to the businesses page where the add modal is fully implemented
+                // Or we can open a local modal if we duplicate logic. Let's redirect to ensure consistency.
+                router.push('/admin/businesses');
                 break;
             case 'Create User':
-                router.push('/admin/users/new');
+                router.push('/admin/users');
                 break;
             case 'Register Device':
-                router.push('/admin/devices/new');
+                router.push('/admin/devices');
                 break;
             case 'Export Reports':
                 notify.success('Report export started. Check your email shortly.');
@@ -124,7 +130,10 @@ export default function AdminDashboardPage() {
                                 <h2 className="text-xl font-display font-bold text-text-main mb-1">Recent Businesses</h2>
                                 <p className="text-sm text-text-secondary">Latest registrations</p>
                             </div>
-                            <button className="px-4 py-2 text-sm font-bold text-primary hover:bg-primary/5 rounded-lg transition-colors">
+                            <button
+                                onClick={() => router.push('/admin/businesses')}
+                                className="px-4 py-2 text-sm font-bold text-primary hover:bg-primary/5 rounded-lg transition-colors"
+                            >
                                 View All
                             </button>
                         </div>
@@ -152,7 +161,7 @@ export default function AdminDashboardPage() {
                                             {business.status}
                                         </span>
                                         <button
-                                            onClick={() => handleViewBusiness(business.name)}
+                                            onClick={() => router.push('/admin/businesses')}
                                             className="p-2 hover:bg-gray-200 rounded-lg text-gray-400 hover:text-primary transition-colors"
                                             title="Manage Business"
                                         >
@@ -207,6 +216,28 @@ export default function AdminDashboardPage() {
                     </div>
                 </div>
             </div>
+
+            <Modal
+                isOpen={isAddModalOpen}
+                onClose={() => { setIsAddModalOpen(false); setSelectedBusiness(null); }}
+                title={selectedBusiness ? 'Update Business' : 'Register New Venue'}
+                description={selectedBusiness ? 'Modify account credentials and access' : 'Enter the details of the new business partner'}
+                size="lg"
+            >
+                <div>
+                    <p className="text-sm font-bold text-text-secondary">Feature moved to Business Management page.</p>
+                    <div className="pt-4 flex justify-end">
+                        <button
+                            onClick={() => {
+                                setIsAddModalOpen(false);
+                                router.push('/admin/businesses');
+                            }}
+                            className="px-4 py-2 bg-primary text-white rounded-lg font-bold text-sm hover:bg-primary-hover">
+                            Go to Businesses
+                        </button>
+                    </div>
+                </div>
+            </Modal>
         </AdminSidebar>
     );
 }

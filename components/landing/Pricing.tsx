@@ -39,6 +39,16 @@ export default function Pricing() {
             features: ['Unlimited visitors', 'Unlimited Active Tags', 'SSO Security', 'Dedicated Account Mgr'],
             cta: "Contact Sales",
             highlight: false,
+        },
+        {
+            name: "White-Label",
+            desc: "Your brand, our tech infrastructure.",
+            price: "₦500k",
+            period: "/license",
+            features: ['Custom Domain', 'Branded Hardware', 'Admin Dashboard', 'Reseller Rights'],
+            cta: "Partner With Us",
+            highlight: false,
+            style: "col-span-1 md:col-span-2 mt-12 bg-gray-900 border-gray-800 text-white"
         }
     ];
 
@@ -56,9 +66,10 @@ export default function Pricing() {
                             key={index}
                             className={`
                                 relative flex flex-col p-8 rounded-xl transition-all duration-500
-                                ${plan.highlight
-                                    ? 'bg-primary shadow-2xl shadow-primary/30 transform lg:scale-105 z-10'
-                                    : 'bg-white border border-gray-100 shadow-sm hover:shadow-xl'
+                                ${plan.style ? plan.style :
+                                    plan.highlight
+                                        ? 'bg-primary shadow-2xl shadow-primary/30 transform lg:scale-105 z-10'
+                                        : 'bg-white border border-gray-100 shadow-sm hover:shadow-xl'
                                 }
                             `}
                         >
@@ -67,23 +78,23 @@ export default function Pricing() {
                                     {plan.tag}
                                 </div>
                             )}
-                            <h3 className={`text-xl font-bold mb-2 font-display ${plan.highlight ? 'text-white' : 'text-text-main'}`}>
+                            <h3 className={`text-xl font-bold mb-2 font-display ${plan.highlight || plan.style ? 'text-white' : 'text-text-main'}`}>
                                 {plan.name}
                             </h3>
-                            <p className={`text-sm mb-8 font-medium ${plan.highlight ? 'text-white/80' : 'text-gray-400'}`}>
+                            <p className={`text-sm mb-8 font-medium ${plan.highlight || plan.style ? 'text-white/80' : 'text-gray-400'}`}>
                                 {plan.desc}
                             </p>
-                            <div className={`flex items-baseline mb-8 ${plan.highlight ? 'text-white' : ''}`}>
-                                <span className={`text-4xl font-bold ${!plan.highlight && 'text-text-main'}`}>{plan.price}</span>
-                                {plan.period && <span className={`ml-2 font-bold text-sm ${plan.highlight ? 'opacity-70' : 'text-gray-400'}`}>{plan.period}</span>}
+                            <div className={`flex items-baseline mb-8 ${plan.highlight || plan.style ? 'text-white' : ''}`}>
+                                <span className={`text-4xl font-bold ${!plan.highlight && !plan.style && 'text-text-main'}`}>{plan.price}</span>
+                                {plan.period && <span className={`ml-2 font-bold text-sm ${plan.highlight || plan.style ? 'opacity-70' : 'text-gray-400'}`}>{plan.period}</span>}
                             </div>
-                            <ul className={`space-y-4 mb-10 flex-1 ${plan.highlight ? 'text-white' : ''}`}>
+                            <ul className={`space-y-4 mb-10 flex-1 ${plan.highlight || plan.style ? 'text-white' : ''}`}>
                                 {plan.features.map((item, i) => (
                                     <li key={i} className="flex items-center text-sm font-semibold">
-                                        <span className={`material-icons-round mr-3 text-lg ${plan.highlight ? '' : 'text-primary'}`}>
-                                            {plan.highlight ? 'verified' : 'check_circle'}
+                                        <span className={`material-icons-round mr-3 text-lg ${plan.highlight || plan.style ? 'text-green-400' : 'text-primary'}`}>
+                                            {plan.highlight || plan.style ? 'verified' : 'check_circle'}
                                         </span>
-                                        {plan.highlight ? item : <span className="text-text-secondary">{item}</span>}
+                                        {plan.highlight || plan.style ? item : <span className="text-text-secondary">{item}</span>}
                                     </li>
                                 ))}
                             </ul>
@@ -93,9 +104,8 @@ export default function Pricing() {
                                     w-full py-4 rounded-2xl font-bold text-center transition-all cursor-pointer shadow-lg
                                     ${plan.highlight
                                         ? 'bg-white text-primary hover:bg-blue-50'
-                                        : 'border-2 border-primary text-primary hover:bg-primary hover:text-white'
+                                        : plan.style ? 'bg-primary text-white hover:bg-primary-hover border-none' : 'border-2 border-primary text-primary hover:bg-primary hover:text-white'
                                     }
-                                    ${plan.name === 'Enterprise' || plan.name === 'White-Label' ? 'bg-primary text-white border-none hover:bg-black' : ''}
                                 `}
                             >
                                 {plan.cta}
