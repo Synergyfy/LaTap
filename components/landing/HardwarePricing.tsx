@@ -55,7 +55,7 @@ export default function HardwarePricing() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center max-w-3xl mx-auto mb-16">
                     <span className="text-primary font-bold tracking-widest text-xs uppercase mb-4 block">Hardware Solutions</span>
-                    <h2 className="text-4xl md:text-5xl font-display font-bold mb-6 text-text-main">ElizTap Hardware & White Labeling</h2>
+                    <h2 className="text-4xl md:text-5xl font-display font-bold mb-6 text-text-main">ElizTap Hardware</h2>
                     <p className="text-lg text-text-secondary font-medium">Get premium, custom-branded NFC hardware for your business or clients.</p>
                 </div>
 
