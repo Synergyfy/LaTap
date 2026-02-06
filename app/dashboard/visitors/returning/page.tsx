@@ -12,11 +12,13 @@ import { dashboardApi } from '@/lib/api/dashboard';
 import { Visitor, Reward } from '@/lib/store/mockDashboardStore';
 import toast from 'react-hot-toast';
 import SendMessageModal from '@/components/dashboard/SendMessageModal';
+import VisitorDetailsModal from '@/components/dashboard/VisitorDetailsModal';
 import { Repeat, Users, Star, AlertTriangle, Gift, Award, Send } from 'lucide-react';
 
 export default function ReturningVisitorsPage() {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [selectedVisitorForMsg, setSelectedVisitorForMsg] = useState<Visitor | null>(null);
+    const [selectedVisitorForDetails, setSelectedVisitorForDetails] = useState<Visitor | null>(null);
     const queryClient = useQueryClient();
 
     const { data: storeData, isLoading } = useQuery({
@@ -129,6 +131,12 @@ export default function ReturningVisitorsPage() {
                     type="reward"
                 />
 
+                <VisitorDetailsModal
+                    isOpen={!!selectedVisitorForDetails}
+                    onClose={() => setSelectedVisitorForDetails(null)}
+                    visitor={selectedVisitorForDetails}
+                />
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     {stats.map((stat, index) => (
                         <StatsCard key={index} {...stat} />
@@ -139,7 +147,7 @@ export default function ReturningVisitorsPage() {
                     columns={columns}
                     data={returningVisitors}
                     isLoading={isLoading}
-                    onRowClick={(visitor) => toast(`Viewing ${visitor.name}'s profile`)}
+                    onRowClick={(visitor) => setSelectedVisitorForDetails(visitor)}
                     emptyState={
                         <EmptyState
                             icon="loop"

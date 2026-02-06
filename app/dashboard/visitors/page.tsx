@@ -11,10 +11,14 @@ import { dashboardApi } from '@/lib/api/dashboard';
 import { Visitor } from '@/lib/store/mockDashboardStore';
 import { Users, UserPlus, Repeat, Star, Search, Download, MoreVertical, Send, Gift } from 'lucide-react';
 import toast from 'react-hot-toast';
+import SendMessageModal from '@/components/dashboard/SendMessageModal';
+import VisitorDetailsModal from '@/components/dashboard/VisitorDetailsModal';
 
 export default function VisitorsOverviewPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
+    const [selectedVisitorForMsg, setSelectedVisitorForMsg] = useState<{ visitor: Visitor, type: 'welcome' | 'reward' | 'general' } | null>(null);
+    const [selectedVisitorForDetails, setSelectedVisitorForDetails] = useState<Visitor | null>(null);
 
     const { data: storeData, isLoading } = useQuery({
         queryKey: ['dashboard'],
@@ -22,6 +26,25 @@ export default function VisitorsOverviewPage() {
     });
 
     const visitors = storeData?.recentVisitors || [];
+
+    const handleExportCSV = () => {
+        const csvContent = [
+            ['Name', 'Phone', 'Status', 'Last Visit'],
+            ...visitors.map((v: Visitor) => [v.name, v.phone, v.status, v.time])
+        ].map(row => row.join(',')).join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `visitors_report_${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+
+        toast.success('Report exported successfully!');
+    };
 
     const stats = [
         { label: 'Total Visitors', value: visitors.length.toString(), icon: Users, color: 'blue' as const, trend: { value: '+12%', isUp: true } },
@@ -74,7 +97,7 @@ export default function VisitorsOverviewPage() {
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            toast.success(`Welcome message sent to ${item.name}`);
+                            setSelectedVisitorForMsg({ visitor: item, type: 'general' });
                         }}
                         className="p-2 text-text-secondary hover:text-primary hover:bg-primary/5 rounded-lg transition-all"
                         title="Quick Message"
@@ -84,7 +107,7 @@ export default function VisitorsOverviewPage() {
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            toast.success(`Reward points issued to ${item.name}`);
+                            setSelectedVisitorForMsg({ visitor: item, type: 'reward' });
                         }}
                         className="p-2 text-text-secondary hover:text-orange-500 hover:bg-orange-50 rounded-lg transition-all"
                         title="Issue Reward"
@@ -103,7 +126,10 @@ export default function VisitorsOverviewPage() {
                     title="Visitors Overview"
                     description="Monitor your customer footfall and engagement levels"
                     actions={
-                        <button className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm shadow-sm">
+                        <button
+                            onClick={handleExportCSV}
+                            className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm shadow-sm"
+                        >
                             <Download size={18} />
                             Export Report
                         </button>
@@ -143,7 +169,7 @@ export default function VisitorsOverviewPage() {
                     columns={columns}
                     data={filteredVisitors}
                     isLoading={isLoading}
-                    onRowClick={(visitor) => toast(`Viewing ${visitor.name}'s profile`)}
+                    onRowClick={(visitor) => setSelectedVisitorForDetails(visitor)}
                     emptyState={
                         <EmptyState
                             icon="people"
@@ -151,6 +177,20 @@ export default function VisitorsOverviewPage() {
                             description="Tap the 'Simulate Check-in' button on the dashboard to see data here."
                         />
                     }
+                />
+
+                <SendMessageModal
+                    isOpen={!!selectedVisitorForMsg}
+                    onClose={() => setSelectedVisitorForMsg(null)}
+                    recipientName={selectedVisitorForMsg?.visitor.name || ''}
+                    recipientPhone={selectedVisitorForMsg?.visitor.phone}
+                    type={selectedVisitorForMsg?.type || 'general'}
+                />
+
+                <VisitorDetailsModal
+                    isOpen={!!selectedVisitorForDetails}
+                    onClose={() => setSelectedVisitorForDetails(null)}
+                    visitor={selectedVisitorForDetails}
                 />
             </div>
         </DashboardSidebar>

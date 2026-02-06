@@ -4,6 +4,7 @@ import Hero from '@/components/landing/Hero';
 import Process from '@/components/landing/Process';
 import Features from '@/components/landing/Features';
 import Pricing from '@/components/landing/Pricing';
+import HardwarePricing from '@/components/landing/HardwarePricing';
 import MobileExperience from '@/components/landing/MobileExperience';
 import AutomationCTA from '@/components/landing/AutomationCTA';
 import Testimonials from '@/components/landing/Testimonials';
@@ -17,6 +18,7 @@ export default function LandingPage() {
       <Hero />
       <Process />
       <Features />
+      <HardwarePricing />
       <Pricing />
       <MobileExperience />
       <Testimonials />

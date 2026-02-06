@@ -66,7 +66,7 @@ export default function SendMessageModal({ isOpen, onClose, recipientName, recip
             onClose={onClose}
             title="Compose Message"
             description={`Personalize and send a message to ${recipientName}`}
-            size="lg"
+            size="2xl"
         >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-4">
                 {/* Editor */}

@@ -17,6 +17,7 @@ export const dashboardApi = {
       staffMembers: state.staffMembers,
       devices: state.devices,
       redemptionRequests: state.redemptionRequests,
+      businessName: 'Green Terrace Cafe',
     };
   },
 

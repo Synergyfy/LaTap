@@ -7,16 +7,20 @@ import StatsCard from '@/components/dashboard/StatsCard';
 import ChartCard from '@/components/dashboard/ChartCard';
 import DataTable, { Column } from '@/components/dashboard/DataTable';
 import CreateRewardModal from '@/components/dashboard/CreateRewardModal';
+import PreviewRewardModal from '@/components/dashboard/PreviewRewardModal';
+import DeleteConfirmationModal from '@/components/dashboard/DeleteConfirmationModal';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { dashboardApi } from '@/lib/api/dashboard';
 import { Reward } from '@/lib/store/mockDashboardStore';
 import toast from 'react-hot-toast';
-import { Gift, DollarSign, Award, Star, Plus, Settings, Trash2, X, HelpCircle, ArrowRight, MessageSquare, CheckCircle2 } from 'lucide-react';
+import { Gift, DollarSign, Award, Star, Plus, Settings, Trash2, X, HelpCircle, ArrowRight, MessageSquare, CheckCircle2, Eye } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function LoyaltyOverviewPage() {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [editingReward, setEditingReward] = useState<Reward | null>(null);
+    const [previewReward, setPreviewReward] = useState<Reward | null>(null);
+    const [deleteRewardId, setDeleteRewardId] = useState<string | null>(null);
     const [showRulesModal, setShowRulesModal] = useState(false);
     const queryClient = useQueryClient();
 
@@ -48,6 +52,7 @@ export default function LoyaltyOverviewPage() {
         mutationFn: dashboardApi.deleteReward,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+            setDeleteRewardId(null);
             toast.success('Reward deleted');
         }
     });
@@ -74,9 +79,9 @@ export default function LoyaltyOverviewPage() {
         }
     };
 
-    const handleDeleteReward = (id: string) => {
-        if (confirm('Are you sure you want to delete this reward?')) {
-            deleteRewardMutation.mutate(id);
+    const confirmDeleteReward = () => {
+        if (deleteRewardId) {
+            deleteRewardMutation.mutate(deleteRewardId);
         }
     }
 
@@ -169,6 +174,22 @@ export default function LoyaltyOverviewPage() {
                     isLoading={createRewardMutation.isPending || updateRewardMutation.isPending}
                 />
 
+                <PreviewRewardModal
+                    isOpen={!!previewReward}
+                    onClose={() => setPreviewReward(null)}
+                    rewardTitle={previewReward?.title || 'Reward'}
+                    businessName={data?.businessName || 'Your Business'}
+                />
+
+                <DeleteConfirmationModal
+                    isOpen={!!deleteRewardId}
+                    onClose={() => setDeleteRewardId(null)}
+                    onConfirm={confirmDeleteReward}
+                    title="Delete Reward?"
+                    description="This action cannot be undone. Customers will no longer be able to earn or redeem this reward."
+                    isLoading={deleteRewardMutation.isPending}
+                />
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     {loyaltyStats.map((stat, index) => (
                         <StatsCard key={index} {...stat as any} />
@@ -181,12 +202,12 @@ export default function LoyaltyOverviewPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {data?.rewards.map((reward: Reward) => (
                             <div key={reward.id} className="bg-white rounded-xl p-6 border border-gray-200 flex flex-col justify-between hover:shadow-lg transition-all group">
-                                <div>
+                                <div onClick={() => setPreviewReward(reward)} className="cursor-pointer">
                                     <div className="flex items-start justify-between mb-4">
-                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${reward.active ? 'bg-purple-50 text-purple-600' : 'bg-gray-50 text-gray-400'}`}>
+                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${reward.active ? 'bg-purple-50 text-purple-600' : 'bg-gray-50 text-gray-400'} group-hover:scale-110 transition-transform`}>
                                             <Gift size={24} />
                                         </div>
-                                        <div className="flex items-center gap-2">
+                                        <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                                             <button
                                                 onClick={() => toggleMutation.mutate({ id: reward.id, active: !reward.active })}
                                                 className={`px-2 py-1 rounded-md text-[10px] font-bold transition-colors ${reward.active ? 'bg-green-50 text-green-600 hover:bg-green-100' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}
@@ -194,7 +215,7 @@ export default function LoyaltyOverviewPage() {
                                                 {reward.active ? 'Active' : 'Inactive'}
                                             </button>
                                             <button
-                                                onClick={() => handleDeleteReward(reward.id)}
+                                                onClick={() => setDeleteRewardId(reward.id)}
                                                 className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors"
                                             >
                                                 <Trash2 size={16} />
@@ -203,6 +224,11 @@ export default function LoyaltyOverviewPage() {
                                     </div>
                                     <h3 className={`font-bold text-lg mb-1 ${reward.active ? 'text-text-main' : 'text-gray-400'}`}>{reward.title}</h3>
                                     <p className="text-sm text-text-secondary mb-4 line-clamp-2">{reward.description}</p>
+
+                                    <div className="flex items-center gap-2 text-xs font-bold text-primary mb-2 opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0">
+                                        <Eye size={14} />
+                                        Click card to preview
+                                    </div>
                                 </div>
                                 <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
                                     <div className={`flex items-center gap-1.5 ${reward.active ? 'text-orange-500' : 'text-gray-400'}`}>

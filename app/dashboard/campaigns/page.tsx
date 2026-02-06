@@ -1,34 +1,51 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import StatsCard from '@/components/dashboard/StatsCard';
 import DataTable, { Column } from '@/components/dashboard/DataTable';
 import EmptyState from '@/components/dashboard/EmptyState';
 import CreateMessageModal from '@/components/dashboard/CreateMessageModal';
+import DeleteConfirmationModal from '@/components/dashboard/DeleteConfirmationModal';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { dashboardApi } from '@/lib/api/dashboard';
 import { Campaign } from '@/lib/store/mockDashboardStore';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
 import toast from 'react-hot-toast';
 import { BarChart, Send, Eye, Edit, Trash2, Plus, FileText } from 'lucide-react';
 
-export default function AllMessagesPage() {
+function MessagesContent() {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const { user } = useAuthStore();
     const queryClient = useQueryClient();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingMessage, setEditingMessage] = useState<Campaign | null>(null);
+    const [deleteCampaignId, setDeleteCampaignId] = useState<string | null>(null);
 
     const { data, isLoading } = useQuery({
         queryKey: ['dashboard'],
         queryFn: dashboardApi.fetchDashboardData,
     });
 
+    // Check for 'create' query param to auto-open modal
+    useEffect(() => {
+        if (searchParams.get('create') === 'true') {
+            setIsModalOpen(true);
+            const templateId = searchParams.get('template');
+            if (templateId) {
+                // Here we could fetch template details, for now just showing a toast
+                toast.success('Template loaded! Customize your message below.');
+            }
+            // Clean up URL
+            router.replace('/dashboard/campaigns');
+        }
+    }, [searchParams, router]);
+
     // Protection: Only Owners and Managers can manage messages
-    React.useEffect(() => {
+    useEffect(() => {
         if (!isLoading && user && user.role === 'staff') {
             router.push('/dashboard');
         }
@@ -41,6 +58,7 @@ export default function AllMessagesPage() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['dashboard'] });
             toast.success('Message deleted successfully');
+            setDeleteCampaignId(null);
         }
     });
 
@@ -70,9 +88,9 @@ export default function AllMessagesPage() {
         }
     };
 
-    const handleDelete = (id: string, name: string) => {
-        if (confirm(`Are you sure you want to delete "${name}"?`)) {
-            deleteMutation.mutate(id);
+    const confirmDeleteCampaign = () => {
+        if (deleteCampaignId) {
+            deleteMutation.mutate(deleteCampaignId);
         }
     };
 
@@ -138,7 +156,7 @@ export default function AllMessagesPage() {
                     </button>
                     <button
                         className="p-1.5 text-text-secondary hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                        onClick={() => handleDelete(item.id, item.name)}
+                        onClick={() => setDeleteCampaignId(item.id)}
                         title="Delete Message"
                     >
                         <Trash2 size={18} />
@@ -149,71 +167,88 @@ export default function AllMessagesPage() {
     ];
 
     return (
-        <DashboardSidebar>
-            <div className="p-8">
-                <PageHeader
-                    title="Messages"
-                    description="Reach your customers with targeted messaging"
-                    actions={
-                        <div className="flex gap-3">
-                            <button
-                                onClick={() => router.push('/dashboard/campaigns/templates')}
-                                className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm"
-                            >
-                                <FileText size={18} />
-                                Templates
-                            </button>
-                            <button
-                                onClick={() => setIsModalOpen(true)}
-                                className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-lg shadow-primary/20 active:scale-95"
-                            >
-                                <Plus size={18} />
-                                Create Message
-                            </button>
-                        </div>
+        <div className="p-8">
+            <PageHeader
+                title="Messages"
+                description="Reach your customers with targeted messaging"
+                actions={
+                    <div className="flex gap-3">
+                        <button
+                            onClick={() => router.push('/dashboard/campaigns/templates')}
+                            className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm"
+                        >
+                            <FileText size={18} />
+                            Templates
+                        </button>
+                        <button
+                            onClick={() => setIsModalOpen(true)}
+                            className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-lg shadow-primary/20 active:scale-95"
+                        >
+                            <Plus size={18} />
+                            Create Message
+                        </button>
+                    </div>
+                }
+            />
+
+            <CreateMessageModal
+                isOpen={isModalOpen || !!editingMessage}
+                onClose={() => {
+                    setIsModalOpen(false);
+                    setEditingMessage(null);
+                }}
+                onSubmit={handleCreateOrUpdate}
+                isLoading={createMutation.isPending || updateMutation.isPending}
+                initialData={editingMessage}
+            />
+
+            <DeleteConfirmationModal
+                isOpen={!!deleteCampaignId}
+                onClose={() => setDeleteCampaignId(null)}
+                onConfirm={confirmDeleteCampaign}
+                title="Delete Message?"
+                description="This action cannot be undone. This campaign will be permanently removed."
+                isLoading={deleteMutation.isPending}
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                {stats.map((stat, index) => (
+                    <StatsCard key={index} {...stat as any} />
+                ))}
+            </div>
+
+            {isLoading ? (
+                <div className="flex items-center justify-center p-20">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                </div>
+            ) : (
+                <DataTable
+                    columns={columns}
+                    data={messages}
+                    emptyState={
+                        <EmptyState
+                            icon="campaign"
+                            title="No messages yet"
+                            description="Start your first marketing message to drive repeat visits and increase revenue."
+                            action={{
+                                label: "Create Message",
+                                onClick: () => setIsModalOpen(true),
+                                icon: "add"
+                            }}
+                        />
                     }
                 />
+            )}
+        </div>
+    );
+}
 
-                <CreateMessageModal
-                    isOpen={isModalOpen || !!editingMessage}
-                    onClose={() => {
-                        setIsModalOpen(false);
-                        setEditingMessage(null);
-                    }}
-                    onSubmit={handleCreateOrUpdate}
-                    isLoading={createMutation.isPending || updateMutation.isPending}
-                    initialData={editingMessage}
-                />
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    {stats.map((stat, index) => (
-                        <StatsCard key={index} {...stat as any} />
-                    ))}
-                </div>
-
-                {isLoading ? (
-                    <div className="flex items-center justify-center p-20">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-                    </div>
-                ) : (
-                    <DataTable
-                        columns={columns}
-                        data={messages}
-                        emptyState={
-                            <EmptyState
-                                icon="campaign"
-                                title="No messages yet"
-                                description="Start your first marketing message to drive repeat visits and increase revenue."
-                                action={{
-                                    label: "Create Message",
-                                    onClick: () => setIsModalOpen(true),
-                                    icon: "add"
-                                }}
-                            />
-                        }
-                    />
-                )}
-            </div>
+export default function AllMessagesPage() {
+    return (
+        <DashboardSidebar>
+            <Suspense fallback={<div className="p-8"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>}>
+                <MessagesContent />
+            </Suspense>
         </DashboardSidebar>
     );
 }

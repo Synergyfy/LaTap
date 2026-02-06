@@ -48,14 +48,14 @@ export default function Modal({
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
                     {/* Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+                        className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm z-0"
                     />
 
                     {/* Modal Content */}
@@ -64,11 +64,11 @@ export default function Modal({
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         transition={{ type: 'spring', duration: 0.5, bounce: 0.3 }}
-                        className={`relative w-full ${sizes[size]} bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 flex flex-col max-h-[90vh]`}
+                        className={`relative w-full ${sizes[size]} bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 flex flex-col max-h-[90vh] z-10`}
                     >
                         {/* Header */}
                         {(title || showClose) && (
-                            <div className="flex items-center justify-between p-6 pb-2">
+                            <div className="flex items-center justify-between p-8 pb-4">
                                 <div className="flex-1">
                                     {title && (
                                         <h3 className="text-xl font-display font-bold text-slate-900 leading-tight">
@@ -93,7 +93,7 @@ export default function Modal({
                         )}
 
                         {/* Body */}
-                        <div className="flex-1 overflow-y-auto p-6 scrollbar-hide">
+                        <div className="flex-1 overflow-y-auto p-8 scrollbar-hide">
                             {children}
                         </div>
                     </motion.div>

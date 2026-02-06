@@ -12,6 +12,8 @@ import DataTable, { Column } from '@/components/dashboard/DataTable';
 import EmptyState from '@/components/dashboard/EmptyState';
 import AddVisitorModal, { VisitorFormData } from '@/components/dashboard/AddVisitorModal';
 import SendMessageModal from '@/components/dashboard/SendMessageModal';
+import DeleteConfirmationModal from '@/components/dashboard/DeleteConfirmationModal';
+import VisitorDetailsModal from '@/components/dashboard/VisitorDetailsModal';
 import { Users, UserPlus, Repeat, Star, Download, Search, Edit, Trash2, MoreVertical, Send, MessageSquare } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -22,6 +24,8 @@ export default function AllVisitorsPage() {
     const [filterStatus, setFilterStatus] = useState('all');
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [selectedVisitorForMsg, setSelectedVisitorForMsg] = useState<Visitor | null>(null);
+    const [selectedVisitorForDetails, setSelectedVisitorForDetails] = useState<Visitor | null>(null);
+    const [deleteVisitorId, setDeleteVisitorId] = useState<string | null>(null);
 
     const { data: storeData, isLoading } = useQuery({
         queryKey: ['dashboard'],
@@ -35,6 +39,7 @@ export default function AllVisitorsPage() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['dashboard'] });
             toast.success('Visitor removed successfully');
+            setDeleteVisitorId(null);
         }
     });
 
@@ -80,8 +85,10 @@ export default function AllVisitorsPage() {
         toast.success('CSV exported successfully!');
     };
 
-    const handleDeleteVisitor = (id: string, name: string) => {
-        deleteMutation.mutate(id);
+    const confirmDeleteVisitor = () => {
+        if (deleteVisitorId) {
+            deleteMutation.mutate(deleteVisitorId);
+        }
     };
 
     const handleInviteVisitor = (visitor: Visitor) => {
@@ -89,7 +96,11 @@ export default function AllVisitorsPage() {
     };
 
     const handleSendMessage = () => {
-        toast('Message composer coming soon');
+        if (visitors.length > 0) {
+            setSelectedVisitorForMsg(visitors[0]); // Just for demo, generically opening a message composer
+        } else {
+            toast('No visitors available to message');
+        }
     };
 
     const stats = [
@@ -158,7 +169,7 @@ export default function AllVisitorsPage() {
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            handleDeleteVisitor(item.id, item.name);
+                            setDeleteVisitorId(item.id);
                         }}
                         className="p-1.5 text-text-secondary hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                         title="Delete visitor"
@@ -168,7 +179,7 @@ export default function AllVisitorsPage() {
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            toast('Details coming soon');
+                            setSelectedVisitorForDetails(item);
                         }}
                         className="p-1.5 text-text-secondary hover:text-text-main hover:bg-gray-100 rounded-lg transition-colors"
                     >
@@ -220,6 +231,21 @@ export default function AllVisitorsPage() {
                     type="welcome"
                 />
 
+                <VisitorDetailsModal
+                    isOpen={!!selectedVisitorForDetails}
+                    onClose={() => setSelectedVisitorForDetails(null)}
+                    visitor={selectedVisitorForDetails}
+                />
+
+                <DeleteConfirmationModal
+                    isOpen={!!deleteVisitorId}
+                    onClose={() => setDeleteVisitorId(null)}
+                    onConfirm={confirmDeleteVisitor}
+                    title="Delete Visitor?"
+                    description="This action cannot be undone. All visitor history and data will be permanently removed."
+                    isLoading={deleteMutation.isPending}
+                />
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     {stats.map((stat, index) => (
                         <StatsCard key={index} {...stat} />
@@ -261,7 +287,7 @@ export default function AllVisitorsPage() {
                     data={filteredVisitors}
                     isLoading={isLoading}
                     onRowClick={(visitor) => {
-                        toast(`Viewing ${visitor.name}'s profile`);
+                        setSelectedVisitorForDetails(visitor);
                     }}
                     emptyState={
                         <EmptyState
