@@ -17,8 +17,21 @@ export const dashboardApi = {
       staffMembers: state.staffMembers,
       devices: state.devices,
       redemptionRequests: state.redemptionRequests,
+      templates: state.templates,
       businessName: 'Green Terrace Cafe',
     };
+  },
+
+  addTemplate: async (template: any) => {
+    await delay(500);
+    useMockDashboardStore.getState().addTemplate(template);
+    return template;
+  },
+
+  deleteTemplate: async (id: string) => {
+    await delay(400);
+    useMockDashboardStore.getState().deleteTemplate(id);
+    return id;
   },
 
   addVisitor: async (visitor: Visitor) => {
@@ -114,12 +127,12 @@ export const dashboardApi = {
     useMockDashboardStore.getState().addCampaign(newCampaign);
     useMockDashboardStore.getState().addNotification({
       id: Math.random().toString(36).substr(2, 9),
-      title: 'Campaign Created',
-      message: `Campaign "${campaign.name}" has been ${campaign.status === 'Active' ? 'launched' : 'scheduled'}.`,
+      title: 'Message Created',
+      message: `Message "${campaign.name}" has been ${campaign.status === 'Active' ? 'launched' : 'scheduled'}.`,
       timestamp: Date.now(),
       read: false,
       type: 'success',
-      scope: 'DASHBOARD'
+      scope: 'DASHBOARD'    
     });
     return newCampaign;
   },

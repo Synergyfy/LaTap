@@ -23,9 +23,9 @@ export default function StatsCard({ label, value, icon: Icon, trend, color = 'bl
     };
 
     return (
-        <div className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow">
+        <div className="bg-white rounded-lg p-6 border border-gray-200 hover:shadow-lg transition-shadow">
             <div className="flex items-start justify-between mb-4">
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${colorClasses[color]}`}>
+                <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${colorClasses[color]}`}>
                     <Icon size={20} />
                 </div>
                 {trend && (

@@ -22,15 +22,15 @@ export default function NewCampaignPage() {
         schedule: 'now'
     });
 
-    const createCampaignMutation = useMutation({
+    const createMessageMutation = useMutation({
         mutationFn: dashboardApi.createCampaign,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-            toast.success('Campaign launched successfully!');
+            toast.success('Bulk message sent successfully!');
             router.push('/dashboard/campaigns');
         },
         onError: () => {
-            toast.error('Failed to create campaign');
+            toast.error('Failed to send bulk message');
             setIsSubmitting(false);
         }
     });
@@ -48,11 +48,11 @@ export default function NewCampaignPage() {
             return;
         }
         setIsSubmitting(true);
-        createCampaignMutation.mutate({
+        createMessageMutation.mutate({
             name: formData.name,
             type: formData.type,
             audience: formData.audience,
-            message: formData.message,
+            content: formData.message,
             status: 'Active'
         });
     };
@@ -61,8 +61,8 @@ export default function NewCampaignPage() {
         <DashboardSidebar>
             <div className="p-8 max-w-4xl mx-auto">
                 <PageHeader
-                    title="Create New Campaign"
-                    description="Configure your message and target audience"
+                    title="Create Bulk Message"
+                    description="Send messages to multiple customers at once"
                     actions={
                         <button
                             onClick={() => router.back()}
@@ -100,13 +100,13 @@ export default function NewCampaignPage() {
                     <div className="p-8">
                         {step === 1 && (
                             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                <h3 className="text-xl font-display font-bold text-text-main">Campaign Details</h3>
+                                <h3 className="text-xl font-display font-bold text-text-main">Message Details</h3>
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Campaign Name</label>
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Message Name</label>
                                     <input
                                         type="text"
                                         placeholder="e.g. Weekend Coffee Special"
-                                        className="w-full h-14 bg-gray-50 border border-gray-100 rounded-2xl px-5 font-bold outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
+                                        className="w-full h-14 bg-gray-50 border border-gray-100 rounded-lg px-5 font-bold outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
                                         value={formData.name}
                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                         autoFocus
@@ -123,10 +123,10 @@ export default function NewCampaignPage() {
                                             <button
                                                 key={t.id}
                                                 onClick={() => setFormData({ ...formData, type: t.id })}
-                                                className={`flex flex-col items-start gap-4 p-5 rounded-2xl border-2 transition-all text-left ${formData.type === t.id ? 'border-primary bg-primary/5 shadow-inner' : 'border-gray-50 hover:border-gray-200 bg-gray-50/50'
+                                                className={`flex flex-col items-start gap-4 p-5 rounded-lg border-2 transition-all text-left ${formData.type === t.id ? 'border-primary bg-primary/5 shadow-inner' : 'border-gray-50 hover:border-gray-200 bg-gray-50/50'
                                                     }`}
                                             >
-                                                <div className={`p-2 rounded-xl ${formData.type === t.id ? 'bg-primary text-white' : 'bg-white text-text-secondary border border-gray-100'}`}>
+                                                <div className={`p-2 rounded-lg ${formData.type === t.id ? 'bg-primary text-white' : 'bg-white text-text-secondary border border-gray-100'}`}>
                                                     <t.icon size={20} />
                                                 </div>
                                                 <div>
@@ -153,7 +153,7 @@ export default function NewCampaignPage() {
                                         <button
                                             key={a.id}
                                             onClick={() => setFormData({ ...formData, audience: a.id })}
-                                            className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all text-left ${formData.audience === a.id ? 'border-primary bg-primary/5 shadow-inner' : 'border-gray-50 hover:border-gray-200'
+                                            className={`flex items-center gap-4 p-5 rounded-lg border-2 transition-all text-left ${formData.audience === a.id ? 'border-primary bg-primary/5 shadow-inner' : 'border-gray-50 hover:border-gray-200'
                                                 }`}
                                         >
                                             <div className={`size-6 rounded-full border-2 flex items-center justify-center transition-all ${formData.audience === a.id ? 'border-primary bg-primary' : 'border-gray-200'
@@ -188,7 +188,7 @@ export default function NewCampaignPage() {
                                     <textarea
                                         rows={6}
                                         placeholder="Type your message here... Use {name} for personalization."
-                                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-5 font-bold outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm resize-none"
+                                        className="w-full bg-gray-50 border border-gray-100 rounded-lg p-5 font-bold outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm resize-none"
                                         value={formData.message}
                                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                                     />
@@ -216,8 +216,8 @@ export default function NewCampaignPage() {
                                     <div className="size-20 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-xl">
                                         <Rocket size={40} />
                                     </div>
-                                    <h3 className="text-2xl font-display font-bold text-text-main">Ready to Blast Off?</h3>
-                                    <p className="text-text-secondary text-sm">Review your campaign settings before launching</p>
+                                    <h3 className="text-2xl font-display font-bold text-text-main">Ready to Send?</h3>
+                                    <p className="text-text-secondary text-sm">Review your message settings before sending</p>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
@@ -253,13 +253,13 @@ export default function NewCampaignPage() {
                         <button
                             onClick={() => step < 4 ? setStep(step + 1) : handleLaunch()}
                             disabled={isSubmitting || (step === 1 && !formData.name) || (step === 3 && !formData.message)}
-                            className="flex items-center gap-2 px-10 py-3 bg-primary text-white font-bold rounded-2xl hover:bg-primary-hover transition-all text-sm shadow-xl shadow-primary/20 active:scale-95 disabled:opacity-50"
+                            className="flex items-center gap-2 px-10 py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition-all text-sm shadow-xl shadow-primary/20 active:scale-95 disabled:opacity-50"
                         >
                             {isSubmitting ? (
                                 <div className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                             ) : (
                                 <>
-                                    {step === 4 ? 'Launch Campaign' : 'Continue'}
+                                    {step === 4 ? 'Send Message' : 'Continue'}
                                     <ArrowRight size={18} />
                                 </>
                             )}

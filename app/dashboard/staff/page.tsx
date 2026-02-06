@@ -75,9 +75,10 @@ export default function StaffManagementPage() {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const staffData = {
-            name: formData.get('name') as string,
+            name: `${formData.get('firstName')} ${formData.get('lastName')}`,
             email: formData.get('email') as string,
             role: formData.get('role') as any,
+            jobTitle: formData.get('jobTitle') as string,
             permissions: selectedPermissions,
         };
         addStaffMutation.mutate(staffData);
@@ -173,7 +174,7 @@ export default function StaffManagementPage() {
                     actions={
                         <button
                             onClick={() => setIsInviteModalOpen(true)}
-                            className="flex items-center gap-2 px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-lg shadow-primary/20 active:scale-95"
+                            className="flex items-center gap-2 px-6 py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition-all text-sm shadow-lg shadow-primary/20 active:scale-95"
                         >
                             <UserPlus size={18} />
                             Invite Staff
@@ -193,7 +194,7 @@ export default function StaffManagementPage() {
 
                 <div className="mt-8 bg-linear-to-r from-primary/5 to-transparent border border-primary/10 rounded-2xl p-6">
                     <div className="flex gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                        <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                             <Shield className="text-primary" size={24} />
                         </div>
                         <div>
@@ -228,21 +229,32 @@ export default function StaffManagementPage() {
                 <form onSubmit={handleInviteStaff} className="space-y-6 py-4">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Full Name</label>
-                            <input name="name" required className="w-full h-12 px-4 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all font-bold text-sm" placeholder="e.g. John Doe" />
+                            <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">First Name</label>
+                            <input name="firstName" required className="w-full h-12 px-4 bg-gray-50 border border-gray-100 rounded-lg focus:outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all font-bold text-sm" placeholder="e.g. John" />
+                        </div>
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Last Name</label>
+                            <input name="lastName" required className="w-full h-12 px-4 bg-gray-50 border border-gray-100 rounded-lg focus:outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all font-bold text-sm" placeholder="e.g. Doe" />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Job Title / Role</label>
+                            <input name="jobTitle" required className="w-full h-12 px-4 bg-gray-50 border border-gray-100 rounded-lg focus:outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all font-bold text-sm" placeholder="e.g. Head of Sales" />
                         </div>
                         <div className="space-y-1.5">
                             <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Email Address</label>
-                            <input name="email" type="email" required className="w-full h-12 px-4 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all font-bold text-sm" placeholder="john@example.com" />
+                            <input name="email" type="email" required className="w-full h-12 px-4 bg-gray-50 border border-gray-100 rounded-lg focus:outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all font-bold text-sm" placeholder="john@example.com" />
                         </div>
                     </div>
 
                     <div className="space-y-1.5">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Assign Base Role</label>
-                        <select name="role" className="w-full h-12 px-4 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all font-bold text-sm appearance-none">
-                            <option value="Staff">Staff Member</option>
-                            <option value="Manager">Manager</option>
-                            <option value="Owner">Business Owner</option>
+                        <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Access Level</label>
+                        <select name="role" className="w-full h-12 px-4 bg-gray-50 border border-gray-100 rounded-lg focus:outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all font-bold text-sm appearance-none">
+                            <option value="Staff">Staff Member (Limited Access)</option>
+                            <option value="Manager">Manager (Full Dashboard)</option>
+                            <option value="Owner">Business Owner (Admin)</option>
                         </select>
                     </div>
 
@@ -259,7 +271,7 @@ export default function StaffManagementPage() {
                                         onClick={() => setSelectedPermissions(prev =>
                                             isSelected ? prev.filter(id => id !== p.id) : [...prev, p.id]
                                         )}
-                                        className={`flex items-center gap-3 p-3 rounded-xl border-2 transition-all group ${isSelected ? 'border-primary bg-primary/5' : 'border-gray-50 hover:border-gray-100 bg-gray-50/50'}`}
+                                        className={`flex items-center gap-3 p-3 rounded-lg border-2 transition-all group ${isSelected ? 'border-primary bg-primary/5' : 'border-gray-50 hover:border-gray-100 bg-gray-50/50'}`}
                                     >
                                         <div className={`p-1.5 rounded-lg ${isSelected ? 'bg-primary text-white' : 'bg-white text-text-secondary border border-gray-100'}`}>
                                             <Icon size={14} />
@@ -296,7 +308,7 @@ export default function StaffManagementPage() {
                                 <button
                                     key={role}
                                     onClick={() => handleUpdateRole(editingStaff!.id, role)}
-                                    className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${editingStaff?.role === role ? 'border-primary bg-primary/5' : 'border-gray-50 hover:border-gray-100 bg-gray-50/50'}`}
+                                    className={`flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all ${editingStaff?.role === role ? 'border-primary bg-primary/5' : 'border-gray-50 hover:border-gray-100 bg-gray-50/50'}`}
                                 >
                                     <Shield size={20} className={editingStaff?.role === role ? 'text-primary' : 'text-gray-300'} />
                                     <span className={`text-[11px] font-black uppercase mt-2 ${editingStaff?.role === role ? 'text-primary' : 'text-text-secondary'}`}>{role}</span>
@@ -348,10 +360,10 @@ export default function StaffManagementPage() {
                 description={`Are you sure you want to remove ${staffToDelete?.name}? This action cannot be undone.`}
             >
                 <div className="flex gap-3 py-4">
-                    <button onClick={() => setStaffToDelete(null)} className="flex-1 h-12 border border-gray-100 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm">
+                    <button onClick={() => setStaffToDelete(null)} className="flex-1 h-12 border-2 border-primary/20 text-primary font-bold rounded-lg hover:bg-primary/5 hover:border-primary/30 transition-all text-sm">
                         Cancel
                     </button>
-                    <button onClick={confirmDelete} className="flex-1 h-12 bg-red-500 text-white font-bold rounded-xl hover:bg-red-600 transition-all shadow-lg shadow-red-500/20 text-sm">
+                    <button onClick={confirmDelete} className="flex-1 h-12 bg-red-500 text-white font-bold rounded-lg hover:bg-red-600 transition-all shadow-lg shadow-red-500/20 text-sm">
                         Remove
                     </button>
                 </div>

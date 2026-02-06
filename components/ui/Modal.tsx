@@ -64,7 +64,7 @@ export default function Modal({
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         transition={{ type: 'spring', duration: 0.5, bounce: 0.3 }}
-                        className={`relative w-full ${sizes[size]} bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 flex flex-col max-h-[90vh] z-10`}
+                        className={`relative w-full ${sizes[size]} bg-white rounded-lg shadow-2xl overflow-hidden border border-slate-100 flex flex-col max-h-[90vh] z-10`}
                     >
                         {/* Header */}
                         {(title || showClose) && (
@@ -84,7 +84,7 @@ export default function Modal({
                                 {showClose && (
                                     <button
                                         onClick={onClose}
-                                        className="p-2 hover:bg-slate-50 rounded-xl text-slate-400 hover:text-slate-900 transition-colors shrink-0 ml-4 cursor-pointer"
+                                        className="p-2 hover:bg-primary/5 rounded-lg text-slate-400 hover:text-primary transition-colors shrink-0 ml-4 cursor-pointer"
                                     >
                                         <X size={20} />
                                     </button>

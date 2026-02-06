@@ -9,7 +9,7 @@ import { dashboardApi } from '@/lib/api/dashboard';
 import { Notification } from '@/lib/store/mockDashboardStore';
 import {
     LayoutGrid, History, Gift, User, Nfc, Bell,
-    LogOut, Menu, Star
+    LogOut, Menu, Star, BarChart3
 } from 'lucide-react';
 import Logo from '@/components/brand/Logo';
 
@@ -67,6 +67,12 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
             href: '/customer/dashboard',
         },
         {
+            id: 'analytics',
+            label: 'Analytics',
+            icon: BarChart3,
+            href: '/customer/analytics',
+        },
+        {
             id: 'history',
             label: 'Visit History',
             icon: History,
@@ -108,7 +114,7 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
                                 <Link
                                     key={item.id}
                                     href={item.href}
-                                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${isActive(item.href)
+                                    className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-all ${isActive(item.href)
                                         ? 'bg-primary text-white shadow-lg shadow-primary/20'
                                         : 'text-text-secondary hover:bg-gray-50 hover:text-text-main'
                                         }`}
@@ -121,7 +127,7 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
                     </div>
 
                     {/* Promo Card */}
-                    <div className="mt-8 bg-linear-to-br from-primary to-blue-600 rounded-xl p-4 text-white relative overflow-hidden">
+                    <div className="mt-8 bg-linear-to-br from-primary to-blue-600 rounded-lg p-4 text-white relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full translate-x-10 -translate-y-10 blur-xl"></div>
                         <Star className="text-white mb-2 bg-white/20 p-2 rounded-lg backdrop-blur-sm" size={32} />
                         <h3 className="font-bold text-sm mb-1">Earn more points!</h3>
