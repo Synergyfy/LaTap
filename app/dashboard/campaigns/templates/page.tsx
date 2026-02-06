@@ -1,12 +1,16 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import StatsCard from '@/components/dashboard/StatsCard';
 import ChartCard from '@/components/dashboard/ChartCard';
+import { Plus } from 'lucide-react';
 
 export default function CampaignTemplatesPage() {
+    const router = useRouter();
+
     const templates = [
         { id: '1', title: 'Welcome Message', category: 'Onboarding', type: 'Any', textColor: 'blue' },
         { id: '2', title: 'Weekend Promo', category: 'Marketing', type: 'WhatsApp', textColor: 'green' },
@@ -16,6 +20,10 @@ export default function CampaignTemplatesPage() {
         { id: '6', title: 'Flash Sale Alert', category: 'Marketing', type: 'SMS', textColor: 'red' },
     ];
 
+    const handleUseTemplate = (templateId: string) => {
+        router.push(`/dashboard/campaigns?create=true&template=${templateId}`);
+    };
+
     return (
         <DashboardSidebar>
             <div className="p-8">
@@ -23,8 +31,11 @@ export default function CampaignTemplatesPage() {
                     title="Message Templates"
                     description="Quick-start your campaigns with pre-built message formats"
                     actions={
-                        <button className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20">
-                            <span className="material-icons-round text-lg">add</span>
+                        <button
+                            onClick={() => router.push('/dashboard/campaigns?create=true')}
+                            className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20"
+                        >
+                            <Plus size={18} />
                             Create Template
                         </button>
                     }
@@ -51,7 +62,10 @@ export default function CampaignTemplatesPage() {
                                         <span className="material-icons-round text-sm text-gray-400">devices</span>
                                         <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">{template.type}</span>
                                     </div>
-                                    <button className="text-primary text-xs font-bold hover:underline flex items-center gap-1">
+                                    <button
+                                        onClick={() => handleUseTemplate(template.id)}
+                                        className="text-primary text-xs font-bold hover:underline flex items-center gap-1"
+                                    >
                                         Use This
                                         <span className="material-icons-round text-sm">arrow_forward</span>
                                     </button>
@@ -60,9 +74,12 @@ export default function CampaignTemplatesPage() {
                         </div>
                     ))}
 
-                    <button className="bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 p-6 flex flex-col items-center justify-center text-center hover:bg-gray-100 hover:border-primary/30 transition-all group">
+                    <button
+                        onClick={() => router.push('/dashboard/campaigns?create=true')}
+                        className="bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 p-6 flex flex-col items-center justify-center text-center hover:bg-gray-100 hover:border-primary/30 transition-all group"
+                    >
                         <div className="size-12 rounded-full bg-white flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
-                            <span className="material-icons-round text-gray-400 group-hover:text-primary">add</span>
+                            <Plus size={24} className="text-gray-400 group-hover:text-primary" />
                         </div>
                         <h3 className="font-bold text-text-main mb-1">Custom Template</h3>
                         <p className="text-xs text-text-secondary">Build from scratch</p>

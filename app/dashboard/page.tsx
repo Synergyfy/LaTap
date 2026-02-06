@@ -1,6 +1,6 @@
 'use client';
 
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { dashboardApi } from '@/lib/api/dashboard';
@@ -13,12 +13,14 @@ import {
 import { useRouter } from 'next/navigation';
 import Modal from '@/components/ui/Modal';
 import SendMessageModal from '@/components/dashboard/SendMessageModal';
+import VisitorDetailsModal from '@/components/dashboard/VisitorDetailsModal';
 
 export default function DashboardPage() {
     const queryClient = useQueryClient();
     const router = useRouter();
     const [showClearModal, setShowClearModal] = useState(false);
     const [selectedVisitorForMsg, setSelectedVisitorForMsg] = useState<{ visitor: Visitor, type: 'welcome' | 'reward' } | null>(null);
+    const [selectedVisitorForDetails, setSelectedVisitorForDetails] = useState<Visitor | null>(null);
 
     // Fetch Dashboard Data
     const { data, isLoading } = useQuery({
@@ -230,7 +232,7 @@ export default function DashboardPage() {
                                     key={i}
                                     onClick={() => {
                                         if (action.label === 'Manual Entry') {
-                                            toast.success('Navigate to All Visitors to add manually');
+                                            // Just navigate, logic handled on page
                                         }
                                         router.push(action.route);
                                     }}
@@ -260,10 +262,7 @@ export default function DashboardPage() {
                             <p className="text-sm text-text-secondary">Latest customer check-ins</p>
                         </div>
                         <button
-                            onClick={() => {
-                                toast('Navigating to visitors page');
-                                console.log('View All clicked');
-                            }}
+                            onClick={() => router.push('/dashboard/visitors/all')}
                             className="px-4 py-2 text-sm font-bold text-primary hover:bg-primary/5 rounded-lg transition-colors"
                         >
                             View All
@@ -285,10 +284,7 @@ export default function DashboardPage() {
                                     <tr
                                         key={visitor.id || index}
                                         className="border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
-                                        onClick={() => {
-                                            console.log('Visitor row clicked:', visitor);
-                                            toast(`Viewing details for ${visitor.name}`);
-                                        }}
+                                        onClick={() => setSelectedVisitorForDetails(visitor)}
                                     >
                                         <td className="py-4 px-4">
                                             <div className="flex items-center gap-3">
@@ -359,6 +355,12 @@ export default function DashboardPage() {
                     recipientName={selectedVisitorForMsg?.visitor.name || ''}
                     recipientPhone={selectedVisitorForMsg?.visitor.phone}
                     type={selectedVisitorForMsg?.type || 'welcome'}
+                />
+
+                <VisitorDetailsModal
+                    isOpen={!!selectedVisitorForDetails}
+                    onClose={() => setSelectedVisitorForDetails(null)}
+                    visitor={selectedVisitorForDetails}
                 />
             </div>
         </DashboardSidebar>

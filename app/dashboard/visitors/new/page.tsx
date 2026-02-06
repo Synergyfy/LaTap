@@ -11,12 +11,14 @@ import { dashboardApi } from '@/lib/api/dashboard';
 import { Visitor } from '@/lib/store/mockDashboardStore';
 import { UserPlus, Calendar, TrendingUp, Timer, Send, Hand } from 'lucide-react';
 import SendMessageModal from '@/components/dashboard/SendMessageModal';
+import VisitorDetailsModal from '@/components/dashboard/VisitorDetailsModal';
 import toast from 'react-hot-toast';
 
 export default function NewVisitorsPage() {
     const queryClient = useQueryClient();
 
     const [selectedVisitorForMsg, setSelectedVisitorForMsg] = useState<Visitor | null>(null);
+    const [selectedVisitorForDetails, setSelectedVisitorForDetails] = useState<Visitor | null>(null);
 
     const { data: storeData, isLoading } = useQuery({
         queryKey: ['dashboard'],
@@ -31,11 +33,12 @@ export default function NewVisitorsPage() {
     };
 
     const handleSendWelcomeMessage = () => {
-        if (newVisitors.length === 0) {
+        if (newVisitors.length > 0) {
+            // Bulk message logic would go here, for now pick the first one as demo or open a generic composer
+            toast.success(`Welcome message campaign scheduled for ${newVisitors.length} new visitors!`);
+        } else {
             toast.error('No new visitors to send welcome message to');
-            return;
         }
-        toast.success(`Welcome message sent to ${newVisitors.length} new visitors!`);
     };
 
     const stats = [
@@ -111,6 +114,12 @@ export default function NewVisitorsPage() {
                     type="welcome"
                 />
 
+                <VisitorDetailsModal
+                    isOpen={!!selectedVisitorForDetails}
+                    onClose={() => setSelectedVisitorForDetails(null)}
+                    visitor={selectedVisitorForDetails}
+                />
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     {stats.map((stat, index) => (
                         <StatsCard key={index} {...stat} />
@@ -121,7 +130,7 @@ export default function NewVisitorsPage() {
                     columns={columns}
                     data={newVisitors}
                     isLoading={isLoading}
-                    onRowClick={(visitor) => toast(`Viewing ${visitor.name}'s profile`)}
+                    onRowClick={(visitor) => setSelectedVisitorForDetails(visitor)}
                     emptyState={
                         <EmptyState
                             icon="person_add"
