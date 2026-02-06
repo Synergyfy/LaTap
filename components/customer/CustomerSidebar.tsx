@@ -151,7 +151,7 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
                     </div>
                     <button
                         onClick={handleLogout}
-                        className="w-full py-2.5 px-3 border border-red-100 text-red-600 rounded-xl text-xs font-bold hover:bg-red-50 transition-colors flex items-center justify-center gap-2"
+                        className="w-full py-2.5 px-3 border border-red-100 text-red-600 rounded-lg text-xs font-bold hover:bg-red-50 transition-colors flex items-center justify-center gap-2"
                     >
                         <LogOut size={16} />
                         Sign Out
@@ -198,7 +198,7 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
                                     className="fixed inset-0 z-40"
                                     onClick={() => setShowNotifications(false)}
                                 ></div>
-                                <div className="absolute right-0 top-14 w-80 bg-white rounded-2xl shadow-xl border border-gray-200 z-50 overflow-hidden">
+                                <div className="absolute right-0 top-14 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50 overflow-hidden">
                                     <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-gray-50">
                                         <h3 className="font-bold text-text-main text-sm">Notifications</h3>
                                         <button

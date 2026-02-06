@@ -7,14 +7,37 @@ import { useCustomerFlowStore } from '@/store/useCustomerFlowStore';
 import { StepWelcomeBack } from '@/components/visitor/StepWelcomeBack';
 import { StepFinalSuccess } from '@/components/visitor/StepFinalSuccess';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HelpCircle, X, CheckCircle2, Gift, ArrowRight, MessageSquare, Smartphone, ChevronLeft, ChevronRight } from 'lucide-react';
 import { notify } from '@/lib/notify';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { dashboardApi } from '@/lib/api/dashboard';
+import { Reward } from '@/lib/store/mockDashboardStore';
+import { HelpCircle, X, CheckCircle2, Gift, ArrowRight, MessageSquare, Smartphone, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function MessageSettingsPage() {
     const store = useCustomerFlowStore();
     const [activeTab, setActiveTab] = useState<'welcome' | 'success' | 'rewards'>('welcome');
     const [showRulesModal, setShowRulesModal] = useState(false);
     const [previewIndex, setPreviewIndex] = useState(0);
+    const queryClient = useQueryClient();
+
+    const { data: dashboardData } = useQuery({
+        queryKey: ['dashboard'],
+        queryFn: dashboardApi.fetchDashboardData,
+    });
+
+    const updateRewardMutation = useMutation({
+        mutationFn: dashboardApi.updateReward,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+        }
+    });
+
+    // Auto-sync tab with preview screen
+    React.useEffect(() => {
+        if (activeTab === 'welcome') setPreviewIndex(0);
+        else if (activeTab === 'success') setPreviewIndex(1);
+        else if (activeTab === 'rewards') setPreviewIndex(2);
+    }, [activeTab]);
 
     // Local state for preview updates before saving
     const [settings, setSettings] = useState({
@@ -228,61 +251,43 @@ export default function MessageSettingsPage() {
                                         exit={{ opacity: 0, y: -10 }}
                                         className="space-y-8"
                                     >
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-4">
-                                                <div className="size-12 bg-orange-50 rounded-xl flex items-center justify-center text-orange-600">
-                                                    <Gift size={24} />
-                                                </div>
-                                                <div>
-                                                    <h3 className="font-display font-bold text-lg text-text-main">Loyalty programs</h3>
-                                                    <p className="text-xs text-text-secondary font-medium">Reward your frequent customers automatically.</p>
-                                                </div>
-                                            </div>
-
-                                            <label className="relative inline-flex items-center cursor-pointer group">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={settings.rewardEnabled}
-                                                    onChange={(e) => setSettings({ ...settings, rewardEnabled: e.target.checked })}
-                                                    className="sr-only peer"
-                                                />
-                                                <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary shadow-inner"></div>
-                                            </label>
-                                        </div>
-
-                                        <div className={`space-y-8 transition-all duration-500 ${!settings.rewardEnabled ? 'opacity-30 pointer-events-none grayscale' : ''}`}>
-                                            <div className="space-y-4 bg-gray-50 p-6 rounded-xl border border-gray-100">
-                                                <div className="flex justify-between items-center px-1">
-                                                    <label className="text-[10px] font-bold text-text-secondary">Visit milestone</label>
-                                                    <div className="flex items-center gap-2">
-                                                        <input
-                                                            type="number"
-                                                            min="1"
-                                                            max="100"
-                                                            value={settings.rewardVisitThreshold}
-                                                            onChange={(e) => setSettings({ ...settings, rewardVisitThreshold: Math.min(100, Math.max(1, parseInt(e.target.value) || 1)) })}
-                                                            className="w-16 h-8 bg-white border border-gray-200 rounded-lg text-center font-bold text-xs outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30"
-                                                        />
-                                                        <span className="text-[10px] font-bold text-text-secondary">visits</span>
-                                                    </div>
-                                                </div>
-                                                <input
-                                                    type="range"
-                                                    min="1"
-                                                    max="50"
-                                                    step="1"
-                                                    value={settings.rewardVisitThreshold > 50 ? 50 : settings.rewardVisitThreshold}
-                                                    onChange={(e) => setSettings({ ...settings, rewardVisitThreshold: parseInt(e.target.value) })}
-                                                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary"
-                                                />
-                                                <div className="flex justify-between text-[10px] font-bold text-text-secondary px-1">
-                                                    <span>1 visit</span>
-                                                    <span>50+ visits</span>
+                                        <div className="space-y-6">
+                                            <div className="flex flex-col gap-4">
+                                                <label className="text-[10px] font-bold text-text-secondary ml-1">Individual reward thresholds</label>
+                                                <div className="space-y-3">
+                                                    {dashboardData?.rewards?.length ? (
+                                                        dashboardData.rewards.map((reward: Reward) => (
+                                                            <div key={reward.id} className="bg-gray-50 p-4 rounded-xl border border-gray-100 flex items-center justify-between group hover:border-primary/20 transition-all">
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className={`size-8 rounded-lg flex items-center justify-center text-[10px] font-bold ${reward.active ? 'bg-primary text-white' : 'bg-gray-200 text-gray-400'}`}>
+                                                                        {reward.title.charAt(0)}
+                                                                    </div>
+                                                                    <p className="text-sm font-bold text-text-main">{reward.title}</p>
+                                                                </div>
+                                                                <div className="flex items-center gap-3">
+                                                                    <input
+                                                                        type="number"
+                                                                        className="w-14 h-9 bg-white border border-gray-200 rounded-lg text-center font-bold text-xs outline-none focus:ring-2 focus:ring-primary/20"
+                                                                        value={reward.points}
+                                                                        onChange={(e) => updateRewardMutation.mutate({
+                                                                            id: reward.id,
+                                                                            updates: { points: parseInt(e.target.value) || 0 }
+                                                                        })}
+                                                                    />
+                                                                    <span className="text-[10px] font-bold text-text-secondary pr-2">visits</span>
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                    ) : (
+                                                        <div className="p-4 bg-gray-50 rounded-xl border border-dashed border-gray-200 text-center">
+                                                            <p className="text-[10px] font-bold text-text-secondary uppercase">No rewards found</p>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
 
                                             <div className="space-y-3">
-                                                <label className="text-[10px] font-bold text-text-secondary ml-1">Threshold reached message</label>
+                                                <label className="text-[10px] font-bold text-text-secondary ml-1">Universal reward message</label>
                                                 <textarea
                                                     rows={3}
                                                     className="w-full bg-gray-50 border border-gray-100 rounded-xl p-5 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm resize-none"
@@ -330,6 +335,12 @@ export default function MessageSettingsPage() {
                                     >
                                         Screen B
                                     </button>
+                                    <button
+                                        onClick={() => setPreviewIndex(2)}
+                                        className={`px-3 py-1 text-[10px] font-bold transition-all rounded-md ${previewIndex === 2 ? 'bg-white shadow-sm text-primary' : 'text-text-secondary hover:text-text-main'}`}
+                                    >
+                                        Screen C
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -361,7 +372,7 @@ export default function MessageSettingsPage() {
                                                 <p className="text-[10px] font-bold text-text-secondary">Screen A</p>
                                                 <p className="text-xs font-bold text-text-main">Returning user flow</p>
                                             </div>
-                                            <div className="bg-gray-900 rounded-3xl p-4 shadow-2xl border-[6px] border-gray-800 aspect-[10/18] relative overflow-hidden">
+                                            <div className="bg-gray-900 rounded-3xl p-4 shadow-2xl border-[6px] border-gray-800 aspect-10/18 relative overflow-hidden">
                                                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-gray-800 rounded-b-xl z-50"></div>
                                                 <div className="bg-white w-full h-full rounded-xl overflow-hidden relative flex flex-col">
                                                     <div className="flex-1 overflow-y-auto pt-12 px-5 bg-gray-50">
@@ -385,14 +396,14 @@ export default function MessageSettingsPage() {
                                                 </div>
                                             </div>
                                         </div>
-                                    ) : (
+                                    ) : previewIndex === 1 ? (
                                         /* Device 2: Final Success */
                                         <div className="space-y-6">
                                             <div className="flex flex-col items-center gap-1">
                                                 <p className="text-[10px] font-bold text-text-secondary">Screen B</p>
                                                 <p className="text-xs font-bold text-text-main">Completion success</p>
                                             </div>
-                                            <div className="bg-gray-900 rounded-3xl p-4 shadow-2xl border-[6px] border-gray-800 aspect-[10/18] relative overflow-hidden">
+                                            <div className="bg-gray-900 rounded-3xl p-4 shadow-2xl border-[6px] border-gray-800 aspect-10/18 relative overflow-hidden">
                                                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-gray-800 rounded-b-xl z-50"></div>
                                                 <div className="bg-white w-full h-full rounded-xl overflow-hidden relative flex flex-col">
                                                     <div className="flex-1 overflow-y-auto pt-12 px-5 bg-gray-50">
@@ -402,6 +413,37 @@ export default function MessageSettingsPage() {
                                                             finalSuccessMessage={settings.successMessage}
                                                             customSuccessButton={settings.successButton}
                                                             onFinish={() => { }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        /* Device 3: Reward Unlocked */
+                                        <div className="space-y-6">
+                                            <div className="flex flex-col items-center gap-1">
+                                                <p className="text-[10px] font-bold text-text-secondary">Screen C</p>
+                                                <p className="text-xs font-bold text-text-main">Reward Unlocked</p>
+                                            </div>
+                                            <div className="bg-gray-900 rounded-lg p-4 shadow-2xl border-[6px] border-gray-800 aspect-10/18 relative overflow-hidden">
+                                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-gray-800 rounded-b-xl z-50"></div>
+                                                <div className="bg-white w-full h-full rounded-lg overflow-hidden relative flex flex-col">
+                                                    <div className="flex-1 overflow-y-auto pt-12 px-5 bg-gray-50">
+                                                        <StepWelcomeBack
+                                                            storeName={store.storeName}
+                                                            logoUrl={store.logoUrl}
+                                                            customWelcomeTag="CONGRATULATIONS!"
+                                                            customWelcomeTitle="Reward Unlocked!"
+                                                            customWelcomeMessage={settings.rewardMessage}
+                                                            customWelcomeButton="Claim Prize"
+                                                            visitCount={settings.rewardVisitThreshold}
+                                                            userData={{ name: 'John Doe', email: 'john@example.com' }}
+                                                            rewardVisitThreshold={settings.rewardVisitThreshold}
+                                                            hasRewardSetup={true}
+                                                            redemptionStatus="none"
+                                                            onRedeem={() => { }}
+                                                            onContinue={() => { }}
+                                                            onClear={() => { }}
                                                         />
                                                     </div>
                                                 </div>
@@ -427,7 +469,7 @@ export default function MessageSettingsPage() {
 
                             {/* Navigation Dots */}
                             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3">
-                                {[0, 1].map((idx) => (
+                                {[0, 1, 2].map((idx) => (
                                     <button
                                         key={idx}
                                         onClick={() => setPreviewIndex(idx)}
@@ -444,7 +486,7 @@ export default function MessageSettingsPage() {
             {/* Loyalty Rules Modal */}
             <AnimatePresence>
                 {showRulesModal && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}

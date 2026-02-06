@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import CustomerSidebar from '@/components/customer/CustomerSidebar';
 import Modal from '@/components/ui/Modal';
+import AnimatedRewardModal from '@/components/customer/AnimatedRewardModal';
 import Link from 'next/link';
 import {
     History, Star, PiggyBank, Coffee, Smartphone, Dumbbell,
@@ -16,6 +17,9 @@ export default function CustomerDashboardPage() {
     const { user, isAuthenticated } = useAuthStore();
     const router = useRouter();
     const [showIdModal, setShowIdModal] = useState(false);
+    const [showRewardAnimation, setShowRewardAnimation] = useState(false);
+    const [currentReward, setCurrentReward] = useState<{ name: string; points: number; icon?: React.ReactNode } | null>(null);
+    const [userPoints, setUserPoints] = useState(1250);
 
     useEffect(() => {
         if (!isAuthenticated || user?.role !== 'customer') {
@@ -27,12 +31,6 @@ export default function CustomerDashboardPage() {
         return null;
     }
 
-    const stats = [
-        { label: 'Total Visits', value: '42', icon: History, color: 'blue' },
-        { label: 'Reward Points', value: '1,250', icon: Star, color: 'primary' },
-        { label: 'Net Savings', value: '₦15,000', icon: PiggyBank, color: 'green' },
-    ];
-
     const recentVisits = [
         { id: 1, place: 'Green Terrace Cafe', date: 'Today, 10:30 AM', points: '+50', icon: Coffee },
         { id: 2, place: 'NextGen Tech Store', date: 'Yesterday, 4:15 PM', points: '+120', icon: Smartphone },
@@ -40,13 +38,26 @@ export default function CustomerDashboardPage() {
         { id: 4, place: 'Green Terrace Cafe', date: 'Jan 28, 11:00 AM', points: '+50', icon: Coffee },
     ];
 
-    const handleRedeem = (reward: string, points: number) => {
-        if (points > 1250) {
+    const handleRedeem = (reward: string, points: number, icon?: React.ReactNode) => {
+        if (points > userPoints) {
             notify.error(`Insufficient points to redeem ${reward}`);
             return;
         }
-        notify.success(`Success! Your reward voucher for ${reward} is now active.`);
+
+        // Show animated modal
+        setCurrentReward({ name: reward, points, icon });
+        setShowRewardAnimation(true);
+
+        // Deduct points
+        setUserPoints(prev => prev - points);
+
+        // Close animation after some time
+        setTimeout(() => {
+            setShowRewardAnimation(false);
+            setCurrentReward(null);
+        }, 5000);
     };
+
 
     return (
         <CustomerSidebar>
@@ -103,7 +114,7 @@ export default function CustomerDashboardPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {[
                         { label: 'Total Visits', value: '42', icon: History, color: 'blue' },
-                        { label: 'Reward Points', value: '1,250', icon: Star, color: 'primary' },
+                        { label: 'Reward Points', value: userPoints.toLocaleString(), icon: Star, color: 'primary' },
                         { label: 'Net Savings', value: '₦15,000', icon: PiggyBank, color: 'green' },
                     ].map((stat, index) => {
                         const IconComponent = stat.icon;
@@ -171,6 +182,7 @@ export default function CustomerDashboardPage() {
                                 <h3 className="font-display font-bold text-xl text-text-main">Unlocked Rewards</h3>
                                 <p className="text-xs text-text-secondary font-medium mt-1">Ready for redemption</p>
                             </div>
+                            <Link href="/customer/rewards" className="px-4 py-2 bg-gray-50 text-xs font-black uppercase tracking-widest text-primary hover:bg-primary/5 rounded-lg transition-all">View All</Link>
                         </div>
                         <div className="space-y-6">
                             {/* Reward 1 - In Progress */}
@@ -217,7 +229,7 @@ export default function CustomerDashboardPage() {
                                         </div>
                                     </div>
                                     <button
-                                        onClick={() => handleRedeem('Free Gym Session', 1000)}
+                                        onClick={() => handleRedeem('1 Free Gym Session', 1000, <Dumbbell size={64} className="text-blue-600" />)}
                                         className="w-full h-11 bg-primary text-white rounded-lg text-xs font-black uppercase tracking-widest hover:bg-primary-hover shadow-lg shadow-primary/20 transition-all active:scale-95 flex items-center justify-center gap-2"
                                     >
                                         Claim Reward Now
@@ -244,17 +256,17 @@ export default function CustomerDashboardPage() {
                     <p className="text-sm text-slate-500 font-medium mt-1">EntryConnect Member since 2024</p>
                 </div>
 
-                <div className="bg-slate-50 rounded-4xl p-8 mb-8 border border-slate-100 text-center relative group">
-                    <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-4xl"></div>
+                <div className="bg-slate-50 rounded-lg p-8 mb-8 border border-slate-100 text-center relative group">
+                    <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg"></div>
                     <QrCode size={180} className="mx-auto text-slate-900 relative z-10" />
                     <p className="mt-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Scan at Terminal</p>
                 </div>
 
                 <div className="flex gap-4 mb-8">
-                    <button className="flex-1 h-14 bg-slate-100 text-slate-600 font-bold rounded-2xl hover:bg-slate-200 transition-all text-[10px] uppercase tracking-widest active:scale-95">
+                    <button className="flex-1 h-14 bg-slate-100 text-slate-600 font-bold rounded-lg hover:bg-slate-200 transition-all text-[10px] uppercase tracking-widest active:scale-95">
                         Apple Wallet
                     </button>
-                    <button className="flex-1 h-14 bg-primary text-white font-bold rounded-2xl hover:bg-primary-hover transition-all text-[10px] uppercase tracking-widest shadow-xl shadow-primary/20 active:scale-95">
+                    <button className="flex-1 h-14 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition-all text-[10px] uppercase tracking-widest shadow-xl shadow-primary/20 active:scale-95">
                         G-Pay
                     </button>
                 </div>
@@ -262,7 +274,7 @@ export default function CustomerDashboardPage() {
                 <div className="pt-6 border-t border-slate-100 flex items-center justify-between">
                     <div className="text-left">
                         <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Points Balance</p>
-                        <p className="text-lg font-display font-bold text-primary">1,250 pts</p>
+                        <p className="text-lg font-display font-bold text-primary">{userPoints.toLocaleString()} pts</p>
                     </div>
                     <div className="text-right">
                         <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Membership</p>
@@ -272,6 +284,18 @@ export default function CustomerDashboardPage() {
                     </div>
                 </div>
             </Modal>
+
+            {/* Animated Reward Modal */}
+            <AnimatedRewardModal
+                isOpen={showRewardAnimation}
+                onClose={() => {
+                    setShowRewardAnimation(false);
+                    setCurrentReward(null);
+                }}
+                rewardName={currentReward?.name || ''}
+                rewardIcon={currentReward?.icon}
+                points={currentReward?.points || 0}
+            />
         </CustomerSidebar>
     );
 }
