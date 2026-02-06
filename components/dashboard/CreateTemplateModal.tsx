@@ -2,32 +2,28 @@
 
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { X, Plus, Send, Calendar, Clock, Edit } from 'lucide-react';
-import { Campaign } from '@/lib/store/mockDashboardStore';
+import { Plus, Edit } from 'lucide-react';
 import Modal from '@/components/ui/Modal';
+import { Template } from '@/lib/store/mockDashboardStore';
 
-interface CreateMessageModalProps {
+interface CreateTemplateModalProps {
     isOpen: boolean;
     onClose: () => void;
     onSubmit: (data: any) => void;
     isLoading: boolean;
-    initialData?: Partial<Campaign> | null;
-    isEditing?: boolean;
+    initialData?: Template | null;
 }
 
-export default function CreateMessageModal({ isOpen, onClose, onSubmit, isLoading, initialData, isEditing = false }: CreateMessageModalProps) {
+export default function CreateTemplateModal({ isOpen, onClose, onSubmit, isLoading, initialData }: CreateTemplateModalProps) {
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         defaultValues: initialData ? {
-            name: initialData.name,
+            title: initialData.title,
+            category: initialData.category,
             type: initialData.type,
-            audience: initialData.audience,
-            status: initialData.status,
             content: initialData.content,
         } : {
-            type: 'WhatsApp',
-            audience: 'All Customers',
-            status: 'Active',
-            content: '',
+            type: 'Any',
+            category: 'Marketing',
         }
     });
 
@@ -40,66 +36,54 @@ export default function CreateMessageModal({ isOpen, onClose, onSubmit, isLoadin
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            title={isEditing ? 'Edit Message' : 'Create Message'}
-            description={isEditing ? 'Update your message details' : 'Reach your customers with targeted messaging'}
+            title={initialData ? 'Edit Template' : 'Create Template'}
+            description="Design a reusable message format for your team."
             size="lg"
         >
             <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
                 <div className="space-y-2">
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Message Name</label>
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Template Title</label>
                     <input
-                        {...register('name', { required: 'Name is required' })}
-                        placeholder="e.g. Weekend Flash Sale"
+                        {...register('title', { required: 'Title is required' })}
+                        placeholder="e.g. Welcome Series #1"
                         className="w-full h-12 px-4 bg-slate-50 border border-slate-100 rounded-lg focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all font-bold text-sm"
                     />
-                    {errors.name && <p className="text-xs text-red-500 mt-1 ml-1 font-bold">{errors.name.message as string}</p>}
+                    {errors.title && <p className="text-xs text-red-500 mt-1 ml-1 font-bold">{errors.title.message as string}</p>}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                        <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Channel</label>
+                        <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Category</label>
+                        <select
+                            {...register('category')}
+                            className="w-full h-12 px-4 bg-slate-50 border border-slate-100 rounded-lg focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all font-bold text-sm appearance-none cursor-pointer"
+                        >
+                            <option value="Onboarding">Onboarding</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Retention">Retention</option>
+                            <option value="Special">Special / Occasion</option>
+                            <option value="Custom">Custom</option>
+                        </select>
+                    </div>
+                    <div className="space-y-2">
+                        <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Channel Type</label>
                         <select
                             {...register('type')}
                             className="w-full h-12 px-4 bg-slate-50 border border-slate-100 rounded-lg focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all font-bold text-sm appearance-none cursor-pointer"
                         >
+                            <option value="Any">Any Channel</option>
                             <option value="WhatsApp">WhatsApp</option>
                             <option value="SMS">SMS</option>
                             <option value="Email">Email</option>
                         </select>
                     </div>
-                    <div className="space-y-2">
-                        <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Status</label>
-                        <select
-                            {...register('status')}
-                            className="w-full h-12 px-4 bg-slate-50 border border-slate-100 rounded-lg focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all font-bold text-sm appearance-none cursor-pointer"
-                        >
-                            <option value="Active">Send Now (Active)</option>
-                            <option value="Scheduled">Scheduled</option>
-                            <option value="Draft">Draft</option>
-                            <option value="Recurring">Recurring</option>
-                        </select>
-                    </div>
                 </div>
 
                 <div className="space-y-2">
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Target Audience</label>
-                    <select
-                        {...register('audience')}
-                        className="w-full h-12 px-4 bg-slate-50 border border-slate-100 rounded-lg focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all font-bold text-sm appearance-none cursor-pointer"
-                    >
-                        <option value="All Customers">All Customers</option>
-                        <option value="New Customers">New Customers Only</option>
-                        <option value="Frequent Visitors">Frequent Visitors (3+ visits)</option>
-                        <option value="Inactive Customers">Inactive (30+ days)</option>
-                        <option value="VIP Members">VIP Members Only</option>
-                    </select>
-                </div>
-
-                <div className="space-y-2">
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Message Content</label>
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Template Content</label>
                     <textarea
-                        {...register('content', { required: 'Message content is required' })}
-                        placeholder="Hi {name}, welcome to our store..."
+                        {...register('content', { required: 'Content is required' })}
+                        placeholder="Hello {name}, ..."
                         className="w-full h-32 px-4 py-3 bg-slate-50 border border-slate-100 rounded-lg focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all font-medium text-sm resize-none"
                     />
                     <p className="text-[10px] text-slate-400 font-bold text-right">Supported variables: {'{name}'}, {'{business}'}</p>
@@ -123,8 +107,8 @@ export default function CreateMessageModal({ isOpen, onClose, onSubmit, isLoadin
                             <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                         ) : (
                             <>
-                                {isEditing ? <Edit size={20} /> : <Plus size={20} />}
-                                {isEditing ? 'Update Message' : 'Create Message'}
+                                {initialData ? <Edit size={20} /> : <Plus size={20} />}
+                                {initialData ? 'Update Template' : 'Save Template'}
                             </>
                         )}
                     </button>

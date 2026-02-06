@@ -1,10 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import DataTable, { Column } from '@/components/dashboard/DataTable';
 import EmptyState from '@/components/dashboard/EmptyState';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
+import { Edit, XCircle } from 'lucide-react';
 
 interface ScheduledMessage {
     id: string;
@@ -16,11 +19,32 @@ interface ScheduledMessage {
 }
 
 export default function ScheduledMessagesPage() {
-    const messages = [
+    const router = useRouter();
+    const [messages, setMessages] = useState<ScheduledMessage[]>([
         { id: '1', name: 'Weekend Coffee Special', type: 'WhatsApp', audience: 'All Customers', scheduledFor: 'Oct 12, 2024 - 10:00 AM', status: 'Scheduled' },
         { id: '2', name: 'Monday Morning Motivation', type: 'SMS', audience: 'Returning Customers', scheduledFor: 'Oct 14, 2024 - 08:30 AM', status: 'Scheduled' },
         { id: '3', name: 'Monthly Royalty Points Update', type: 'WhatsApp', audience: 'All Customers', scheduledFor: 'Nov 01, 2024 - 09:00 AM', status: 'Recurring' },
-    ];
+    ]);
+
+    const handleCalendarView = () => {
+        toast.success('Calendar view coming soon!');
+        // TODO: Navigate to calendar view page
+        // router.push('/dashboard/campaigns/calendar');
+    };
+
+    const handleEdit = (messageId: string) => {
+        toast.success('Editing message...');
+        // TODO: Open edit modal or navigate to edit page
+        console.log('Edit message:', messageId);
+    };
+
+    const handleStop = (messageId: string) => {
+        const message = messages.find(m => m.id === messageId);
+        if (message) {
+            setMessages(messages.filter(m => m.id !== messageId));
+            toast.success(`Stopped "${message.name}"`);
+        }
+    };
 
     const columns: Column<ScheduledMessage>[] = [
         {
@@ -55,13 +79,21 @@ export default function ScheduledMessagesPage() {
         },
         {
             header: 'Actions',
-            accessor: () => (
+            accessor: (item: ScheduledMessage) => (
                 <div className="flex items-center gap-2">
-                    <button className="p-1.5 text-text-secondary hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                        <span className="material-icons-round text-lg">cancel</span>
+                    <button 
+                        onClick={() => handleStop(item.id)}
+                        className="p-1.5 text-text-secondary hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        title="Stop Message"
+                    >
+                        <XCircle size={18} />
                     </button>
-                    <button className="p-1.5 text-text-secondary hover:text-text-main hover:bg-gray-100 rounded-lg transition-colors">
-                        <span className="material-icons-round text-lg">edit</span>
+                    <button 
+                        onClick={() => handleEdit(item.id)}
+                        className="p-1.5 text-text-secondary hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
+                        title="Edit Message"
+                    >
+                        <Edit size={18} />
                     </button>
                 </div>
             )
@@ -75,7 +107,10 @@ export default function ScheduledMessagesPage() {
                     title="Scheduled Messages"
                     description="View and manage your upcoming marketing messages"
                     actions={
-                        <button className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20">
+                        <button 
+                            onClick={handleCalendarView}
+                            className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20"
+                        >
                             <span className="material-icons-round text-lg">calendar_month</span>
                             Calendar View
                         </button>
@@ -92,7 +127,7 @@ export default function ScheduledMessagesPage() {
                             description="You don't have any upcoming messages. Keep your audience engaged by scheduling regular updates."
                             action={{
                                 label: "Create Message",
-                                onClick: () => console.log('Create message clicked'),
+                                onClick: () => router.push('/dashboard/campaigns/new'),
                                 icon: "add"
                             }}
                         />

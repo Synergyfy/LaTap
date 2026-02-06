@@ -38,6 +38,7 @@ export interface Campaign {
   name: string;
   type: 'WhatsApp' | 'SMS' | 'Email';
   audience: string;
+  content?: string;
   status: 'Active' | 'Scheduled' | 'Recurring' | 'Completed' | 'Draft';
   sent: number;
   delivered: string;
@@ -46,6 +47,15 @@ export interface Campaign {
   opens?: number; // For Email/WhatsApp
   ctr: number; // Click-through rate percentage
   timestamp: number;
+}
+
+export interface Template {
+  id: string;
+  title: string;
+  category: string;
+  type: 'WhatsApp' | 'SMS' | 'Email' | 'Any';
+  content: string;
+  textColor?: string;
 }
 
 export interface Staff {
@@ -89,6 +99,7 @@ export interface DashboardState {
   staffMembers: Staff[];
   devices: Device[];
   redemptionRequests: RedemptionRequest[];
+  templates: Template[];
   stats: {
     totalVisitors: number;
     newVisitors: number;
@@ -117,6 +128,8 @@ export interface DashboardState {
   deleteDevice: (id: string) => void;
   updateVisitor: (id: string, updates: Partial<Visitor>) => void;
   deleteVisitor: (id: string) => void;
+  addTemplate: (template: Template) => void;
+  deleteTemplate: (id: string) => void;
   addRedemptionRequest: (request: Omit<RedemptionRequest, 'id' | 'status' | 'timestamp'>) => void;
   approveRedemption: (id: string) => void;
   declineRedemption: (id: string) => void;
@@ -225,6 +238,12 @@ const initialDevices: Device[] = [
     { id: '3', name: 'Checkout Counter', type: 'Fob', code: 'NFC-003', location: 'Cashier', assignedTo: 'Unassigned', lastActive: 'Never', status: 'inactive', batteryLevel: 0, totalScans: 2341, timestamp: Date.now() },
 ];
 
+const initialTemplates: Template[] = [
+    { id: '1', title: 'Welcome Message', category: 'Onboarding', type: 'Any', content: "Hello {name}! Welcome to {business}. We're glad to have you!", textColor: 'blue' },
+    { id: '2', title: 'Weekend Promo', category: 'Marketing', type: 'WhatsApp', content: "Hey {name}, check out our weekend specials! 20% off all items.", textColor: 'green' },
+    { id: '3', title: 'We Miss You', category: 'Retention', type: 'SMS', content: "Hi {name}, it's been a while. Come back and get a free coffee!", textColor: 'purple' },
+];
+
 const initialStats = {
   totalVisitors: 2847,
   newVisitors: 512,
@@ -243,6 +262,7 @@ export const useMockDashboardStore = create<DashboardState>()(
       staffMembers: initialStaff,
       devices: initialDevices,
       redemptionRequests: [],
+      templates: initialTemplates,
       stats: initialStats,
 
       addVisitor: (visitor) =>
@@ -316,6 +336,8 @@ export const useMockDashboardStore = create<DashboardState>()(
       deleteVisitor: (id) => set((state) => ({
         visitors: state.visitors.filter(v => v.id !== id)
       })),
+      addTemplate: (template) => set((state) => ({ templates: [...state.templates, template] })),
+      deleteTemplate: (id) => set((state) => ({ templates: state.templates.filter(t => t.id !== id) })),
       recordExternalTap: (visitorData) => set((state) => {
         const existingIndex = state.visitors.findIndex(v => 
           (visitorData.phone && v.phone === visitorData.phone) || 
@@ -448,6 +470,7 @@ export const useMockDashboardStore = create<DashboardState>()(
           staffMembers: initialStaff,
           devices: initialDevices,
           redemptionRequests: [],
+          templates: initialTemplates,
           stats: initialStats,
         }),
     }),

@@ -55,7 +55,7 @@ export default function CustomerNotificationsPage() {
                     <div className="flex items-center gap-5">
                         <Link
                             href="/customer/dashboard"
-                            className="w-12 h-12 rounded-2xl bg-white border border-gray-200 flex items-center justify-center text-text-secondary hover:text-primary hover:border-primary/30 transition-all shadow-sm group"
+                            className="w-12 h-12 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-text-secondary hover:text-primary hover:border-primary/30 transition-all shadow-sm group"
                         >
                             <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
                         </Link>
@@ -68,7 +68,7 @@ export default function CustomerNotificationsPage() {
                         <button
                             onClick={() => readAllMutation.mutate()}
                             disabled={notifications.length === 0}
-                            className="h-12 px-6 bg-white border border-gray-200 text-text-main font-black uppercase tracking-widest text-[10px] rounded-2xl hover:bg-gray-50 transition-all shadow-sm disabled:opacity-50 flex items-center gap-2"
+                            className="h-12 px-6 bg-white border border-gray-200 text-text-main font-black uppercase tracking-widest text-[10px] rounded-lg hover:bg-gray-50 transition-all shadow-sm disabled:opacity-50 flex items-center gap-2"
                         >
                             Clear Inbox
                         </button>
@@ -76,7 +76,7 @@ export default function CustomerNotificationsPage() {
                 </div>
 
                 {/* Notifications List */}
-                <div className="bg-white rounded-[2.5rem] border border-gray-100 overflow-hidden shadow-sm">
+                <div className="bg-white rounded-lg border border-gray-100 overflow-hidden shadow-sm">
                     {isLoading ? (
                         <div className="p-32 flex flex-col items-center justify-center gap-6">
                             <div className="relative">
@@ -87,7 +87,7 @@ export default function CustomerNotificationsPage() {
                         </div>
                     ) : notifications.length === 0 ? (
                         <div className="p-32 flex flex-col items-center justify-center text-center">
-                            <div className="w-24 h-24 bg-gray-50 rounded-4xl flex items-center justify-center mb-6 shadow-inner">
+                            <div className="w-24 h-24 bg-gray-50 rounded-lg flex items-center justify-center mb-6 shadow-inner">
                                 <Bell className="text-gray-300" size={40} />
                             </div>
                             <h3 className="text-xl font-display font-bold text-text-main mb-2">Peace & Quiet</h3>
@@ -108,7 +108,7 @@ export default function CustomerNotificationsPage() {
                                         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-12 bg-primary rounded-r-full" />
                                     )}
 
-                                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 shadow-sm transition-transform group-hover:scale-110 duration-500 ${!note.read ? 'bg-white border border-primary/20' : 'bg-gray-50 grayscale'
+                                    <div className={`w-14 h-14 rounded-lg flex items-center justify-center shrink-0 shadow-sm transition-transform group-hover:scale-110 duration-500 ${!note.read ? 'bg-white border border-primary/20' : 'bg-gray-50 grayscale'
                                         }`}>
                                         {getIcon(note.type, note.title)}
                                     </div>
@@ -161,14 +161,14 @@ export default function CustomerNotificationsPage() {
                 </div>
 
                 {/* Engagement Card */}
-                <div className="bg-linear-to-r from-primary to-blue-600 rounded-[2.5rem] p-10 text-white relative overflow-hidden shadow-2xl shadow-primary/20">
+                <div className="bg-linear-to-r from-primary to-blue-600 rounded-lg p-10 text-white relative overflow-hidden shadow-2xl shadow-primary/20">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full translate-x-20 -translate-y-20 blur-3xl"></div>
                     <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                         <div>
                             <h3 className="text-2xl font-display font-bold mb-2">Missed an alert?</h3>
                             <p className="text-blue-100 font-medium max-w-sm">Enable push notifications on your mobile device to never miss a premium voucher or check-in verification.</p>
                         </div>
-                        <button className="h-14 px-8 bg-white text-primary font-black uppercase tracking-widest text-xs rounded-2xl shadow-xl hover:shadow-2xl transition-all active:scale-95 whitespace-nowrap">
+                        <button className="h-14 px-8 bg-white text-primary font-black uppercase tracking-widest text-xs rounded-lg shadow-xl hover:shadow-2xl transition-all active:scale-95 whitespace-nowrap">
                             Customize Settings
                         </button>
                     </div>

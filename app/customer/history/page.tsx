@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import CustomerSidebar from '@/components/customer/CustomerSidebar';
-import { Search, Filter, Download, ExternalLink, Calendar, Clock, MapPin, Receipt, Star, MoreVertical, X } from 'lucide-react';
+import { Search, Filter, Download, ExternalLink, Calendar, Clock, MapPin, Receipt, Star, MoreVertical, X, Coffee, Smartphone, Dumbbell } from 'lucide-react';
 
 export default function CustomerHistoryPage() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -40,13 +40,13 @@ export default function CustomerHistoryPage() {
                                 placeholder="Search history..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full h-12 pl-12 pr-4 bg-white border border-gray-200 rounded-2xl text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+                                className="w-full h-12 pl-12 pr-4 bg-white border border-gray-200 rounded-lg text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all outline-none"
                             />
                         </div>
-                        <button className="h-12 w-12 bg-white border border-gray-200 rounded-2xl flex items-center justify-center text-text-secondary hover:bg-gray-50 transition-all shadow-sm">
+                        <button className="h-12 w-12 bg-white border border-gray-200 rounded-lg flex items-center justify-center text-text-secondary hover:bg-gray-50 transition-all shadow-sm">
                             <Filter size={18} />
                         </button>
-                        <button className="h-12 px-6 bg-primary text-white font-black uppercase tracking-widest text-xs rounded-2xl flex items-center justify-center gap-2 hover:bg-primary-hover transition-all shadow-lg shadow-primary/20">
+                        <button className="h-12 px-6 bg-primary text-white font-black uppercase tracking-widest text-xs rounded-lg flex items-center justify-center gap-2 hover:bg-primary-hover transition-all shadow-lg shadow-primary/20">
                             <Download size={16} />
                             Export
                         </button>
@@ -54,7 +54,7 @@ export default function CustomerHistoryPage() {
                 </div>
 
                 {/* Visits Timeline */}
-                <div className="bg-white rounded-[2.5rem] border border-gray-200 overflow-hidden shadow-sm">
+                <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
                     <div className="overflow-x-auto">
                         <table className="w-full">
                             <thead className="bg-gray-50/50 border-b border-gray-100">
@@ -75,8 +75,13 @@ export default function CustomerHistoryPage() {
                                     >
                                         <td className="py-6 px-8">
                                             <div className="flex items-center gap-4">
-                                                <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-text-secondary group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                                                    <span className="material-icons-round">{visit.icon}</span>
+                                                <div className="w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center text-text-secondary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                                                    {visit.icon === 'coffee' ? <Coffee size={24} /> :
+                                                        visit.icon === 'devices' ? <Smartphone size={24} /> :
+                                                            visit.icon === 'fitness_center' ? <Dumbbell size={24} /> :
+                                                                visit.icon === 'shopping_bag' ? <Receipt size={24} /> :
+                                                                    visit.icon === 'nightlife' ? <Star size={24} /> :
+                                                                        <Clock size={24} />}
                                                 </div>
                                                 <div>
                                                     <p className="font-bold text-sm text-text-main group-hover:text-primary transition-colors">{visit.place}</p>
@@ -109,7 +114,7 @@ export default function CustomerHistoryPage() {
                                         </td>
                                         <td className="py-6 px-8">
                                             <div className="flex justify-center">
-                                                <button className="p-2 text-gray-300 hover:text-text-main hover:bg-white hover:shadow-sm rounded-xl transition-all">
+                                                <button className="p-2 text-gray-300 hover:text-text-main hover:bg-white hover:shadow-sm rounded-lg transition-all">
                                                     <MoreVertical size={18} />
                                                 </button>
                                             </div>
@@ -125,11 +130,16 @@ export default function CustomerHistoryPage() {
                 {selectedVisit && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                         <div className="absolute inset-0 bg-text-main/80 backdrop-blur-xl animate-in fade-in" onClick={() => setSelectedVisit(null)}></div>
-                        <div className="relative w-full max-w-lg bg-white rounded-[3rem] overflow-hidden shadow-2xl animate-in zoom-in slide-in-from-bottom-10 duration-500">
+                        <div className="relative w-full max-w-lg bg-white rounded-lg overflow-hidden shadow-2xl animate-in zoom-in slide-in-from-bottom-10 duration-500">
                             <div className="p-10">
                                 <div className="flex justify-between items-start mb-10">
-                                    <div className="w-16 h-16 rounded-[1.25rem] bg-primary/10 flex items-center justify-center text-primary">
-                                        <span className="material-icons-round text-3xl">{selectedVisit.icon}</span>
+                                    <div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                                        {selectedVisit.icon === 'coffee' ? <Coffee size={32} /> :
+                                            selectedVisit.icon === 'devices' ? <Smartphone size={32} /> :
+                                                selectedVisit.icon === 'fitness_center' ? <Dumbbell size={32} /> :
+                                                    selectedVisit.icon === 'shopping_bag' ? <Receipt size={32} /> :
+                                                        selectedVisit.icon === 'nightlife' ? <Star size={32} /> :
+                                                            <Clock size={32} />}
                                     </div>
                                     <button
                                         onClick={() => setSelectedVisit(null)}
@@ -165,7 +175,7 @@ export default function CustomerHistoryPage() {
 
                                 <div className="space-y-6">
                                     <div className="flex items-start gap-4">
-                                        <div className="p-3 bg-blue-50 rounded-xl text-blue-600">
+                                        <div className="p-3 bg-blue-50 rounded-lg text-blue-600">
                                             <MapPin size={20} />
                                         </div>
                                         <div>
@@ -174,7 +184,7 @@ export default function CustomerHistoryPage() {
                                         </div>
                                     </div>
                                     <div className="flex items-start gap-4">
-                                        <div className="p-3 bg-orange-50 rounded-xl text-orange-600">
+                                        <div className="p-3 bg-orange-50 rounded-lg text-orange-600">
                                             <Star size={20} />
                                         </div>
                                         <div>
@@ -185,11 +195,11 @@ export default function CustomerHistoryPage() {
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4 mt-12">
-                                    <button className="h-14 bg-gray-100 text-text-secondary font-black uppercase tracking-widest text-[10px] rounded-2xl hover:bg-gray-200 transition-all flex items-center justify-center gap-2">
+                                    <button className="h-14 bg-gray-100 text-text-secondary font-black uppercase tracking-widest text-[10px] rounded-lg hover:bg-gray-200 transition-all flex items-center justify-center gap-2">
                                         <Receipt size={16} />
                                         PDF Receipt
                                     </button>
-                                    <button className="h-14 bg-primary text-white font-black uppercase tracking-widest text-[10px] rounded-2xl hover:bg-primary-hover shadow-xl shadow-primary/20 transition-all flex items-center justify-center gap-2">
+                                    <button className="h-14 bg-primary text-white font-black uppercase tracking-widest text-[10px] rounded-lg hover:bg-primary-hover shadow-xl shadow-primary/20 transition-all flex items-center justify-center gap-2">
                                         <ExternalLink size={16} />
                                         Venue Profile
                                     </button>
@@ -201,7 +211,7 @@ export default function CustomerHistoryPage() {
 
                 {/* Empty State Mock */}
                 {filteredVisits.length === 0 && (
-                    <div className="bg-white rounded-[2.5rem] border border-gray-100 p-20 text-center">
+                    <div className="bg-white rounded-lg border border-gray-100 p-20 text-center">
                         <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
                             <Search className="text-gray-300" size={32} />
                         </div>

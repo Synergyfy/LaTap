@@ -9,7 +9,7 @@ import { dashboardApi } from '@/lib/api/dashboard';
 import { Notification } from '@/lib/store/mockDashboardStore';
 import {
     LayoutGrid, History, Gift, User, Nfc, Bell,
-    LogOut, Menu, Star
+    LogOut, Menu, Star, BarChart3
 } from 'lucide-react';
 import Logo from '@/components/brand/Logo';
 
@@ -67,6 +67,12 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
             href: '/customer/dashboard',
         },
         {
+            id: 'analytics',
+            label: 'Analytics',
+            icon: BarChart3,
+            href: '/customer/analytics',
+        },
+        {
             id: 'history',
             label: 'Visit History',
             icon: History,
@@ -108,7 +114,7 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
                                 <Link
                                     key={item.id}
                                     href={item.href}
-                                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${isActive(item.href)
+                                    className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-all ${isActive(item.href)
                                         ? 'bg-primary text-white shadow-lg shadow-primary/20'
                                         : 'text-text-secondary hover:bg-gray-50 hover:text-text-main'
                                         }`}
@@ -121,7 +127,7 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
                     </div>
 
                     {/* Promo Card */}
-                    <div className="mt-8 bg-linear-to-br from-primary to-blue-600 rounded-xl p-4 text-white relative overflow-hidden">
+                    <div className="mt-8 bg-linear-to-br from-primary to-blue-600 rounded-lg p-4 text-white relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full translate-x-10 -translate-y-10 blur-xl"></div>
                         <Star className="text-white mb-2 bg-white/20 p-2 rounded-lg backdrop-blur-sm" size={32} />
                         <h3 className="font-bold text-sm mb-1">Earn more points!</h3>
@@ -145,7 +151,7 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
                     </div>
                     <button
                         onClick={handleLogout}
-                        className="w-full py-2.5 px-3 border border-red-100 text-red-600 rounded-xl text-xs font-bold hover:bg-red-50 transition-colors flex items-center justify-center gap-2"
+                        className="w-full py-2.5 px-3 border border-red-100 text-red-600 rounded-lg text-xs font-bold hover:bg-red-50 transition-colors flex items-center justify-center gap-2"
                     >
                         <LogOut size={16} />
                         Sign Out
@@ -192,7 +198,7 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
                                     className="fixed inset-0 z-40"
                                     onClick={() => setShowNotifications(false)}
                                 ></div>
-                                <div className="absolute right-0 top-14 w-80 bg-white rounded-2xl shadow-xl border border-gray-200 z-50 overflow-hidden">
+                                <div className="absolute right-0 top-14 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50 overflow-hidden">
                                     <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-gray-50">
                                         <h3 className="font-bold text-text-main text-sm">Notifications</h3>
                                         <button

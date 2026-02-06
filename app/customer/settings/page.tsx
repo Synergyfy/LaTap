@@ -40,16 +40,16 @@ export default function CustomerSettingsPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                     {/* Left Column: Navigation/Profile Summary */}
                     <div className="space-y-6">
-                        <div className="bg-white rounded-4xl border border-gray-100 p-8 shadow-sm text-center relative overflow-hidden group">
+                        <div className="bg-white rounded-lg border border-gray-100 p-8 shadow-sm text-center relative overflow-hidden group">
                             <div className="absolute top-0 inset-x-0 h-24 bg-linear-to-r from-primary/10 to-blue-500/10"></div>
 
                             <div className="relative mt-4 mb-6 inline-block">
-                                <div className="w-24 h-24 rounded-4xl bg-white shadow-xl flex items-center justify-center border-4 border-white overflow-hidden">
+                                <div className="w-24 h-24 rounded-lg bg-white shadow-xl flex items-center justify-center border-4 border-white overflow-hidden">
                                     <div className="w-full h-full bg-primary/5 flex items-center justify-center text-primary">
                                         <User size={40} />
                                     </div>
                                 </div>
-                                <button className="absolute -bottom-2 -right-2 p-2.5 bg-primary text-white rounded-xl hover:bg-primary-hover shadow-lg hover:scale-110 transition-all">
+                                <button className="absolute -bottom-2 -right-2 p-2.5 bg-primary text-white rounded-lg hover:bg-primary-hover shadow-lg hover:scale-110 transition-all">
                                     <Camera size={16} />
                                 </button>
                             </div>
@@ -70,7 +70,7 @@ export default function CustomerSettingsPage() {
                             </div>
                         </div>
 
-                        <nav className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+                        <nav className="bg-white rounded-lg border border-gray-100 overflow-hidden shadow-sm">
                             {[
                                 { id: 'profile', label: 'Identity Profile', icon: User, active: true },
                                 { id: 'security', label: 'Security & Privacy', icon: Shield },
@@ -93,7 +93,7 @@ export default function CustomerSettingsPage() {
 
                         <button
                             onClick={handleLogout}
-                            className="w-full h-14 bg-red-50 text-red-600 font-black uppercase tracking-widest text-[10px] rounded-2xl hover:bg-red-100 transition-all flex items-center justify-center gap-2 border border-red-100/50 active:scale-95"
+                            className="w-full h-14 bg-red-50 text-red-600 font-black uppercase tracking-widest text-[10px] rounded-lg hover:bg-red-100 transition-all flex items-center justify-center gap-2 border border-red-100/50 active:scale-95"
                         >
                             <LogOut size={16} />
                             Terminate Session
@@ -103,7 +103,7 @@ export default function CustomerSettingsPage() {
                     {/* Right Column: Active Form */}
                     <div className="lg:col-span-2 space-y-10">
                         {/* Profile Details */}
-                        <div className="bg-white rounded-5xl border border-gray-100 p-10 shadow-sm relative overflow-hidden">
+                        <div className="bg-white rounded-lg border border-gray-100 p-10 shadow-sm relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full translate-x-32 -translate-y-32 blur-3xl"></div>
 
                             <h3 className="text-lg font-display font-bold text-text-main mb-8 flex items-center gap-3">
@@ -120,7 +120,7 @@ export default function CustomerSettingsPage() {
                                     <input
                                         type="text"
                                         defaultValue="Daniel Customer"
-                                        className="w-full h-14 px-5 border border-gray-200 rounded-2xl text-sm font-bold bg-gray-50/50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+                                        className="w-full h-14 px-5 border border-gray-200 rounded-lg text-sm font-bold bg-gray-50/50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all outline-none"
                                     />
                                 </div>
                                 <div className="space-y-3">
@@ -160,7 +160,7 @@ export default function CustomerSettingsPage() {
                                         { label: 'Activity Summaries', desc: 'Weekly digest of my check-ins and savings', checked: true },
                                         { label: 'SMS Security Alerts', desc: 'Notice for logins from unrecognized devices', checked: false },
                                     ].map((pref, i) => (
-                                        <div key={i} className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-2xl transition-all cursor-pointer group">
+                                        <div key={i} className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg transition-all cursor-pointer group">
                                             <div>
                                                 <p className="font-bold text-sm text-text-main">{pref.label}</p>
                                                 <p className="text-xs text-text-secondary font-medium">{pref.desc}</p>
@@ -178,7 +178,7 @@ export default function CustomerSettingsPage() {
                                 <button
                                     onClick={handleSave}
                                     disabled={isLoading}
-                                    className="w-full h-16 bg-primary text-white font-black uppercase tracking-[0.2em] text-xs rounded-2xl hover:bg-primary-hover transition-all shadow-2xl shadow-primary/30 active:scale-95 flex items-center justify-center gap-3"
+                                    className="w-full h-16 bg-primary text-white font-black uppercase tracking-[0.2em] text-xs rounded-lg hover:bg-primary-hover transition-all shadow-2xl shadow-primary/30 active:scale-95 flex items-center justify-center gap-3"
                                 >
                                     {isLoading ? (
                                         <div className="animate-spin rounded-full h-5 w-5 border-2 border-white/50 border-t-white" />
@@ -193,11 +193,11 @@ export default function CustomerSettingsPage() {
                         </div>
 
                         {/* Security / Danger Zone */}
-                        <div className="bg-red-50/50 border-2 border-dashed border-red-100 rounded-5xl p-10 relative overflow-hidden group">
+                        <div className="bg-red-50/50 border-2 border-dashed border-red-100 rounded-lg p-10 relative overflow-hidden group">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-red-100/50 rounded-full translate-x-16 -translate-y-16 group-hover:scale-150 transition-transform duration-700"></div>
                             <div className="relative z-10">
                                 <div className="flex items-center gap-4 mb-6 text-red-800">
-                                    <div className="w-12 h-12 rounded-xl bg-red-100 flex items-center justify-center">
+                                    <div className="w-12 h-12 rounded-lg bg-red-100 flex items-center justify-center">
                                         <Trash2 size={24} />
                                     </div>
                                     <h3 className="text-xl font-display font-bold">Data Purge Protocol</h3>
@@ -205,7 +205,7 @@ export default function CustomerSettingsPage() {
                                 <p className="text-sm text-red-700/80 mb-8 font-medium leading-relaxed max-w-xl text-balance">
                                     Initiating an account deletion will permanently erase your check-in history, earned points, and active vouchers from the EntryConnect decentralized ledger. This action is irreversible.
                                 </p>
-                                <button className="h-14 px-8 border-2 border-red-200 text-red-600 font-black uppercase tracking-widest text-[10px] rounded-2xl hover:bg-red-600 hover:text-white hover:border-red-600 transition-all active:scale-95 shadow-lg shadow-red-200/50">
+                                <button className="h-14 px-8 border-2 border-red-200 text-red-600 font-black uppercase tracking-widest text-[10px] rounded-lg hover:bg-red-600 hover:text-white hover:border-red-600 transition-all active:scale-95 shadow-lg shadow-red-200/50">
                                     Request Account Termination
                                 </button>
                             </div>

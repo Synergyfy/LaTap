@@ -3,12 +3,14 @@
 import React, { useState } from 'react';
 import CustomerSidebar from '@/components/customer/CustomerSidebar';
 import Modal from '@/components/ui/Modal';
+import AnimatedRewardModal from '@/components/customer/AnimatedRewardModal';
 import { notify } from '@/lib/notify';
-import { Star, Gift, Search, Info, CheckCircle2, QrCode, X, Clock, MapPin } from 'lucide-react';
+import { Star, Gift, Search, Info, CheckCircle2, QrCode, X, Clock, MapPin, Coffee, Dumbbell, Smartphone, Music, Film, Flower2 } from 'lucide-react';
 
 export default function CustomerRewardsPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedReward, setSelectedReward] = useState<any>(null);
+    const [showRewardAnimation, setShowRewardAnimation] = useState(false);
 
     const myRewards = [
         { id: 1, title: 'Free Gym Session', business: 'Fitness Center', points: 1000, value: '₦5,000', image: 'fitness_center', color: 'bg-blue-100 text-blue-600', progress: 100, desc: 'One full day pass access to all gym facilities including swimming pool and sauna.' },
@@ -22,9 +24,22 @@ export default function CustomerRewardsPage() {
         { id: 6, title: 'Movie Night for Two', business: 'Cinema Max', points: 1500, value: '₦8,000', image: 'movie', color: 'bg-red-100 text-red-600', desc: 'Two standard tickets for any regular showtime including large popcorn.' },
     ];
 
+    const getRewardIcon = (image: string, size = 24) => {
+        switch (image) {
+            case 'fitness_center': return <Dumbbell size={size} />;
+            case 'local_cafe': return <Coffee size={size} />;
+            case 'spa': return <Flower2 size={size} />;
+            case 'devices': return <Smartphone size={size} />;
+            case 'nightlife': return <Music size={size} />;
+            case 'movie': return <Film size={size} />;
+            default: return <Gift size={size} />;
+        }
+    };
+
     const handleRedeem = (reward: any) => {
-        notify.success(`Voucher generated for ${reward.title}. Check your email for details.`);
         setSelectedReward(null);
+        setShowRewardAnimation(true);
+        // In a real app, we would deduct points here
     };
 
     return (
@@ -44,7 +59,7 @@ export default function CustomerRewardsPage() {
                             placeholder="Search by venue or item..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full h-12 pl-12 pr-4 bg-white border border-gray-200 rounded-2xl text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+                            className="w-full h-12 pl-12 pr-4 bg-white border border-gray-200 rounded-lg text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all outline-none"
                         />
                     </div>
                 </div>
@@ -63,11 +78,11 @@ export default function CustomerRewardsPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {myRewards.filter(r => r.progress >= 100).map((reward) => (
-                            <div key={reward.id} className="bg-white rounded-[2.5rem] border-2 border-primary/20 p-8 flex flex-col hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group relative overflow-hidden">
+                            <div key={reward.id} className="bg-white rounded-lg border-2 border-primary/20 p-8 flex flex-col hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group relative overflow-hidden">
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full translate-x-16 -translate-y-16 group-hover:scale-150 transition-transform duration-700" />
 
-                                <div className={`w-16 h-16 rounded-[1.25rem] flex items-center justify-center mb-6 shadow-lg ${reward.color}`}>
-                                    <span className="material-icons-round text-3xl">{reward.image}</span>
+                                <div className={`w-16 h-16 rounded-lg flex items-center justify-center mb-6 shadow-lg ${reward.color}`}>
+                                    {getRewardIcon(reward.image, 32)}
                                 </div>
 
                                 <div className="flex-1">
@@ -86,7 +101,7 @@ export default function CustomerRewardsPage() {
                                     </div>
                                     <button
                                         onClick={() => setSelectedReward(reward)}
-                                        className="w-full h-14 bg-primary text-white text-sm font-black uppercase tracking-widest rounded-2xl hover:bg-primary-hover transition-all shadow-xl shadow-primary/25 active:scale-95 flex items-center justify-center gap-2"
+                                        className="w-full h-14 bg-primary text-white text-sm font-black uppercase tracking-widest rounded-lg hover:bg-primary-hover transition-all shadow-xl shadow-primary/25 active:scale-95 flex items-center justify-center gap-2"
                                     >
                                         Activate Voucher
                                         <Gift size={18} />
@@ -97,9 +112,9 @@ export default function CustomerRewardsPage() {
 
                         {/* In Progress Rewards */}
                         {myRewards.filter(r => r.progress < 100).map((reward) => (
-                            <div key={reward.id} className="bg-white rounded-[2.5rem] border border-gray-100 p-8 flex flex-col hover:border-primary/20 transition-all group">
-                                <div className={`w-16 h-16 rounded-[1.25rem] bg-gray-50 text-gray-400 flex items-center justify-center mb-6 group-hover:text-primary transition-colors`}>
-                                    <span className="material-icons-round text-3xl">{reward.image}</span>
+                            <div key={reward.id} className="bg-white rounded-lg border border-gray-100 p-8 flex flex-col hover:border-primary/20 transition-all group">
+                                <div className={`w-16 h-16 rounded-lg bg-gray-50 text-gray-400 flex items-center justify-center mb-6 group-hover:text-primary transition-colors`}>
+                                    {getRewardIcon(reward.image, 32)}
                                 </div>
 
                                 <div className="flex-1">
@@ -118,7 +133,7 @@ export default function CustomerRewardsPage() {
                                             style={{ width: `${reward.progress}%` }}
                                         />
                                     </div>
-                                    <button className="w-full h-12 border-2 border-gray-100 text-text-secondary text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-gray-50 transition-all">
+                                    <button className="w-full h-12 border-2 border-gray-100 text-text-secondary text-xs font-black uppercase tracking-widest rounded-lg hover:bg-gray-50 transition-all">
                                         How to earn more
                                     </button>
                                 </div>
@@ -136,11 +151,11 @@ export default function CustomerRewardsPage() {
                         {availableRewards.map((reward) => (
                             <div
                                 key={reward.id}
-                                className="bg-white rounded-3xl border border-gray-100 p-6 transition-all hover:bg-gray-50 hover:shadow-xl hover:border-transparent group cursor-pointer"
+                                className="bg-white rounded-lg border border-gray-100 p-6 transition-all hover:bg-gray-50 hover:shadow-xl hover:border-transparent group cursor-pointer"
                                 onClick={() => setSelectedReward(reward)}
                             >
-                                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition-transform group-hover:scale-110 duration-500 ${reward.color}`}>
-                                    <span className="material-icons-round text-2xl">{reward.image}</span>
+                                <div className={`w-14 h-14 rounded-lg flex items-center justify-center mb-6 transition-transform group-hover:scale-110 duration-500 ${reward.color}`}>
+                                    {getRewardIcon(reward.image, 24)}
                                 </div>
                                 <h3 className="font-bold text-sm text-text-main mb-1 group-hover:text-primary transition-colors">{reward.title}</h3>
                                 <p className="text-[10px] text-text-secondary font-black uppercase tracking-widest mb-4">{reward.business}</p>
@@ -163,8 +178,12 @@ export default function CustomerRewardsPage() {
                     {selectedReward && (
                         <div className="-m-6"> {/* Negative margin to bleed to edges if desired, or just use standard padding */}
                             <div className={`h-32 relative flex items-center justify-center ${selectedReward.color}`}>
-                                <span className="material-icons-round text-6xl opacity-20 scale-150 absolute top-0 left-0 -translate-x-4 -translate-y-4">{selectedReward.image}</span>
-                                <span className="material-icons-round text-5xl drop-shadow-2xl">{selectedReward.image}</span>
+                                <div className="opacity-20 scale-150 absolute top-0 left-0 -translate-x-4 -translate-y-4">
+                                    {getRewardIcon(selectedReward.image, 64)}
+                                </div>
+                                <div className="drop-shadow-2xl">
+                                    {getRewardIcon(selectedReward.image, 48)}
+                                </div>
                             </div>
 
                             <div className="p-8">
@@ -183,7 +202,7 @@ export default function CustomerRewardsPage() {
                                 </div>
 
                                 <div className="space-y-4 mb-8">
-                                    <div className="flex gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                    <div className="flex gap-4 p-4 bg-slate-50 rounded-lg border border-slate-100">
                                         <Clock className="text-primary shrink-0" size={18} />
                                         <div>
                                             <p className="font-bold text-sm text-slate-900">Voucher Validity</p>
@@ -192,7 +211,7 @@ export default function CustomerRewardsPage() {
                                     </div>
                                     <div>
                                         <p className="font-bold text-xs text-slate-400 uppercase tracking-widest mb-2 ml-1">Description</p>
-                                        <p className="text-sm text-slate-600 font-medium leading-relaxed bg-slate-50/50 p-4 rounded-2xl border border-slate-100">
+                                        <p className="text-sm text-slate-600 font-medium leading-relaxed bg-slate-50/50 p-4 rounded-lg border border-slate-100">
                                             {selectedReward.desc}
                                         </p>
                                     </div>
@@ -200,24 +219,24 @@ export default function CustomerRewardsPage() {
 
                                 {selectedReward.progress >= 100 || !selectedReward.progress ? (
                                     <div className="space-y-6">
-                                        <div className="bg-slate-50 rounded-3xl p-6 border-2 border-dashed border-slate-200 text-center flex flex-col items-center">
+                                        <div className="bg-slate-50 rounded-lg p-6 border-2 border-dashed border-slate-200 text-center flex flex-col items-center">
                                             <QrCode size={80} className="text-slate-300 mb-3" />
                                             <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest leading-tight">Activation Required</p>
                                         </div>
                                         <button
                                             onClick={() => handleRedeem(selectedReward)}
-                                            className="w-full h-14 bg-primary text-white font-black uppercase tracking-widest rounded-2xl hover:bg-primary-hover shadow-xl shadow-primary/20 transition-all active:scale-95 flex items-center justify-center gap-3"
+                                            className="w-full h-14 bg-primary text-white font-black uppercase tracking-widest rounded-lg hover:bg-primary-hover shadow-xl shadow-primary/20 transition-all active:scale-95 flex items-center justify-center gap-3"
                                         >
                                             Redeem {selectedReward.points} Points
                                         </button>
                                     </div>
                                 ) : (
-                                    <div className="p-6 bg-slate-50 rounded-3xl text-center border border-slate-100">
+                                    <div className="p-6 bg-slate-50 rounded-lg text-center border border-slate-100">
                                         <p className="text-sm font-bold text-slate-900 mb-1">More points needed</p>
                                         <p className="text-xs text-slate-500 font-medium mb-4">Check-in at {selectedReward.business} to earn {selectedReward.points - 1250} more pts.</p>
                                         <button
                                             onClick={() => setSelectedReward(null)}
-                                            className="w-full h-12 bg-white border border-slate-200 text-slate-600 font-bold rounded-xl hover:bg-slate-100 transition-all text-sm"
+                                            className="w-full h-12 bg-white border border-slate-200 text-slate-600 font-bold rounded-lg hover:bg-slate-100 transition-all text-sm"
                                         >
                                             Back to Vault
                                         </button>
@@ -227,6 +246,14 @@ export default function CustomerRewardsPage() {
                         </div>
                     )}
                 </Modal>
+
+                <AnimatedRewardModal
+                    isOpen={showRewardAnimation}
+                    onClose={() => setShowRewardAnimation(false)}
+                    rewardName={selectedReward?.title ?? ''}
+                    rewardIcon={selectedReward ? getRewardIcon(selectedReward.image, 64) : null}
+                    points={selectedReward?.points ?? 0}
+                />
             </div>
         </CustomerSidebar>
     );

@@ -23,6 +23,7 @@ function MessagesContent() {
     const queryClient = useQueryClient();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingMessage, setEditingMessage] = useState<Campaign | null>(null);
+    const [templateData, setTemplateData] = useState<Partial<Campaign> | null>(null);
     const [deleteCampaignId, setDeleteCampaignId] = useState<string | null>(null);
 
     const { data, isLoading } = useQuery({
@@ -32,17 +33,25 @@ function MessagesContent() {
 
     // Check for 'create' query param to auto-open modal
     useEffect(() => {
-        if (searchParams.get('create') === 'true') {
-            setIsModalOpen(true);
+        if (!isLoading && data && searchParams.get('create') === 'true') {
             const templateId = searchParams.get('template');
             if (templateId) {
-                // Here we could fetch template details, for now just showing a toast
-                toast.success('Template loaded! Customize your message below.');
+                const template = data.templates?.find((t: any) => t.id === templateId);
+                if (template) {
+                    setTemplateData({
+                        name: template.title,
+                        type: template.type === 'Any' ? 'WhatsApp' : template.type,
+                        content: template.content,
+                        audience: 'All Customers',
+                        status: 'Active',
+                    });
+                    toast.success('Template loaded! Customize your message below.');
+                }
             }
-            // Clean up URL
+            setIsModalOpen(true);
             router.replace('/dashboard/campaigns');
         }
-    }, [searchParams, router]);
+    }, [searchParams, router, data, isLoading]);
 
     // Protection: Only Owners and Managers can manage messages
     useEffect(() => {
@@ -95,10 +104,10 @@ function MessagesContent() {
     };
 
     const stats = [
-        { label: 'Total Sent', value: messages.reduce((acc: number, c: Campaign) => acc + c.sent, 0).toLocaleString(), icon: 'send', color: 'blue', trend: { value: '+15%', isUp: true } },
-        { label: 'Avg. Delivery', value: '94%', icon: 'visibility', color: 'green', trend: { value: '+2%', isUp: true } },
-        { label: 'Total Clicks', value: messages.reduce((acc: number, c: Campaign) => acc + c.clicks, 0).toLocaleString(), icon: 'touch_app', color: 'purple', trend: { value: '+1.5%', isUp: true } },
-        { label: 'Active Messages', value: messages.filter((c: Campaign) => c.status === 'Active').length.toString(), icon: 'campaign', color: 'yellow', trend: { value: '0', isUp: true } },
+        { label: 'Total Sent', value: messages.reduce((acc: number, c: Campaign) => acc + c.sent, 0).toLocaleString(), icon: Send, color: 'blue' as const, trend: { value: '+15%', isUp: true } },
+        { label: 'Avg. Delivery', value: '94%', icon: Eye, color: 'green' as const, trend: { value: '+2%', isUp: true } },
+        { label: 'Total Clicks', value: messages.reduce((acc: number, c: Campaign) => acc + c.clicks, 0).toLocaleString(), icon: FileText, color: 'purple' as const, trend: { value: '+1.5%', isUp: true } },
+        { label: 'Active Messages', value: messages.filter((c: Campaign) => c.status === 'Active').length.toString(), icon: BarChart, color: 'yellow' as const, trend: { value: '0', isUp: true } },
     ];
 
     const columns: Column<Campaign>[] = [
@@ -196,10 +205,12 @@ function MessagesContent() {
                 onClose={() => {
                     setIsModalOpen(false);
                     setEditingMessage(null);
+                    setTemplateData(null);
                 }}
                 onSubmit={handleCreateOrUpdate}
                 isLoading={createMutation.isPending || updateMutation.isPending}
-                initialData={editingMessage}
+                initialData={editingMessage || templateData}
+                isEditing={!!editingMessage}
             />
 
             <DeleteConfirmationModal
@@ -207,7 +218,7 @@ function MessagesContent() {
                 onClose={() => setDeleteCampaignId(null)}
                 onConfirm={confirmDeleteCampaign}
                 title="Delete Message?"
-                description="This action cannot be undone. This campaign will be permanently removed."
+                description="This action cannot be undone. This message will be permanently removed."
                 isLoading={deleteMutation.isPending}
             />
 
