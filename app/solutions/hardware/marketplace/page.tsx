@@ -5,7 +5,9 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { ShoppingCart, Check, Info, Truck, CreditCard, Paintbrush, ArrowRight } from 'lucide-react';
 import { notify } from '@/lib/notify';
-import Nfc1 from "@/assets/nfc/"
+import Nfc1 from "@/assets/nfc/Card NFC Plate White Spec branded.avif"
+import Nfc2 from "@/assets/nfc/Chip_tag_NFC215.avif"
+import Nfc3 from "@/assets/nfc/Reading_position.avif"
 
 export default function NfcMarketplacePage() {
     const products = [
@@ -13,7 +15,7 @@ export default function NfcMarketplacePage() {
             id: 'card-1',
             name: 'Elite NFC Identity Card',
             price: 3500,
-            image: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=400&auto=format&fit=crop', // Placeholder style
+            image: Nfc1.src,
             desc: 'Durable premium PVC with full-color CMYK printing. Perfect for staff and VIP members.',
             features: ['NXP NTAG213 Chip', 'Waterproof PVC', 'Both Sides Printing', 'Hole Punching Option'],
             colors: ['Matte Black', 'Royal White', 'Clear Frost']
@@ -22,7 +24,7 @@ export default function NfcMarketplacePage() {
             id: 'sticker-1',
             name: 'Smart Business Sticker',
             price: 1500,
-            image: 'https://images.unsplash.com/photo-1572336183013-960c3e185b04?q=80&w=400&auto=format&fit=crop',
+            image: Nfc2.src,
             desc: 'Peel and stick on any non-metal surface. Ideal for menus, mirrors, and checkout counters.',
             features: ['3M Industrial Adhesive', 'UV Protected PET', 'Small 30mm Profile', 'Fast Tap Handshake'],
             colors: ['Circular White', 'Transparent']
@@ -31,7 +33,7 @@ export default function NfcMarketplacePage() {
             id: 'metal-1',
             name: 'Signature Metal Plate',
             price: 12000,
-            image: 'https://images.unsplash.com/photo-1603513492128-ba7bc9b3e143?q=80&w=400&auto=format&fit=crop',
+            image: Nfc3.src,
             desc: 'Precision laser-engraved stainless steel for the ultimate luxury feel and durability.',
             features: ['304 Stainless Steel', 'Anti-Metal Shielding', 'Deep Laser Etching', 'Lifetime Warranty'],
             colors: ['Brushed Silver', 'Gold Plated', 'Space Grey']
