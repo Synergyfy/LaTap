@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useMarketplaceStore } from '@/store/marketplaceStore';
 import { useCartStore } from '@/store/cartStore';
+import { useWishlistStore } from '@/store/wishlistStore';
 import { fetchProducts } from '@/lib/api/marketplace';
 import { ProductCardSkeleton } from '@/components/marketplace/Skeletons';
 
@@ -24,6 +25,7 @@ export default function MarketplacePage() {
     } = useMarketplaceStore();
 
     const { addItem, items } = useCartStore();
+    const { toggleItem, isInWishlist, items: wishlistItems } = useWishlistStore();
 
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
     const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
@@ -81,14 +83,14 @@ export default function MarketplacePage() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col font-sans text-text-main relative">
+        <div className="min-h-screen bg-white flex flex-col font-sans text-text-main relative">
             {/* Header */}
             <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
                 <div className="max-w-[1600px] mx-auto px-4 md:px-8 h-20 flex items-center justify-between gap-8">
                     {/* Logo Area */}
                     <div className="flex items-center gap-12">
                         <Link href="/" className="flex items-center gap-2 group">
-                            <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                            <div className="w-10 h-10 bg-primary/10 rounded-sm flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
                                 <Grid size={24} />
                             </div>
                             <span className="font-display font-bold text-xl tracking-tight text-text-main">
@@ -113,7 +115,7 @@ export default function MarketplacePage() {
                             placeholder="Check product name, MCU, or part number..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full h-12 pl-12 pr-4 bg-gray-50 hover:bg-gray-100 focus:bg-white border-2 border-transparent focus:border-primary/20 rounded-2xl outline-none font-medium transition-all text-sm placeholder:text-gray-400"
+                            className="w-full h-12 pl-12 pr-4 bg-gray-50 hover:bg-gray-100 focus:bg-white border-2 border-transparent focus:border-primary/20 rounded-sm outline-none font-medium transition-all text-sm placeholder:text-gray-400"
                         />
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors" size={20} />
                     </div>
@@ -124,9 +126,14 @@ export default function MarketplacePage() {
                         </button>
 
                         <div className="flex items-center gap-4">
-                            <button className="p-2 text-gray-500 hover:text-primary transition-colors hidden sm:block">
+                            <Link href="/marketplace/wishlist" className="p-2 text-gray-500 hover:text-primary transition-colors relative hidden sm:block">
                                 <Heart size={22} />
-                            </button>
+                                {wishlistItems.length > 0 && (
+                                    <span className="absolute top-0 right-0 w-4 h-4 bg-primary text-white text-[10px] font-bold flex items-center justify-center rounded-full border border-white">
+                                        {wishlistItems.length}
+                                    </span>
+                                )}
+                            </Link>
                             <Link href="/marketplace/cart" className="p-2 text-gray-500 hover:text-primary transition-colors relative">
                                 <ShoppingCart size={22} />
                                 {items.length > 0 && (
@@ -139,8 +146,8 @@ export default function MarketplacePage() {
 
                         <div className="h-8 w-[1px] bg-gray-200 hidden sm:block"></div>
 
-                        <button className="hidden sm:flex items-center gap-3 hover:bg-gray-50 p-1.5 pr-3 rounded-full border border-transparent hover:border-gray-200 transition-all">
-                            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 border border-gray-200 overflow-hidden flex items-center justify-center">
+                        <button className="hidden sm:flex items-center gap-3 hover:bg-gray-50 p-1.5 pr-3 rounded-sm border border-transparent hover:border-gray-200 transition-all">
+                            <div className="w-9 h-9 rounded-sm bg-linear-to-br from-gray-100 to-gray-200 border border-gray-200 overflow-hidden flex items-center justify-center">
                                 <span className="font-bold text-gray-500">JP</span>
                             </div>
                             <span className="text-sm font-bold text-gray-700">Account</span>
@@ -234,7 +241,7 @@ export default function MarketplacePage() {
                                         <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Brands</p>
                                         <div className="space-y-2">
                                             {['ACS', 'HID Global', 'NXP', 'EntryConnect', 'StrongLink'].map((brand, i) => (
-                                                <label key={i} className="flex items-center gap-3 cursor-pointer group hover:bg-gray-50 p-2 -mx-2 rounded-lg transition-colors">
+                                                <label key={i} className="flex items-center gap-3 cursor-pointer group hover:bg-gray-50 p-2 -mx-2 rounded-sm transition-colors">
                                                     <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${selectedBrands.includes(brand) ? 'bg-primary border-primary' : 'bg-white border-gray-300'}`}>
                                                         {selectedBrands.includes(brand) && <CheckCircle2 size={12} className="text-white" />}
                                                     </div>
@@ -250,7 +257,7 @@ export default function MarketplacePage() {
                                         </div>
                                     </div>
 
-                                    <button onClick={resetFilters} className="w-full py-2.5 border border-gray-300 rounded-xl text-sm font-bold text-gray-600 hover:border-gray-400 hover:text-text-main transition-colors">
+                                    <button onClick={resetFilters} className="w-full py-2.5 border border-gray-300 rounded-sm text-sm font-bold text-gray-600 hover:border-gray-400 hover:text-text-main transition-colors">
                                         Reset Filters
                                     </button>
                                 </div>
@@ -295,7 +302,7 @@ export default function MarketplacePage() {
                             </div>
                             <div className="hidden sm:flex items-center gap-3">
                                 <span className="text-sm text-gray-500 font-medium">Sort by:</span>
-                                <select className="bg-white border border-gray-200 text-sm font-bold text-text-main rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer shadow-sm hover:border-gray-300 transition-colors">
+                                <select className="bg-white border border-gray-200 text-sm font-bold text-text-main rounded-sm px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer shadow-sm hover:border-gray-300 transition-colors">
                                     <option>Popularity</option>
                                     <option>Price: Low to High</option>
                                     <option>Newest</option>
@@ -333,21 +340,33 @@ export default function MarketplacePage() {
                                     <div
                                         key={product.id}
                                         onClick={() => handleCardClick(product.id)}
-                                        className="group bg-white rounded-xl border border-gray-200 hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300 flex flex-col overflow-hidden relative cursor-pointer"
+                                        className="group bg-white rounded-sm border border-gray-200 hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300 flex flex-col overflow-hidden relative cursor-pointer"
                                     >
 
                                         {/* Image Area */}
-                                        <div className="relative aspect-[1.2] p-8 bg-gray-50 group-hover:bg-white transition-colors duration-500 flex items-center justify-center border-b border-gray-50 group-hover:border-gray-100">
+                                        <div className="relative aspect-square p-8 bg-white group-hover:bg-gray-50 transition-colors duration-500 flex items-center justify-center border-b border-gray-100">
                                             <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
-                                                <span className={`self-start px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white shadow-sm ${product.tagColor}`}>
+                                                <span className={`self-start px-3 py-1 rounded-sm text-[10px] font-bold uppercase tracking-wider text-white shadow-sm ${product.tagColor}`}>
                                                     {product.tag}
                                                 </span>
                                             </div>
                                             <button
-                                                onClick={(e) => { e.stopPropagation(); /* Add to wishlist logic */ }}
-                                                className="absolute top-4 right-4 p-2.5 bg-white rounded-full shadow-md text-gray-400 hover:text-red-500 hover:scale-110 active:scale-90 transition-all z-10 opacity-0 group-hover:opacity-100"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    toggleItem({
+                                                        id: product.id,
+                                                        productId: product.id,
+                                                        name: product.name,
+                                                        brand: product.brand,
+                                                        price: product.price,
+                                                        image: product.image,
+                                                        desc: product.desc
+                                                    });
+                                                    toast.success(isInWishlist(product.id) ? 'Removed from wishlist' : 'Added to wishlist');
+                                                }}
+                                                className={`absolute top-4 right-4 p-2.5 bg-white rounded-sm shadow-md transition-all z-10 opacity-0 group-hover:opacity-100 ${isInWishlist(product.id) ? 'text-red-500' : 'text-gray-400 hover:text-red-500 hover:scale-110'}`}
                                             >
-                                                <Heart size={18} fill={product.id === '1' ? "currentColor" : "none"} />
+                                                <Heart size={18} fill={isInWishlist(product.id) ? "currentColor" : "none"} />
                                             </button>
 
                                             <img
@@ -387,12 +406,12 @@ export default function MarketplacePage() {
                                                 <button
                                                     onClick={(e) => handleAction(e, product)}
                                                     className={`
-                                                        h-11 px-6 rounded-xl text-sm font-bold flex items-center gap-2 transition-all active:scale-95 shadow-sm ml-auto
+                                                        h-11 px-6 rounded-sm text-sm font-bold flex items-center gap-2 transition-all active:scale-95 shadow-sm ml-auto
                                                         ${product.action === 'quote'
                                                             ? 'bg-transparent text-primary hover:text-primary-hover hover:underline shadow-none px-0'
                                                             : product.action === 'download'
                                                                 ? 'bg-primary/10 text-primary hover:bg-primary/20'
-                                                                : 'bg-primary text-white hover:bg-primary-hover shadow-lg shadow-primary/20'
+                                                                : 'bg-primary text-white hover:bg-primary-dark shadow-lg shadow-primary/20'
                                                         }
                                                     `}
                                                 >
@@ -408,7 +427,7 @@ export default function MarketplacePage() {
                         )}
 
                         {!isLoading && !isError && products.length === 0 && (
-                            <div className="py-20 text-center bg-gray-50 rounded-3xl border border-dashed border-gray-200">
+                            <div className="py-20 text-center bg-gray-50 rounded-sm border border-dashed border-gray-200">
                                 <p className="text-text-secondary font-medium">No products match your filters.</p>
                                 <button onClick={resetFilters} className="mt-4 text-primary font-bold hover:underline">Clear Filters</button>
                             </div>
