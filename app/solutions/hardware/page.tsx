@@ -313,30 +313,16 @@ export default function HardwareSolutionPage() {
                 </section>
 
                 {/* FINAL CALL TO ACTION */}
-                <section className="py-24 px-4 bg-blue-200">
-                    <div className="max-w-5xl mx-auto bg-text-main rounded-3xl p-12 md:p-24 text-center text-white space-y-10 relative overflow-hidden shadow-2xl">
-                        <div className="space-y-6 relative z-10">
-                            <h2 className="text-4xl md:text-7xl font-display font-bold leading-tight">Let's tap into <br /> your future.</h2>
-                            <p className="text-xl text-white/60 font-medium max-w-2xl mx-auto leading-relaxed">
-                                Join the elite tier of Nigerian merchants using NFC to automate customer identification and reward redemption.
-                            </p>
-                        </div>
-
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 relative z-10 pt-6">
-                            <Link
-                                href="/solutions/hardware/marketplace"
-                                className="px-12 py-6 bg-primary text-white font-black uppercase tracking-widest text-[12px] rounded-full hover:bg-primary-hover shadow-2xl shadow-primary/30 transition-all flex items-center gap-3 active:scale-95 transform hover:scale-105"
-                            >
-                                Explorer Hardware Catalog
-                                <ArrowRight size={18} />
-                            </Link>
-                            <Link
-                                href="/login"
-                                className="px-12 py-6 bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-[12px] rounded-full hover:bg-white/10 transition-all active:scale-95"
-                            >
-                                Login to Dashboard
-                            </Link>
-                        </div>
+                <section className="py-24 px-4 bg-white">
+                    <div className="max-w-7xl mx-auto container">
+                        <Link href="/solutions/hardware/marketplace" className="block relative rounded-[3rem] overflow-hidden shadow-2xl group transition-transform duration-500 hover:scale-[1.02]">
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition-colors z-10 pointer-events-none"></div>
+                            <img
+                                src="/assets/nfc_cta_banner.png"
+                                alt="Buy NFC Tags"
+                                className="w-full h-auto object-cover"
+                            />
+                        </Link>
                     </div>
                 </section>
             </main>
