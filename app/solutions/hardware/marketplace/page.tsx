@@ -5,6 +5,7 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { ShoppingCart, Check, Info, Truck, CreditCard, Paintbrush, ArrowRight } from 'lucide-react';
 import { notify } from '@/lib/notify';
+import Nfc1 from "@/assets/nfc/"
 
 export default function NfcMarketplacePage() {
     const products = [

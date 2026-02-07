@@ -17,13 +17,13 @@ export default function SoftwareSolutionPage() {
             <Navbar />
 
             <main className="relative">
-                {/* HERO SECTION - Mirroring Landing Page Hero */}
+                {/* HERO SECTION*/}
                 <section className="relative pt-48 pb-24 overflow-hidden bg-white min-h-[85vh] flex flex-col items-center border-b border-gray-50">
-                    {/* Ambient Gradients - Match Landing Page */}
+                    {/* Ambient Gradients */}
                     <div className="absolute top-20 right-10 w-96 h-96 bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
                     <div className="absolute bottom-20 left-10 w-80 h-80 bg-purple-500/10 rounded-full blur-[80px] pointer-events-none"></div>
 
-                    {/* Decorative Fading Grid Lines - Match Landing Page */}
+                    {/* Decorative Fading Grid Lines */}
                     <div className="absolute inset-0 pointer-events-none opacity-[0.05]" style={{
                         backgroundImage: `linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)`,
                         backgroundSize: '40px 40px',

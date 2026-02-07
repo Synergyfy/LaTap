@@ -112,7 +112,7 @@ export default function HardwareSolutionPage() {
                                     <span className="text-primary font-black uppercase tracking-[0.2em] text-[10px]">Technical Specifications</span>
                                     <h2 className="text-4xl md:text-6xl font-display font-bold tracking-tight">How our NFC bridge operates.</h2>
                                     <p className="text-lg text-text-secondary font-medium leading-relaxed">
-                                        We don't just sell stickers; we provide a high-performance communication layer. Our hardware is engineered to work in high-traffic environments, ensuring that every tap results in a successful merchant-customer handshake.
+                                        We don't just sell smart stickers,metal plates,identity cards; we provide a high-performance communication layer. Our hardware is engineered to work in high-traffic environments, ensuring that every tap results in a successful merchant-customer handshake.
                                     </p>
                                 </div>
 
@@ -309,14 +309,8 @@ export default function HardwareSolutionPage() {
                 </section>
 
                 {/* FINAL CALL TO ACTION */}
-                <section className="py-24 px-4 bg-white">
+                <section className="py-24 px-4 bg-blue-200">
                     <div className="max-w-5xl mx-auto bg-text-main rounded-[4rem] p-12 md:p-24 text-center text-white space-y-10 relative overflow-hidden shadow-2xl">
-                        {/* Landing Page Style Detail */}
-                        <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none" style={{
-                            backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`,
-                            backgroundSize: '40px 40px'
-                        }}></div>
-
                         <div className="space-y-6 relative z-10">
                             <h2 className="text-4xl md:text-7xl font-display font-bold leading-tight">Let's tap into <br /> your future.</h2>
                             <p className="text-xl text-white/60 font-medium max-w-2xl mx-auto leading-relaxed">
