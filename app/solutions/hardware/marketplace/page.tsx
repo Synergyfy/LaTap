@@ -7,7 +7,7 @@ import { ShoppingCart, Check, Info, Truck, CreditCard, Paintbrush, ArrowRight } 
 import { notify } from '@/lib/notify';
 import Nfc1 from "@/assets/nfc/Card NFC Plate White Spec branded.avif"
 import Nfc2 from "@/assets/nfc/Chip_tag_NFC215.avif"
-import Nfc3 from "@/assets/nfc/Reading_position.avif"
+import Nfc3 from "@/assets/nfc/Reading position.avif"
 
 export default function NfcMarketplacePage() {
     const products = [
