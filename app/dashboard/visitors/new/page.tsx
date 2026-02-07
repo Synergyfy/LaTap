@@ -17,6 +17,7 @@ import toast from 'react-hot-toast';
 export default function NewVisitorsPage() {
     const queryClient = useQueryClient();
 
+    const [isBulkMsgOpen, setIsBulkMsgOpen] = useState(false);
     const [selectedVisitorForMsg, setSelectedVisitorForMsg] = useState<Visitor | null>(null);
     const [selectedVisitorForDetails, setSelectedVisitorForDetails] = useState<Visitor | null>(null);
 
@@ -34,8 +35,7 @@ export default function NewVisitorsPage() {
 
     const handleSendWelcomeMessage = () => {
         if (newVisitors.length > 0) {
-            // Bulk message logic would go here, for now pick the first one as demo or open a generic composer
-            toast.success(`Welcome message campaign scheduled for ${newVisitors.length} new visitors!`);
+            setIsBulkMsgOpen(true);
         } else {
             toast.error('No new visitors to send welcome message to');
         }
@@ -111,6 +111,13 @@ export default function NewVisitorsPage() {
                     onClose={() => setSelectedVisitorForMsg(null)}
                     recipientName={selectedVisitorForMsg?.name || ''}
                     recipientPhone={selectedVisitorForMsg?.phone}
+                    type="welcome"
+                />
+
+                <SendMessageModal
+                    isOpen={isBulkMsgOpen}
+                    onClose={() => setIsBulkMsgOpen(false)}
+                    recipientName={`${newVisitors.length} New Visitors`}
                     type="welcome"
                 />
 

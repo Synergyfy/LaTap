@@ -141,3 +141,20 @@ now for enry connect please check that evry page with the welcome show the modal
 -- hardware landing page leads to hardware store which leads to our marketplace
 --  the admin will add and populate the store market place.
 --they should be able to coustomize the nfc crds based on the background color,name,brand etc
+
+-- :nfcs 
+
+---Did you know?
+
+NFC identification is 4x faster than QR code scanning. It eliminates the need for camera focus, lighting adjustments, and app interaction, making it the perfect solution for busy store-fronts and clubs.
+--add it strategically to the landing page
+---for the Merchant Plates use images
+--https://store.gototags.com/
+
+--we will have booking section 1.booking multiple 
+
+--add to cart,see,add quote,
+
+--Let's tap into
+your future. - this section background should be like a soft blue like the card with the cta in the main landing page and please make sure you use  there are no to rounded cards anywhere in this application go ahead and also use our dashboard sidebar as a refrnce to create the market place with the product card and major desc about the product  Let's tap into
+your future. 

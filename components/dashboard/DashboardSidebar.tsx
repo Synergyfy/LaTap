@@ -126,6 +126,13 @@ export default function DashboardSidebar({ children }: SidebarProps) {
             ]
         },
         {
+            id: 'support',
+            label: 'Support',
+            icon: HelpCircle,
+            href: '/dashboard/support',
+            roles: ['owner', 'manager', 'staff']
+        },
+        {
             id: 'staff',
             label: 'Team',
             icon: Users2,
@@ -345,9 +352,12 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                             </>
                         )}
 
-                        <button className="p-2 text-text-secondary hover:text-text-main hover:bg-gray-50 rounded-lg transition-colors">
+                        <Link
+                            href="/dashboard/support"
+                            className="p-2 text-text-secondary hover:text-text-main hover:bg-gray-50 rounded-lg transition-colors"
+                        >
                             <HelpCircle size={20} />
-                        </button>
+                        </Link>
                     </div>
                 </header>
 

@@ -9,14 +9,15 @@ export default function AdminSupportPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
     const [filterPriority, setFilterPriority] = useState('all');
+    const [supportType, setSupportType] = useState<'business' | 'customer'>('business');
 
     const [tickets, setTickets] = useState([
-        { id: 'TKT-2401', subject: 'NFC device not scanning correctly', business: 'Green Terrace Cafe', priority: 'High', status: 'Open', created: '2 hours ago', agent: 'Daniel' },
-        { id: 'TKT-2398', subject: 'Billing inquiry for March', business: 'Tech Hub Lagos', priority: 'Medium', status: 'In Progress', created: '5 hours ago', agent: 'Sarah' },
-        { id: 'TKT-2392', subject: 'How to update business logo?', business: 'Fashion Boutique', priority: 'Low', status: 'Closed', created: '1 day ago', agent: 'Mike' },
-        { id: 'TKT-2385', subject: 'Login issues for staff account', business: 'Restaurant 360', priority: 'High', status: 'Open', created: '1 day ago', agent: 'Unassigned' },
-        { id: 'TKT-2350', subject: 'Feature request: Custom rewards', business: 'Fitness Center', priority: 'Low', status: 'In Progress', created: '2 days ago', agent: 'Daniel' },
-        { id: 'TKT-2342', subject: 'Device arrived damaged', business: 'Beauty Spa', priority: 'High', status: 'Closed', created: '3 days ago', agent: 'Sarah' },
+        { id: 'TKT-2401', subject: 'NFC device not scanning correctly', business: 'Green Terrace Cafe', user: 'Business', priority: 'High', status: 'Open', created: '2 hours ago', agent: 'Daniel' },
+        { id: 'TKT-2398', subject: 'Billing inquiry for March', business: 'Tech Hub Lagos', user: 'Business', priority: 'Medium', status: 'In Progress', created: '5 hours ago', agent: 'Sarah' },
+        { id: 'TKT-2392', subject: 'How to update business logo?', business: 'Fashion Boutique', user: 'Business', priority: 'Low', status: 'Closed', created: '1 day ago', agent: 'Mike' },
+        { id: 'TKT-2385', subject: 'Points not added after visit', user: 'Customer', name: 'Bisi Adebowale', priority: 'High', status: 'Open', created: '1 day ago', agent: 'Unassigned' },
+        { id: 'TKT-2350', subject: 'Cannot redeem coffee voucher', user: 'Customer', name: 'John Doe', priority: 'Low', status: 'In Progress', created: '2 days ago', agent: 'Daniel' },
+        { id: 'TKT-2342', subject: 'Device arrived damaged', business: 'Beauty Spa', user: 'Business', priority: 'High', status: 'Closed', created: '3 days ago', agent: 'Sarah' },
     ]);
 
     const stats = [
@@ -37,30 +38,49 @@ export default function AdminSupportPage() {
     };
 
     const filteredTickets = tickets.filter(ticket => {
+        const matchesType = supportType === 'business' ? ticket.user === 'Business' : ticket.user === 'Customer';
         const matchesSearch = ticket.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
             ticket.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            ticket.business.toLowerCase().includes(searchQuery.toLowerCase());
+            (ticket.business?.toLowerCase().includes(searchQuery.toLowerCase())) ||
+            (ticket.name?.toLowerCase().includes(searchQuery.toLowerCase()));
         const matchesPriority = filterPriority === 'all' || ticket.priority === filterPriority;
         const matchesStatus = filterStatus === 'all' || ticket.status === filterStatus;
-        return matchesSearch && matchesPriority && matchesStatus;
+        return matchesType && matchesSearch && matchesPriority && matchesStatus;
     });
 
     return (
         <AdminSidebar>
             <div className="p-8">
                 {/* Page Header */}
-                <div className="flex items-center justify-between mb-8">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
                     <div>
                         <h1 className="text-3xl font-display font-bold text-text-main mb-2">Omnichannel Support</h1>
-                        <p className="text-text-secondary font-medium">Manage merchant inquiries and resolve platform issues</p>
+                        <p className="text-text-secondary font-medium">Manage inquiries and resolve platform issues</p>
                     </div>
-                    <button
-                        onClick={() => notify.info('Support dashboard syncing...')}
-                        className="px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all flex items-center gap-2 shadow-lg shadow-primary/20"
-                    >
-                        <MessageSquare size={18} />
-                        Live Chat Console
-                    </button>
+
+                    <div className="flex items-center gap-3">
+                        <div className="bg-gray-100 p-1.5 rounded-xl flex items-center gap-1 shadow-inner">
+                            <button
+                                onClick={() => setSupportType('business')}
+                                className={`px-4 py-2 text-xs font-black uppercase tracking-wider rounded-lg transition-all ${supportType === 'business' ? 'bg-white text-primary shadow-sm' : 'text-text-secondary hover:text-text-main'}`}
+                            >
+                                Business
+                            </button>
+                            <button
+                                onClick={() => setSupportType('customer')}
+                                className={`px-4 py-2 text-xs font-black uppercase tracking-wider rounded-lg transition-all ${supportType === 'customer' ? 'bg-white text-primary shadow-sm' : 'text-text-secondary hover:text-text-main'}`}
+                            >
+                                Customer
+                            </button>
+                        </div>
+                        <button
+                            onClick={() => notify.info('Support dashboard syncing...')}
+                            className="px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all flex items-center gap-2 shadow-lg shadow-primary/20"
+                        >
+                            <MessageSquare size={18} />
+                            Live Console
+                        </button>
+                    </div>
                 </div>
 
                 {/* Stats Grid */}
@@ -129,7 +149,7 @@ export default function AdminSupportPage() {
                             <thead className="bg-gray-50 border-b border-gray-200">
                                 <tr>
                                     <th className="text-left py-4 px-6 text-xs font-black uppercase tracking-wider text-text-secondary">ID</th>
-                                    <th className="text-left py-4 px-6 text-xs font-black uppercase tracking-wider text-text-secondary">Subject & Business</th>
+                                    <th className="text-left py-4 px-6 text-xs font-black uppercase tracking-wider text-text-secondary">Subject & {supportType === 'business' ? 'Business' : 'Customer'}</th>
                                     <th className="text-left py-4 px-6 text-xs font-black uppercase tracking-wider text-text-secondary">Priority</th>
                                     <th className="text-left py-4 px-6 text-xs font-black uppercase tracking-wider text-text-secondary">Status</th>
                                     <th className="text-left py-4 px-6 text-xs font-black uppercase tracking-wider text-text-secondary">Time Ago</th>
@@ -146,7 +166,7 @@ export default function AdminSupportPage() {
                                         <td className="py-4 px-6">
                                             <div className="max-w-xs">
                                                 <p className="font-bold text-sm text-text-main group-hover:text-primary transition-colors cursor-pointer">{ticket.subject}</p>
-                                                <p className="text-[10px] text-text-secondary font-black uppercase tracking-widest mt-0.5">{ticket.business}</p>
+                                                <p className="text-[10px] text-text-secondary font-black uppercase tracking-widest mt-0.5">{supportType === 'business' ? (ticket as any).business : (ticket as any).name}</p>
                                             </div>
                                         </td>
                                         <td className="py-4 px-6">

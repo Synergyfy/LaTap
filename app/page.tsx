@@ -1,10 +1,11 @@
 import React from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Hero from '@/components/landing/Hero';
+import SpeedComparison from '@/components/landing/SpeedComparison';
+import SolutionsPreview from '@/components/landing/SolutionsPreview';
 import Process from '@/components/landing/Process';
 import Features from '@/components/landing/Features';
 import Pricing from '@/components/landing/Pricing';
-import HardwarePricing from '@/components/landing/HardwarePricing';
 import MobileExperience from '@/components/landing/MobileExperience';
 import AutomationCTA from '@/components/landing/AutomationCTA';
 import Testimonials from '@/components/landing/Testimonials';
@@ -16,9 +17,10 @@ export default function LandingPage() {
     <div className="min-h-screen bg-white">
       <Navbar />
       <Hero />
+      <SpeedComparison />
       <Process />
       <Features />
-      <HardwarePricing />
+      <SolutionsPreview />
       <Pricing />
       <MobileExperience />
       <Testimonials />

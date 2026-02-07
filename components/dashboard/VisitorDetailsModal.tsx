@@ -77,6 +77,13 @@ export default function VisitorDetailsModal({ isOpen, onClose, visitor }: Visito
                                 </p>
                             </div>
                             <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                <label className="text-[10px] font-bold text-text-secondary uppercase mb-1 block">Phone Number</label>
+                                <p className="font-medium text-text-main flex items-center gap-2">
+                                    <Phone size={14} className="text-gray-400" />
+                                    {visitor.phone}
+                                </p>
+                            </div>
+                            <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
                                 <label className="text-[10px] font-bold text-text-secondary uppercase mb-1 block">First Seen</label>
                                 <p className="font-medium text-text-main flex items-center gap-2">
                                     <Calendar size={14} className="text-gray-400" />

@@ -13,12 +13,12 @@ export default function AdminBusinessesPage() {
     const [selectedBusiness, setSelectedBusiness] = useState<any>(null);
 
     const [businesses, setBusinesses] = useState([
-        { id: 1, name: 'Green Terrace Cafe', owner: 'John Smith', email: 'john@greenterrace.com', plan: 'Premium', devices: 5, visitors: 2847, status: 'active', joined: '2024-01-15' },
-        { id: 2, name: 'Tech Hub Lagos', owner: 'Sarah Johnson', email: 'sarah@techhub.ng', plan: 'Enterprise', devices: 12, visitors: 8921, status: 'active', joined: '2024-01-10' },
-        { id: 3, name: 'Fashion Boutique', owner: 'Mike Williams', email: 'mike@fashion.com', plan: 'Basic', devices: 2, visitors: 456, status: 'pending', joined: '2024-02-01' },
-        { id: 4, name: 'Fitness Center', owner: 'Emily Davis', email: 'emily@fitness.ng', plan: 'Premium', devices: 8, visitors: 3421, status: 'active', joined: '2024-01-20' },
-        { id: 5, name: 'Restaurant 360', owner: 'David Brown', email: 'david@restaurant360.com', plan: 'Basic', devices: 3, visitors: 1234, status: 'suspended', joined: '2023-12-05' },
-        { id: 6, name: 'Beauty Spa', owner: 'Lisa Anderson', email: 'lisa@beautyspa.ng', plan: 'Free', devices: 1, visitors: 89, status: 'active', joined: '2024-01-28' },
+        { id: 1, name: 'Green Terrace Cafe', owner: 'John Smith', email: 'john@greenterrace.com', phone: '+234 802 345 6789', plan: 'Premium', devices: 5, visitors: 2847, status: 'active', joined: '2024-01-15' },
+        { id: 2, name: 'Tech Hub Lagos', owner: 'Sarah Johnson', email: 'sarah@techhub.ng', phone: '+234 803 456 7890', plan: 'Enterprise', devices: 12, visitors: 8921, status: 'active', joined: '2024-01-10' },
+        { id: 3, name: 'Fashion Boutique', owner: 'Mike Williams', email: 'mike@fashion.com', phone: '+234 804 567 8901', plan: 'Basic', devices: 2, visitors: 456, status: 'pending', joined: '2024-02-01' },
+        { id: 4, name: 'Fitness Center', owner: 'Emily Davis', email: 'emily@fitness.ng', phone: '+234 805 678 9012', plan: 'Premium', devices: 8, visitors: 3421, status: 'active', joined: '2024-01-20' },
+        { id: 5, name: 'Restaurant 360', owner: 'David Brown', email: 'david@restaurant360.com', phone: '+234 806 789 0123', plan: 'Basic', devices: 3, visitors: 1234, status: 'suspended', joined: '2023-12-05' },
+        { id: 6, name: 'Beauty Spa', owner: 'Lisa Anderson', email: 'lisa@beautyspa.ng', phone: '+234 807 890 1234', plan: 'Free', devices: 1, visitors: 89, status: 'active', joined: '2024-01-28' },
     ]);
 
     const stats = [
@@ -53,6 +53,7 @@ export default function AdminBusinessesPage() {
             plan: formData.get('plan') as string,
             owner: formData.get('owner') as string,
             email: formData.get('email') as string,
+            phone:formData.get('phone') as string,
             status: selectedBusiness?.status || 'active',
             joined: selectedBusiness?.joined || new Date().toISOString().split('T')[0],
             devices: selectedBusiness?.devices || 0,
@@ -336,16 +337,29 @@ export default function AdminBusinessesPage() {
                         />
                     </div>
 
-                    <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Primary Email Address</label>
-                        <input
-                            name="email"
-                            defaultValue={selectedBusiness?.email}
-                            type="email"
-                            required
-                            className="w-full h-12 px-4 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all font-bold text-sm"
-                            placeholder="billing@business.com"
-                        />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Primary Email Address</label>
+                            <input
+                                name="email"
+                                defaultValue={selectedBusiness?.email}
+                                type="email"
+                                required
+                                className="w-full h-12 px-4 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all font-bold text-sm"
+                                placeholder="billing@business.com"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Phone Number</label>
+                            <input
+                                name="phone"
+                                defaultValue={selectedBusiness?.phone || '+234 '}
+                                type="tel"
+                                required
+                                className="w-full h-12 px-4 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all font-bold text-sm"
+                                placeholder="+234 800 000 0000"
+                            />
+                        </div>
                     </div>
 
                     <div className="pt-4 flex gap-4">
@@ -358,7 +372,7 @@ export default function AdminBusinessesPage() {
                         </button>
                         <button
                             type="submit"
-                            className="flex-[2] h-14 bg-primary text-white font-bold rounded-2xl hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3 active:scale-95"
+                            className="flex-2 h-14 bg-primary text-white font-bold rounded-2xl hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3 active:scale-95"
                         >
                             {selectedBusiness ? 'Update Business' : 'Launch Venue'}
                         </button>
