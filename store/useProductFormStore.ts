@@ -7,6 +7,12 @@ interface Spec {
   value: string;
 }
 
+interface Step {
+  id: string;
+  title: string;
+  description: string;
+}
+
 interface VolumeDiscount {
   id: string;
   minQty: number;
@@ -28,7 +34,13 @@ interface ProductFormData {
     detail: File | string | null;
     packaging: File | string | null;
   };
+  video: {
+    file: File | null;
+    url: string;
+    autoplay: boolean;
+  };
   specs: Spec[];
+  howToSteps: Step[];
   
   // Step 3
   msrp: number;
@@ -53,9 +65,13 @@ const initialFormData: ProductFormData = {
   sku: '',
   description: '',
   images: { primary: null, side: null, detail: null, packaging: null },
+  video: { file: null, url: '', autoplay: false },
   specs: [
     { id: '1', label: 'Frequency', value: '13.56 MHz' },
     { id: '2', label: 'Connection Interface', value: 'USB 2.0 / Bluetooth 5.0' }
+  ],
+  howToSteps: [
+    { id: '1', title: 'Tap to Connect', description: 'Enable NFC on your device and tap the reader.' }
   ],
   msrp: 450.00,
   costPrice: 280.00,

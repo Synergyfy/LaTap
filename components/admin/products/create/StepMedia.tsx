@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useProductFormStore } from '@/store/useProductFormStore';
-import { Upload, X, Plus, Info, Image as ImageIcon, Trash2, GripVertical, ArrowRight } from 'lucide-react';
+import { Upload, X, Plus, Info, Image as ImageIcon, Trash2, GripVertical, ArrowRight, Video, Link as LinkIcon, Play } from 'lucide-react';
 
 export default function StepMedia() {
     const { formData, updateFormData, nextStep, prevStep } = useProductFormStore();
     const primaryInputRef = useRef<HTMLInputElement>(null);
+    const videoInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'primary' | 'side' | 'detail' | 'packaging') => {
         if (e.target.files && e.target.files[0]) {
@@ -15,7 +16,17 @@ export default function StepMedia() {
             // Or create a temporary URL for preview.
             const url = URL.createObjectURL(file);
             updateFormData({
-                images: { ...formData.images, [type]: url } // Mocking URL
+                images: { ...formData.images, [type]: url } // Mocki
+            });
+        }
+    };
+
+
+    const handleVideoFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            updateFormData({
+                video: { ...formData.video, file: file }
             });
         }
     };
@@ -93,6 +104,94 @@ export default function StepMedia() {
                                         />
                                     </label>
                                 ))}
+                            </div>
+                        </div>
+                    </div>
+
+
+                    {/* Video Section */}
+                    <div className="mb-12 border-t border-gray-100 pt-12">
+                        <div className="flex justify-between items-center mb-8">
+                            <h3 className="text-xl font-bold font-display text-text-main">Product Video</h3>
+                            <span className="text-xs font-bold text-gray-400 bg-gray-50 px-3 py-1 rounded-full uppercase tracking-wider">MP4, WEBM</span>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {/* Video Upload */}
+                            <div
+                                onClick={() => videoInputRef.current?.click()}
+                                className="group relative flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-primary/30 transition-all overflow-hidden"
+                            >
+                                {formData.video.file ? (
+                                    <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50">
+                                        <Video size={48} className="text-primary mb-2" />
+                                        <p className="text-sm font-bold text-text-main">{formData.video.file.name}</p>
+                                        <p className="text-xs text-text-secondary">{(formData.video.file.size / 1024 / 1024).toFixed(2)} MB</p>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                updateFormData({ video: { ...formData.video, file: null } });
+                                            }}
+                                            className="mt-4 px-4 py-2 bg-white border border-gray-200 rounded-lg text-xs font-bold text-red-500 hover:bg-red-50"
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center px-4">
+                                        <div className="size-16 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                            <Video size={28} />
+                                        </div>
+                                        <p className="mb-2 text-sm text-text-main font-bold">Upload Video</p>
+                                        <p className="text-xs text-text-secondary">Drag & drop or click</p>
+                                    </div>
+                                )}
+                                <input
+                                    ref={videoInputRef}
+                                    type="file"
+                                    className="hidden"
+                                    accept="video/*"
+                                    onChange={handleVideoFileChange}
+                                />
+                            </div>
+
+                            {/* Video Settings */}
+                            <div className="space-y-6">
+                                <div>
+                                    <label className="block text-sm font-bold text-text-secondary mb-2">Video Link (Optional)</label>
+                                    <div className="relative">
+                                        <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                                        <input
+                                            type="url"
+                                            placeholder="https://youtube.com/..."
+                                            value={formData.video.url}
+                                            onChange={(e) => updateFormData({ video: { ...formData.video, url: e.target.value } })}
+                                            className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none font-medium text-sm"
+                                        />
+                                    </div>
+                                    <p className="text-xs text-gray-400 mt-2">Used if no video file is uploaded.</p>
+                                </div>
+
+                                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                    <div className="flex items-center gap-3">
+                                        <div className="size-10 bg-white rounded-lg flex items-center justify-center border border-gray-200 text-gray-500">
+                                            <Play size={18} fill="currentColor" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-bold text-text-main">Autoplay</p>
+                                            <p className="text-xs text-text-secondary">Play video automatically on load</p>
+                                        </div>
+                                    </div>
+                                    <label className="relative inline-flex items-center cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            className="sr-only peer"
+                                            checked={formData.video.autoplay}
+                                            onChange={(e) => updateFormData({ video: { ...formData.video, autoplay: e.target.checked } })}
+                                        />
+                                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>

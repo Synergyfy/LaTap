@@ -310,7 +310,7 @@ export default function SoftwareSolutionPage() {
                         <div className="space-y-6 relative z-10">
                             <h2 className="text-4xl md:text-8xl font-display font-bold leading-tight">Digitize your <br /> venue today.</h2>
                             <p className="text-xl text-white/60 font-medium max-w-2xl mx-auto leading-relaxed">
-                                Experience the power of the EntryConnect merchant ecosystem. No credit card required to start your enterprise trial.
+                                Experience the power of the Eliztap merchant ecosystem. No credit card required to start your enterprise trial.
                             </p>
                         </div>
 

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useProductFormStore } from '@/store/useProductFormStore';
-import { Factory, QrCode, ArrowRight, Save } from 'lucide-react';
+import { Factory, QrCode, ArrowRight, Save, Plus, Trash2, GripVertical, ListOrdered } from 'lucide-react';
 
 export default function StepDetails() {
     const { formData, updateFormData, nextStep } = useProductFormStore();
@@ -10,6 +10,20 @@ export default function StepDetails() {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         updateFormData({ [name]: value });
+    };
+
+    const addStep = () => {
+        const newStep = { id: Date.now().toString(), title: '', description: '' };
+        updateFormData({ howToSteps: [...formData.howToSteps, newStep] });
+    };
+
+    const removeStep = (id: string) => {
+        updateFormData({ howToSteps: formData.howToSteps.filter(s => s.id !== id) });
+    };
+
+    const updateStep = (id: string, field: 'title' | 'description', value: string) => {
+        const newSteps = formData.howToSteps.map(s => s.id === id ? { ...s, [field]: value } : s);
+        updateFormData({ howToSteps: newSteps });
     };
 
     return (
@@ -81,6 +95,62 @@ export default function StepDetails() {
                                     onChange={handleChange}
                                 ></textarea>
                                 <p className="text-right text-xs text-gray-400 mt-2">{formData.description.length}/2000 characters</p>
+                            </div>
+                        </div>
+
+                        {/* How-to Steps Section */}
+                        <div className="mt-12 pt-12 border-t border-gray-100">
+                            <div className="flex justify-between items-center mb-8">
+                                <div>
+                                    <h3 className="text-xl font-bold font-display text-text-main">How to Use</h3>
+                                    <p className="text-sm text-text-secondary mt-1 font-medium">Add step-by-step instructions for the user.</p>
+                                </div>
+                                <button
+                                    onClick={addStep}
+                                    className="text-primary hover:text-primary-hover font-bold text-sm flex items-center gap-1 bg-primary/5 px-4 py-2 rounded-xl transition-colors"
+                                >
+                                    <Plus size={16} />
+                                    Add Step
+                                </button>
+                            </div>
+
+                            <div className="space-y-4">
+                                {formData.howToSteps?.map((step, index) => (
+                                    <div key={step.id} className="flex gap-4 items-start group animate-in slide-in-from-bottom-2 fade-in duration-300">
+                                        <div className="w-8 pt-4 flex items-center justify-center text-gray-300 cursor-move">
+                                            <span className="font-bold text-sm bg-gray-100 size-6 rounded-full flex items-center justify-center text-gray-500">{index + 1}</span>
+                                        </div>
+                                        <div className="flex-1 grid grid-cols-1 gap-4 bg-gray-50/50 p-4 rounded-2xl border border-gray-100 hover:border-primary/20 transition-colors">
+                                            <input
+                                                type="text"
+                                                value={step.title}
+                                                onChange={(e) => updateStep(step.id, 'title', e.target.value)}
+                                                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm font-bold text-text-main focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all placeholder-gray-300"
+                                                placeholder={`Step ${index + 1} Title`}
+                                            />
+                                            <textarea
+                                                value={step.description}
+                                                onChange={(e) => updateStep(step.id, 'description', e.target.value)}
+                                                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-text-secondary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all placeholder-gray-300 resize-none"
+                                                placeholder="Describe this step..."
+                                                rows={2}
+                                            />
+                                        </div>
+                                        <button
+                                            onClick={() => removeStep(step.id)}
+                                            className="p-2 mt-4 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                                        >
+                                            <Trash2 size={18} />
+                                        </button>
+                                    </div>
+                                ))}
+
+                                {(!formData.howToSteps || formData.howToSteps.length === 0) && (
+                                    <div className="text-center py-8 border-2 border-dashed border-gray-100 rounded-2xl text-gray-300">
+                                        <ListOrdered size={32} className="mx-auto mb-2 opacity-50" />
+                                        <p>No instructions added. Click "Add Step" to start.</p>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
