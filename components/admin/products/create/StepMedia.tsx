@@ -16,7 +16,7 @@ export default function StepMedia() {
             // Or create a temporary URL for preview.
             const url = URL.createObjectURL(file);
             updateFormData({
-                images: { ...formData.images, [type]: url } // Mocking URL
+                images: { ...formData.images, [type]: url } // Mocki
             });
         }
     };
