@@ -129,7 +129,7 @@ export default function MarketplacePage() {
                             <Link href="/marketplace/wishlist" className="p-2 text-gray-500 hover:text-primary transition-colors relative hidden sm:block">
                                 <Heart size={22} />
                                 {wishlistItems.length > 0 && (
-                                    <span className="absolute top-0 right-0 w-4 h-4 bg-primary text-white text-[10px] font-bold flex items-center justify-center rounded-full border border-white">
+                                    <span className="absolute top-0 right-0 w-4 h-4 bg-primary text-white text-[10px] font-bold flex items-center justify-center rounded-sm border border-white">
                                         {wishlistItems.length}
                                     </span>
                                 )}
@@ -137,14 +137,14 @@ export default function MarketplacePage() {
                             <Link href="/marketplace/cart" className="p-2 text-gray-500 hover:text-primary transition-colors relative">
                                 <ShoppingCart size={22} />
                                 {items.length > 0 && (
-                                    <span className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full border border-white">
+                                    <span className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[10px] font-bold flex items-center justify-center rounded-sm border border-white">
                                         {items.length}
                                     </span>
                                 )}
                             </Link>
                         </div>
 
-                        <div className="h-8 w-[1px] bg-gray-200 hidden sm:block"></div>
+                        <div className="h-8 w-px bg-gray-200 hidden sm:block"></div>
 
                         <button className="hidden sm:flex items-center gap-3 hover:bg-gray-50 p-1.5 pr-3 rounded-sm border border-transparent hover:border-gray-200 transition-all">
                             <div className="w-9 h-9 rounded-sm bg-linear-to-br from-gray-100 to-gray-200 border border-gray-200 overflow-hidden flex items-center justify-center">
@@ -188,7 +188,7 @@ export default function MarketplacePage() {
                 <div className="flex flex-col lg:flex-row gap-8 xl:gap-12">
 
                     {/* Filters Sidebar (Desktop) */}
-                    <aside className="hidden lg:block w-72 flex-shrink-0">
+                    <aside className="hidden lg:block w-72 shrink-0">
                         <div className="sticky top-40 space-y-10">
                             <div>
                                 <h3 className="flex items-center gap-2 font-display font-bold text-lg mb-6 text-text-main">
@@ -210,8 +210,8 @@ export default function MarketplacePage() {
                                                         checked={selectedCategory === item}
                                                         onChange={() => setCategory(item)}
                                                     />
-                                                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${selectedCategory === item ? 'border-primary' : 'border-gray-300 group-hover:border-primary'}`}>
-                                                        {selectedCategory === item && <div className="w-2 h-2 rounded-full bg-primary"></div>}
+                                                    <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${selectedCategory === item ? 'border-primary' : 'border-gray-300 group-hover:border-primary'}`}>
+                                                        {selectedCategory === item && <div className="w-2 h-2 rounded-sm bg-primary"></div>}
                                                     </div>
                                                     <span className={`text-sm transition-colors ${selectedCategory === item ? 'text-primary font-bold' : 'text-gray-600 font-medium group-hover:text-primary'}`}>{item}</span>
                                                 </label>
@@ -232,7 +232,7 @@ export default function MarketplacePage() {
                                             step="5000"
                                             value={priceRange[1]}
                                             onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
-                                            className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary hover:accent-primary-hover"
+                                            className="w-full h-1 bg-gray-200 rounded-sm appearance-none cursor-pointer accent-primary hover:accent-primary-hover"
                                         />
                                     </div>
 
@@ -267,12 +267,12 @@ export default function MarketplacePage() {
 
                     {/* Mobile Filter Drawer */}
                     {isMobileFilterOpen && (
-                        <div className="fixed inset-0 z-[60] lg:hidden">
+                        <div className="fixed inset-0 z-60 lg:hidden">
                             <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsMobileFilterOpen(false)}></div>
                             <div className="absolute inset-y-0 right-0 w-80 bg-white shadow-2xl p-6 overflow-y-auto animate-in slide-in-from-right duration-200">
                                 <div className="flex items-center justify-between mb-8">
                                     <h3 className="font-display font-bold text-xl">Filters</h3>
-                                    <button onClick={() => setIsMobileFilterOpen(false)} className="p-2 hover:bg-gray-100 rounded-full">
+                                    <button onClick={() => setIsMobileFilterOpen(false)} className="p-2 hover:bg-gray-100 rounded-sm">
                                         <X size={24} />
                                     </button>
                                 </div>
@@ -281,7 +281,7 @@ export default function MarketplacePage() {
                                         <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Category</p>
                                         <div className="space-y-2">
                                             {['All Products', 'NFC Readers', 'Smart Cards', 'Development Kits'].map((item) => (
-                                                <button key={item} onClick={() => { setCategory(item); setIsMobileFilterOpen(false); }} className={`block w-full text-left py-2 px-3 rounded-lg text-sm font-medium ${selectedCategory === item ? 'bg-primary/10 text-primary' : 'text-gray-600'}`}>
+                                                <button key={item} onClick={() => { setCategory(item); setIsMobileFilterOpen(false); }} className={`block w-full text-left py-2 px-3 rounded-sm text-sm font-medium ${selectedCategory === item ? 'bg-primary/10 text-primary' : 'text-gray-600'}`}>
                                                     {item}
                                                 </button>
                                             ))}
@@ -322,12 +322,12 @@ export default function MarketplacePage() {
                         {/* Error State */}
                         {isError && (
                             <div className="flex-1 flex flex-col items-center justify-center p-20 text-center">
-                                <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-4">
+                                <div className="w-16 h-16 bg-red-50 text-red-500 rounded-sm flex items-center justify-center mb-4">
                                     <X size={32} />
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 mb-2">Failed to load products</h3>
                                 <p className="text-gray-500 mb-6">Something went wrong while fetching the marketplace data.</p>
-                                <button onClick={() => window.location.reload()} className="px-6 py-2 bg-primary text-white rounded-lg font-bold hover:bg-primary-hover transition-colors">
+                                <button onClick={() => window.location.reload()} className="px-6 py-2 bg-primary text-white rounded-sm font-bold hover:bg-primary-hover transition-colors">
                                     Try Again
                                 </button>
                             </div>
@@ -382,9 +382,9 @@ export default function MarketplacePage() {
                                                 <span className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1">
                                                     {product.brand}
                                                 </span>
-                                                <div className="flex items-center gap-1.5 bg-amber-50 px-2 py-1 rounded-md">
-                                                    <Star size={12} className="text-amber-400 fill-amber-400" />
-                                                    <span className="text-xs font-bold text-amber-700">{product.rating}</span>
+                                                <div className="flex items-center gap-1.5 bg-primary/10 px-2 py-1 rounded-sm">
+                                                    <Star size={12} className="text-primary fill-primary" />
+                                                    <span className="text-xs font-bold text-primary">{product.rating}</span>
                                                 </div>
                                             </div>
 
@@ -444,7 +444,7 @@ export default function MarketplacePage() {
                                     <button
                                         onClick={() => setPage(Math.max(1, currentPage - 1))}
                                         disabled={currentPage === 1}
-                                        className="p-2 rounded-lg border border-gray-200 text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-gray-300 transition-all"
+                                        className="p-2 rounded-sm border border-gray-200 text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-gray-300 transition-all"
                                     >
                                         <ChevronLeft size={20} />
                                     </button>
@@ -453,7 +453,7 @@ export default function MarketplacePage() {
                                         <button
                                             key={page}
                                             onClick={() => setPage(page)}
-                                            className={`w-10 h-10 rounded-lg text-sm font-bold transition-all ${currentPage === page
+                                            className={`w-10 h-10 rounded-sm text-sm font-bold transition-all ${currentPage === page
                                                 ? 'bg-primary text-white shadow-lg shadow-primary/20'
                                                 : 'text-gray-600 hover:bg-gray-50 border border-transparent hover:border-gray-200'
                                                 }`}
@@ -465,7 +465,7 @@ export default function MarketplacePage() {
                                     <button
                                         onClick={() => setPage(Math.min(totalPages, currentPage + 1))}
                                         disabled={currentPage === totalPages}
-                                        className="p-2 rounded-lg border border-gray-200 text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-gray-300 transition-all"
+                                        className="p-2 rounded-sm border border-gray-200 text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-gray-300 transition-all"
                                     >
                                         <ChevronRight size={20} />
                                     </button>
@@ -488,33 +488,33 @@ export default function MarketplacePage() {
             {/* Modals */}
             {
                 isQuoteModalOpen && selectedQuoteProduct && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
                         <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={() => setIsQuoteModalOpen(false)}></div>
-                        <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200">
+                        <div className="relative bg-white rounded-sm shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200">
                             <div className="p-6 border-b border-gray-100 flex items-center justify-between">
                                 <div>
                                     <h3 className="font-display font-bold text-xl text-text-main">Request Quote</h3>
                                     <p className="text-sm text-text-secondary">Bulk pricing for {selectedQuoteProduct.name}</p>
                                 </div>
-                                <button onClick={() => setIsQuoteModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-500">
+                                <button onClick={() => setIsQuoteModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-sm transition-colors text-gray-500">
                                     <X size={20} />
                                 </button>
                             </div>
                             <form onSubmit={handleQuoteSubmit} className="p-6 space-y-4">
                                 <div>
                                     <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Quantity Needed</label>
-                                    <input type="number" placeholder="e.g. 50" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium" required />
+                                    <input type="number" placeholder="e.g. 50" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-sm focus:ring-2 focus:ring-primary/20 outline-none font-medium" required />
                                 </div>
                                 <div>
                                     <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Business Name</label>
-                                    <input type="text" placeholder="Company Ltd." className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium" required />
+                                    <input type="text" placeholder="Company Ltd." className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-sm focus:ring-2 focus:ring-primary/20 outline-none font-medium" required />
                                 </div>
                                 <div>
                                     <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Additional Notes</label>
-                                    <textarea rows={3} placeholder="Any specific requirements?" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium resize-none"></textarea>
+                                    <textarea rows={3} placeholder="Any specific requirements?" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-sm focus:ring-2 focus:ring-primary/20 outline-none font-medium resize-none"></textarea>
                                 </div>
                                 <div className="pt-2">
-                                    <button type="submit" className="w-full py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">
+                                    <button type="submit" className="w-full py-4 bg-primary text-white font-bold rounded-sm hover:bg-primary-hover shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">
                                         Submit Request
                                     </button>
                                 </div>
@@ -526,15 +526,15 @@ export default function MarketplacePage() {
 
             {
                 isSuccessModalOpen && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
                         <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={() => setIsSuccessModalOpen(false)}></div>
-                        <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-200 text-center p-8">
-                            <div className="w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <div className="relative bg-white rounded-sm shadow-2xl w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-200 text-center p-8">
+                            <div className="w-16 h-16 bg-green-50 text-green-500 rounded-sm flex items-center justify-center mx-auto mb-6">
                                 <CheckCircle2 size={32} />
                             </div>
                             <h3 className="font-display font-bold text-2xl text-text-main mb-2">Request Sent!</h3>
                             <p className="text-sm text-text-secondary mb-8">We've received your quote request. A member of our sales team will contact you shortly.</p>
-                            <button onClick={() => setIsSuccessModalOpen(false)} className="w-full py-3 bg-gray-100 hover:bg-gray-200 text-text-main font-bold rounded-xl transition-colors">
+                            <button onClick={() => setIsSuccessModalOpen(false)} className="w-full py-3 bg-gray-100 hover:bg-gray-200 text-text-main font-bold rounded-sm transition-colors">
                                 Continue Browsing
                             </button>
                         </div>

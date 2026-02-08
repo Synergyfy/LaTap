@@ -75,16 +75,16 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     };
 
     return (
-        <div className="min-h-screen bg-white dark:bg-slate-950 pb-0">
+        <div className="min-h-screen bg-white pb-0">
             {/* Header */}
-            <header className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+            <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
                 <div className="max-w-[1400px] mx-auto px-4 md:px-8 h-20 flex items-center justify-between gap-8">
                     <div className="flex items-center gap-12">
                         <Link href="/" className="flex items-center gap-2 group">
                             <div className="w-10 h-10 bg-primary/10 rounded-sm flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
                                 <Grid size={24} />
                             </div>
-                            <span className="font-display font-bold text-xl tracking-tight text-slate-900 dark:text-white">
+                            <span className="font-display font-bold text-xl tracking-tight text-slate-900">
                                 ElizTap<span className="text-primary">.Market</span>
                             </span>
                         </Link>
@@ -106,7 +106,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 </span>
                             )}
                         </Link>
-                        <div className="w-9 h-9 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-500 font-bold text-xs">
+                        <div className="w-9 h-9 rounded-sm bg-slate-200 flex items-center justify-center text-slate-500 font-bold text-xs">
                             JP
                         </div>
                     </div>
@@ -115,18 +115,18 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
             <main className="max-w-[1400px] mx-auto px-4 md:px-8 py-8">
                 {/* Breadcrumb */}
-                <nav className="flex mb-8 text-sm font-medium text-slate-500 dark:text-slate-400">
+                <nav className="flex mb-8 text-sm font-medium text-slate-500">
                     <Link href="/" className="hover:text-primary flex items-center gap-1"><Home size={14} /> Home</Link>
                     <ChevronRight size={14} className="mx-2 self-center" />
                     <Link href="/marketplace" className="hover:text-primary">Marketplace</Link>
                     <ChevronRight size={14} className="mx-2 self-center" />
-                    <span className="text-slate-900 dark:text-white font-bold">{product.name}</span>
+                    <span className="text-slate-900 font-bold">{product.name}</span>
                 </nav>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                     {/* Left Column: Images */}
                     <div className="lg:col-span-7 space-y-6">
-                        <div className="aspect-square bg-white dark:bg-slate-900 rounded-sm border border-slate-200 dark:border-slate-800 overflow-hidden relative group shadow-sm">
+                        <div className="aspect-square bg-white rounded-sm border border-slate-200 overflow-hidden relative group shadow-sm">
                             <div className="h-full w-full" ref={emblaRef}>
                                 <div className="flex h-full">
                                     {product.images.map((img: string, i: number) => (
@@ -141,7 +141,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 </div>
                             </div>
                             <div className="absolute top-6 left-6 z-10">
-                                <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${product.tagColor}`}>
+                                <span className={`px-3 py-1 rounded-sm text-xs font-bold uppercase tracking-wider ${product.tagColor}`}>
                                     {product.tag}
                                 </span>
                             </div>
@@ -151,7 +151,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 <button
                                     key={i}
                                     onClick={() => scrollToImage(i)}
-                                    className={`aspect-square rounded-sm border-2 overflow-hidden bg-white dark:bg-slate-900 hover:opacity-100 transition-all ${selectedImage === i ? 'border-primary opacity-100 shadow-lg shadow-primary/10' : 'border-slate-200 dark:border-slate-800 opacity-60 hover:border-slate-300'}`}
+                                    className={`aspect-square rounded-sm border-2 overflow-hidden bg-white hover:opacity-100 transition-all ${selectedImage === i ? 'border-primary opacity-100 shadow-lg shadow-primary/10' : 'border-slate-200 opacity-60 hover:border-slate-300'}`}
                                 >
                                     <img src={img} alt={`View ${i + 1}`} className="w-full h-full object-contain p-2" />
                                 </button>
@@ -162,33 +162,33 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     {/* Right Column: Product Details */}
                     <div className="lg:col-span-5 space-y-8">
                         <div>
-                            <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 mb-4">
+                            <span className="inline-block px-2.5 py-0.5 rounded-sm text-xs font-semibold bg-green-100 text-green-800 mb-4">
                                 In Stock
                             </span>
-                            <h1 className="text-4xl font-display font-bold text-slate-900 dark:text-white mb-2 leading-tight">{product.name}</h1>
-                            <p className="text-slate-500 dark:text-slate-400 font-medium font-mono text-sm">SKU: {product.sku}</p>
+                            <h1 className="text-4xl font-display font-bold text-slate-900 mb-2 leading-tight">{product.name}</h1>
+                            <p className="text-slate-500 font-medium font-mono text-sm">SKU: {product.sku}</p>
                         </div>
 
                         {/* Tiered Pricing Table */}
                         <div className="space-y-4">
-                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Tiered Pricing</h3>
-                            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-sm overflow-hidden shadow-sm">
+                            <h3 className="text-lg font-bold text-slate-900">Tiered Pricing</h3>
+                            <div className="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-sm">
                                 <table className="w-full text-left text-sm">
-                                    <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                                    <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider">
                                         <tr>
                                             <th className="px-6 py-3 font-bold">Quantity</th>
                                             <th className="px-6 py-3 font-bold text-right">Unit Price</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                                    <tbody className="divide-y divide-slate-100">
                                         {product.tieredPricing?.map((tier: any, idx: number) => {
                                             const isActive = quantity >= tier.minQuantity && (!tier.maxQuantity || quantity <= tier.maxQuantity);
                                             return (
                                                 <tr key={idx} className={isActive ? "bg-primary/5" : ""}>
-                                                    <td className={`px-6 py-4 font-medium ${isActive ? 'text-primary' : 'text-slate-600 dark:text-slate-300'}`}>
+                                                    <td className={`px-6 py-4 font-medium ${isActive ? 'text-primary' : 'text-slate-600'}`}>
                                                         {tier.maxQuantity ? `${tier.minQuantity} - ${tier.maxQuantity} Units` : `${tier.minQuantity}+ Units`}
                                                     </td>
-                                                    <td className={`px-6 py-4 font-bold text-right ${tier.price === 'quote' ? 'text-primary' : isActive ? 'text-primary' : 'text-slate-900 dark:text-white'}`}>
+                                                    <td className={`px-6 py-4 font-bold text-right ${tier.price === 'quote' ? 'text-primary' : isActive ? 'text-primary' : 'text-slate-900'}`}>
                                                         {tier.price === 'quote' ? 'Request Quote' : `₦${tier.price.toLocaleString()}`}
                                                     </td>
                                                 </tr>
@@ -200,15 +200,15 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         </div>
 
                         {/* Price Breakdown */}
-                        <div className="bg-slate-50 dark:bg-slate-900 p-6 rounded-sm border border-slate-200 dark:border-slate-800 space-y-3">
+                        <div className="bg-slate-50 p-6 rounded-sm border border-slate-200 space-y-3">
                             <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Breakdown Quote</h3>
                             <div className="flex justify-between text-sm">
                                 <span className="text-slate-500">Selected Quantity</span>
-                                <span className="font-bold text-slate-900 dark:text-white">{quantity} Units</span>
+                                <span className="font-bold text-slate-900">{quantity} Units</span>
                             </div>
                             <div className="flex justify-between text-sm">
                                 <span className="text-slate-500">Unit Price</span>
-                                <span className="font-bold text-slate-900 dark:text-white">
+                                <span className="font-bold text-slate-900">
                                     {currentTier?.price === 'quote' ? 'Request Quote' : `₦${unitPrice.toLocaleString()}`}
                                 </span>
                             </div>
@@ -218,8 +218,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     <span className="font-bold">-₦{savings.toLocaleString()}</span>
                                 </div>
                             )}
-                            <div className="pt-3 border-t border-slate-200 dark:border-slate-700 flex justify-between items-baseline">
-                                <span className="text-base font-bold text-slate-900 dark:text-white">Estimated Total</span>
+                            <div className="pt-3 border-t border-slate-200 flex justify-between items-baseline">
+                                <span className="text-base font-bold text-slate-900">Estimated Total</span>
                                 <span className="text-2xl font-black text-primary">
                                     {currentTier?.price === 'quote' ? 'TBA' : `₦${totalPrice.toLocaleString()}`}
                                 </span>
@@ -228,13 +228,13 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                         <div className="flex flex-col gap-4 pt-4">
                             <div className="flex items-center gap-4">
-                                <div className="flex items-center border border-slate-300 dark:border-slate-700 rounded-sm h-14 bg-white dark:bg-slate-900">
+                                <div className="flex items-center border border-slate-300 rounded-sm h-14 bg-white">
                                     <button
                                         onClick={() => setQuantity(Math.max(1, quantity - 1))}
                                         className="px-4 text-slate-500 hover:text-primary transition-colors text-lg"
                                     >-</button>
                                     <input
-                                        className="w-12 text-center bg-transparent border-none focus:ring-0 text-lg font-bold text-slate-900 dark:text-white"
+                                        className="w-12 text-center bg-transparent border-none focus:ring-0 text-lg font-bold text-slate-900"
                                         type="number"
                                         value={quantity}
                                         onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
@@ -261,7 +261,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             <div className="grid grid-cols-2 gap-4">
                                 <button
                                     onClick={() => router.push('/contact?type=quote')}
-                                    className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-4 rounded-sm hover:opacity-90 transition-all active:scale-[0.98]"
+                                    className="w-full bg-slate-900 text-white font-bold py-4 rounded-sm hover:opacity-90 transition-all active:scale-[0.98]"
                                 >
                                     Bulk Quote
                                 </button>
@@ -282,7 +282,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4 text-xs font-semibold text-slate-500 dark:text-slate-400">
+                        <div className="grid grid-cols-2 gap-4 text-xs font-semibold text-slate-500">
                             <div className="flex items-center gap-2">
                                 <Truck size={16} className="text-primary" /> Ships in 24-48 Hours
                             </div>
@@ -301,26 +301,26 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             <nav className="flex space-x-8 min-w-max">
                                 <button
                                     onClick={() => setActiveTab('specs')}
-                                    className={`border-b-2 py-4 text-sm font-bold transition-all ${activeTab === 'specs' ? 'border-primary text-primary' : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
+                                    className={`border-b-2 py-4 text-sm font-bold transition-all ${activeTab === 'specs' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
                                 >
                                     Specifications
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('downloads')}
-                                    className={`border-b-2 py-4 text-sm font-bold transition-all flex items-center gap-2 ${activeTab === 'downloads' ? 'border-primary text-primary' : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
+                                    className={`border-b-2 py-4 text-sm font-bold transition-all flex items-center gap-2 ${activeTab === 'downloads' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
                                 >
-                                    Downloads <span className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full text-[10px]">{product.documents?.length || 0}</span>
+                                    Downloads <span className="bg-slate-100 px-2 py-0.5 rounded-sm text-[10px]">{product.documents?.length || 0}</span>
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('details')}
-                                    className={`border-b-2 py-4 text-sm font-bold transition-all ${activeTab === 'details' ? 'border-primary text-primary' : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
+                                    className={`border-b-2 py-4 text-sm font-bold transition-all ${activeTab === 'details' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
                                 >
                                     Details
                                 </button>
                                 {product.video && (
                                     <button
                                         onClick={() => setActiveTab('video')}
-                                        className={`border-b-2 py-4 text-sm font-bold transition-all ${activeTab === 'video' ? 'border-primary text-primary' : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
+                                        className={`border-b-2 py-4 text-sm font-bold transition-all ${activeTab === 'video' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
                                     >
                                         Video Demo
                                     </button>
@@ -328,14 +328,14 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 {product.howToSteps?.length > 0 && (
                                     <button
                                         onClick={() => setActiveTab('howto')}
-                                        className={`border-b-2 py-4 text-sm font-bold transition-all ${activeTab === 'howto' ? 'border-primary text-primary' : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
+                                        className={`border-b-2 py-4 text-sm font-bold transition-all ${activeTab === 'howto' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
                                     >
                                         How to Use
                                     </button>
                                 )}
                                 <button
                                     onClick={() => setActiveTab('quote')}
-                                    className={`border-b-2 py-4 text-sm font-bold transition-all ${activeTab === 'quote' ? 'border-primary text-primary' : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
+                                    className={`border-b-2 py-4 text-sm font-bold transition-all ${activeTab === 'quote' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
                                 >
                                     Quote
                                 </button>
@@ -346,14 +346,14 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         <div className="space-y-12">
                             {activeTab === 'specs' && (
                                 <section className="space-y-6 animate-in fade-in duration-300">
-                                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Technical Specifications</h3>
-                                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-sm overflow-hidden shadow-sm">
+                                    <h3 className="text-2xl font-bold text-slate-900">Technical Specifications</h3>
+                                    <div className="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-sm">
                                         <table className="w-full text-sm text-left">
-                                            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                                            <tbody className="divide-y divide-slate-100">
                                                 {Object.entries(product.specifications || {}).map(([key, value]) => (
                                                     <tr key={key}>
-                                                        <td className="px-6 py-4 font-bold text-slate-500 dark:text-slate-400 w-1/3 bg-slate-50/50 dark:bg-slate-800/30">{key}</td>
-                                                        <td className="px-6 py-4 text-slate-900 dark:text-white font-medium">{value as string}</td>
+                                                        <td className="px-6 py-4 font-bold text-slate-500 w-1/3 bg-slate-50/50">{key}</td>
+                                                        <td className="px-6 py-4 text-slate-900 font-medium">{value as string}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
@@ -364,17 +364,17 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                             {activeTab === 'downloads' && (
                                 <section className="space-y-6 animate-in fade-in duration-300">
-                                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white">SDKs & Documentation</h3>
+                                    <h3 className="text-2xl font-bold text-slate-900">SDKs & Documentation</h3>
                                     <div className="grid gap-4">
                                         {product.documents?.map((doc: any, i: number) => (
-                                            <div key={i} className="flex items-center justify-between p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl hover:border-primary transition-all cursor-pointer group shadow-sm">
+                                            <div key={i} className="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-sm hover:border-primary transition-all cursor-pointer group shadow-sm">
                                                 <div className="flex items-center gap-4">
-                                                    <div className={`p-3 rounded-sm ${doc.type === 'sdk' ? 'bg-primary/10 text-primary' : 'bg-slate-100 dark:bg-slate-800 text-slate-600'}`}>
+                                                    <div className={`p-3 rounded-sm ${doc.type === 'sdk' ? 'bg-primary/10 text-primary' : 'bg-slate-100 text-slate-600'}`}>
                                                         {doc.type === 'sdk' ? <Grid size={24} /> : <FileText size={24} />}
                                                     </div>
                                                     <div>
-                                                        <p className="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">{doc.name}</p>
-                                                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">{doc.size} • {doc.date}</p>
+                                                        <p className="font-bold text-slate-900 group-hover:text-primary transition-colors">{doc.name}</p>
+                                                        <p className="text-xs text-slate-500 mt-1 font-medium">{doc.size} • {doc.date}</p>
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center gap-4">
@@ -390,9 +390,9 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             {activeTab === 'details' && (
                                 <section className="space-y-8 animate-in fade-in duration-300">
                                     <div className="space-y-6">
-                                        <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Product Overview</h3>
-                                        <div className="prose prose-slate dark:prose-invert max-w-none">
-                                            <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-lg">{product.longDescription || product.description}</p>
+                                        <h3 className="text-2xl font-bold text-slate-900">Product Overview</h3>
+                                        <div className="prose prose-slate max-w-none">
+                                            <p className="text-slate-600 leading-relaxed text-lg">{product.longDescription || product.description}</p>
                                         </div>
                                     </div>
                                 </section>
@@ -400,8 +400,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                             {activeTab === 'video' && product.video && (
                                 <section className="space-y-6 animate-in fade-in duration-300">
-                                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Product Action video</h3>
-                                    <div className="aspect-video rounded-3xl overflow-hidden bg-black shadow-2xl">
+                                    <h3 className="text-2xl font-bold text-slate-900">Product Action video</h3>
+                                    <div className="aspect-video rounded-sm overflow-hidden bg-black shadow-2xl">
                                         <iframe
                                             src={product.video.url || ''}
                                             className="w-full h-full"
@@ -415,20 +415,61 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                             {activeTab === 'howto' && product.howToSteps?.length > 0 && (
                                 <section className="space-y-6 animate-in fade-in duration-300">
-                                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white">How to Use</h3>
+                                    <h3 className="text-2xl font-bold text-slate-900">How to Use</h3>
                                     <div className="space-y-8 relative">
-                                        <div className="absolute left-[19px] top-6 bottom-6 w-0.5 bg-slate-100 dark:bg-slate-800"></div>
+                                        <div className="absolute left-[19px] top-6 bottom-6 w-0.5 bg-slate-100"></div>
                                         {product.howToSteps.map((step: any, idx: number) => (
                                             <div key={idx} className="flex gap-6 relative">
-                                                <div className="size-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm shadow-lg shadow-primary/20 shrink-0 z-10">
+                                                <div className="size-10 rounded-sm bg-primary text-white flex items-center justify-center font-bold text-sm shadow-lg shadow-primary/20 shrink-0 z-10">
                                                     {idx + 1}
                                                 </div>
-                                                <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm flex-1">
-                                                    <h4 className="font-bold text-lg text-slate-900 dark:text-white mb-2">{step.title}</h4>
-                                                    <p className="text-slate-500 dark:text-slate-400 leading-relaxed">{step.description}</p>
+                                                <div className="bg-white p-6 rounded-sm border border-slate-100 shadow-sm flex-1">
+                                                    <h4 className="font-bold text-lg text-slate-900 mb-2">{step.title}</h4>
+                                                    <p className="text-slate-500 leading-relaxed">{step.description}</p>
                                                 </div>
                                             </div>
                                         ))}
+                                    </div>
+                                </section>
+                            )}
+
+                            {activeTab === 'quote' && (
+                                <section className="space-y-6 animate-in fade-in duration-300">
+                                    <h3 className="text-2xl font-bold text-slate-900">Request Bulk Quote</h3>
+                                    <div className="bg-white p-8 rounded-sm border border-slate-200 shadow-sm">
+                                        <form className="space-y-6">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                <div>
+                                                    <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Full Name</label>
+                                                    <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-sm focus:ring-2 focus:ring-primary/20 outline-none font-medium" placeholder="John Doe" />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Work Email</label>
+                                                    <input type="email" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-sm focus:ring-2 focus:ring-primary/20 outline-none font-medium" placeholder="john@company.com" />
+                                                </div>
+                                            </div>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                <div>
+                                                    <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Company Name</label>
+                                                    <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-sm focus:ring-2 focus:ring-primary/20 outline-none font-medium" placeholder="Acme Inc." />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Expected Quantity</label>
+                                                    <input type="number" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-sm focus:ring-2 focus:ring-primary/20 outline-none font-medium" placeholder="100" />
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Message / Requirements</label>
+                                                <textarea rows={4} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-sm focus:ring-2 focus:ring-primary/20 outline-none font-medium resize-none" placeholder="Tell us about your project..."></textarea>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => toast.success("Quote request sent successfully!")}
+                                                className="w-full py-4 bg-primary text-white font-bold rounded-sm hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all active:scale-[0.99]"
+                                            >
+                                                Submit Quote Request
+                                            </button>
+                                        </form>
                                     </div>
                                 </section>
                             )}
@@ -437,23 +478,23 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                     {/* Sidebar */}
                     <div className="lg:col-span-4 space-y-8">
-                        <div className="bg-white dark:bg-slate-900/40 rounded-sm p-6 border border-slate-200 dark:border-slate-800 sticky top-28">
-                            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Compatible Hardware</h3>
+                        <div className="bg-white rounded-sm p-6 border border-slate-200 sticky top-28">
+                            <h3 className="text-lg font-bold text-slate-900 mb-6">Compatible Hardware</h3>
                             <div className="space-y-6">
                                 {product.relatedProducts?.map((related: any) => (
                                     <Link key={related.id} href={`/marketplace/product/${related.id}`} className="flex gap-4 group">
-                                        <div className="w-20 h-20 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden shrink-0 flex items-center justify-center p-2 group-hover:scale-95 transition-transform">
+                                        <div className="w-20 h-20 bg-white border border-slate-200 rounded-sm overflow-hidden shrink-0 flex items-center justify-center p-2 group-hover:scale-95 transition-transform">
                                             <img src={related.image} alt={related.name} className="max-w-full max-h-full object-contain" />
                                         </div>
                                         <div className="flex-1">
-                                            <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors line-clamp-1">{related.name}</h4>
-                                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{related.brand}</p>
-                                            <p className="text-sm font-bold text-slate-900 dark:text-white mt-2">₦{related.price.toLocaleString()}</p>
+                                            <h4 className="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors line-clamp-1">{related.name}</h4>
+                                            <p className="text-xs text-slate-500 mt-1">{related.brand}</p>
+                                            <p className="text-sm font-bold text-slate-900 mt-2">₦{related.price.toLocaleString()}</p>
                                         </div>
                                     </Link>
                                 ))}
                             </div>
-                            <button className="w-full mt-8 py-3 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-bold hover:bg-white dark:hover:bg-slate-800 transition-all text-slate-600 dark:text-slate-300">
+                            <button className="w-full mt-8 py-3 border border-slate-200 rounded-sm text-sm font-bold hover:bg-white transition-all text-slate-600">
                                 View All Compatibility
                             </button>
 
@@ -474,7 +515,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             </main>
 
             {/* Footer */}
-            <footer className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12 mt-20">
+            <footer className="bg-white border-t border-slate-200 py-12 mt-20">
                 <div className="max-w-[1400px] mx-auto px-4 md:px-8">
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                         <div className="col-span-2">
@@ -482,30 +523,30 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 <div className="bg-primary p-2 rounded-sm text-white">
                                     <Grid size={24} />
                                 </div>
-                                <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">ElizTap</span>
+                                <span className="text-xl font-bold tracking-tight text-slate-900">ElizTap</span>
                             </div>
-                            <p className="text-slate-500 dark:text-slate-400 text-sm max-w-xs">
+                            <p className="text-slate-500 text-sm max-w-xs">
                                 The leading marketplace for secure access hardware, NFC readers, and enterprise connectivity solutions.
                             </p>
                         </div>
                         <div>
-                            <h4 className="font-bold text-sm mb-6 uppercase tracking-wider text-slate-900 dark:text-white">Shop</h4>
-                            <ul className="space-y-4 text-sm text-slate-600 dark:text-slate-400">
+                            <h4 className="font-bold text-sm mb-6 uppercase tracking-wider text-slate-900">Shop</h4>
+                            <ul className="space-y-4 text-sm text-slate-600">
                                 <li><Link href="/marketplace" className="hover:text-primary transition-colors">All Products</Link></li>
                                 <li><Link href="/marketplace?cat=NFC Readers" className="hover:text-primary transition-colors">NFC Readers</Link></li>
                                 <li><Link href="/marketplace?cat=Smart Cards" className="hover:text-primary transition-colors">Smart Cards</Link></li>
                             </ul>
                         </div>
                         <div>
-                            <h4 className="font-bold text-sm mb-6 uppercase tracking-wider text-slate-900 dark:text-white">Support</h4>
-                            <ul className="space-y-4 text-sm text-slate-600 dark:text-slate-400">
+                            <h4 className="font-bold text-sm mb-6 uppercase tracking-wider text-slate-900">Support</h4>
+                            <ul className="space-y-4 text-sm text-slate-600">
                                 <li><Link href="/contact" className="hover:text-primary transition-colors">Contact Us</Link></li>
                                 <li><Link href="/faq" className="hover:text-primary transition-colors">Knowledge Base</Link></li>
                                 <li><Link href="/contact" className="hover:text-primary transition-colors">Bulk Orders</Link></li>
                             </ul>
                         </div>
                     </div>
-                    <div className="pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
+                    <div className="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
                         <p>© {new Date().getFullYear()} ElizTap. All rights reserved.</p>
                         <div className="flex gap-6">
                             <Link href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
