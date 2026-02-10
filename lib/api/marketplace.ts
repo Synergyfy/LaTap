@@ -14,7 +14,7 @@ const allProducts: Product[] = [
         desc: 'Dual-interface Smart Card Reader with CCID Support',
         tag: 'In Stock',
         tagColor: 'bg-emerald-500',
-        action: 'cart'
+        action: 'quote'
     },
     {
         id: 'omnikey-5422',
@@ -26,24 +26,11 @@ const allProducts: Product[] = [
         originalPrice: null,
         image: "https://lh3.googleusercontent.com/aida-public/AB6AXuA13i7tJ7UvtV5AeSpw3wOHaYE8eOSOAHsJtyf9B8QtVXaQpAPS3C7Teyqjev3z6_-2UBAUUsl9_wQrPFQB4dsL21qcM803GIIhce48iGdAgKXjYlhpJBNo1PKjrd-FnkGqZzA9IKKpAIcee1B396E-WCSuonb2_wSUSBjZpX_9OT6hB2FsxRZYweRceLiA9MfmDMM0f3rXJHKAq-TzdbZ2XPvvKlIxen5gbQNQZlFxGq791xkCofDQmiLKdWXKTXx5bV39FHTL2Zxu",
         desc: 'Contactless 13.56 MHz and Contact Smart Card',
-        tag: 'Bulk Choice',
-        tagColor: 'bg-blue-500',
+        tag: 'Out of Stock',
+        tagColor: 'bg-red-500',
         action: 'quote'
     },
-    {
-        id: 'sdk-bundle',
-        name: 'Universal NFC Developer SDK',
-        brand: 'EntryConnect',
-        category: 'Development Kits',
-        rating: 5.0,
-        price: 499000,
-        originalPrice: null,
-        image: "https://lh3.googleusercontent.com/aida-public/AB6AXuB9fUTe24WCXHHYE4D4j0PVwg79HTdwdPmXG64DA9YOPJgE3IueN-3HHmLPcpgz0mA8Zv-HKS9rL6Wkpp0FRhDePtzWdJ8_vVpFbqT8grR6SyWyuQJlAYEZMHdIjcJAkZASE4iH8WHSJS0bqM0mvzNzPuctGZfYF0QsdbMOcQ6NuiCqpWrfcnaU-XlodX_ZGJcMfXXdD-uW2yjKMdzwsrPxqDjvTp8eIYbZWNSV2IIKpeWykSDBLl3dNFlzK8D46MQVO4EpHHXmsIsE",
-        desc: 'Python, C++, Java & WebHID API wrappers',
-        tag: 'Software',
-        tagColor: 'bg-indigo-500',
-        action: 'download'
-    },
+
     {
         id: 'ntag215-pack',
         name: 'NTAG215 PVC Smart Cards (Pack of 100)',
@@ -54,9 +41,9 @@ const allProducts: Product[] = [
         originalPrice: null,
         image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAjOLHjEImnuX2LOtQ9_35UJ5iBVDjYgoAdUkfVCIOKlzLzNbR8jzZuXMqBzr2zm7bTB60FByuzS4DfbPxOdC-XETnsg_xSz6HydW21C7a49GAGuikH8vL51ldD0GCCYAAAWeyYjrsST43T02ixab1YBLQ0SN7FPkmwUSZjyJwz5rbAfLT4RqccxCFX1gzrKZ55WEV-TfuHqVMMxN3TpGlj_Q1xdnQblfVWikTCC9YahMk0rdT2xgoAgGPqhqumczAzvpmU-SttVIU1",
         desc: '504 Bytes Memory, Compatible with Amiibo',
-        tag: 'Multipack',
-        tagColor: 'bg-amber-500',
-        action: 'cart'
+        tag: 'In Stock',
+        tagColor: 'bg-emerald-500',
+        action: 'quote'
     },
     {
         id: 'sl025m-module',
@@ -68,22 +55,22 @@ const allProducts: Product[] = [
         originalPrice: null,
         image: "https://m.media-amazon.com/images/I/61+yV+J+d3L._AC_SL1000_.jpg",
         desc: 'Embedded module for custom hardware integration.',
-        tag: 'Component',
-        tagColor: 'bg-gray-500',
-        action: 'cart'
+        tag: 'In Stock',
+        tagColor: 'bg-emerald-500',
+        action: 'quote'
     },
     {
         id: 'nfc-wristband',
         name: 'Silicone NFC Wristband (Event Pack)',
-        brand: 'EntryConnect',
+        brand: 'ElizTap',
         category: 'Accessory',
         rating: 4.6,
         price: 45000,
         originalPrice: 60000,
         image: "https://sc04.alicdn.com/kf/H835260171a3949989506684724495537t.jpg",
         desc: 'Waterproof wristbands for event access control.',
-        tag: 'Bulk',
-        tagColor: 'bg-purple-500',
+        tag: 'In Stock',
+        tagColor: 'bg-emerald-500',
         action: 'quote'
     },
     {
@@ -96,9 +83,9 @@ const allProducts: Product[] = [
         originalPrice: null,
         image: "https://m.media-amazon.com/images/I/61kQqnyv7BL._AC_SX679_.jpg",
         desc: 'Durable epoxy finish, 888 bytes memory.',
-        tag: 'Keyfob',
-        tagColor: 'bg-teal-500',
-        action: 'cart'
+        tag: 'In Stock',
+        tagColor: 'bg-emerald-500',
+        action: 'quote'
     },
     {
         id: 'acr122u-reader',
@@ -110,23 +97,23 @@ const allProducts: Product[] = [
         originalPrice: 55000,
         image: "https://m.media-amazon.com/images/I/61+yV+J+d3L._AC_SL1000_.jpg", // Placeholder - replace if needed
         desc: 'Popular NFC reader for desktop applications.',
-        tag: 'Standard',
-        tagColor: 'bg-gray-500',
-        action: 'cart'
+        tag: 'In Stock',
+        tagColor: 'bg-emerald-500',
+        action: 'quote'
     },
      {
         id: 'metal-nfc-card',
         name: 'Premium Metal NFC Business Card',
-        brand: 'EntryConnect',
+        brand: 'ElizTap',
         category: 'Smart Cards',
         rating: 4.9,
         price: 25000,
         originalPrice: null,
         image: "https://m.media-amazon.com/images/I/61kQqnyv7BL._AC_SX679_.jpg", // Placeholder
         desc: 'Matte black metal finish with laser engraving.',
-        tag: 'Premium',
-        tagColor: 'bg-yellow-600',
-        action: 'cart'
+        tag: 'In Stock',
+        tagColor: 'bg-emerald-500',
+        action: 'quote'
     }
 ];
 
@@ -142,7 +129,7 @@ export const fetchProducts = async (
     await new Promise(resolve => setTimeout(resolve, 800));
 
     let filtered = allProducts.filter(p => {
-        const matchesCategory = category === 'All Products' || p.category === category || (category === 'All Hardware' && p.category !== 'Software');
+        const matchesCategory = category === 'All Products' || p.category === category;
         const matchesPrice = p.price >= priceRange[0] && p.price <= priceRange[1];
         const matchesBrand = brands.length === 0 || brands.includes(p.brand);
         const matchesSearch = searchQuery === '' || 
@@ -296,7 +283,7 @@ export const fetchProductDetail = async (id: string) => {
         id: id,
         sku: `${id.toUpperCase()}-GEN`,
         name: `Product ${id}`,
-        brand: 'EntryConnect',
+        brand: 'ElizTap',
         price: 99999,
         description: 'Universal NFC hardware for enterprise solutions.',
         longDescription: 'Detailed information for this specific product is currently being updated. This product meets all industry standards for NFC connectivity and security. Please contact our support for specific technical data.',

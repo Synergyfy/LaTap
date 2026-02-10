@@ -126,13 +126,22 @@ export default function VisitorsOverviewPage() {
                     title="Visitors Overview"
                     description="Monitor your customer footfall and engagement levels"
                     actions={
-                        <button
-                            onClick={handleExportCSV}
-                            className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm shadow-sm"
-                        >
-                            <Download size={18} />
-                            Export Report
-                        </button>
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={() => setSelectedVisitorForMsg({ visitor: {} as Visitor, type: 'general' })}
+                                className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-lg shadow-primary/20"
+                            >
+                                <Plus size={18} />
+                                Compose
+                            </button>
+                            <button
+                                onClick={handleExportCSV}
+                                className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm shadow-sm"
+                            >
+                                <Download size={18} />
+                                Export
+                            </button>
+                        </div>
                     }
                 />
 

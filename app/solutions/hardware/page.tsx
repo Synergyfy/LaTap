@@ -35,14 +35,9 @@ export default function HardwareSolutionPage() {
                     }}></div>
 
                     <div className="container mx-auto px-4 text-center z-10 relative">
-                        <div className="inline-flex items-center gap-2 px-6 py-2 bg-primary/5 text-primary rounded-full text-[10px] font-black uppercase tracking-[0.25em] border border-primary/10 mb-8">
-                            <Cpu size={14} />
-                            Enterprise Hardware Infrastructure
-                        </div>
-
                         <h1 className="font-display font-bold text-5xl md:text-8xl leading-[1.05] text-text-main max-w-5xl mx-auto mb-8 tracking-tight">
-                            Identity Infrastructure <br />
-                            <span className="text-gradient">Built for Scale</span>
+                            Enterprise Hardware <br />
+                            <span className="text-gradient">Infrastructure</span>
                         </h1>
 
                         <p className="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto mb-12 leading-relaxed font-medium">

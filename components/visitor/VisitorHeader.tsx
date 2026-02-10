@@ -10,7 +10,7 @@ interface VisitorHeaderProps {
 export const VisitorHeader: React.FC<VisitorHeaderProps> = ({ logoUrl, storeName, tag = "Verified Partner" }) => {
     return (
         <div className="flex items-center gap-4 mb-8">
-            <div className="size-14 rounded-2xl bg-white shadow-lg shadow-primary/5 border border-slate-100 overflow-hidden flex items-center justify-center p-1.5">
+            <div className="size-14 rounded-full bg-white shadow-lg shadow-primary/5 border border-slate-100 overflow-hidden flex items-center justify-center p-1.5">
                 <img
                     src={logoUrl || defaultLogo.src}
                     alt={storeName}

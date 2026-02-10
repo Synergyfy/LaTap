@@ -3,41 +3,54 @@
 import React, { useState } from 'react';
 import Modal from '@/components/ui/Modal';
 import { useCustomerFlowStore } from '@/store/useCustomerFlowStore';
-import { MessageSquare, Send, Smartphone } from 'lucide-react';
+import { MessageSquare, Send, Smartphone, Edit3, Check, ChevronDown } from 'lucide-react';
 import { notify } from '@/lib/notify';
 
 interface SendMessageModalProps {
     isOpen: boolean;
     onClose: () => void;
-    recipientName: string;
+    recipientName?: string;
     recipientPhone?: string;
-    type: 'welcome' | 'general' | 'reward';
+    type: 'welcome' | 'general' | 'reward' | 'custom';
 }
 
 export default function SendMessageModal({ isOpen, onClose, recipientName, recipientPhone, type }: SendMessageModalProps) {
     const store = useCustomerFlowStore();
 
     // Get template from store
-    const getTemplate = () => {
-        if (type === 'welcome') return store.customWelcomeMessage || 'Welcome back! We are so glad to see you again. Enjoy your stay!';
-        if (type === 'reward') return store.customRewardMessage || 'Congratulations! You have earned a reward for your loyalty.';
-        return 'Hello {name}, thank you for visiting us! We have a special offer for you.';
+    const getTemplate = (t: string) => {
+        if (t === 'welcome') return store.customWelcomeMessage || 'Welcome back! We are so glad to see you again. Enjoy your stay!';
+        if (t === 'reward') return store.customRewardMessage || 'Congratulations! You have earned a reward for your loyalty.';
+        if (t === 'general') return 'Hello {name}, thank you for visiting us! We have a special offer for you.';
+        return '';
     };
 
-    const getTitle = () => {
-        if (type === 'welcome') return store.customWelcomeTitle || 'Hi, {name}!';
+    const getTitle = (t: string) => {
+        if (t === 'welcome') return store.customWelcomeTitle || 'Hi, {name}!';
+        if (t === 'reward') return 'Special Reward for {name}';
         return 'Special Message for {name}';
     };
 
-    const [message, setMessage] = useState(getTemplate());
-    const [title, setTitle] = useState(getTitle());
+    const [selectedType, setSelectedType] = useState(type);
+    const [name, setName] = useState(recipientName || '');
+    const [message, setMessage] = useState(getTemplate(type));
+    const [title, setTitle] = useState(getTitle(type));
     const [isLoading, setIsLoading] = useState(false);
 
-    // Sync with store if it changes
+    const templates = [
+        { id: 'welcome', label: 'Welcome Template', icon: MessageSquare },
+        { id: 'reward', label: 'Reward Template', icon: Send },
+        { id: 'general', label: 'General Announcement', icon: Smartphone },
+        { id: 'custom', label: 'Custom Message', icon: Edit3 }
+    ];
+
+    // Sync with store if it changes or if template selection changes
     React.useEffect(() => {
-        setMessage(getTemplate());
-        setTitle(getTitle());
-    }, [type, store.customWelcomeMessage, store.customRewardMessage]);
+        if (selectedType !== 'custom') {
+            setMessage(getTemplate(selectedType));
+            setTitle(getTitle(selectedType));
+        }
+    }, [selectedType, store.customWelcomeMessage, store.customRewardMessage]);
 
     const handleSend = async () => {
         setIsLoading(true);
@@ -57,20 +70,50 @@ export default function SendMessageModal({ isOpen, onClose, recipientName, recip
     };
 
     // Helper to replace tokens for preview
-    const previewMessage = message.replace('{name}', recipientName);
-    const previewTitle = title.replace('{name}', recipientName);
+    const activeName = recipientName || name || '{name}';
+    const previewMessage = message.replace(/{name}/g, activeName);
+    const previewTitle = title.replace(/{name}/g, activeName);
 
     return (
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            title="Compose Message"
-            description={`Personalize and send a message to ${recipientName}`}
+            title={recipientName ? "Personalize Message" : "Compose New Message"}
+            description={recipientName ? `Sending to ${recipientName}` : "Send a message to any visitor"}
             size="2xl"
         >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-4">
                 {/* Editor */}
                 <div className="space-y-6">
+                    {!recipientName && (
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Recipient Name</label>
+                            <input
+                                type="text"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl px-5 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm"
+                                placeholder="Enter visitor name..."
+                            />
+                        </div>
+                    )}
+
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Select Template</label>
+                        <div className="grid grid-cols-2 gap-2">
+                            {templates.map((t) => (
+                                <button
+                                    key={t.id}
+                                    onClick={() => setSelectedType(t.id as any)}
+                                    className={`flex items-center gap-2 p-3 rounded-xl border-2 transition-all text-xs font-bold ${selectedType === t.id ? 'border-primary bg-primary/5 text-primary' : 'border-gray-50 bg-gray-50 text-slate-500 hover:border-gray-200'}`}
+                                >
+                                    <t.icon size={14} />
+                                    {t.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
                     <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Message Heading</label>
                         <input
@@ -91,9 +134,21 @@ export default function SendMessageModal({ isOpen, onClose, recipientName, recip
                             className="w-full bg-gray-50 border border-gray-100 rounded-xl p-5 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm resize-none"
                             placeholder="Type your message here..."
                         />
-                        <p className="text-[10px] text-text-secondary font-medium px-1">
-                            Use <code className="text-primary font-bold">{"{name}"}</code> for customer personalization.
-                        </p>
+                        <div className="flex items-center justify-between gap-4 px-1">
+                            <p className="text-[10px] text-text-secondary font-medium">
+                                Use <code className="text-primary font-bold">{"{name}"}</code> for personalization.
+                            </p>
+                            <button
+                                onClick={() => {
+                                    setMessage('');
+                                    setTitle('');
+                                    setSelectedType('custom');
+                                }}
+                                className="text-[10px] font-bold text-primary hover:underline flex items-center gap-1"
+                            >
+                                <Edit3 size={10} /> Compose Fresh
+                            </button>
+                        </div>
                     </div>
 
                     <div className="pt-4 flex gap-3">
@@ -105,7 +160,7 @@ export default function SendMessageModal({ isOpen, onClose, recipientName, recip
                         </button>
                         <button
                             onClick={handleSend}
-                            disabled={isLoading}
+                            disabled={isLoading || (!recipientName && !name)}
                             className="flex-2 h-14 bg-primary text-white font-bold rounded-2xl hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
                         >
                             {isLoading ? (
