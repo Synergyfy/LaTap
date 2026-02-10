@@ -4,28 +4,36 @@ import React, { useState } from 'react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import { notify } from '@/lib/notify';
 import { Cpu, Zap, Shield, Palette, Printer, Settings, Save, Smartphone, ChevronRight, Package, Box } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { fetchHardwarePricing, updateHardwarePrice, updateHardwareItem } from '@/lib/api/hardware-pricing';
+import { HardwareOption } from '@/types/pricing';
+import { usePricingStore } from '@/store/usePricingStore';
+
+
 
 export default function AdminHardwarePage() {
-    const [hardware, setHardware] = useState([
-        { id: 'h1', name: "Premium NFC Card", price: 3500, cost: 2100, stock: 450, status: 'active', color: 'blue', icon: Cpu },
-        { id: 'h2', name: "Smart Sticker", price: 1500, cost: 850, stock: 1200, status: 'active', color: 'green', icon: Zap },
-        { id: 'h3', name: "Metal NFC Plate", price: 12000, cost: 7500, stock: 85, status: 'active', color: 'orange', icon: Shield },
-    ]);
-
-    const [whiteLabelSettings, setWhiteLabelSettings] = useState({
-        minOrder: 1000,
-        markupPercentage: 15,
-        setupFee: 50000,
-        available: true
+    const queryClient = useQueryClient();
+    const { data: hardware = [], isLoading } = useQuery({
+        queryKey: ['hardware-pricing'],
+        queryFn: fetchHardwarePricing
     });
 
+    const updatePriceMutation = useMutation({
+        mutationFn: ({ id, price }: { id: string, price: number }) => updateHardwarePrice(id, price),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['hardware-pricing'] });
+            notify.success('Hardware pricing updated');
+        }
+    });
+
+    const { whiteLabelSettings, setWhiteLabelSettings } = usePricingStore();
+
     const handleUpdatePrice = (id: string, newPrice: number) => {
-        setHardware(prev => prev.map(h => h.id === id ? { ...h, price: newPrice } : h));
-        notify.success('Hardware pricing updated');
+        updatePriceMutation.mutate({ id, price: newPrice });
     };
 
     const handleToggleWhiteLabel = () => {
-        setWhiteLabelSettings(prev => ({ ...prev, available: !prev.available }));
+        setWhiteLabelSettings({ available: !whiteLabelSettings.available });
         notify.success(`White-labeling ${!whiteLabelSettings.available ? 'enabled' : 'disabled'}`);
     };
 
@@ -69,7 +77,11 @@ export default function AdminHardwarePage() {
                                             item.color === 'green' ? 'bg-green-50 text-green-600' :
                                                 'bg-orange-50 text-orange-600'
                                             }`}>
-                                            <item.icon size={24} />
+                                            {(() => {
+                                                const IconMap: any = { Cpu, Zap, Shield };
+                                                const Icon = IconMap[item.icon as string] || Box;
+                                                return <Icon size={24} />;
+                                            })()}
                                         </div>
                                         <div className="text-right">
                                             <span className="text-[10px] font-black uppercase tracking-widest text-text-secondary">Current Net Margin</span>
@@ -145,7 +157,7 @@ export default function AdminHardwarePage() {
                                     <input
                                         type="number"
                                         value={whiteLabelSettings.minOrder}
-                                        onChange={(e) => setWhiteLabelSettings(prev => ({ ...prev, minOrder: parseInt(e.target.value) }))}
+                                        onChange={(e) => setWhiteLabelSettings({ minOrder: parseInt(e.target.value) })}
                                         className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl font-bold text-sm focus:ring-2 focus:ring-primary/20 focus:outline-none focus:bg-white transition-all"
                                     />
                                 </div>

@@ -50,6 +50,8 @@ interface ProductFormData {
   originalPrice: number;
   costPrice: number;
   bulkQuotesEnabled: boolean;
+  customBrandingEnabled: boolean;
+  customizationFee: number;
   volumeDiscounts: VolumeDiscount[];
 }
 
@@ -84,6 +86,8 @@ const initialFormData: ProductFormData = {
   originalPrice: 0,
   costPrice: 280.00,
   bulkQuotesEnabled: true,
+  customBrandingEnabled: false,
+  customizationFee: 1500,
   volumeDiscounts: [
     { id: '1', minQty: 1, maxQty: 9, discountPercent: 0 },
     { id: '2', minQty: 10, maxQty: 49, discountPercent: 5 },

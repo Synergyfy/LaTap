@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useProductFormStore } from '@/store/useProductFormStore';
-import { Percent, Trash2, Plus, Info, LayoutGrid, CheckCircle } from 'lucide-react';
+import { Percent, Trash2, Plus, Info, LayoutGrid, CheckCircle, Sparkles } from 'lucide-react';
 import { TbCurrencyNaira } from "react-icons/tb";
 export default function StepPricing() {
     const { formData, updateFormData, nextStep, prevStep } = useProductFormStore();
@@ -93,6 +93,46 @@ export default function StepPricing() {
                             />
                             <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                         </label>
+                    </div>
+
+                    <div className="mt-6 flex flex-col gap-4 p-5 bg-purple-50/50 rounded-xl border border-purple-100">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                                <div className="bg-white p-3 rounded-xl text-purple-600 shadow-sm">
+                                    <Sparkles size={20} />
+                                </div>
+                                <div>
+                                    <p className="font-bold text-text-main text-sm">Custom Branded Cards</p>
+                                    <p className="text-xs text-text-secondary font-medium mt-0.5">Enable logo printing and custom artwork for this product</p>
+                                </div>
+                            </div>
+                            <label className="relative inline-flex items-center cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={formData.customBrandingEnabled}
+                                    onChange={(e) => updateFormData({ customBrandingEnabled: e.target.checked })}
+                                    className="sr-only peer"
+                                />
+                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                            </label>
+                        </div>
+
+                        {formData.customBrandingEnabled && (
+                            <div className="pt-4 border-t border-purple-100/50 animate-in fade-in slide-in-from-top-2 duration-300">
+                                <div className="flex items-center justify-between">
+                                    <label className="text-xs font-bold text-purple-700">Customization Setup Fee</label>
+                                    <div className="relative w-32">
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-purple-400 text-xs font-bold"><TbCurrencyNaira /></span>
+                                        <input
+                                            type="number"
+                                            value={formData.customizationFee}
+                                            onChange={(e) => updateFormData({ customizationFee: parseFloat(e.target.value) })}
+                                            className="w-full pl-7 pr-3 py-2 bg-white border border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-200 focus:outline-none font-bold text-text-main text-sm transition-all"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -207,10 +247,10 @@ export default function StepPricing() {
                                 </div>
                                 <div className="text-right">
                                     {formData.originalPrice > 0 && (
-                                        <p className="text-[10px] text-gray-400 line-through font-bold inline-flex items-center"><TbCurrencyNaira/>{formData.originalPrice.toFixed(2)}</p>
+                                        <p className="text-[10px] text-gray-400 line-through font-bold inline-flex items-center"><TbCurrencyNaira />{formData.originalPrice.toFixed(2)}</p>
                                     )}
                                     <div className="flex items-center justify-end">
-                                        <span className=" font-black text-xl text-primary inline-flex items-center "><TbCurrencyNaira/>{formData.msrp.toFixed(2)}</span>
+                                        <span className=" font-black text-xl text-primary inline-flex items-center "><TbCurrencyNaira />{formData.msrp.toFixed(2)}</span>
                                     </div>
                                     <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">per unit</span>
                                 </div>
