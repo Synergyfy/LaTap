@@ -1,57 +1,55 @@
-import React from 'react';
 import Link from 'next/link';
+import { CheckCircle2 } from 'lucide-react';
+
+const STATIC_PLANS = [
+    {
+        name: "Free",
+        desc: "For individuals & testing.",
+        price: "₦0",
+        period: "/mo",
+        features: ['100 visitors/mo', '1 Demo Tag', 'Basic Analytics', 'Community Support'],
+        cta: "Get Started Free",
+        highlight: false,
+    },
+    {
+        name: "Basic",
+        desc: "For small events & pop-ups.",
+        price: "₦45,000",
+        period: "/mo",
+        features: ['500 visitors/mo', '1 Active Tag License', 'Standard Analytics', 'Email Support'],
+        cta: "Choose Basic",
+        highlight: false,
+    },
+    {
+        name: "Premium",
+        desc: "For regular venues & scaling.",
+        price: "₦120,000",
+        period: "/mo",
+        features: ['5,000 visitors/mo', '5 Active Tag Licenses', 'Full CRM Integration', 'Priority Support'],
+        cta: "Choose Premium",
+        highlight: true,
+        tag: "Best Value"
+    },
+    {
+        name: "Enterprise",
+        desc: "For multi-location operations.",
+        price: "Custom",
+        period: "",
+        features: ['Unlimited visitors', 'Unlimited Active Tags', 'SSO Security', 'Dedicated Account Mgr'],
+        cta: "Contact Sales",
+        highlight: false,
+    },
+    {
+        name: "White-Label",
+        desc: "Your brand, our tech infrastructure.",
+        features: ['Custom Domain', 'Branded Hardware', 'Admin Dashboard', 'Reseller Rights'],
+        cta: "Partner With Us",
+        highlight: false,
+        style: "col-span-1 md:col-span-2 lg:col-span-4 lg:w-1/2 lg:mx-auto mt-12 bg-gray-900 border-gray-800 text-white"
+    }
+];
 
 export default function Pricing() {
-    const plans = [
-        {
-            name: "Free",
-            desc: "For individuals & testing.",
-            price: "₦0",
-            period: "/mo",
-            features: ['100 visitors/mo', '1 Demo Tag', 'Basic Analytics', 'Community Support'],
-            cta: "Get Started Free",
-            highlight: false,
-        },
-        {
-            name: "Basic",
-            desc: "For small events & pop-ups.",
-            price: "₦45,000",
-            period: "/mo",
-            features: ['500 visitors/mo', '1 Active Tag License', 'Standard Analytics', 'Email Support'],
-            cta: "Choose Basic",
-            highlight: false,
-        },
-        {
-            name: "Premium",
-            desc: "For regular venues & scaling.",
-            price: "₦120,000",
-            period: "/mo",
-            features: ['5,000 visitors/mo', '5 Active Tag Licenses', 'Full CRM Integration', 'Priority Support'],
-            cta: "Choose Premium",
-            highlight: true,
-            tag: "Best Value"
-        },
-        {
-            name: "Enterprise",
-            desc: "For multi-location operations.",
-            price: "Custom",
-            period: "",
-            features: ['Unlimited visitors', 'Unlimited Active Tags', 'SSO Security', 'Dedicated Account Mgr'],
-            cta: "Contact Sales",
-            highlight: false,
-        },
-        {
-            name: "White-Label",
-            desc: "Your brand, our tech infrastructure.",
-            price: "₦500k",
-            period: "/license",
-            features: ['Custom Domain', 'Branded Hardware', 'Admin Dashboard', 'Reseller Rights'],
-            cta: "Partner With Us",
-            highlight: false,
-            style: "col-span-1 md:col-span-2 lg:col-span-4 lg:w-1/2 lg:mx-auto mt-12 bg-gray-900 border-gray-800 text-white"
-        }
-    ];
-
     return (
         <section id="pricing" className="py-24 bg-gray-50 overflow-hidden relative">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -61,7 +59,7 @@ export default function Pricing() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {plans.map((plan, index) => (
+                    {STATIC_PLANS.map((plan, index) => (
                         <div
                             key={index}
                             className={`
@@ -90,16 +88,14 @@ export default function Pricing() {
                             </div>
                             <ul className={`space-y-4 mb-10 flex-1 ${plan.highlight || plan.style ? 'text-white' : ''}`}>
                                 {plan.features.map((item, i) => (
-                                    <li key={i} className="flex items-center text-sm font-semibold">
-                                        <span className={`material-icons-round mr-3 text-lg ${plan.highlight || plan.style ? 'text-green-400' : 'text-primary'}`}>
-                                            {plan.highlight || plan.style ? 'verified' : 'check_circle'}
-                                        </span>
+                                    <li key={i} className="flex items-center text-sm font-semibold gap-3">
+                                        <CheckCircle2 size={18} className={plan.highlight || plan.style ? 'text-green-400' : 'text-primary'} />
                                         {plan.highlight || plan.style ? item : <span className="text-text-secondary">{item}</span>}
                                     </li>
                                 ))}
                             </ul>
                             <Link
-                                href={(plan as any).href || "/get-started"}
+                                href={"/get-started"}
                                 className={`
                                     w-full py-4 rounded-2xl font-bold text-center transition-all cursor-pointer shadow-lg
                                     ${plan.highlight

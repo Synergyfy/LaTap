@@ -66,8 +66,8 @@ export default function AdminHardwarePage() {
                                 <div key={item.id} className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm group">
                                     <div className="flex items-start justify-between mb-6">
                                         <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${item.color === 'blue' ? 'bg-blue-50 text-blue-600' :
-                                                item.color === 'green' ? 'bg-green-50 text-green-600' :
-                                                    'bg-orange-50 text-orange-600'
+                                            item.color === 'green' ? 'bg-green-50 text-green-600' :
+                                                'bg-orange-50 text-orange-600'
                                             }`}>
                                             <item.icon size={24} />
                                         </div>
@@ -150,63 +150,17 @@ export default function AdminHardwarePage() {
                                     />
                                 </div>
 
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary flex items-center gap-2">
-                                        <Zap size={12} />
-                                        Bulk Discount Markup (%)
-                                    </label>
-                                    <div className="relative">
-                                        <input
-                                            type="number"
-                                            value={whiteLabelSettings.markupPercentage}
-                                            onChange={(e) => setWhiteLabelSettings(prev => ({ ...prev, markupPercentage: parseInt(e.target.value) }))}
-                                            className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl font-bold text-sm focus:ring-2 focus:ring-primary/20 focus:outline-none focus:bg-white transition-all"
-                                        />
-                                        <span className="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-primary">%</span>
-                                    </div>
-                                    <p className="text-[10px] text-text-secondary font-medium italic">Applied on top of hardware unit cost for white-label orders</p>
-                                </div>
-
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary flex items-center gap-2">
-                                        <Settings size={12} />
-                                        One-time Setup Fee (₦)
-                                    </label>
-                                    <input
-                                        type="number"
-                                        value={whiteLabelSettings.setupFee}
-                                        onChange={(e) => setWhiteLabelSettings(prev => ({ ...prev, setupFee: parseInt(e.target.value) }))}
-                                        className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl font-bold text-sm focus:ring-2 focus:ring-primary/20 focus:outline-none focus:bg-white transition-all"
-                                    />
-                                </div>
-
-                                <div className="pt-4 border-t border-gray-100">
-                                    <div className="flex items-center gap-3 text-sm font-bold text-text-main">
-                                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                                            <Printer size={16} className="text-primary" />
-                                        </div>
-                                        Branding Service: <span className="text-primary">Operational</span>
-                                    </div>
-                                </div>
                             </div>
                         </div>
+                    </div>
+                </div>
 
-                        {/* White label visual demo */}
-                        <div className="bg-primary/5 rounded-2xl p-6 border border-primary/10">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-primary mb-4 flex items-center gap-2">
-                                <Smartphone size={14} />
-                                Merchant Preview
-                            </h4>
-                            <div className="bg-white rounded-xl p-4 shadow-sm border border-primary/5">
-                                <div className="flex items-center gap-3 mb-3">
-                                    <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse"></div>
-                                    <div className="h-4 w-24 bg-gray-100 rounded"></div>
-                                </div>
-                                <div className="h-32 bg-gray-50 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-200">
-                                    <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Custom Brand Logo Here</p>
-                                </div>
-                            </div>
+                <div className="pt-4 border-t border-gray-100">
+                    <div className="flex items-center gap-3 text-sm font-bold text-text-main">
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                            <Printer size={16} className="text-primary" />
                         </div>
+                        Branding Service: <span className="text-primary">Operational</span>
                     </div>
                 </div>
             </div>

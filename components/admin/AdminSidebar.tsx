@@ -9,15 +9,16 @@ import { dashboardApi } from '@/lib/api/dashboard';
 import { Notification } from '@/lib/store/mockDashboardStore';
 import {
     Home, Store, Users, Nfc, CreditCard, BarChart, MessageSquare,
-    Settings, ChevronDown, Shield, LogOut, LayoutGrid, Search, Bell, HelpCircle, Package
+    Settings, ChevronDown, Shield, LogOut, LayoutGrid, Search, Bell, HelpCircle, Package, FileText, Tag
 } from 'lucide-react';
 import Logo from '@/components/brand/Logo';
 
 interface AdminSidebarProps {
     children: React.ReactNode;
+    activePage?: string;
 }
 
-export default function AdminSidebar({ children }: AdminSidebarProps) {
+export default function AdminSidebar({ children, activePage }: AdminSidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
     const { user, logout } = useAuthStore();
@@ -118,6 +119,18 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
             label: 'Support Tickets',
             icon: MessageSquare,
             href: '/admin/support',
+        },
+        {
+            id: 'quotes',
+            label: 'Quote Requests',
+            icon: FileText,
+            href: '/admin/quotes',
+        },
+        {
+            id: 'pricing',
+            label: 'Pricing Plans',
+            icon: Tag,
+            href: '/admin/pricing',
         },
         {
             id: 'settings',

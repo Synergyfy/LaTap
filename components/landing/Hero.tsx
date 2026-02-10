@@ -22,7 +22,7 @@ export default function Hero() {
                 </h1>
 
                 <p className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
-                    Stop using paper forms. Instantly collect customer numbers and details with a simple tap, and see everything on your phone.
+                    7 out of 10 customers don't buy on first visit. Instantly collect customer numbers and details with a simple tap, and see everything on your phone.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-24">
