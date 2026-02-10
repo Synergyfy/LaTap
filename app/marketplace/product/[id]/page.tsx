@@ -5,9 +5,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import {
-    Search, Grid, Star, Download, CheckCircle2, SlidersHorizontal, ArrowRight,
-    Home, ChevronRight, FileText, CheckCircle, ShieldCheck, Truck, Headset,
-    Share2, Scale, Flag, MessageSquare, StarHalf, Layout, X
+    Search, Grid, Star,ArrowRight,
+    Home, ChevronRight, ShieldCheck, Truck, Headset,
+    Share2, X
 } from 'lucide-react';
 import { fetchProductDetail } from '@/lib/api/marketplace';
 import { ProductDetailSkeleton } from '@/components/marketplace/Skeletons';
@@ -114,17 +114,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         }
     };
 
-    const handleAddToCart = () => {
-        addItem({
-            id: product.id,
-            productId: product.id,
-            name: product.name,
-            price: unitPrice,
-            image: product.images?.[0] || '',
-            category: product.category || 'Hardware'
-        });
-        toast.success(`Added ${product.name} to cart!`);
-    };
+    
 
     const handleQuoteSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -371,12 +361,6 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                         className="px-4 text-slate-500 hover:text-primary transition-colors text-lg"
                                     >+</button>
                                 </div>
-                                <button
-                                    onClick={handleAddToCart}
-                                    className="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold h-14 rounded-none shadow-lg shadow-slate-900/10 transition-all flex items-center justify-center gap-3 active:scale-[0.98]"
-                                >
-                                    Add to Cart
-                                </button>
                                 <button
                                     onClick={() => setActiveTab('quote')}
                                     className="flex-1 bg-primary hover:bg-primary/90 text-white font-bold h-14 rounded-none shadow-lg shadow-primary/25 transition-all flex items-center justify-center gap-3 active:scale-[0.98]"

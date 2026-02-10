@@ -19,6 +19,7 @@ export const dashboardApi = {
       redemptionRequests: state.redemptionRequests,
       templates: state.templates,
       businessName: 'Green Terrace Cafe',
+      businessLogo: '/icon.png',
     };
   },
 

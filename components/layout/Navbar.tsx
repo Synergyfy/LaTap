@@ -41,6 +41,15 @@ export default function Navbar() {
                                         <p className="text-[10px] text-text-secondary font-medium">Management Dashboard</p>
                                     </div>
                                 </Link>
+                                <Link href="/solutions/white-label" className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors">
+                                    <div className="size-10 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center">
+                                        <span className="material-icons-round">workspace_premium</span>
+                                    </div>
+                                    <div>
+                                        <p className="text-text-main text-xs font-black uppercase tracking-wider">White Label</p>
+                                        <p className="text-[10px] text-text-secondary font-medium">Reseller Infrastructure</p>
+                                    </div>
+                                </Link>
                             </div>
                         </div>
                         <Link className="hover:text-primary transition-colors" href="/marketplace">Marketplace</Link>
@@ -86,6 +95,7 @@ export default function Navbar() {
                             <span className="text-[10px] font-black uppercase tracking-widest text-text-secondary">Solutions</span>
                             <Link onClick={() => setIsMenuOpen(false)} className="hover:text-primary transition-colors pl-4 border-l-2 border-gray-100" href="/solutions/hardware">Hardware</Link>
                             <Link onClick={() => setIsMenuOpen(false)} className="hover:text-primary transition-colors pl-4 border-l-2 border-gray-100" href="/solutions/software">Software</Link>
+                            <Link onClick={() => setIsMenuOpen(false)} className="hover:text-primary transition-colors pl-4 border-l-2 border-gray-100" href="/solutions/white-label">White Label</Link>
                         </div>
                         <Link onClick={() => setIsMenuOpen(false)} className="hover:text-primary transition-colors" href="/features">Features</Link>
                         <Link onClick={() => setIsMenuOpen(false)} className="hover:text-primary transition-colors" href="/pricing">Pricing</Link>

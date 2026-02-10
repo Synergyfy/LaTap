@@ -54,21 +54,21 @@ export default function HardwareWhitepaperPage() {
     const hardwarePricing = [
         {
             type: "NFC Smart Cards",
-            startingAt: "₦3,500",
+            startingAt: "Custom Quote",
             bestFor: "Membership & VIP loyalty",
             specs: "PVC / Metal / Wood",
             moq: "10 Units"
         },
         {
             type: "Digital Window Stickers",
-            startingAt: "₦1,500",
+            startingAt: "Custom Quote",
             bestFor: "Storefronts & Tables",
             specs: "3M Adhesive PET",
             moq: "20 Units"
         },
         {
             type: "Industrial NFC Plates",
-            startingAt: "₦12,000",
+            startingAt: "Custom Quote",
             bestFor: "Outdoor & High-Traffic",
             specs: "Laser-Engraved Steel",
             moq: "5 Units"
@@ -214,15 +214,15 @@ export default function HardwareWhitepaperPage() {
                                 <div className="space-y-4 mb-10">
                                     <div className="flex items-center justify-between text-sm py-3 border-b border-white/5">
                                         <span className="text-slate-400 font-medium">Setup Fee</span>
-                                        <span className="text-white font-bold">₦150k Flat</span>
+                                        <span className="text-white font-bold">Inquire for Quote</span>
                                     </div>
                                     <div className="flex items-center justify-between text-sm py-3 border-b border-white/5">
                                         <span className="text-slate-400 font-medium">Monthly Infrastructure</span>
-                                        <span className="text-white font-bold">Contact Sales</span>
+                                        <span className="text-white font-bold">Volume-Based</span>
                                     </div>
                                     <div className="flex items-center justify-between text-sm py-3">
                                         <span className="text-slate-400 font-medium">Minimum Hardware Order</span>
-                                        <span className="text-white font-bold">100 Units/year</span>
+                                        <span className="text-white font-bold">Custom Volume</span>
                                     </div>
                                 </div>
                                 <button className="w-full h-16 bg-primary text-white font-black uppercase tracking-widest text-xs rounded-2xl hover:bg-primary-hover shadow-2xl shadow-primary/30 transition-all active:scale-95">

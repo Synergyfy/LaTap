@@ -14,6 +14,7 @@ import AddVisitorModal, { VisitorFormData } from '@/components/dashboard/AddVisi
 import SendMessageModal from '@/components/dashboard/SendMessageModal';
 import DeleteConfirmationModal from '@/components/dashboard/DeleteConfirmationModal';
 import VisitorDetailsModal from '@/components/dashboard/VisitorDetailsModal';
+import PreviewRewardModal from '@/components/dashboard/PreviewRewardModal';
 import { Users, UserPlus, Repeat, Star, Download, Search, Edit, Trash2, MoreVertical, Send, MessageSquare } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -25,6 +26,7 @@ export default function AllVisitorsPage() {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [selectedVisitorForMsg, setSelectedVisitorForMsg] = useState<Visitor | null>(null);
     const [selectedVisitorForDetails, setSelectedVisitorForDetails] = useState<Visitor | null>(null);
+    const [rewardPreviewVisitor, setRewardPreviewVisitor] = useState<Visitor | null>(null);
     const [deleteVisitorId, setDeleteVisitorId] = useState<string | null>(null);
 
     const { data: storeData, isLoading } = useQuery({
@@ -166,6 +168,18 @@ export default function AllVisitorsPage() {
                     >
                         <Send size={18} />
                     </button>
+                    {item.status === 'returning' && (
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setRewardPreviewVisitor(item);
+                            }}
+                            className="p-1.5 text-orange-500 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
+                            title="Preview reward"
+                        >
+                            <Gift size={18} />
+                        </button>
+                    )}
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
@@ -235,6 +249,13 @@ export default function AllVisitorsPage() {
                     isOpen={!!selectedVisitorForDetails}
                     onClose={() => setSelectedVisitorForDetails(null)}
                     visitor={selectedVisitorForDetails}
+                />
+
+                <PreviewRewardModal
+                    isOpen={!!rewardPreviewVisitor}
+                    onClose={() => setRewardPreviewVisitor(null)}
+                    rewardTitle="Free Coffee or Pastry"
+                    businessName={storeData?.businessName || 'Your Business'}
                 />
 
                 <DeleteConfirmationModal

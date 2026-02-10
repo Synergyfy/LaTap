@@ -66,12 +66,12 @@ export default function CreateRewardModal({ isOpen, onClose, onSubmit, isLoading
 
                 <div className="space-y-2">
                     <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">
-                        Points required
+                        Visits threshold
                     </label>
                     <input
                         type="number"
-                        {...register('points', { required: 'Points are required', min: 1 })}
-                        placeholder="e.g. 100"
+                        {...register('points', { required: 'Visit threshold is required', min: 1 })}
+                        placeholder="e.g. 5"
                         className="w-full h-12 px-4 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all text-sm font-bold"
                     />
                     {errors.points && <span className="text-xs text-red-500 mt-1 ml-1 font-bold">{errors.points.message}</span>}

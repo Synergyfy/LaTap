@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import Modal from '@/components/ui/Modal';
 import SendMessageModal from '@/components/dashboard/SendMessageModal';
 import VisitorDetailsModal from '@/components/dashboard/VisitorDetailsModal';
+import PreviewRewardModal from '@/components/dashboard/PreviewRewardModal';
 
 export default function DashboardPage() {
     const queryClient = useQueryClient();
@@ -21,6 +22,7 @@ export default function DashboardPage() {
     const [showClearModal, setShowClearModal] = useState(false);
     const [selectedVisitorForMsg, setSelectedVisitorForMsg] = useState<{ visitor: Visitor, type: 'welcome' | 'reward' } | null>(null);
     const [selectedVisitorForDetails, setSelectedVisitorForDetails] = useState<Visitor | null>(null);
+    const [rewardPreviewVisitor, setRewardPreviewVisitor] = useState<Visitor | null>(null);
 
     // Fetch Dashboard Data
     const { data, isLoading } = useQuery({
@@ -305,19 +307,33 @@ export default function DashboardPage() {
                                             </span>
                                         </td>
                                         <td className="py-4 px-4">
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setSelectedVisitorForMsg({
-                                                        visitor,
-                                                        type: visitor.status === 'new' ? 'welcome' : 'reward'
-                                                    });
-                                                }}
-                                                className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white text-[10px] font-black uppercase tracking-wider rounded-lg hover:bg-primary-hover transition-colors"
-                                            >
-                                                <Send size={12} />
-                                                {visitor.status === 'new' ? 'Welcome' : 'Message'}
-                                            </button>
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setSelectedVisitorForMsg({
+                                                            visitor,
+                                                            type: visitor.status === 'new' ? 'welcome' : 'reward'
+                                                        });
+                                                    }}
+                                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-wider rounded-lg hover:bg-primary/20 transition-colors"
+                                                >
+                                                    <Send size={12} />
+                                                    {visitor.status === 'new' ? 'Welcome' : 'Message'}
+                                                </button>
+                                                {visitor.status === 'returning' && (
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setRewardPreviewVisitor(visitor);
+                                                        }}
+                                                        className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-500 text-white text-[10px] font-black uppercase tracking-wider rounded-lg hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20"
+                                                    >
+                                                        <Gift size={12} />
+                                                        Reward
+                                                    </button>
+                                                )}
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
@@ -361,6 +377,13 @@ export default function DashboardPage() {
                     isOpen={!!selectedVisitorForDetails}
                     onClose={() => setSelectedVisitorForDetails(null)}
                     visitor={selectedVisitorForDetails}
+                />
+
+                <PreviewRewardModal
+                    isOpen={!!rewardPreviewVisitor}
+                    onClose={() => setRewardPreviewVisitor(null)}
+                    rewardTitle="Free Coffee or Pastry"
+                    businessName={data?.businessName || 'Your Business'}
                 />
             </div>
         </DashboardSidebar>

@@ -23,8 +23,8 @@ export default function PricingPage() {
                     Choose the plan that fits your scale. All plans include 24/7 support and secure data encryption.
                 </p>
             </div>
-            <Pricing />
             <HardwarePricing />
+            <Pricing />
             {/* FAQ or additional pricing info can go here */}
             <section className="py-24 bg-white border-t border-gray-50">
                 <div className="max-w-4xl mx-auto px-4 text-center">
