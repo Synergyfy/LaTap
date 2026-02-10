@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { useProductFormStore } from '@/store/useProductFormStore';
-import { DollarSign, Percent, Trash2, Plus, Info, LayoutGrid, CheckCircle } from 'lucide-react';
-
+import { Percent, Trash2, Plus, Info, LayoutGrid, CheckCircle } from 'lucide-react';
+import { TbCurrencyNaira } from "react-icons/tb";
 export default function StepPricing() {
     const { formData, updateFormData, nextStep, prevStep } = useProductFormStore();
 
@@ -32,14 +32,14 @@ export default function StepPricing() {
                 {/* Base Pricing */}
                 <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
                     <h3 className="text-xl font-bold font-display text-text-main mb-6 flex items-center gap-2">
-                        <DollarSign className="text-primary" size={24} />
+                        <TbCurrencyNaira className="text-primary" size={24} />
                         Base Pricing
                     </h3>
                     <div className="grid grid-cols-2 gap-6">
                         <div>
-                            <label className="block text-sm font-bold text-text-secondary mb-2">MSRP (USD)</label>
+                            <label className="block text-sm font-bold text-text-secondary mb-2">MSRP (Selling Price)</label>
                             <div className="relative">
-                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">$</span>
+                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold"><TbCurrencyNaira /></span>
                                 <input
                                     type="number"
                                     value={formData.msrp}
@@ -49,9 +49,21 @@ export default function StepPricing() {
                             </div>
                         </div>
                         <div>
-                            <label className="block text-sm font-bold text-text-secondary mb-2">Cost Price (Internal)</label>
+                            <label className="block text-sm font-bold text-text-secondary mb-2">Original Price (Strike-through)</label>
                             <div className="relative">
-                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">$</span>
+                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold"><TbCurrencyNaira /></span>
+                                <input
+                                    type="number"
+                                    value={formData.originalPrice}
+                                    onChange={(e) => updateFormData({ originalPrice: parseFloat(e.target.value) })}
+                                    className="w-full pl-8 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:outline-none font-bold text-text-main text-lg transition-all"
+                                />
+                            </div>
+                        </div>
+                        <div className="col-span-2">
+                            <label className="block text-sm font-bold text-text-secondary mb-2">Cost Price (Internal Only)</label>
+                            <div className="relative">
+                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold"><TbCurrencyNaira /></span>
                                 <input
                                     type="number"
                                     value={formData.costPrice}
@@ -144,8 +156,8 @@ export default function StepPricing() {
                                                 <span className="text-gray-400 font-bold text-xs">%</span>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 font-bold text-primary">
-                                            ${calculatePrice(tier.discountPercent)}
+                                        <td className="px-6 py-4 font-bold text-primary inline-flex items-center gap-2">
+                                            <TbCurrencyNaira /> {calculatePrice(tier.discountPercent)}
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <button
@@ -177,8 +189,9 @@ export default function StepPricing() {
 
                     <div className="border border-gray-100 rounded-2xl overflow-hidden group hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 bg-white">
                         <div className="bg-gray-50 p-8 flex items-center justify-center relative h-64 overflow-hidden">
-                            <div className="absolute top-4 left-4 z-10">
-                                <span className="bg-white/90 backdrop-blur text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg shadow-sm text-text-main">Hardware</span>
+                            <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
+                                <span className={`${formData.tagColor} text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 shadow-sm`}>{formData.tag}</span>
+                                <span className="bg-white/90 backdrop-blur text-[9px] font-black uppercase tracking-widest px-2 py-0.5 border border-gray-100 shadow-sm text-text-main">{formData.category}</span>
                             </div>
                             {formData.images.primary ? (
                                 <img src={formData.images.primary as string} className="w-40 h-40 object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-500" />
@@ -193,7 +206,12 @@ export default function StepPricing() {
                                     <p className="text-xs text-text-secondary font-bold uppercase tracking-widest">{formData.manufacturer || 'Manufacturer'}</p>
                                 </div>
                                 <div className="text-right">
-                                    <span className="block font-black text-xl text-primary">${formData.msrp.toFixed(2)}</span>
+                                    {formData.originalPrice > 0 && (
+                                        <p className="text-[10px] text-gray-400 line-through font-bold inline-flex items-center"><TbCurrencyNaira/>{formData.originalPrice.toFixed(2)}</p>
+                                    )}
+                                    <div className="flex items-center justify-end">
+                                        <span className=" font-black text-xl text-primary inline-flex items-center "><TbCurrencyNaira/>{formData.msrp.toFixed(2)}</span>
+                                    </div>
                                     <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">per unit</span>
                                 </div>
                             </div>

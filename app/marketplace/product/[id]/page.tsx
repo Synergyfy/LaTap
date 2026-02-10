@@ -15,6 +15,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import toast from 'react-hot-toast';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useQuoteStore } from '@/store/quoteStore';
+import { useCartStore } from '@/store/cartStore';
 import { calculateQuotePrice } from '@/lib/utils/calculateQuotePrice';
 
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -28,6 +29,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
     const { user } = useAuthStore();
     const addQuote = useQuoteStore((state) => state.addQuote);
+    const addItem = useCartStore((state) => state.addItem);
     const [selectedImage, setSelectedImage] = useState(0);
     const [quantity, setQuantity] = useState(1);
     const [activeTab, setActiveTab] = useState<'specs' | 'quote' | 'reviews'>('specs');
@@ -112,6 +114,18 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         }
     };
 
+    const handleAddToCart = () => {
+        addItem({
+            id: product.id,
+            productId: product.id,
+            name: product.name,
+            price: unitPrice,
+            image: product.images?.[0] || '',
+            category: product.category || 'Hardware'
+        });
+        toast.success(`Added ${product.name} to cart!`);
+    };
+
     const handleQuoteSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -163,15 +177,41 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     <div className="flex items-center gap-12">
                         <Link href="/" className="flex items-center gap-2 group">
                             <div className="w-12 h-12 flex items-center justify-center transition-all duration-300">
-                                <img src="/logo.png" alt="ElizTap Logo" className="w-full h-full object-contain rounded-full" />
+                                <span className="material-icons-round text-primary text-4xl select-none">nfc</span>
                             </div>
                             <span className="font-display font-bold text-xl tracking-tight text-slate-900">
                                 ElizTap<span className="text-primary">.Market</span>
                             </span>
                         </Link>
                         <nav className="hidden lg:flex items-center gap-8">
-                            <Link href="/marketplace" className="text-sm font-bold text-primary">Marketplace</Link>
-                            <Link href="#" className="text-sm font-bold text-slate-500 hover:text-primary transition-colors">Support</Link>
+                            <div className="relative group">
+                                <button className="flex items-center gap-1 text-sm font-bold text-slate-500 hover:text-primary transition-all py-2">
+                                    Solutions
+                                    <span className="material-icons-round text-lg transition-transform group-hover:rotate-180">expand_more</span>
+                                </button>
+                                <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-none shadow-2xl border border-slate-100 p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                                    <Link href="/solutions/hardware" className="flex items-center gap-3 p-3 hover:bg-slate-50 transition-colors">
+                                        <div className="size-10 bg-blue-50 text-blue-600 rounded-none flex items-center justify-center">
+                                            <span className="material-icons-round">nfc</span>
+                                        </div>
+                                        <div>
+                                            <p className="text-slate-900 text-[10px] font-black uppercase tracking-wider">Hardware</p>
+                                            <p className="text-[10px] text-slate-500 font-medium whitespace-nowrap">NFC Plates & Cards</p>
+                                        </div>
+                                    </Link>
+                                    <Link href="/solutions/software" className="flex items-center gap-3 p-3 hover:bg-slate-50 transition-colors">
+                                        <div className="size-10 bg-primary/10 text-primary rounded-none flex items-center justify-center">
+                                            <span className="material-icons-round">terminal</span>
+                                        </div>
+                                        <div>
+                                            <p className="text-slate-900 text-[10px] font-black uppercase tracking-wider">Software</p>
+                                            <p className="text-[10px] text-slate-500 font-medium whitespace-nowrap">Management Dashboard</p>
+                                        </div>
+                                    </Link>
+                                </div>
+                            </div>
+                            <Link href="/marketplace" className="text-sm font-bold text-primary underline underline-offset-4 decoration-2">Marketplace</Link>
+                            <Link href="/support" className="text-sm font-bold text-slate-500 hover:text-primary transition-colors">Support</Link>
                         </nav>
                     </div>
 
@@ -331,6 +371,12 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                         className="px-4 text-slate-500 hover:text-primary transition-colors text-lg"
                                     >+</button>
                                 </div>
+                                <button
+                                    onClick={handleAddToCart}
+                                    className="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold h-14 rounded-none shadow-lg shadow-slate-900/10 transition-all flex items-center justify-center gap-3 active:scale-[0.98]"
+                                >
+                                    Add to Cart
+                                </button>
                                 <button
                                     onClick={() => setActiveTab('quote')}
                                     className="flex-1 bg-primary hover:bg-primary/90 text-white font-bold h-14 rounded-none shadow-lg shadow-primary/25 transition-all flex items-center justify-center gap-3 active:scale-[0.98]"
@@ -585,105 +631,127 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             {isQuoteModalOpen && (
                 <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
                     <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={() => setIsQuoteModalOpen(false)}></div>
-                    <div className="relative bg-white rounded-none shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200">
-                        <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-                            <div>
-                                <h3 className="font-display font-bold text-xl text-text-main">Request Bulk Quote</h3>
-                                <p className="text-sm text-text-secondary">ElizTap specialized pricing for {product.name}</p>
+                    <div className="relative bg-white rounded-none shadow-2xl w-full max-w-4xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col md:flex-row">
+                        {/* Signup Suggestion Side Panel */}
+                        {!user && (
+                            <div className="w-full md:w-80 bg-primary/5 p-8 border-b md:border-b-0 md:border-r border-primary/10 flex flex-col justify-center">
+                                <div className="w-12 h-12 bg-primary/10 text-primary rounded-none flex items-center justify-center mb-6">
+                                    <Star size={24} className="fill-primary" />
+                                </div>
+                                <h4 className="font-display font-bold text-xl text-slate-900 mb-3">Save your quotes</h4>
+                                <p className="text-sm text-slate-600 mb-8 leading-relaxed font-medium">
+                                    Create an account to track your bulk requests, get faster responses, and access exclusive member pricing.
+                                </p>
+                                <Link
+                                    href="/get-started"
+                                    className="w-full py-3 bg-white border border-primary text-primary font-bold text-center hover:bg-primary hover:text-white transition-all text-sm"
+                                >
+                                    Create Account
+                                </Link>
+                                <p className="text-[10px] text-gray-400 mt-4 text-center font-bold uppercase tracking-wider font-display">Takes less than 1 minute</p>
                             </div>
-                            <button onClick={() => setIsQuoteModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-none transition-colors text-gray-500">
-                                <X size={20} />
-                            </button>
-                        </div>
-                        <form onSubmit={handleQuoteSubmit} className="p-6 space-y-4">
-                            <div className="grid grid-cols-2 gap-4">
+                        )}
+
+                        <div className="flex-1">
+                            <div className="p-6 border-b border-gray-100 flex items-center justify-between">
                                 <div>
-                                    <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">First Name</label>
-                                    <input
-                                        type="text"
-                                        value={quoteData.firstName}
-                                        onChange={(e) => setQuoteData({ ...quoteData, firstName: e.target.value })}
-                                        placeholder="John"
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
-                                        required
-                                    />
+                                    <h3 className="font-display font-bold text-xl text-text-main">Request Bulk Quote</h3>
+                                    <p className="text-sm text-text-secondary">ElizTap specialized pricing for {product.name}</p>
                                 </div>
-                                <div>
-                                    <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Last Name</label>
-                                    <input
-                                        type="text"
-                                        value={quoteData.lastName}
-                                        onChange={(e) => setQuoteData({ ...quoteData, lastName: e.target.value })}
-                                        placeholder="Doe"
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
-                                        required
-                                    />
-                                </div>
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Work Email</label>
-                                    <input
-                                        type="email"
-                                        value={quoteData.email}
-                                        onChange={(e) => setQuoteData({ ...quoteData, email: e.target.value })}
-                                        placeholder="john@company.com"
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Location / State</label>
-                                    <input
-                                        type="text"
-                                        value={quoteData.location}
-                                        onChange={(e) => setQuoteData({ ...quoteData, location: e.target.value })}
-                                        placeholder="Lagos, Nigeria"
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
-                                        required
-                                    />
-                                </div>
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Quantity Needed</label>
-                                    <input
-                                        type="number"
-                                        value={quoteData.quantity}
-                                        onChange={(e) => setQuoteData({ ...quoteData, quantity: e.target.value })}
-                                        placeholder="e.g. 100"
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Business Name</label>
-                                    <input
-                                        type="text"
-                                        value={quoteData.company}
-                                        onChange={(e) => setQuoteData({ ...quoteData, company: e.target.value })}
-                                        placeholder="Company Ltd."
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
-                                        required
-                                    />
-                                </div>
-                            </div>
-                            <div>
-                                <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Additional Notes</label>
-                                <textarea
-                                    rows={3}
-                                    value={quoteData.notes}
-                                    onChange={(e) => setQuoteData({ ...quoteData, notes: e.target.value })}
-                                    placeholder="Any specific requirements?"
-                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium resize-none"
-                                ></textarea>
-                            </div>
-                            <div className="pt-2">
-                                <button type="submit" className="w-full py-4 bg-primary text-white font-bold rounded-none hover:bg-primary-hover shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">
-                                    Submit Request
+                                <button onClick={() => setIsQuoteModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-none transition-colors text-gray-500">
+                                    <X size={20} />
                                 </button>
                             </div>
-                        </form>
+                            <form onSubmit={handleQuoteSubmit} className="p-6 space-y-4">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">First Name</label>
+                                        <input
+                                            type="text"
+                                            value={quoteData.firstName}
+                                            onChange={(e) => setQuoteData({ ...quoteData, firstName: e.target.value })}
+                                            placeholder="John"
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Last Name</label>
+                                        <input
+                                            type="text"
+                                            value={quoteData.lastName}
+                                            onChange={(e) => setQuoteData({ ...quoteData, lastName: e.target.value })}
+                                            placeholder="Doe"
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Work Email</label>
+                                        <input
+                                            type="email"
+                                            value={quoteData.email}
+                                            onChange={(e) => setQuoteData({ ...quoteData, email: e.target.value })}
+                                            placeholder="john@company.com"
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Location / State</label>
+                                        <input
+                                            type="text"
+                                            value={quoteData.location}
+                                            onChange={(e) => setQuoteData({ ...quoteData, location: e.target.value })}
+                                            placeholder="Lagos, Nigeria"
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Quantity Needed</label>
+                                        <input
+                                            type="number"
+                                            value={quoteData.quantity}
+                                            onChange={(e) => setQuoteData({ ...quoteData, quantity: e.target.value })}
+                                            placeholder="e.g. 100"
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Business Name</label>
+                                        <input
+                                            type="text"
+                                            value={quoteData.company}
+                                            onChange={(e) => setQuoteData({ ...quoteData, company: e.target.value })}
+                                            placeholder="Company Ltd."
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Additional Notes</label>
+                                    <textarea
+                                        rows={3}
+                                        value={quoteData.notes}
+                                        onChange={(e) => setQuoteData({ ...quoteData, notes: e.target.value })}
+                                        placeholder="Any specific requirements?"
+                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium resize-none"
+                                    ></textarea>
+                                </div>
+                                <div className="pt-2">
+                                    <button type="submit" className="w-full py-4 bg-primary text-white font-bold rounded-none hover:bg-primary-hover shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">
+                                        Submit Request
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             )}

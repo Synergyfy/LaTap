@@ -24,6 +24,9 @@ interface ProductFormData {
   // Step 1
   title: string;
   manufacturer: string;
+  category: string;
+  tag: string;
+  tagColor: string;
   sku: string;
   description: string;
   
@@ -44,6 +47,7 @@ interface ProductFormData {
   
   // Step 3
   msrp: number;
+  originalPrice: number;
   costPrice: number;
   bulkQuotesEnabled: boolean;
   volumeDiscounts: VolumeDiscount[];
@@ -62,6 +66,9 @@ interface ProductFormState {
 const initialFormData: ProductFormData = {
   title: '',
   manufacturer: '',
+  category: 'NFC Hardware',
+  tag: 'New Arrival',
+  tagColor: 'bg-primary',
   sku: '',
   description: '',
   images: { primary: null, side: null, detail: null, packaging: null },
@@ -74,6 +81,7 @@ const initialFormData: ProductFormData = {
     { id: '1', title: 'Tap to Connect', description: 'Enable NFC on your device and tap the reader.' }
   ],
   msrp: 450.00,
+  originalPrice: 0,
   costPrice: 280.00,
   bulkQuotesEnabled: true,
   volumeDiscounts: [

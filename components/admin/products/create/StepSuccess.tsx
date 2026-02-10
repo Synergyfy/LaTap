@@ -44,11 +44,10 @@ export default function StepSuccess() {
                 </div>
                 <div className="flex flex-col justify-center grow min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-green-700 border border-green-100">
-                            <span className="size-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                            Active
+                        <span className={`inline-flex items-center gap-1.5 rounded-full ${formData.tagColor.replace('bg-', 'bg-')}/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-widest ${formData.tagColor.replace('bg-', 'text-')} border border-current/10`}>
+                            {formData.tag}
                         </span>
-                        <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Hardware</span>
+                        <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">{formData.category}</span>
                     </div>
                     <h3 className="font-bold text-text-main text-base truncate">{formData.title || 'Product Name'}</h3>
                     <p className="text-xs text-text-secondary mt-0.5 font-mono">{formData.sku || 'SKU-000'}</p>

@@ -83,6 +83,52 @@ export default function StepDetails() {
                                 </div>
                             </div>
 
+                            <div className="col-span-1">
+                                <label className="block text-sm font-bold text-text-secondary mb-2" htmlFor="category">Category</label>
+                                <select
+                                    className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none font-medium text-text-main appearance-none cursor-pointer"
+                                    id="category"
+                                    name="category"
+                                    value={formData.category}
+                                    onChange={handleChange}
+                                >
+                                    <option value="NFC Hardware">NFC Hardware</option>
+                                    <option value="Smart Cards">Smart Cards</option>
+                                    <option value="NFC Readers">NFC Readers</option>
+                                    <option value="Accessories">Accessories</option>
+                                </select>
+                            </div>
+
+                            <div className="col-span-1">
+                                <label className="block text-sm font-bold text-text-secondary mb-2" htmlFor="tag">Promo Tag</label>
+                                <input
+                                    className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none font-medium text-text-main placeholder-gray-400"
+                                    id="tag"
+                                    name="tag"
+                                    placeholder="e.g. New Arrival"
+                                    type="text"
+                                    value={formData.tag}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            <div className="col-span-1">
+                                <label className="block text-sm font-bold text-text-secondary mb-2" htmlFor="tagColor">Tag Color Class</label>
+                                <select
+                                    className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none font-medium text-text-main appearance-none cursor-pointer"
+                                    id="tagColor"
+                                    name="tagColor"
+                                    value={formData.tagColor}
+                                    onChange={handleChange}
+                                >
+                                    <option value="bg-primary">Primary (Orange)</option>
+                                    <option value="bg-blue-600">Blue</option>
+                                    <option value="bg-green-600">Green</option>
+                                    <option value="bg-slate-900">Black</option>
+                                    <option value="bg-red-600">Red</option>
+                                </select>
+                            </div>
+
                             <div className="col-span-1 md:col-span-2">
                                 <label className="block text-sm font-bold text-text-secondary mb-2" htmlFor="description">Description</label>
                                 <textarea

@@ -12,6 +12,7 @@ import {
 import { useMarketplaceStore } from '@/store/marketplaceStore';
 import { fetchProducts } from '@/lib/api/marketplace';
 import { ProductCardSkeleton } from '@/components/marketplace/Skeletons';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export default function MarketplacePage() {
     const router = useRouter();
@@ -21,6 +22,7 @@ export default function MarketplacePage() {
         selectedCategory, priceRange, selectedBrands, currentPage, searchQuery,
         setCategory, setPriceRange, toggleBrand, setPage, setSearchQuery, resetFilters
     } = useMarketplaceStore();
+    const { user } = useAuthStore();
 
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
     const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
@@ -73,7 +75,7 @@ export default function MarketplacePage() {
                     <div className="flex items-center gap-12">
                         <Link href="/" className="flex items-center gap-2 group">
                             <div className="w-12 h-12 flex items-center justify-center transition-all duration-300">
-                                <img src="/logo.png" alt="ElizTap Logo" className="w-full h-full object-contain" />
+                                <span className="material-icons-round text-primary text-4xl select-none">nfc</span>
                             </div>
                             <span className="font-display font-bold text-xl tracking-tight text-text-main">
                                 ElizTap<span className="text-primary">.Market</span>
@@ -82,6 +84,32 @@ export default function MarketplacePage() {
 
                         {/* Desktop Nav */}
                         <nav className="hidden lg:flex items-center gap-8">
+                            <div className="relative group">
+                                <button className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-primary transition-colors py-2">
+                                    Solutions
+                                    <span className="material-icons-round text-lg transition-transform group-hover:rotate-180">expand_more</span>
+                                </button>
+                                <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-none shadow-2xl border border-gray-100 p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                                    <Link href="/solutions/hardware" className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors">
+                                        <div className="size-10 bg-blue-50 text-blue-600 rounded-none flex items-center justify-center">
+                                            <span className="material-icons-round">nfc</span>
+                                        </div>
+                                        <div>
+                                            <p className="text-text-main text-[10px] font-black uppercase tracking-wider">Hardware</p>
+                                            <p className="text-[10px] text-text-secondary font-medium whitespace-nowrap">NFC Plates & Cards</p>
+                                        </div>
+                                    </Link>
+                                    <Link href="/solutions/software" className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors">
+                                        <div className="size-10 bg-primary/10 text-primary rounded-none flex items-center justify-center">
+                                            <span className="material-icons-round">terminal</span>
+                                        </div>
+                                        <div>
+                                            <p className="text-text-main text-[10px] font-black uppercase tracking-wider">Software</p>
+                                            <p className="text-[10px] text-text-secondary font-medium whitespace-nowrap">Management Dashboard</p>
+                                        </div>
+                                    </Link>
+                                </div>
+                            </div>
                             {['New Arrivals', 'Best Sellers', 'Deals', 'Support'].map((item) => (
                                 <Link key={item} href="#" className="text-sm font-bold text-gray-500 hover:text-primary transition-colors">
                                     {item}
@@ -312,51 +340,73 @@ export default function MarketplacePage() {
                 isQuoteModalOpen && selectedQuoteProduct && (
                     <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
                         <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={() => setIsQuoteModalOpen(false)}></div>
-                        <div className="relative bg-white rounded-none shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200">
-                            <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-                                <div>
-                                    <h3 className="font-display font-bold text-xl text-text-main">Request Quote</h3>
-                                    <p className="text-sm text-text-secondary">Bulk pricing for {selectedQuoteProduct.name}</p>
-                                </div>
-                                <button onClick={() => setIsQuoteModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-none transition-colors text-gray-500">
-                                    <X size={20} />
-                                </button>
-                            </div>
-                            <form onSubmit={handleQuoteSubmit} className="p-6 space-y-4">
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-1">First Name</label>
-                                        <input type="text" placeholder="John" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium" required />
+                        <div className="relative bg-white rounded-none shadow-2xl w-full max-w-4xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col md:flex-row">
+                            {/* Signup Suggestion Side Panel */}
+                            {!user && (
+                                <div className="w-full md:w-80 bg-primary/5 p-8 border-b md:border-b-0 md:border-r border-primary/10 flex flex-col justify-center">
+                                    <div className="w-12 h-12 bg-primary/10 text-primary rounded-none flex items-center justify-center mb-6">
+                                        <Star size={24} className="fill-primary" />
                                     </div>
+                                    <h4 className="font-display font-bold text-xl text-text-main mb-3">Save your quotes</h4>
+                                    <p className="text-sm text-text-secondary mb-8 leading-relaxed">
+                                        Create an account to track your bulk requests, get faster responses, and access exclusive member pricing.
+                                    </p>
+                                    <Link
+                                        href="/get-started"
+                                        className="w-full py-3 bg-white border border-primary text-primary font-bold text-center hover:bg-primary hover:text-white transition-all text-sm"
+                                    >
+                                        Create Account
+                                    </Link>
+                                    <p className="text-[10px] text-gray-400 mt-4 text-center font-bold uppercase tracking-wider">Takes less than 1 minute</p>
+                                </div>
+                            )}
+
+                            <div className="flex-1">
+                                <div className="p-6 border-b border-gray-100 flex items-center justify-between">
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Last Name</label>
-                                        <input type="text" placeholder="Doe" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium" required />
+                                        <h3 className="font-display font-bold text-xl text-text-main">Request Quote</h3>
+                                        <p className="text-sm text-text-secondary">Bulk pricing for {selectedQuoteProduct.name}</p>
                                     </div>
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Quantity Needed</label>
-                                        <input type="number" placeholder="e.g. 50" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium" required />
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Location</label>
-                                        <input type="text" placeholder="Lagos, Nigeria" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium" required />
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Business Name</label>
-                                    <input type="text" placeholder="Company Ltd." className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium" required />
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Additional Notes</label>
-                                    <textarea rows={3} placeholder="Any specific requirements?" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium resize-none"></textarea>
-                                </div>
-                                <div className="pt-2">
-                                    <button type="submit" className="w-full py-4 bg-primary text-white font-bold rounded-none hover:bg-primary-hover shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">
-                                        Submit Request
+                                    <button onClick={() => setIsQuoteModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-none transition-colors text-gray-500">
+                                        <X size={20} />
                                     </button>
                                 </div>
-                            </form>
+                                <form onSubmit={handleQuoteSubmit} className="p-6 space-y-4">
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">First Name</label>
+                                            <input type="text" placeholder="John" defaultValue={user?.name?.split(' ')[0] || ''} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium" required />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Last Name</label>
+                                            <input type="text" placeholder="Doe" defaultValue={user?.name?.split(' ').slice(1).join(' ') || ''} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium" required />
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Quantity Needed</label>
+                                            <input type="number" placeholder="e.g. 50" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium" required />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Location</label>
+                                            <input type="text" placeholder="Lagos, Nigeria" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium" required />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Business Name</label>
+                                        <input type="text" placeholder="Company Ltd." defaultValue={user?.businessName || ''} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium" required />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Additional Notes</label>
+                                        <textarea rows={3} placeholder="Any specific requirements?" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium resize-none"></textarea>
+                                    </div>
+                                    <div className="pt-2">
+                                        <button type="submit" className="w-full py-4 bg-primary text-white font-bold rounded-none hover:bg-primary-hover shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">
+                                            Submit Request
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 )
