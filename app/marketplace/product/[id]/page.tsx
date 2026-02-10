@@ -27,6 +27,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     });
 
     const { user } = useAuthStore();
+    const addQuote = useQuoteStore((state) => state.addQuote);
     const [selectedImage, setSelectedImage] = useState(0);
     const [quantity, setQuantity] = useState(1);
     const [activeTab, setActiveTab] = useState<'specs' | 'quote' | 'reviews'>('specs');
@@ -110,8 +111,6 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             }
         }
     };
-
-    const addQuote = useQuoteStore((state) => state.addQuote);
 
     const handleQuoteSubmit = (e: React.FormEvent) => {
         e.preventDefault();
