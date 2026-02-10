@@ -164,27 +164,6 @@ export default function AdminHardwarePage() {
                     </div>
                 </div>
             </div>
-        </div>
-
-                        {/* White label visual demo */ }
-    <div className="bg-primary/5 rounded-2xl p-6 border border-primary/10">
-        <h4 className="text-xs font-black uppercase tracking-widest text-primary mb-4 flex items-center gap-2">
-            <Smartphone size={14} />
-            Merchant Preview
-        </h4>
-        <div className="bg-white rounded-xl p-4 shadow-sm border border-primary/5">
-            <div className="flex items-center gap-3 mb-3">
-                <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse"></div>
-                <div className="h-4 w-24 bg-gray-100 rounded"></div>
-            </div>
-            <div className="h-32 bg-gray-50 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-200">
-                <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Custom Brand Logo Here</p>
-            </div>
-        </div>
-    </div>
-                    </div >
-                </div >
-            </div >
-        </AdminSidebar >
+        </AdminSidebar>
     );
 }

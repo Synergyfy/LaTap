@@ -14,6 +14,8 @@ import { ProductDetailSkeleton } from '@/components/marketplace/Skeletons';
 import useEmblaCarousel from 'embla-carousel-react';
 import toast from 'react-hot-toast';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useQuoteStore } from '@/store/quoteStore';
+import { calculateQuotePrice } from '@/lib/utils/calculateQuotePrice';
 
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const router = useRouter();
@@ -109,11 +111,49 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         }
     };
 
+    const addQuote = useQuoteStore((state) => state.addQuote);
+
     const handleQuoteSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!quoteData.firstName || !quoteData.lastName || !quoteData.email || !quoteData.quantity) {
+            toast.error('Please fill in all required fields');
+            return;
+        }
+
+        const quantity = parseInt(quoteData.quantity);
+        if (isNaN(quantity) || quantity < 1) {
+            toast.error('Please enter a valid quantity');
+            return;
+        }
+
+        // Calculate estimated value based on tiered pricing
+        const estimatedValue = calculateQuotePrice(product.tieredPricing || [], quantity);
+
+        addQuote({
+            productId: product.id,
+            productName: product.name,
+            productImage: product.mainImage || product.images?.[0] || '',
+            firstName: quoteData.firstName,
+            lastName: quoteData.lastName,
+            email: quoteData.email,
+            company: quoteData.company,
+            quantity,
+            message: quoteData.notes,
+            estimatedValue,
+        });
+
         toast.success(`Quote request sent for ${product.name}!`);
-        setIsQuoteModalOpen(false);
-        setQuoteData({ firstName: '', lastName: '', email: '', company: '', quantity: '', location: '', notes: '' });
+        setActiveTab('specs');
+        setQuoteData({
+            firstName: user?.name?.split(' ')[0] || '',
+            lastName: user?.name?.split(' ').slice(1).join(' ') || '',
+            email: user?.email || '',
+            company: user?.businessName || '',
+            quantity: '',
+            location: '',
+            notes: ''
+        });
     };
 
     return (

@@ -9,45 +9,54 @@ import {
     MessageSquare, User, Building2, Package
 } from 'lucide-react';
 import Modal from '@/components/ui/Modal';
-
-interface QuoteRequest {
-    id: string;
-    product: string;
-    business: string;
-    contact: string;
-    quantity: number;
-    status: 'Pending' | 'Approved' | 'Rejected' | 'Expired';
-    date: string;
-    value: string;
-}
+import { useQuoteStore, Quote } from '@/store/quoteStore';
+import Link from 'next/link';
+import Image from 'next/image';
 
 export default function AdminQuotesPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
-    const [selectedQuote, setSelectedQuote] = useState<QuoteRequest | null>(null);
+    const [selectedQuote, setSelectedQuote] = useState<Quote | null>(null);
     const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
-    const [quotes, setQuotes] = useState<QuoteRequest[]>([
-        { id: 'QT-9821', product: 'ACS ACR1552U NFC Reader', business: 'Apex Logistics', contact: 'John Carter', quantity: 150, status: 'Pending', date: '4 hours ago', value: '₦1,425,000' },
-        { id: 'QT-9815', product: 'HID Omnikey 5427 CK', business: 'SecureBase Inc.', contact: 'Sarah Miller', quantity: 50, status: 'Approved', date: 'Yesterday', value: '₦475,000' },
-        { id: 'QT-9790', product: 'Identiv uTrust 3700 F', business: 'HealthPlus Clinics', contact: 'Dr. Bisi Ade', quantity: 200, status: 'Rejected', date: '2 days ago', value: '₦1,900,000' },
-        { id: 'QT-8321', product: 'SpringCard Puck', business: 'Edutech Solutions', contact: 'Samuel Okon', quantity: 10, status: 'Expired', date: '1 week ago', value: '₦95,000' },
-    ]);
+    const quotes = useQuoteStore((state) => state.quotes);
+    const updateQuoteStatus = useQuoteStore((state) => state.updateQuoteStatus);
+    const deleteQuote = useQuoteStore((state) => state.deleteQuote);
 
     const handleAction = (id: string, action: 'Approve' | 'Reject' | 'Archive') => {
         if (action === 'Archive') {
-            setQuotes(prev => prev.filter(q => q.id !== id));
+            deleteQuote(id);
             notify.success(`Quote ${id} archived`);
         } else {
-            setQuotes(prev => prev.map(q => q.id === id ? { ...q, status: action === 'Approve' ? 'Approved' : 'Rejected' } : q));
+            updateQuoteStatus(id, action === 'Approve' ? 'Approved' : 'Rejected');
             notify.success(`Quote ${id} marked as ${action}`);
         }
+        setIsDetailsModalOpen(false);
+    };
+
+    const formatValue = (value: number | 'quote') => {
+        if (value === 'quote') return 'Custom Quote';
+        return `₦${value.toLocaleString()}`;
+    };
+
+    const formatDate = (date: Date) => {
+        const now = new Date();
+        const diff = now.getTime() - new Date(date).getTime();
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const days = Math.floor(hours / 24);
+
+        if (hours < 1) return 'Just now';
+        if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+        if (days === 1) return 'Yesterday';
+        if (days < 7) return `${days} days ago`;
+        return `${Math.floor(days / 7)} week${Math.floor(days / 7) > 1 ? 's' : ''} ago`;
     };
 
     const filteredQuotes = quotes.filter(q => {
         const matchesSearch = q.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            q.business.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            q.product.toLowerCase().includes(searchQuery.toLowerCase());
+            q.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            q.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            `${q.firstName} ${q.lastName}`.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesStatus = filterStatus === 'all' || q.status === filterStatus;
         return matchesSearch && matchesStatus;
     });
@@ -108,8 +117,9 @@ export default function AdminQuotesPage() {
                             <table className="w-full text-left border-collapse">
                                 <thead>
                                     <tr className="text-[10px] font-black uppercase tracking-widest text-text-secondary border-b border-gray-100 bg-gray-50/50">
+                                        <th className="px-8 py-6">Product</th>
                                         <th className="px-8 py-6">Reference</th>
-                                        <th className="px-8 py-6">Business & Product</th>
+                                        <th className="px-8 py-6">Business & Contact</th>
                                         <th className="px-8 py-6">Quantity</th>
                                         <th className="px-8 py-6">Est. Value</th>
                                         <th className="px-8 py-6">Status</th>
@@ -123,28 +133,47 @@ export default function AdminQuotesPage() {
                                             className="group hover:bg-gray-50/50 transition-colors"
                                         >
                                             <td className="px-8 py-6">
+                                                <Link
+                                                    href={`/marketplace/product/${quote.productId}`}
+                                                    className="flex items-center gap-3 group/product"
+                                                >
+                                                    <div className="relative w-12 h-12 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0">
+                                                        <Image
+                                                            src={quote.productImage}
+                                                            alt={quote.productName}
+                                                            fill
+                                                            className="object-cover"
+                                                        />
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                        <span className="font-bold text-text-main group-hover/product:text-primary transition-colors">{quote.productName}</span>
+                                                        <span className="text-xs font-mono text-text-secondary">ID: {quote.productId}</span>
+                                                    </div>
+                                                </Link>
+                                            </td>
+                                            <td className="px-8 py-6">
                                                 <span className="text-xs font-mono font-bold text-slate-400">#{quote.id}</span>
                                                 <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-bold uppercase mt-1">
-                                                    <Clock size={10} /> {quote.date}
+                                                    <Clock size={10} /> {formatDate(quote.createdAt)}
                                                 </div>
                                             </td>
                                             <td className="px-8 py-6">
                                                 <div className="flex flex-col">
-                                                    <span className="font-bold text-text-main group-hover:text-primary transition-colors cursor-pointer">{quote.business}</span>
-                                                    <span className="text-xs font-medium text-text-secondary mt-0.5">{quote.product}</span>
+                                                    <span className="font-bold text-text-main">{quote.company || 'N/A'}</span>
+                                                    <span className="text-xs font-medium text-text-secondary mt-0.5">{quote.firstName} {quote.lastName}</span>
                                                 </div>
                                             </td>
                                             <td className="px-8 py-6 text-sm font-bold text-text-main">
                                                 {quote.quantity} units
                                             </td>
                                             <td className="px-8 py-6 text-sm font-black text-text-main">
-                                                {quote.value}
+                                                {formatValue(quote.estimatedValue)}
                                             </td>
                                             <td className="px-8 py-6">
                                                 <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${quote.status === 'Pending' ? 'bg-orange-50 text-orange-600' :
-                                                        quote.status === 'Approved' ? 'bg-green-50 text-green-600' :
-                                                            quote.status === 'Rejected' ? 'bg-red-50 text-red-600' :
-                                                                'bg-gray-100 text-gray-500'
+                                                    quote.status === 'Approved' ? 'bg-green-50 text-green-600' :
+                                                        quote.status === 'Rejected' ? 'bg-red-50 text-red-600' :
+                                                            'bg-gray-100 text-gray-500'
                                                     }`}>
                                                     {quote.status}
                                                 </span>
@@ -215,39 +244,61 @@ export default function AdminQuotesPage() {
                         size="2xl"
                     >
                         <div className="space-y-8 py-4">
+                            {/* Product Preview */}
+                            <Link
+                                href={`/marketplace/product/${selectedQuote.productId}`}
+                                className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100 hover:border-primary/20 transition-all group"
+                            >
+                                <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0">
+                                    <Image
+                                        src={selectedQuote.productImage}
+                                        alt={selectedQuote.productName}
+                                        fill
+                                        className="object-cover"
+                                    />
+                                </div>
+                                <div className="flex-1">
+                                    <p className="text-lg font-black text-text-main group-hover:text-primary transition-colors">{selectedQuote.productName}</p>
+                                    <p className="text-xs font-mono text-text-secondary">Product ID: {selectedQuote.productId}</p>
+                                </div>
+                                <ArrowUpRight size={20} className="text-primary" />
+                            </Link>
+
                             <div className="grid grid-cols-2 gap-8">
                                 <div className="space-y-6">
                                     <div className="space-y-1">
                                         <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary flex items-center gap-2">
                                             <Building2 size={12} /> Entity Information
                                         </label>
-                                        <p className="text-lg font-black text-text-main">{selectedQuote.business}</p>
-                                        <p className="text-sm font-medium text-text-secondary">Main Contact: {selectedQuote.contact}</p>
+                                        <p className="text-lg font-black text-text-main">{selectedQuote.company || 'N/A'}</p>
+                                        <p className="text-sm font-medium text-text-secondary">Contact: {selectedQuote.firstName} {selectedQuote.lastName}</p>
+                                        <p className="text-sm font-medium text-text-secondary">{selectedQuote.email}</p>
                                     </div>
                                     <div className="space-y-1">
                                         <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary flex items-center gap-2">
-                                            <Package size={12} /> Product Specification
+                                            <Package size={12} /> Order Details
                                         </label>
-                                        <p className="text-base font-bold text-text-main">{selectedQuote.product}</p>
                                         <p className="text-sm font-medium text-text-secondary">Quantity: {selectedQuote.quantity} units</p>
                                     </div>
                                 </div>
                                 <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 flex flex-col justify-center text-center">
                                     <p className="text-[10px] font-black uppercase tracking-widest text-text-secondary mb-2">Total Estimated Value</p>
-                                    <h4 className="text-4xl font-display font-black text-primary">{selectedQuote.value}</h4>
+                                    <h4 className="text-4xl font-display font-black text-primary">{formatValue(selectedQuote.estimatedValue)}</h4>
                                     <p className="text-xs font-bold text-text-secondary mt-2">Calculated at current unit cost</p>
                                 </div>
                             </div>
 
-                            <div className="bg-primary/5 p-6 rounded-2xl border border-primary/10">
-                                <h5 className="font-bold text-text-main mb-3 flex items-center gap-2">
-                                    <MessageSquare size={18} className="text-primary" />
-                                    Merchant Requirements
-                                </h5>
-                                <p className="text-sm text-text-secondary leading-relaxed italic">
-                                    "We are looking to integrate these readers across our 15 distribution centers. We require custom firmware support and a bulk delivery schedule over 3 months. Please provide your best offer."
-                                </p>
-                            </div>
+                            {selectedQuote.message && (
+                                <div className="bg-primary/5 p-6 rounded-2xl border border-primary/10">
+                                    <h5 className="font-bold text-text-main mb-3 flex items-center gap-2">
+                                        <MessageSquare size={18} className="text-primary" />
+                                        Customer Requirements
+                                    </h5>
+                                    <p className="text-sm text-text-secondary leading-relaxed">
+                                        {selectedQuote.message}
+                                    </p>
+                                </div>
+                            )}
 
                             <div className="flex gap-4 pt-4">
                                 <button className="flex-1 h-14 border border-gray-200 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all">
