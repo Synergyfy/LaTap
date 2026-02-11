@@ -38,8 +38,8 @@ export default function Hero() {
                     </div>
 
                     {/* Right Column: Video Showcase */}
-                    <div className="relative animate-in fade-in slide-in-from-right-8 duration-1000 delay-200">
-                        <div className="relative w-full aspect-video bg-gray-900 rounded-[2rem] overflow-hidden shadow-2xl border-[12px] border-gray-50/50">
+                    <div className="relative animate-in fade-in slide-in-from-right-8 duration-1000 delay-200 lg:pl-10">
+                        <div className="relative w-full aspect-video bg-gray-900 rounded-[2rem] overflow-hidden shadow-2xl border border-gray-100">
                             <video
                                 autoPlay
                                 loop
@@ -49,17 +49,13 @@ export default function Hero() {
                             >
                                 <source src="/assets/videos/ElizTap_Video.mp4" type="video/mp4" />
                             </video>
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
                         </div>
 
-                        {/* 5000+ Ratings Badge overlaying video */}
-                        <div className="absolute -bottom-6 -right-6 bg-white/95 backdrop-blur-md p-4 rounded-xl shadow-xl border border-gray-100 hidden sm:block">
+                        {/* 5000+ Ratings Badge overlaying video - Removed Stars as requested */}
+                        <div className="absolute -bottom-6 -right-6 bg-white/95 backdrop-blur-md px-6 py-4 rounded-xl shadow-xl border border-gray-100 hidden sm:block">
                             <p className="text-[10px] font-black uppercase tracking-widest text-[#1A2E1A]/40 mb-1">5000+ RATINGS</p>
-                            <div className="flex items-center gap-1 text-primary">
-                                {[...Array(5)].map((_, i) => (
-                                    <span key={i} className="material-icons-round text-sm">star</span>
-                                ))}
-                            </div>
+                            <p className="text-xs font-black text-[#1A2E1A]">Top Rated Solution</p>
                         </div>
                     </div>
                 </div>
