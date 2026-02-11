@@ -76,7 +76,9 @@ export default function AdminPricingPage() {
             description: 'New plan description',
             features: ['Feature 1'],
             buttonText: 'Get Started',
-            color: 'slate'
+            color: 'slate',
+            visitorLimit: 100,
+            tagLimit: 1
         });
     };
 
@@ -287,6 +289,27 @@ export default function AdminPricingPage() {
                                                     type="text"
                                                     value={editingPlan.price}
                                                     onChange={(e) => setEditingPlan({ ...editingPlan, price: e.target.value })}
+                                                    className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl font-bold text-sm focus:ring-2 focus:ring-primary/20 outline-none"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-6">
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Visitor Limit</label>
+                                                <input
+                                                    type="number"
+                                                    value={editingPlan.visitorLimit === Infinity ? 999999 : editingPlan.visitorLimit}
+                                                    onChange={(e) => setEditingPlan({ ...editingPlan, visitorLimit: parseInt(e.target.value) })}
+                                                    className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl font-bold text-sm focus:ring-2 focus:ring-primary/20 outline-none"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Tag Limit</label>
+                                                <input
+                                                    type="number"
+                                                    value={editingPlan.tagLimit === Infinity ? 999 : editingPlan.tagLimit}
+                                                    onChange={(e) => setEditingPlan({ ...editingPlan, tagLimit: parseInt(e.target.value) })}
                                                     className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl font-bold text-sm focus:ring-2 focus:ring-primary/20 outline-none"
                                                 />
                                             </div>
