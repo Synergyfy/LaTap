@@ -139,7 +139,7 @@ export default function Team() {
                             </div>
 
                             {/* Content Side */}
-                            <div className="p-8 md:p-12 flex flex-col">
+                            <div className="p-6 md:p-12 flex flex-col">
                                 <div className="mb-8">
                                     <h3 className="text-3xl md:text-4xl font-display font-bold text-text-main mb-3 leading-tight">
                                         {selectedMember.name}

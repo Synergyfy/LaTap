@@ -58,10 +58,10 @@ export default function Pricing() {
     return (
         <section id="pricing" className="py-24 bg-gray-50 overflow-hidden relative">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+                <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-16 gap-8 text-center md:text-left">
                     <div className="max-w-2xl">
                         <h2 className="text-4xl md:text-5xl font-display font-bold mb-6 text-text-main">Smart plans for every scale</h2>
-                        <p className="text-lg text-text-secondary font-medium">Clear pricing with no hidden fees. All plans include secure NFC technology.</p>
+                        <p className="text-lg text-text-secondary font-medium px-4 md:px-0">Clear pricing with no hidden fees. All plans include secure NFC technology.</p>
                     </div>
 
                     <div className="flex gap-4">

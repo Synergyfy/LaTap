@@ -20,7 +20,7 @@ export default function Features() {
                         { icon: 'security', title: 'Secure Data', desc: 'Your data is safe and encrypted. We protect your customer information.', color: 'teal' },
                         { icon: 'hub', title: 'Connect Other Apps', desc: 'Send your customer data to other tools you use automatically.', color: 'pink' }
                     ].map((f, i) => (
-                        <div key={i} className={`p-10 rounded-xl transition-all duration-300 border ${f.highlight ? 'bg-primary text-white border-primary shadow-2xl shadow-primary/20 -translate-y-2' : 'bg-gray-50 border-gray-100 hover:shadow-xl'}`}>
+                        <div key={i} className={`p-8 md:p-10 rounded-xl transition-all duration-300 border ${f.highlight ? 'bg-primary text-white border-primary shadow-2xl shadow-primary/20 -translate-y-2' : 'bg-gray-50 border-gray-100 hover:shadow-xl'}`}>
                             <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-8 ${f.highlight ? 'bg-white/20' : 'bg-white shadow-lg shadow-gray-200/50'}`}>
                                 <span className={`material-icons-round text-3xl ${f.highlight ? 'text-white' : 'text-primary'}`}>{f.icon}</span>
                             </div>
