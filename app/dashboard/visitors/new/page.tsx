@@ -91,7 +91,7 @@ export default function NewVisitorsPage() {
 
     return (
         <DashboardSidebar>
-            <div className="p-8">
+            <div className="p-4 md:p-8">
                 <PageHeader
                     title="New Visitors"
                     description="Identify and welcome your first-time customers"

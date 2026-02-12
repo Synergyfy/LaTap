@@ -201,3 +201,8 @@ your future.
 --7 out of 10 coustomer dont buy  on first visit
 
 --on tab the dropdown is not clicking for solutions
+
+min-qusntity
+1-100 price:500/unit
+500-999:400/unit
+1000=> :350/unit

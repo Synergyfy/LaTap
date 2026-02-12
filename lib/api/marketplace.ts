@@ -276,8 +276,8 @@ export const fetchProductDetail = async (id: string) => {
             features: ['Free Shipping on 5+ Packs'],
             tieredPricing: [
                 { minQuantity: 100, maxQuantity: 499, price: 500 },
-                { minQuantity: 500, maxQuantity: 999, price: 450 },
-                { minQuantity: 1000, price: 'quote' }
+                { minQuantity: 500, maxQuantity: 999, price: 400 },
+                { minQuantity: 1000, price: 350 }
             ]
         }
     };

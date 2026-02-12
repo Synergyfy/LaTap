@@ -84,7 +84,7 @@ export default function AdminDashboardPage() {
 
     return (
         <AdminSidebar>
-            <div className="p-8">
+            <div className="p-4 md:p-8">
                 {/* Page Header */}
                 <div className="mb-8">
                     <h1 className="text-3xl font-display font-bold text-text-main mb-2">Admin Dashboard</h1>

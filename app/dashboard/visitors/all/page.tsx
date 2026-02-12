@@ -206,7 +206,7 @@ export default function AllVisitorsPage() {
 
     return (
         <DashboardSidebar>
-            <div className="p-8">
+            <div className="p-4 md:p-8">
                 <PageHeader
                     title="All Visitors"
                     description="View and manage your entire customer database"

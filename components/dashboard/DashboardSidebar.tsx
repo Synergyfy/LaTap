@@ -11,7 +11,7 @@ import { dashboardApi } from '@/lib/api/dashboard';
 import { Notification } from '@/lib/store/mockDashboardStore';
 import {
     Home, Users, Nfc, Send, Gift, BarChart, Users2, Settings,
-    ChevronDown, LogOut, Bell, Search, HelpCircle
+    ChevronDown, LogOut, Bell, Search, HelpCircle, Menu, X
 } from 'lucide-react';
 import Logo from '@/components/brand/Logo';
 
@@ -26,6 +26,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
     const { storeName, logoUrl: businessLogo } = useCustomerFlowStore();
     const [expandedMenus, setExpandedMenus] = useState<string[]>(['visitors']);
     const [showNotifications, setShowNotifications] = useState(false);
+    const [isMobileOpen, setIsMobileOpen] = useState(false);
     const queryClient = useQueryClient();
 
     const { data } = useQuery({
@@ -162,9 +163,20 @@ export default function DashboardSidebar({ children }: SidebarProps) {
         submenu?.some(item => pathname === item.href);
 
     return (
-        <div className="flex h-screen bg-gray-50 overflow-hidden">
+        <div className="flex h-screen bg-gray-50 overflow-hidden relative">
+            {/* Mobile Overlay */}
+            {isMobileOpen && (
+                <div
+                    className="fixed inset-0 bg-black/50 z-60 lg:hidden backdrop-blur-sm transition-opacity"
+                    onClick={() => setIsMobileOpen(false)}
+                />
+            )}
+
             {/* Sidebar */}
-            <aside className="w-64 bg-white border-r border-gray-200 flex flex-col">
+            <aside className={`
+                fixed inset-y-0 left-0 z-70 w-64 bg-white border-r border-gray-200 flex flex-col transition-transform duration-300 lg:static lg:translate-x-0
+                ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}
+            `}>
                 {/* Logo with Wordmark */}
                 <div className="h-16 flex items-center px-6 border-b border-gray-200">
                     <Link href="/dashboard" className="flex items-center gap-2">
@@ -268,11 +280,17 @@ export default function DashboardSidebar({ children }: SidebarProps) {
             </aside>
 
             {/* Main Content */}
-            <div className="flex-1 flex flex-col overflow-hidden">
+            <div className="flex-1 flex flex-col overflow-hidden w-full">
                 {/* Top Bar */}
-                <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8">
-                    <div className="flex-1">
-                        <div className="relative max-w-md">
+                <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 lg:px-8">
+                    <div className="flex items-center gap-4 flex-1">
+                        <button
+                            onClick={() => setIsMobileOpen(true)}
+                            className="p-2 text-text-secondary hover:bg-gray-50 rounded-lg lg:hidden"
+                        >
+                            <Menu size={24} />
+                        </button>
+                        <div className="relative max-w-md w-full hidden sm:block">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                             <input
                                 type="text"

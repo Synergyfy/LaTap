@@ -87,7 +87,7 @@ export default function AdminBusinessesPage() {
 
     return (
         <AdminSidebar>
-            <div className="p-8">
+            <div className="p-4 md:p-8">
                 {/* Page Header */}
                 <div className="flex items-center justify-between mb-8">
                     <div>

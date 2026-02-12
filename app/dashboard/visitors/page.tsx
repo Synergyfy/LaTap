@@ -121,7 +121,7 @@ export default function VisitorsOverviewPage() {
 
     return (
         <DashboardSidebar>
-            <div className="p-8">
+            <div className="p-4 md:p-8">
                 <PageHeader
                     title="Visitors Overview"
                     description="Monitor your customer footfall and engagement levels"

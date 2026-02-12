@@ -35,7 +35,7 @@ export default function AnalyticsDashboardPage() {
 
     return (
         <DashboardSidebar>
-            <div className="p-8">
+            <div className="p-4 md:p-8">
                 <PageHeader
                     title="Analytics Overview"
                     description="Deep dive into your business traffic and customer behavior"

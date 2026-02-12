@@ -245,7 +245,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                             {/* Chevron Controls */}
                             <div className="absolute inset-y-0 left-4 flex items-center z-20">
-                                <button 
+                                <button
                                     onClick={() => emblaApi?.scrollPrev()}
                                     className="p-3 bg-white/90 hover:bg-white text-slate-900 rounded-none shadow-xl border border-slate-100 transition-all active:scale-95 group"
                                 >
@@ -253,7 +253,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 </button>
                             </div>
                             <div className="absolute inset-y-0 right-4 flex items-center z-20">
-                                <button 
+                                <button
                                     onClick={() => emblaApi?.scrollNext()}
                                     className="p-3 bg-white/90 hover:bg-white text-slate-900 rounded-none shadow-xl border border-slate-100 transition-all active:scale-95 group"
                                 >
@@ -333,11 +333,14 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         <div className="bg-primary/5 p-6 rounded-none border border-primary/10 space-y-4 shadow-sm">
                             <div className="flex items-center justify-between">
                                 <span className="text-sm font-bold text-slate-600 uppercase tracking-wider">Minimum Quantity</span>
-                                <span className="text-2xl font-black text-primary">{product.tieredPricing?.[0]?.minQuantity || 1} Units</span>
+                                <span className="text-2xl font-black text-primary">{product.moq || product.tieredPricing?.[0]?.minQuantity || 1} Pieces</span>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span className="text-sm font-bold text-slate-600 uppercase tracking-wider">Starting Price</span>
-                                <span className="text-2xl font-black text-slate-900">₦{product.price.toLocaleString()}</span>
+                                <span className="text-sm font-bold text-slate-600 uppercase tracking-wider">Unit Price</span>
+                                <div className="flex items-baseline gap-1">
+                                    <span className="text-2xl font-black text-slate-900">₦{product.price.toLocaleString()}</span>
+                                    <span className="text-xs text-slate-500 font-bold lowercase">/ unit</span>
+                                </div>
                             </div>
                             <button
                                 onClick={() => setIsQuoteModalOpen(true)}
@@ -419,11 +422,11 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                             <h3 className="text-2xl font-bold text-slate-900">Product Demonstration</h3>
                                         </div>
                                         <div className="relative aspect-video bg-slate-900 rounded-none overflow-hidden group border border-slate-200">
-                                            <video 
-                                                src="/assets/videos/ElizTap_Video.mp4" 
-                                                autoPlay 
-                                                muted 
-                                                loop 
+                                            <video
+                                                src="/assets/videos/ElizTap_Video.mp4"
+                                                autoPlay
+                                                muted
+                                                loop
                                                 playsInline
                                                 className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
                                             />

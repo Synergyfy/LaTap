@@ -101,7 +101,7 @@ export default function ReturningVisitorsPage() {
 
     return (
         <DashboardSidebar>
-            <div className="p-8">
+            <div className="p-4 md:p-8">
                 <PageHeader
                     title="Returning Visitors"
                     description="Monitor loyalty and reward your repeat customers"

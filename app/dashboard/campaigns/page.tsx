@@ -257,9 +257,11 @@ function MessagesContent() {
 export default function AllMessagesPage() {
     return (
         <DashboardSidebar>
-            <Suspense fallback={<div className="p-8"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>}>
-                <MessagesContent />
-            </Suspense>
+            <div className="p-4 md:p-8">
+                <Suspense fallback={<div className="p-8"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>}>
+                    <MessagesContent />
+                </Suspense>
+            </div>
         </DashboardSidebar>
     );
 }

@@ -34,26 +34,26 @@ export default function HardwareSolutionPage() {
                         WebkitMaskImage: 'linear-gradient(to right, black 20%, transparent 80%)'
                     }}></div>
 
-                    <div className="container mx-auto px-4 text-center z-10 relative">
-                        <h1 className="font-display font-bold text-5xl md:text-8xl leading-[1.05] text-text-main max-w-5xl mx-auto mb-12 tracking-tight">
+                    <div className="container mx-auto px-8 md:px-16 lg:px-20 max-w-6xl text-center z-10 relative">
+                        <h1 className="font-display font-bold text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-text-main max-w-4xl mx-auto mb-10 tracking-tight">
                             The bridge between physical <br />
                             <span className="text-gradient">touchpoints & digital loyalty.</span>
                         </h1>
 
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
-                            <Link href="/marketplace" className="bg-primary hover:bg-primary-hover text-white font-bold px-12 py-5 rounded-full transition-all transform hover:scale-105 shadow-xl shadow-primary/25 text-sm uppercase tracking-widest cursor-pointer flex items-center gap-3">
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+                            <Link href="/marketplace" className="bg-primary hover:bg-primary-hover text-white font-bold px-10 py-4 rounded-full transition-all transform hover:scale-105 shadow-xl shadow-primary/25 text-sm uppercase tracking-widest cursor-pointer flex items-center gap-3">
                                 Explore NFC Catalog
                                 <ArrowRight size={18} />
                             </Link>
-                            <Link href="/get-started" className="flex items-center gap-2 bg-white text-text-main font-bold px-12 py-5 rounded-full border border-gray-200 hover:bg-gray-50 transition-all cursor-pointer text-sm uppercase tracking-widest">
+                            <Link href="/get-started" className="flex items-center gap-2 bg-white text-text-main font-bold px-10 py-4 rounded-full border border-gray-200 hover:bg-gray-50 transition-all cursor-pointer text-sm uppercase tracking-widest">
                                 Request Custom Design
                             </Link>
                         </div>
 
                         {/* Hardware Visualization Mockup */}
-                        <div className="relative max-w-5xl mx-auto group perspective-[2000px]">
-                            <div className="absolute -inset-1 bg-linear-to-r from-primary/30 to-blue-300/30 rounded-[3rem] blur opacity-20 animate-pulse"></div>
-                            <div className="relative bg-white rounded-[3rem] shadow-2xl border border-gray-100 p-8 md:p-16 flex flex-col md:flex-row items-center gap-16 overflow-hidden">
+                        <div className="relative max-w-4xl mx-auto group perspective-[2000px]">
+                            <div className="absolute -inset-1 bg-linear-to-r from-primary/30 to-blue-300/30 rounded-[2.5rem] blur opacity-20 animate-pulse"></div>
+                            <div className="relative bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 p-6 md:p-12 flex flex-col md:flex-row items-center gap-12 overflow-hidden">
                                 <div className="absolute top-0 right-0 w-1/2 h-full bg-gray-50/50 -z-10 rotate-12 translate-x-12"></div>
 
                                 <div className="flex-1 space-y-8 text-left">

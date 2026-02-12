@@ -20,11 +20,9 @@ export default function MarketplacePage() {
     // Zustand Store
     const {
         selectedCategory, priceRange, selectedBrands, currentPage, searchQuery,
-        setCategory, setPriceRange, toggleBrand, setPage, setSearchQuery, resetFilters
+        setPage, resetFilters
     } = useMarketplaceStore();
     const { user } = useAuthStore();
-
-    const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
     const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
     const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
     const [selectedQuoteProduct, setSelectedQuoteProduct] = useState<any>(null);
@@ -186,17 +184,6 @@ export default function MarketplacePage() {
                         </nav>
                     </div>
 
-                    {/* Search Bar */}
-                    <div className="hidden lg:flex flex-1 max-w-xl relative group">
-                        <input
-                            type="text"
-                            placeholder="Check product name, MCU, or part number..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full h-12 pl-12 pr-4 bg-gray-50 hover:bg-gray-100 focus:bg-white border-2 border-transparent focus:border-primary/20 rounded-none outline-none font-medium transition-all text-sm placeholder:text-gray-400"
-                        />
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors" size={20} />
-                    </div>
 
                     <div className="flex items-center gap-3 sm:gap-6">
                         <div className="h-8 w-px bg-gray-200 hidden sm:block"></div>
@@ -294,18 +281,16 @@ export default function MarketplacePage() {
                                             <div className="flex items-center justify-between gap-4">
                                                 <div className="flex flex-col">
                                                     <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Unit Price</span>
-                                                    <div className="flex items-baseline gap-2">
+                                                    <div className="flex items-baseline gap-1">
                                                         <span className="text-2xl font-bold text-text-main leading-none">
                                                             ₦{product.price.toLocaleString()}
                                                         </span>
-                                                        {product.originalPrice && (
-                                                            <span className="text-xs text-gray-400 line-through font-medium">₦{product.originalPrice.toLocaleString()}</span>
-                                                        )}
+                                                        <span className="text-xs text-text-secondary font-medium">/ unit</span>
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-col items-end">
                                                     <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Min. Order</span>
-                                                    <span className="text-lg font-bold text-primary">{product.moq || 1} {product.moq === 1 ? 'unit' : 'units'}</span>
+                                                    <span className="text-lg font-bold text-primary">{product.moq || 1} {product.moq === 1 ? 'piece' : 'pieces'}</span>
                                                 </div>
                                             </div>
 
@@ -324,8 +309,7 @@ export default function MarketplacePage() {
 
                     {!isLoading && !isError && products.length === 0 && (
                         <div className="py-20 text-center bg-gray-50 rounded-none border border-dashed border-gray-200">
-                            <p className="text-text-secondary font-medium">No products match your filters.</p>
-                            <button onClick={resetFilters} className="mt-4 text-primary font-bold hover:underline">Clear Filters</button>
+                            <p className="text-text-secondary font-medium">No products match your search.</p>
                         </div>
                     )}
 

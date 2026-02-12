@@ -16,31 +16,31 @@ export default function Hero() {
                 WebkitMaskImage: 'linear-gradient(to right, black 20%, transparent 80%)'
             }}></div>
 
-            <div className="container mx-auto px-6 md:px-12 z-10 relative">
+            <div className="container mx-auto px-8 md:px-16 lg:px-20 max-w-7xl z-10 relative">
                 {/* Top Section: Split Layout (Text & Video) */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center mb-24 overflow-hidden">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-24 overflow-hidden">
                     {/* Left Column: Content */}
                     <div className="text-left space-y-8 animate-in fade-in slide-in-from-left-32 duration-1000">
-                        <h1 className="font-display font-black text-5xl md:text-7xl lg:text-8xl leading-[1.1] text-text-main tracking-tight px-2 sm:px-0">
+                        <h1 className="font-display font-black text-4xl md:text-5xl lg:text-6xl leading-[1.1] text-text-main tracking-tight">
                             Collect Customer Details <br />
                             <span className="text-gradient">Fast & Simple</span>
                         </h1>
 
-                        <p className="text-lg md:text-xl text-text-secondary max-w-xl font-medium leading-relaxed px-2 sm:px-0">
+                        <p className="text-base md:text-lg text-text-secondary max-w-xl font-medium leading-relaxed">
                             7 out of 10 customers don't buy on first visit. Instantly collect customer numbers and details with a simple tap, and see everything on your phone.
                         </p>
 
-                        <div className="pt-4 px-2 sm:px-0">
-                            <Link href="/get-started" className="inline-block bg-primary hover:bg-primary-hover text-white font-bold px-12 py-5 rounded-2xl transition-all transform hover:scale-105 shadow-xl shadow-primary/25 text-xl cursor-pointer">
+                        <div className="pt-4">
+                            <Link href="/get-started" className="inline-block bg-primary hover:bg-primary-hover text-white font-bold px-10 py-4 rounded-2xl transition-all transform hover:scale-105 shadow-xl shadow-primary/25 text-lg cursor-pointer">
                                 Get Started
                             </Link>
                         </div>
                     </div>
 
                     {/* Right Column: Video Showcase (Portrait Refined) */}
-                    <div className="relative animate-in fade-in slide-in-from-right-32 duration-1000 delay-200 lg:pl-10 flex justify-center">
-                        <div className="relative w-full max-w-[460px] p-4 bg-gray-50/50 rounded-[4rem] border border-gray-100 shadow-sm sm:mx-0 mx-4">
-                            <div className="relative aspect-[9/16] bg-gray-900 rounded-[3rem] overflow-hidden shadow-2xl border-4 border-gray-900">
+                    <div className="relative animate-in fade-in slide-in-from-right-32 duration-1000 delay-200 flex justify-center lg:justify-end">
+                        <div className="relative w-full max-w-[320px] p-3 bg-gray-50/50 rounded-[2.5rem] border border-gray-100 shadow-sm">
+                            <div className="relative aspect-[9/16] bg-gray-900 rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-gray-900">
                                 <video
                                     autoPlay
                                     loop
@@ -55,9 +55,9 @@ export default function Hero() {
                         </div>
 
                         {/* 5000+ Ratings Badge overlaying video */}
-                        <div className="absolute -bottom-6 -right-2 bg-white/95 backdrop-blur-md px-6 py-4 rounded-xl shadow-xl border border-gray-100 hidden sm:block z-20">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-[#1A2E1A]/40 mb-1">5000+ RATINGS</p>
-                            <p className="text-xs font-black text-[#1A2E1A]">Top Rated Solution</p>
+                        <div className="absolute -bottom-5 -right-2 bg-white/95 backdrop-blur-md px-5 py-3 rounded-xl shadow-xl border border-gray-100 hidden sm:block z-20">
+                            <p className="text-[9px] font-black uppercase tracking-widest text-[#1A2E1A]/40 mb-1">5000+ RATINGS</p>
+                            <p className="text-[11px] font-black text-[#1A2E1A]">Top Rated Solution</p>
                         </div>
                     </div>
                 </div>

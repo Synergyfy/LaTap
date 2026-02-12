@@ -28,7 +28,7 @@ export default function LandingPage() {
       <SpeedComparison />
       <Process />
       <Features />
-      <SolutionsPreview />
+      <SolutionsPreview/>
       <Team />
       <Pricing />
       <MarketplaceCTA />
