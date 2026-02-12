@@ -8,7 +8,7 @@ import { Visitor } from '@/lib/store/mockDashboardStore';
 import toast from 'react-hot-toast';
 import {
     Users, UserPlus, Repeat, Calendar, TrendingUp, TrendingDown,
-    ChevronDown, Trash, Send, Nfc, Download, Gift, ArrowRight, MessageSquare
+    ChevronDown, Trash, Send, Nfc, Download, Gift, ArrowRight, MessageSquare, Zap
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Modal from '@/components/ui/Modal';
@@ -157,7 +157,7 @@ export default function DashboardPage() {
                                 <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
                                     <div
                                         className={`h-full transition-all duration-1000 ${(data.stats.totalVisitors / currentPlan.visitorLimit) > 0.9 ? 'bg-red-500' :
-                                                (data.stats.totalVisitors / currentPlan.visitorLimit) > 0.7 ? 'bg-orange-500' : 'bg-primary'
+                                            (data.stats.totalVisitors / currentPlan.visitorLimit) > 0.7 ? 'bg-orange-500' : 'bg-primary'
                                             }`}
                                         style={{ width: `${Math.min((data.stats.totalVisitors / currentPlan.visitorLimit) * 100, 100)}%` }}
                                     ></div>
