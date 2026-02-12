@@ -8,13 +8,14 @@ import { Visitor } from '@/lib/store/mockDashboardStore';
 import toast from 'react-hot-toast';
 import {
     Users, UserPlus, Repeat, Calendar, TrendingUp, TrendingDown,
-    ChevronDown, Trash, Send, Nfc, Download, Gift, ArrowRight, MessageSquare
+    ChevronDown, Trash, Send, Nfc, Download, Gift, ArrowRight, MessageSquare, Zap
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Modal from '@/components/ui/Modal';
 import SendMessageModal from '@/components/dashboard/SendMessageModal';
 import VisitorDetailsModal from '@/components/dashboard/VisitorDetailsModal';
 import PreviewRewardModal from '@/components/dashboard/PreviewRewardModal';
+import { useSubscriptionStore } from '@/store/subscriptionStore';
 
 export default function DashboardPage() {
     const queryClient = useQueryClient();
@@ -48,7 +49,15 @@ export default function DashboardPage() {
         },
     });
 
+    const { hasReachedVisitorLimit, getPlan } = useSubscriptionStore();
+    const currentPlan = getPlan();
+
     const handleSimulateVisitor = () => {
+        if (data && hasReachedVisitorLimit(data.stats.totalVisitors)) {
+            toast.error(`You have reached the ${currentPlan?.name} plan limit of ${currentPlan?.visitorLimit} visitors. Please upgrade to continue tracking.`);
+            return;
+        }
+
         const isNew = Math.random() > 0.5;
         const newVisitor: Visitor = {
             id: Math.random().toString(36).substr(2, 9),
@@ -124,20 +133,58 @@ export default function DashboardPage() {
         <DashboardSidebar>
             <div className="p-8">
                 {/* Page Header */}
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-                    <div>
-                        <h1 className="text-3xl font-display font-bold text-text-main mb-2">Dashboard Overview</h1>
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8">
+                    <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                            <h1 className="text-3xl font-display font-bold text-text-main">Dashboard Overview</h1>
+                            <span className="px-2.5 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest rounded-lg border border-primary/10">
+                                {currentPlan?.name} Plan
+                            </span>
+                        </div>
                         <p className="text-text-secondary font-medium">Welcome back! Here's what's happening with your business today.</p>
                     </div>
 
-                    <button
-                        onClick={handleClearDashboard}
-                        disabled={clearDashboardMutation.isPending}
-                        className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
-                    >
-                        <Trash size={16} />
-                        Reset Data
-                    </button>
+                    <div className="flex flex-col sm:flex-row items-center gap-4">
+                        {/* Usage Indicator */}
+                        {data && currentPlan && currentPlan.visitorLimit !== Infinity && (
+                            <div className="w-full sm:w-64 bg-white border border-gray-100 rounded-xl p-3 shadow-sm">
+                                <div className="flex items-center justify-between mb-2">
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-text-secondary">Visitor Usage</span>
+                                    <span className="text-[10px] font-bold text-text-main">
+                                        {data.stats.totalVisitors} / {currentPlan.visitorLimit}
+                                    </span>
+                                </div>
+                                <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+                                    <div
+                                        className={`h-full transition-all duration-1000 ${(data.stats.totalVisitors / currentPlan.visitorLimit) > 0.9 ? 'bg-red-500' :
+                                            (data.stats.totalVisitors / currentPlan.visitorLimit) > 0.7 ? 'bg-orange-500' : 'bg-primary'
+                                            }`}
+                                        style={{ width: `${Math.min((data.stats.totalVisitors / currentPlan.visitorLimit) * 100, 100)}%` }}
+                                    ></div>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="flex items-center gap-3">
+                            {currentPlan?.id === 'free' && (
+                                <button
+                                    onClick={() => router.push('/#pricing')}
+                                    className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-white bg-primary hover:bg-primary-hover rounded-lg transition-all shadow-lg shadow-primary/20"
+                                >
+                                    <Zap size={14} />
+                                    Upgrade
+                                </button>
+                            )}
+                            <button
+                                onClick={handleClearDashboard}
+                                disabled={clearDashboardMutation.isPending}
+                                className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors border border-red-100"
+                            >
+                                <Trash size={16} />
+                                Reset Data
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Stats Grid */}

@@ -4,6 +4,7 @@ import React from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Link from 'next/link';
+import Pricing from '@/components/landing/Pricing';
 import {
     Terminal, LayoutDashboard, MessageSquare, BarChart3,
     ShieldCheck, ArrowRight, UserCheck, Smartphone,
@@ -222,6 +223,8 @@ export default function SoftwareSolutionPage() {
                         </div>
                     </div>
                 </section>
+
+                <Pricing />
 
                 {/* FINAL CALL TO ACTION */}
                 <section className="py-48 px-4 bg-white text-center">

@@ -60,6 +60,7 @@ export const metadata: Metadata = {
 import QueryProvider from "./providers/QueryProvider";
 import CookieBanner from "@/components/shared/CookieBanner";
 import ToastProvider from "@/components/providers/ToastProvider";
+import SupportChatbot from "@/components/shared/SupportChatbot";
 
 export default function RootLayout({
     children,
@@ -91,6 +92,7 @@ export default function RootLayout({
                     <ToastProvider />
                     {children}
                     <CookieBanner />
+                    <SupportChatbot />
                 </QueryProvider>
             </body>
         </html>

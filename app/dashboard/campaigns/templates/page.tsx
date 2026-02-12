@@ -81,60 +81,62 @@ export default function CampaignTemplatesPage() {
                         <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {templates.map((template: Template) => (
-                            <div key={template.id} className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-all group flex flex-col justify-between">
-                                <div className="p-6">
-                                    <div className="flex items-start justify-between mb-4">
-                                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center bg-gray-50 text-text-secondary group-hover:bg-primary/10 group-hover:text-primary transition-colors`}>
-                                            <span className="material-icons-round text-xl">description</span>
+                    <div className="max-h-[calc(100vh-300px)] overflow-y-auto pr-2">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {templates.map((template: Template) => (
+                                <div key={template.id} className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-all group flex flex-col justify-between">
+                                    <div className="p-6">
+                                        <div className="flex items-start justify-between mb-4">
+                                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center bg-gray-50 text-text-secondary group-hover:bg-primary/10 group-hover:text-primary transition-colors`}>
+                                                <span className="material-icons-round text-xl">description</span>
+                                            </div>
+                                            <span className="px-2 py-1 bg-gray-50 text-[10px] font-black uppercase tracking-wider text-text-secondary rounded">
+                                                {template.category}
+                                            </span>
                                         </div>
-                                        <span className="px-2 py-1 bg-gray-50 text-[10px] font-black uppercase tracking-wider text-text-secondary rounded">
-                                            {template.category}
-                                        </span>
+                                        <h3 className="text-lg font-display font-bold text-text-main mb-2 tracking-tight">{template.title}</h3>
+                                        <p className="text-xs text-text-secondary leading-relaxed line-clamp-3 italic mb-4">
+                                            "{template.content}"
+                                        </p>
                                     </div>
-                                    <h3 className="text-lg font-display font-bold text-text-main mb-2 tracking-tight">{template.title}</h3>
-                                    <p className="text-xs text-text-secondary leading-relaxed line-clamp-3 italic mb-4">
-                                        "{template.content}"
-                                    </p>
-                                </div>
-                                <div className="p-6 pt-0 border-t border-gray-100 mt-auto">
-                                    <div className="flex items-center justify-between pt-4">
-                                        <div className="flex items-center gap-1.5">
-                                            <span className="material-icons-round text-sm text-gray-400">devices</span>
-                                            <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">{template.type}</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <button
-                                                onClick={() => deleteTemplateMutation.mutate(template.id)}
-                                                className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50 transition-all"
-                                                title="Delete Template"
-                                            >
-                                                <Trash2 size={16} />
-                                            </button>
-                                            <button
-                                                onClick={() => handleUseTemplate(template.id)}
-                                                className="text-primary text-xs font-bold hover:underline flex items-center gap-1"
-                                            >
-                                                Use This
-                                                <span className="material-icons-round text-sm">arrow_forward</span>
-                                            </button>
+                                    <div className="p-6 pt-0 border-t border-gray-100 mt-auto">
+                                        <div className="flex items-center justify-between pt-4">
+                                            <div className="flex items-center gap-1.5">
+                                                <span className="material-icons-round text-sm text-gray-400">devices</span>
+                                                <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">{template.type}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    onClick={() => deleteTemplateMutation.mutate(template.id)}
+                                                    className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50 transition-all"
+                                                    title="Delete Template"
+                                                >
+                                                    <Trash2 size={16} />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleUseTemplate(template.id)}
+                                                    className="text-primary text-xs font-bold hover:underline flex items-center gap-1"
+                                                >
+                                                    Use This
+                                                    <span className="material-icons-round text-sm">arrow_forward</span>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
 
-                        <button
-                            onClick={() => setIsCreateModalOpen(true)}
-                            className="bg-gray-50 rounded-lg border-2 border-dashed border-gray-200 p-6 flex flex-col items-center justify-center text-center hover:bg-gray-100 hover:border-primary/30 transition-all group min-h-[200px]"
-                        >
-                            <div className="size-12 rounded-full bg-white flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
-                                <Plus size={24} className="text-gray-400 group-hover:text-primary" />
-                            </div>
-                            <h3 className="font-bold text-text-main mb-1">Custom Template</h3>
-                            <p className="text-xs text-text-secondary">Build from scratch</p>
-                        </button>
+                            <button
+                                onClick={() => setIsCreateModalOpen(true)}
+                                className="bg-gray-50 rounded-lg border-2 border-dashed border-gray-200 p-6 flex flex-col items-center justify-center text-center hover:bg-gray-100 hover:border-primary/30 transition-all group min-h-[200px]"
+                            >
+                                <div className="size-12 rounded-full bg-white flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                                    <Plus size={24} className="text-gray-400 group-hover:text-primary" />
+                                </div>
+                                <h3 className="font-bold text-text-main mb-1">Custom Template</h3>
+                                <p className="text-xs text-text-secondary">Build from scratch</p>
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>

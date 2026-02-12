@@ -76,24 +76,6 @@ export default function SolutionsPreview() {
                     </div>
                 </div>
 
-                {/* White-Label Banner */}
-                <div className="mt-12 max-w-7xl mx-auto">
-                    <Link href="/solutions/white-label" className="group flex flex-col md:flex-row items-center justify-between p-8 bg-gray-50 border border-gray-100 rounded-[2.5rem] hover:bg-gray-100 transition-all">
-                        <div className="flex items-center gap-6 mb-4 md:mb-0">
-                            <div className="size-12 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center text-primary">
-                                <span className="material-icons-round text-2xl">workspace_premium</span>
-                            </div>
-                            <div className="text-left">
-                                <h4 className="text-xl font-bold text-text-main">Looking for a White-Label Partnership?</h4>
-                                <p className="text-sm text-text-secondary font-medium">Build your own brand using our proven NFC infrastructure.</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-widest group-hover:translate-x-2 transition-transform">
-                            View Partner Program
-                            <ArrowRight size={18} />
-                        </div>
-                    </Link>
-                </div>
             </div>
         </section>
     );

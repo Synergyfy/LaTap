@@ -10,7 +10,9 @@ const DEFAULT_PLANS: PricingPlan[] = [
         description: 'Essential features for personal use and basic connectivity.',
         features: ['100 visitors/mo', '1 Demo Tag', 'Basic Analytics', 'Community Support'],
         buttonText: 'Get Started Free',
-        color: 'slate'
+        color: 'slate',
+        visitorLimit: 100,
+        tagLimit: 1
     },
     {
         id: 'basic',
@@ -20,7 +22,9 @@ const DEFAULT_PLANS: PricingPlan[] = [
         description: 'Advanced identification for individuals and small teams.',
         features: ['500 visitors/mo', '1 Active Tag License', 'Standard Analytics', 'Email Support'],
         buttonText: 'Choose Basic',
-        color: 'primary'
+        color: 'primary',
+        visitorLimit: 500,
+        tagLimit: 1
     },
     {
         id: 'premium',
@@ -31,17 +35,33 @@ const DEFAULT_PLANS: PricingPlan[] = [
         features: ['5,000 visitors/mo', '5 Active Tag Licenses', 'Full CRM Integration', 'Priority Support'],
         isPopular: true,
         buttonText: 'Choose Premium',
-        color: 'primary'
+        color: 'primary',
+        visitorLimit: 5000,
+        tagLimit: 5
     },
     {
-        id: 'enterprise',
-        name: 'Enterprise',
+        id: 'white-label',
+        name: 'Software / White Label',
         price: 'Custom',
         period: '',
         description: 'Full branding rights and administrative control for resellers.',
-        features: ['Unlimited visitors', 'Unlimited Active Tags', 'SSO Security', 'Dedicated Account Mgr'],
+        features: ['Unlimited visitors', 'Reseller Dashboard', 'Custom Branding', 'API Access'],
+        buttonText: 'Request Access',
+        color: 'slate',
+        visitorLimit: Infinity,
+        tagLimit: Infinity
+    },
+    {
+        id: 'enterprise',
+        name: 'Custom Pricing',
+        price: 'Custom',
+        period: '',
+        description: 'Bespoke solutions for large-scale industrial deployments.',
+        features: ['Global Infrastructure', 'Unlimited Active Tags', 'SSO Security', 'Dedicated Account Mgr'],
         buttonText: 'Contact Sales',
-        color: 'slate'
+        color: 'slate',
+        visitorLimit: Infinity,
+        tagLimit: Infinity
     }
 ];
 

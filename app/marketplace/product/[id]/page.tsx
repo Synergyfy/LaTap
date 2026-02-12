@@ -6,8 +6,8 @@ import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import {
     Search, Grid, Star, ArrowRight,
-    Home, ChevronRight, ShieldCheck, Truck, Headset,
-    Share2, X
+    Home, ChevronRight, ChevronLeft, ShieldCheck, Truck, Headset,
+    Share2, X, CheckCircle2, Play
 } from 'lucide-react';
 import { fetchProductDetail } from '@/lib/api/marketplace';
 import { ProductDetailSkeleton } from '@/components/marketplace/Skeletons';
@@ -15,7 +15,6 @@ import useEmblaCarousel from 'embla-carousel-react';
 import toast from 'react-hot-toast';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useQuoteStore } from '@/store/quoteStore';
-import { useCartStore } from '@/store/cartStore';
 import { calculateQuotePrice } from '@/lib/utils/calculateQuotePrice';
 
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -29,9 +28,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
     const { user } = useAuthStore();
     const addQuote = useQuoteStore((state) => state.addQuote);
-    const addItem = useCartStore((state) => state.addItem);
     const [selectedImage, setSelectedImage] = useState(0);
-    const [quantity, setQuantity] = useState(1);
     const [activeTab, setActiveTab] = useState<'specs' | 'quote' | 'reviews'>('specs');
     const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
 
@@ -39,6 +36,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         firstName: user?.name?.split(' ')[0] || '',
         lastName: user?.name?.split(' ').slice(1).join(' ') || '',
         email: user?.email || '',
+        phone: user?.phone || '',
         company: user?.businessName || '',
         quantity: '',
         location: '',
@@ -52,25 +50,20 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 firstName: user.name?.split(' ')[0] || '',
                 lastName: user.name?.split(' ').slice(1).join(' ') || '',
                 email: user.email || '',
+                phone: user.phone || '',
                 company: user.businessName || ''
             }));
         }
     }, [user]);
     const [reviews, setReviews] = React.useState([
-        { id: 1, user: 'Samuel O.', rating: 5, date: '2 days ago', comment: 'Excellent quality, exactly what we needed for our office access system.' },
-        { id: 2, user: 'Chioma A.', rating: 4, date: '1 week ago', comment: 'Good value for money. Setup was straightforward.' },
+        { id: 1, user: 'Samuel O.', rating: 5, date: '2 days ago', comment: 'Excellent quality, exactly what we needed for our office access system.', approved: true },
+        { id: 2, user: 'Chioma A.', rating: 4, date: '1 week ago', comment: 'Good value for money. Setup was straightforward.', approved: true },
     ]);
     const [newReview, setNewReview] = React.useState({ rating: 5, comment: '' });
+    const [showReviewSuccess, setShowReviewSuccess] = React.useState(false);
     const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
 
-    // Price Calculation
-    const currentTier = product?.tieredPricing?.find((tier: any) =>
-        quantity >= tier.minQuantity && (!tier.maxQuantity || quantity <= tier.maxQuantity)
-    ) || product?.tieredPricing?.[0];
 
-    const unitPrice = currentTier?.price === 'quote' ? 0 : currentTier?.price || product?.price;
-    const totalPrice = unitPrice * quantity;
-    const savings = (product?.price * quantity) - totalPrice;
 
     React.useEffect(() => {
         if (emblaApi) {
@@ -116,19 +109,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
 
 
-    const handleAddToCart = () => {
-        addItem({
-            id: product.id,
-            productId: product.id,
-            name: product.name,
-            brand: product.brand,
-            price: unitPrice,
-            image: product.mainImage || product.images?.[0] || '',
-            inStock: true,
-            shippingInfo: 'Ships in 24-48 hours'
-        });
-        toast.success(`Added ${product.name} to cart!`);
-    };
+
 
     const handleQuoteSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -154,6 +135,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             firstName: quoteData.firstName,
             lastName: quoteData.lastName,
             email: quoteData.email,
+            phone: quoteData.phone,
             company: quoteData.company,
             quantity,
             message: quoteData.notes,
@@ -166,6 +148,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             firstName: user?.name?.split(' ')[0] || '',
             lastName: user?.name?.split(' ').slice(1).join(' ') || '',
             email: user?.email || '',
+            phone: user?.phone || '',
             company: user?.businessName || '',
             quantity: '',
             location: '',
@@ -259,6 +242,24 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     {product.tag}
                                 </span>
                             </div>
+
+                            {/* Chevron Controls */}
+                            <div className="absolute inset-y-0 left-4 flex items-center z-20">
+                                <button 
+                                    onClick={() => emblaApi?.scrollPrev()}
+                                    className="p-3 bg-white/90 hover:bg-white text-slate-900 rounded-none shadow-xl border border-slate-100 transition-all active:scale-95 group"
+                                >
+                                    <ChevronLeft size={24} className="group-hover:-translate-x-0.5 transition-transform" />
+                                </button>
+                            </div>
+                            <div className="absolute inset-y-0 right-4 flex items-center z-20">
+                                <button 
+                                    onClick={() => emblaApi?.scrollNext()}
+                                    className="p-3 bg-white/90 hover:bg-white text-slate-900 rounded-none shadow-xl border border-slate-100 transition-all active:scale-95 group"
+                                >
+                                    <ChevronRight size={24} className="group-hover:translate-x-0.5 transition-transform" />
+                                </button>
+                            </div>
                         </div>
                         <div className="grid grid-cols-4 gap-4">
                             {product.images.map((img: string, i: number) => (
@@ -311,6 +312,23 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             </div>
                         </div>
 
+                        {/* Pricing Tiers */}
+                        <div className="bg-slate-50 p-6 rounded-none border border-slate-200 space-y-4">
+                            <h4 className="text-sm font-bold text-slate-600 uppercase tracking-wider">Volume Pricing</h4>
+                            <div className="space-y-2">
+                                {product.tieredPricing?.map((tier: any, index: number) => (
+                                    <div key={index} className="flex items-center justify-between py-2 border-b border-slate-200 last:border-0">
+                                        <span className="text-sm font-medium text-slate-600">
+                                            {tier.minQuantity} - {tier.maxQuantity || '∞'} units
+                                        </span>
+                                        <span className="text-lg font-bold text-slate-900">
+                                            {typeof tier.price === 'number' ? `₦${tier.price.toLocaleString()}` : 'Contact for quote'}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
                         {/* Minimum Order Display */}
                         <div className="bg-primary/5 p-6 rounded-none border border-primary/10 space-y-4 shadow-sm">
                             <div className="flex items-center justify-between">
@@ -330,59 +348,25 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             </button>
                         </div>
 
-                        {/* Price Breakdown */}
-                        <div className="bg-slate-50 p-6 rounded-none border border-slate-200 space-y-3">
-                            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Breakdown Quote</h3>
-                            <div className="flex justify-between text-sm">
-                                <span className="text-slate-500">Selected Quantity</span>
-                                <span className="font-bold text-slate-900">{quantity} Units</span>
+                        {/* Low MOQ Quote */}
+                        <div className="bg-amber-50 p-6 rounded-none border border-amber-200 space-y-3">
+                            <h4 className="text-sm font-bold text-amber-900 uppercase tracking-wider">Need Less Than {product.tieredPricing?.[0]?.minQuantity || 1} Units?</h4>
+                            <p className="text-sm text-amber-800 font-medium">Contact us for special pricing on smaller quantities</p>
+                            <div className="flex items-center gap-2 text-sm font-bold text-amber-900">
+                                <span className="material-icons-round text-lg">phone</span>
+                                <a href="tel:+2348012345678" className="hover:underline">+234 801 234 5678</a>
                             </div>
-                            <div className="flex justify-between text-sm">
-                                <span className="text-slate-500">Unit Price</span>
-                                <span className="font-bold text-slate-900">
-                                    {currentTier?.price === 'quote' ? 'Request Quote' : `₦${unitPrice.toLocaleString()}`}
-                                </span>
-                            </div>
-                            {savings > 0 && (
-                                <div className="flex justify-between text-sm text-green-600">
-                                    <span>Bulk Discount Applied</span>
-                                    <span className="font-bold">-₦{savings.toLocaleString()}</span>
-                                </div>
-                            )}
-                            <div className="pt-3 border-t border-slate-200 flex justify-between items-baseline">
-                                <span className="text-base font-bold text-slate-900">Estimated Total</span>
-                                <span className="text-2xl font-black text-primary">
-                                    {currentTier?.price === 'quote' ? 'TBA' : `₦${totalPrice.toLocaleString()}`}
-                                </span>
-                            </div>
+                            <button
+                                onClick={() => setIsQuoteModalOpen(true)}
+                                className="w-full py-3 bg-amber-600 text-white font-bold rounded-none hover:bg-amber-700 transition-all flex items-center justify-center gap-2"
+                            >
+                                Request Low MOQ Quote
+                            </button>
                         </div>
 
-                        <div className="flex flex-col gap-4 pt-4">
-                            <div className="flex items-center gap-4">
-                                <div className="flex items-center border border-slate-300 rounded-none h-14 bg-white flex-1 max-w-[140px]">
-                                    <button
-                                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                        className="px-4 text-slate-500 hover:text-primary transition-colors text-lg"
-                                    >-</button>
-                                    <input
-                                        className="w-12 text-center bg-transparent border-none focus:ring-0 text-lg font-bold text-slate-900"
-                                        type="number"
-                                        value={quantity}
-                                        onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-                                    />
-                                    <button
-                                        onClick={() => setQuantity(quantity + 1)}
-                                        className="px-4 text-slate-500 hover:text-primary transition-colors text-lg"
-                                    >+</button>
-                                </div>
-                                <button
-                                    onClick={handleAddToCart}
-                                    className="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold h-14 rounded-none shadow-lg shadow-slate-900/10 transition-all flex items-center justify-center gap-3 active:scale-[0.98]"
-                                >
-                                    Add to Cart
-                                </button>
-                            </div>
-                        </div>
+
+
+
 
                         <div className="grid grid-cols-2 gap-4 text-xs font-semibold text-slate-500 pt-4">
                             <div className="flex items-center gap-2">
@@ -425,7 +409,32 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         {/* Tab Content */}
                         <div className="space-y-12">
                             {activeTab === 'specs' && (
-                                <section className="space-y-8 animate-in fade-in duration-300">
+                                <section className="space-y-12 animate-in fade-in duration-300">
+                                    {/* Video Showcase Section */}
+                                    <div className="space-y-6">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 bg-primary/10 rounded-none flex items-center justify-center text-primary">
+                                                <Play size={20} fill="currentColor" />
+                                            </div>
+                                            <h3 className="text-2xl font-bold text-slate-900">Product Demonstration</h3>
+                                        </div>
+                                        <div className="relative aspect-video bg-slate-900 rounded-none overflow-hidden group border border-slate-200">
+                                            <video 
+                                                src="/assets/videos/ElizTap_Video.mp4" 
+                                                autoPlay 
+                                                muted 
+                                                loop 
+                                                playsInline
+                                                className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                                            />
+                                            <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+                                            <div className="absolute bottom-8 left-8 text-white">
+                                                <p className="text-xs font-black uppercase tracking-widest mb-1 text-primary">Live Preview</p>
+                                                <h4 className="text-xl font-bold">Watch how it works</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div className="space-y-4">
                                         <h3 className="text-2xl font-bold text-slate-900">Technical Specifications</h3>
                                         <div className="prose prose-slate max-w-none bg-slate-50 p-6 rounded-none border border-slate-100">
@@ -492,12 +501,12 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Location / State</label>
+                                                    <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Phone Number</label>
                                                     <input
-                                                        type="text"
-                                                        value={quoteData.location}
-                                                        onChange={(e) => setQuoteData({ ...quoteData, location: e.target.value })}
-                                                        placeholder="Lagos, Nigeria"
+                                                        type="tel"
+                                                        value={quoteData.phone || ''}
+                                                        onChange={(e) => setQuoteData({ ...quoteData, phone: e.target.value })}
+                                                        placeholder="+234 800 000 0000"
                                                         className="w-full px-4 py-3 bg-white border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                                         required
                                                     />
@@ -505,12 +514,12 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                             </div>
                                             <div className="grid grid-cols-2 gap-6">
                                                 <div>
-                                                    <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Quantity Needed</label>
+                                                    <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Location / State</label>
                                                     <input
-                                                        type="number"
-                                                        value={quoteData.quantity}
-                                                        onChange={(e) => setQuoteData({ ...quoteData, quantity: e.target.value })}
-                                                        placeholder="e.g. 100"
+                                                        type="text"
+                                                        value={quoteData.location}
+                                                        onChange={(e) => setQuoteData({ ...quoteData, location: e.target.value })}
+                                                        placeholder="Lagos, Nigeria"
                                                         className="w-full px-4 py-3 bg-white border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                                         required
                                                     />
@@ -547,9 +556,32 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                             {activeTab === 'reviews' && (
                                 <section className="animate-in fade-in duration-300 space-y-8">
-                                    <h3 className="text-2xl font-bold text-slate-900">Customer Reviews</h3>
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="text-2xl font-bold text-slate-900">Customer Reviews</h3>
+                                        <span className="text-sm text-slate-500 font-medium">
+                                            {reviews.filter(r => r.approved).length} Approved Reviews
+                                        </span>
+                                    </div>
+
+                                    {/* Review Success Message */}
+                                    {showReviewSuccess && (
+                                        <div className="bg-green-50 border border-green-200 p-4 rounded-none">
+                                            <div className="flex items-start gap-3">
+                                                <CheckCircle2 size={20} className="text-green-600 mt-0.5" />
+                                                <div>
+                                                    <h4 className="font-bold text-green-900 mb-1">Review Submitted!</h4>
+                                                    <p className="text-sm text-green-800">Your review has been submitted and is pending admin approval. It will be visible once approved.</p>
+                                                </div>
+                                                <button onClick={() => setShowReviewSuccess(false)} className="ml-auto text-green-600 hover:text-green-800">
+                                                    <X size={18} />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Approved Reviews */}
                                     <div className="space-y-6">
-                                        {reviews.map((review) => (
+                                        {reviews.filter(r => r.approved).map((review) => (
                                             <div key={review.id} className="p-6 border border-slate-100 bg-slate-50/50">
                                                 <div className="flex justify-between items-center mb-4">
                                                     <div className="flex items-center gap-1">
@@ -563,6 +595,68 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                 <p className="text-xs font-bold text-slate-900">— {review.user}</p>
                                             </div>
                                         ))}
+                                    </div>
+
+                                    {/* Add Review Form */}
+                                    <div className="bg-white border border-slate-200 p-6 rounded-none">
+                                        <h4 className="text-lg font-bold text-slate-900 mb-4">Write a Review</h4>
+                                        <form onSubmit={(e) => {
+                                            e.preventDefault();
+                                            if (!newReview.comment.trim()) {
+                                                toast.error('Please write a review comment');
+                                                return;
+                                            }
+                                            // Add review as pending (approved: false)
+                                            const pendingReview = {
+                                                id: reviews.length + 1,
+                                                user: user?.name || 'Anonymous',
+                                                rating: newReview.rating,
+                                                date: 'Just now',
+                                                comment: newReview.comment,
+                                                approved: false // Pending admin approval
+                                            };
+                                            setReviews([...reviews, pendingReview]);
+                                            setNewReview({ rating: 5, comment: '' });
+                                            setShowReviewSuccess(true);
+                                            // Auto-hide success message after 5 seconds
+                                            setTimeout(() => setShowReviewSuccess(false), 5000);
+                                        }} className="space-y-4">
+                                            <div>
+                                                <label className="block text-sm font-bold text-slate-600 mb-2">Rating</label>
+                                                <div className="flex gap-2">
+                                                    {[1, 2, 3, 4, 5].map((rating) => (
+                                                        <button
+                                                            key={rating}
+                                                            type="button"
+                                                            onClick={() => setNewReview({ ...newReview, rating })}
+                                                            className="p-2 hover:bg-slate-50 transition-colors"
+                                                        >
+                                                            <Star
+                                                                size={24}
+                                                                className={rating <= newReview.rating ? "text-primary fill-primary" : "text-slate-300"}
+                                                            />
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-bold text-slate-600 mb-2">Your Review</label>
+                                                <textarea
+                                                    rows={4}
+                                                    value={newReview.comment}
+                                                    onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+                                                    placeholder="Share your experience with this product..."
+                                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium resize-none"
+                                                    required
+                                                />
+                                            </div>
+                                            <button
+                                                type="submit"
+                                                className="w-full py-3 bg-primary text-white font-bold rounded-none hover:bg-primary-hover transition-all"
+                                            >
+                                                Submit Review (Pending Approval)
+                                            </button>
+                                        </form>
                                     </div>
                                 </section>
                             )}

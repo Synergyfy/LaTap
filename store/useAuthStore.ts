@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 export type UserRole = 'owner' | 'manager' | 'staff' | 'admin' | 'customer' | null;
+export type SubscriptionPlan = 'free' | 'basic' | 'premium' | 'white-label' | 'enterprise';
+export type SubscriptionStatus = 'active' | 'past_due' | 'canceled' | 'trialing' | 'none';
 
 interface User {
   id?: string;
@@ -10,6 +12,12 @@ interface User {
   role: UserRole;
   businessName?: string;
   businessId?: string;
+  // Subscription fields
+  planId?: SubscriptionPlan;
+  subscriptionStatus?: SubscriptionStatus;
+  trialEndsAt?: string;
+  billingCycleAt?: string;
+  phone?: string;
 }
 
 interface AuthState {
@@ -18,6 +26,7 @@ interface AuthState {
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signup: (userData: User) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
+  subscribe: (planId: SubscriptionPlan) => Promise<{ success: boolean; error?: string }>;
 }
 
 // Mock users for demonstration
@@ -29,7 +38,9 @@ const MOCK_USERS: Record<string, any> = {
     name: 'John Smith',
     role: 'owner' as UserRole,
     businessName: 'The Azure Bistro',
-    businessId: 'bistro_001'
+    businessId: 'bistro_001',
+    planId: 'premium',
+    subscriptionStatus: 'active'
   },
   manager: {
     id: 'MG-001',
@@ -38,7 +49,9 @@ const MOCK_USERS: Record<string, any> = {
     name: 'Sarah Supervisor',
     role: 'manager' as UserRole,
     businessName: 'The Azure Bistro',
-    businessId: 'bistro_001'
+    businessId: 'bistro_001',
+    planId: 'premium',
+    subscriptionStatus: 'active'
   },
   staff: {
     id: 'ST-001',
@@ -47,7 +60,9 @@ const MOCK_USERS: Record<string, any> = {
     name: 'Michael Cashier',
     role: 'staff' as UserRole,
     businessName: 'The Azure Bistro',
-    businessId: 'bistro_001'
+    businessId: 'bistro_001',
+    planId: 'premium',
+    subscriptionStatus: 'active'
   },
   admin: {
     id: 'AD-001',
@@ -61,13 +76,15 @@ const MOCK_USERS: Record<string, any> = {
     email: 'customer@eliztap.com',
     password: 'customer123',
     name: 'Jane Customer',
-    role: 'customer' as UserRole
+    role: 'customer' as UserRole,
+    planId: 'free',
+    subscriptionStatus: 'none'
   }
 };
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       isAuthenticated: false,
       
@@ -95,20 +112,6 @@ export const useAuthStore = create<AuthState>()(
            return { success: true };
         }
 
-        // 2. Check "Registered" Users (stored in localStorage via persist)
-        // Note: In a real app, this would be a backend call. 
-        // Since we are mocking, we can check if there's a stored user that matches.
-        // However, Zustand persist only stores the *current* state. 
-        // To simulate a "database" of signed up users during a session, we'd need another store or just allow any login that matches a recent signup.
-        // For now, let's keep it simple: if it's not a mock user, perform a "fake" check or fail.
-        
-        // If we want to allow the user who JUST signed up to log in back:
-        // We can't really do that easily without a separate 'users' store. 
-        // But the user said "signup showing 404", which usually implies a routing issue or unhandled promise.
-        
-        // Let's add a generic fallback for testing if email/pass matches a pattern (optional, but good for "fake" generic logins)
-        // For now, strictly enforce Mock Users or return failure.
-        
         return { success: false, error: 'Invalid email or password. Try the demo accounts!' };
       },
 
@@ -116,12 +119,15 @@ export const useAuthStore = create<AuthState>()(
         // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 800));
         
-        // In a real app, you'd post to an API. 
-        // Here we just set the user as logged in immediately.
+        // Default subscription for new business owners is the Free plan
+        const isOwner = userData.role === 'owner' || !userData.role;
+        
         const newUser = {
             ...userData,
             id: userData.id || `USER-${Math.random().toString(36).substr(2, 9)}`,
-            role: userData.role || 'owner'
+            role: userData.role || 'owner',
+            planId: isOwner ? 'free' : undefined,
+            subscriptionStatus: isOwner ? 'none' : undefined
         };
 
         set({ user: newUser, isAuthenticated: true });
@@ -130,6 +136,30 @@ export const useAuthStore = create<AuthState>()(
 
       logout: () => {
         set({ user: null, isAuthenticated: false });
+      },
+
+      subscribe: async (planId: SubscriptionPlan) => {
+        const { user } = get();
+        if (!user) return { success: false, error: 'User must be logged in' };
+
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        const trialDays = (planId === 'basic' || planId === 'premium') ? 14 : 0;
+        const trialEndsAt = trialDays 
+          ? new Date(Date.now() + trialDays * 24 * 60 * 60 * 1000).toISOString()
+          : undefined;
+
+        const updatedUser = {
+          ...user,
+          planId,
+          subscriptionStatus: (trialDays ? 'trialing' : 'active') as SubscriptionStatus,
+          trialEndsAt,
+          billingCycleAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+        };
+
+        set({ user: updatedUser });
+        return { success: true };
       }
     }),
     {

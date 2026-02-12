@@ -1,7 +1,6 @@
 import React from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Pricing from '@/components/landing/Pricing';
-import HardwarePricing from '@/components/landing/HardwarePricing';
 import Footer from '@/components/layout/Footer';
 import { Metadata } from 'next';
 
@@ -23,7 +22,7 @@ export default function PricingPage() {
                     Choose the plan that fits your scale. All plans include 24/7 support and secure data encryption.
                 </p>
             </div>
-            <HardwarePricing />
+    
             <Pricing />
             {/* FAQ or additional pricing info can go here */}
             <section className="py-24 bg-white border-t border-gray-50">

@@ -37,13 +37,14 @@ const allProducts: Product[] = [
         brand: 'NXP',
         category: 'Smart Cards',
         rating: 4.7,
-        price: 85500,
-        originalPrice: null,
+        price: 500, // Price per unit
+        originalPrice: 650,
         image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAjOLHjEImnuX2LOtQ9_35UJ5iBVDjYgoAdUkfVCIOKlzLzNbR8jzZuXMqBzr2zm7bTB60FByuzS4DfbPxOdC-XETnsg_xSz6HydW21C7a49GAGuikH8vL51ldD0GCCYAAAWeyYjrsST43T02ixab1YBLQ0SN7FPkmwUSZjyJwz5rbAfLT4RqccxCFX1gzrKZ55WEV-TfuHqVMMxN3TpGlj_Q1xdnQblfVWikTCC9YahMk0rdT2xgoAgGPqhqumczAzvpmU-SttVIU1",
         desc: '504 Bytes Memory, Compatible with Amiibo',
         tag: 'In Stock',
         tagColor: 'bg-emerald-500',
-        action: 'quote'
+        action: 'quote',
+        moq: 100
     },
     {
         id: 'sl025m-module',
@@ -57,21 +58,23 @@ const allProducts: Product[] = [
         desc: 'Embedded module for custom hardware integration.',
         tag: 'In Stock',
         tagColor: 'bg-emerald-500',
-        action: 'quote'
+        action: 'quote',
+        moq: 1
     },
     {
         id: 'nfc-wristband',
-        name: 'Silicone NFC Wristband (Event Pack)',
+        name: 'Silicone NFC Wristband (Pack of 50)',
         brand: 'ElizTap',
         category: 'Accessory',
         rating: 4.6,
-        price: 45000,
-        originalPrice: 60000,
+        price: 800, // Price per unit
+        originalPrice: 1000,
         image: "https://sc04.alicdn.com/kf/H835260171a3949989506684724495537t.jpg",
-        desc: 'Waterproof wristbands for event access control.',
+        desc: 'Waterproof wristbands for event access.',
         tag: 'In Stock',
         tagColor: 'bg-emerald-500',
-        action: 'quote'
+        action: 'quote',
+        moq: 50
     },
     {
         id: 'ntag216-keyfob',
@@ -79,13 +82,14 @@ const allProducts: Product[] = [
         brand: 'NXP',
         category: 'Smart Cards',
         rating: 4.8,
-        price: 65000,
-        originalPrice: null,
+        price: 600, // Price per unit
+        originalPrice: 800,
         image: "https://m.media-amazon.com/images/I/61kQqnyv7BL._AC_SX679_.jpg",
         desc: 'Durable epoxy finish, 888 bytes memory.',
         tag: 'In Stock',
         tagColor: 'bg-emerald-500',
-        action: 'quote'
+        action: 'quote',
+        moq: 50
     },
     {
         id: 'acr122u-reader',
@@ -95,25 +99,27 @@ const allProducts: Product[] = [
         rating: 4.6,
         price: 45000,
         originalPrice: 55000,
-        image: "https://m.media-amazon.com/images/I/61+yV+J+d3L._AC_SL1000_.jpg", // Placeholder - replace if needed
+        image: "https://m.media-amazon.com/images/I/61+yV+J+d3L._AC_SL1000_.jpg",
         desc: 'Popular NFC reader for desktop applications.',
         tag: 'In Stock',
         tagColor: 'bg-emerald-500',
-        action: 'quote'
+        action: 'quote',
+        moq: 1
     },
-     {
+    {
         id: 'metal-nfc-card',
         name: 'Premium Metal NFC Business Card',
         brand: 'ElizTap',
         category: 'Smart Cards',
         rating: 4.9,
-        price: 25000,
-        originalPrice: null,
-        image: "https://m.media-amazon.com/images/I/61kQqnyv7BL._AC_SX679_.jpg", // Placeholder
+        price: 15000,
+        originalPrice: 25000,
+        image: "https://m.media-amazon.com/images/I/61kQqnyv7BL._AC_SX679_.jpg",
         desc: 'Matte black metal finish with laser engraving.',
         tag: 'In Stock',
         tagColor: 'bg-emerald-500',
-        action: 'quote'
+        action: 'quote',
+        moq: 5
     }
 ];
 
@@ -247,7 +253,7 @@ export const fetchProductDetail = async (id: string) => {
             sku: 'NXP-NTAG215-100',
             name: 'NTAG215 PVC Smart Cards (Pack of 100)',
             brand: 'NXP',
-            price: 85500,
+            price: 500, // Unit price
             description: 'NTAG215 PVC cards for Amiibo, event tracking, and access control.',
             longDescription: 'High-quality PVC cards with genuine NXP NTAG215 chip. Perfect for Amiibo identification, asset tracking, event management, and custom NFC solutions. These cards are blank white and suitable for thermal transfer or inkjet printing (with specialized trays). 504 bytes of usable memory with read/write capability.',
             images: [
@@ -269,9 +275,9 @@ export const fetchProductDetail = async (id: string) => {
             relatedProducts: [],
             features: ['Free Shipping on 5+ Packs'],
             tieredPricing: [
-                { minQuantity: 1, maxQuantity: 4, price: 85500 },
-                { minQuantity: 5, maxQuantity: 10, price: 78000 },
-                { minQuantity: 11, price: 'quote' }
+                { minQuantity: 100, maxQuantity: 499, price: 500 },
+                { minQuantity: 500, maxQuantity: 999, price: 450 },
+                { minQuantity: 1000, price: 'quote' }
             ]
         }
     };

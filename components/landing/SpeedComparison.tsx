@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function SpeedComparison() {
     return (
-        <section className="py-24 bg-white overflow-hidden relative">
+        <section className="py-24 bg-white">
             <div className="container mx-auto px-4 relative z-10">
                 {/* Section Header */}
                 <div className="text-center max-w-3xl mx-auto mb-20">

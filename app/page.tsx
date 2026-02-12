@@ -11,6 +11,8 @@ import AutomationCTA from '@/components/landing/AutomationCTA';
 import Testimonials from '@/components/landing/Testimonials';
 import FAQ from '@/components/landing/FAQ';
 import Footer from '@/components/layout/Footer';
+import Team from '@/components/landing/Team';
+import MarketplaceCTA from '@/components/landing/MarketplaceCTA';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -27,7 +29,9 @@ export default function LandingPage() {
       <Process />
       <Features />
       <SolutionsPreview />
+      <Team />
       <Pricing />
+      <MarketplaceCTA />
       <MobileExperience />
       <Testimonials />
       <AutomationCTA />

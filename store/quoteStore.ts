@@ -9,6 +9,7 @@ export interface Quote {
     firstName: string;
     lastName: string;
     email: string;
+    phone: string;
     company: string;
     quantity: number;
     message: string;

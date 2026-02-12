@@ -35,14 +35,10 @@ export default function HardwareSolutionPage() {
                     }}></div>
 
                     <div className="container mx-auto px-4 text-center z-10 relative">
-                        <h1 className="font-display font-bold text-5xl md:text-8xl leading-[1.05] text-text-main max-w-5xl mx-auto mb-8 tracking-tight">
-                            Enterprise Hardware <br />
-                            <span className="text-gradient">Infrastructure</span>
+                        <h1 className="font-display font-bold text-5xl md:text-8xl leading-[1.05] text-text-main max-w-5xl mx-auto mb-12 tracking-tight">
+                            The bridge between physical <br />
+                            <span className="text-gradient">touchpoints & digital loyalty.</span>
                         </h1>
-
-                        <p className="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto mb-12 leading-relaxed font-medium">
-                            The bridge between physical touchpoints and digital loyalty. Our industrial-grade NFC plates and identity cards provide a 100% friction-less customer identification experience.
-                        </p>
 
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
                             <Link href="/marketplace" className="bg-primary hover:bg-primary-hover text-white font-bold px-12 py-5 rounded-full transition-all transform hover:scale-105 shadow-xl shadow-primary/25 text-sm uppercase tracking-widest cursor-pointer flex items-center gap-3">

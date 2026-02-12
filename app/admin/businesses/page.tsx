@@ -11,14 +11,15 @@ export default function AdminBusinessesPage() {
     const [filterPlan, setFilterPlan] = useState('all');
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [selectedBusiness, setSelectedBusiness] = useState<any>(null);
+    const [expandedBusinessId, setExpandedBusinessId] = useState<number | null>(null);
 
     const [businesses, setBusinesses] = useState([
-        { id: 1, name: 'Green Terrace Cafe', owner: 'John Smith', email: 'john@greenterrace.com', phone: '+234 802 345 6789', plan: 'Premium', devices: 5, visitors: 2847, status: 'active', joined: '2024-01-15' },
-        { id: 2, name: 'Tech Hub Lagos', owner: 'Sarah Johnson', email: 'sarah@techhub.ng', phone: '+234 803 456 7890', plan: 'Enterprise', devices: 12, visitors: 8921, status: 'active', joined: '2024-01-10' },
-        { id: 3, name: 'Fashion Boutique', owner: 'Mike Williams', email: 'mike@fashion.com', phone: '+234 804 567 8901', plan: 'Basic', devices: 2, visitors: 456, status: 'pending', joined: '2024-02-01' },
-        { id: 4, name: 'Fitness Center', owner: 'Emily Davis', email: 'emily@fitness.ng', phone: '+234 805 678 9012', plan: 'Premium', devices: 8, visitors: 3421, status: 'active', joined: '2024-01-20' },
-        { id: 5, name: 'Restaurant 360', owner: 'David Brown', email: 'david@restaurant360.com', phone: '+234 806 789 0123', plan: 'Basic', devices: 3, visitors: 1234, status: 'suspended', joined: '2023-12-05' },
-        { id: 6, name: 'Beauty Spa', owner: 'Lisa Anderson', email: 'lisa@beautyspa.ng', phone: '+234 807 890 1234', plan: 'Free', devices: 1, visitors: 89, status: 'active', joined: '2024-01-28' },
+        { id: 1, name: 'Green Terrace Cafe', owner: 'John Smith', email: 'john@greenterrace.com', phone: '+234 802 345 6789', address: '14 Admiralty Way, Lekki Phase 1, Lagos', plan: 'Premium', devices: 5, visitors: 2847, status: 'active', joined: '2024-01-15', lastActivity: '12 mins ago', nextBilling: '2024-03-15' },
+        { id: 2, name: 'Tech Hub Lagos', owner: 'Sarah Johnson', email: 'sarah@techhub.ng', phone: '+234 803 456 7890', address: '82 Herbert Macaulay Way, Yaba, Lagos', plan: 'Enterprise', devices: 12, visitors: 8921, status: 'active', joined: '2024-01-10', lastActivity: '2 hours ago', nextBilling: '2024-03-10' },
+        { id: 3, name: 'Fashion Boutique', owner: 'Mike Williams', email: 'mike@fashion.com', phone: '+234 804 567 8901', address: 'Unit 4, Palms Mall, Lekki, Lagos', plan: 'Basic', devices: 2, visitors: 456, status: 'pending', joined: '2024-02-01', lastActivity: '1 day ago', nextBilling: '2024-03-01' },
+        { id: 4, name: 'Fitness Center', owner: 'Emily Davis', email: 'emily@fitness.ng', phone: '+234 805 678 9012', address: '12 Isaac John St, Ikeja GRA, Lagos', plan: 'Premium', devices: 8, visitors: 3421, status: 'active', joined: '2024-01-20', lastActivity: '5 mins ago', nextBilling: '2024-03-20' },
+        { id: 5, name: 'Restaurant 360', owner: 'David Brown', email: 'david@restaurant360.com', phone: '+234 806 789 0123', address: 'Plot 12, Victoria Island, Lagos', plan: 'Basic', devices: 3, visitors: 1234, status: 'suspended', joined: '2023-12-05', lastActivity: '3 weeks ago', nextBilling: '2024-02-05' },
+        { id: 6, name: 'Beauty Spa', owner: 'Lisa Anderson', email: 'lisa@beautyspa.ng', phone: '+234 807 890 1234', address: '56 Adeniran Ogunsanya St, Surulere, Lagos', plan: 'Free', devices: 1, visitors: 89, status: 'active', joined: '2024-01-28', lastActivity: '4 hours ago', nextBilling: 'N/A' },
     ]);
 
     const stats = [
@@ -53,11 +54,14 @@ export default function AdminBusinessesPage() {
             plan: formData.get('plan') as string,
             owner: formData.get('owner') as string,
             email: formData.get('email') as string,
-            phone:formData.get('phone') as string,
+            phone: formData.get('phone') as string,
+            address: formData.get('address') as string,
             status: selectedBusiness?.status || 'active',
             joined: selectedBusiness?.joined || new Date().toISOString().split('T')[0],
             devices: selectedBusiness?.devices || 0,
-            visitors: selectedBusiness?.visitors || 0
+            visitors: selectedBusiness?.visitors || 0,
+            lastActivity: selectedBusiness?.lastActivity || 'Just now',
+            nextBilling: selectedBusiness?.nextBilling || (formData.get('plan') === 'Free' ? 'N/A' : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0])
         };
 
         if (selectedBusiness) {
@@ -196,78 +200,205 @@ export default function AdminBusinessesPage() {
                                     </tr>
                                 ) : (
                                     filteredBusinesses.map((business) => (
-                                        <tr key={business.id} className="hover:bg-gray-50 transition-colors group">
-                                            <td className="py-4 px-6">
-                                                <input type="checkbox" className="rounded accent-primary" />
-                                            </td>
-                                            <td className="py-4 px-6">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary transition-colors">
-                                                        <span className="material-icons-round text-primary text-sm group-hover:text-white">store</span>
+                                        <React.Fragment key={business.id}>
+                                            <tr
+                                                onClick={() => setExpandedBusinessId(expandedBusinessId === business.id ? null : business.id)}
+                                                className="hover:bg-gray-50 transition-colors group cursor-pointer"
+                                            >
+                                                <td className="py-4 px-6" onClick={(e) => e.stopPropagation()}>
+                                                    <input type="checkbox" className="rounded accent-primary" />
+                                                </td>
+                                                <td className="py-4 px-6">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary transition-colors">
+                                                            <span className="material-icons-round text-primary text-sm group-hover:text-white">store</span>
+                                                        </div>
+                                                        <div className="flex items-center gap-2">
+                                                            <span className="font-bold text-sm text-text-main">{business.name}</span>
+                                                            <span className="material-icons-round text-gray-400 text-sm group-hover:text-primary transition-colors">
+                                                                {expandedBusinessId === business.id ? 'expand_less' : 'expand_more'}
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                    <span className="font-bold text-sm text-text-main">{business.name}</span>
-                                                </div>
-                                            </td>
-                                            <td className="py-4 px-6">
-                                                <div className="text-sm">
-                                                    <p className="font-bold text-text-main">{business.owner}</p>
-                                                    <p className="text-text-secondary text-xs font-medium">{business.email}</p>
-                                                </div>
-                                            </td>
-                                            <td className="py-4 px-6">
-                                                <span className={`inline-flex px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${business.plan === 'Enterprise' ? 'bg-purple-50 text-purple-600' :
-                                                    business.plan === 'Premium' ? 'bg-blue-50 text-blue-600' :
-                                                        business.plan === 'Basic' ? 'bg-green-50 text-green-600' :
-                                                            'bg-gray-100 text-gray-500'
-                                                    }`}>
-                                                    {business.plan}
-                                                </span>
-                                            </td>
-                                            <td className="py-4 px-6 font-bold text-sm text-text-main">{business.devices}</td>
-                                            <td className="py-4 px-6 font-bold text-sm text-text-main">{business.visitors.toLocaleString()}</td>
-                                            <td className="py-4 px-6">
-                                                <span className={`inline-flex px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${business.status === 'active' ? 'bg-green-50 text-green-600' :
-                                                    business.status === 'pending' ? 'bg-yellow-50 text-yellow-600' :
-                                                        'bg-red-50 text-red-600'
-                                                    }`}>
-                                                    {business.status}
-                                                </span>
-                                            </td>
-                                            <td className="py-4 px-6 text-sm text-text-secondary font-bold">{business.joined}</td>
-                                            <td className="py-4 px-6 text-right">
-                                                <div className="flex items-center justify-end gap-1">
-                                                    <button
-                                                        onClick={() => {
-                                                            setSelectedBusiness(business);
-                                                            setIsAddModalOpen(true);
-                                                        }}
-                                                        className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all"
-                                                        title="Edit"
-                                                    >
-                                                        <span className="material-icons-round text-lg">edit</span>
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleToggleStatus(business.id)}
-                                                        className={`p-2 rounded-lg transition-all ${business.status === 'suspended'
-                                                            ? 'text-green-500 hover:bg-green-50'
-                                                            : 'text-orange-500 hover:bg-orange-50'
-                                                            }`}
-                                                        title={business.status === 'suspended' ? 'Activate' : 'Suspend'}
-                                                    >
-                                                        <span className="material-icons-round text-lg">
-                                                            {business.status === 'suspended' ? 'check_circle' : 'block'}
-                                                        </span>
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleDelete(business.id)}
-                                                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
-                                                        title="Delete"
-                                                    >
-                                                        <span className="material-icons-round text-lg">delete</span>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                </td>
+                                                <td className="py-4 px-6">
+                                                    <div className="text-sm">
+                                                        <p className="font-bold text-text-main">{business.owner}</p>
+                                                        <p className="text-text-secondary text-xs font-medium">{business.email}</p>
+                                                    </div>
+                                                </td>
+                                                <td className="py-4 px-6">
+                                                    <span className={`inline-flex px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${business.plan === 'Enterprise' ? 'bg-purple-50 text-purple-600' :
+                                                        business.plan === 'Premium' ? 'bg-blue-50 text-blue-600' :
+                                                            business.plan === 'Basic' ? 'bg-green-50 text-green-600' :
+                                                                'bg-gray-100 text-gray-500'
+                                                        }`}>
+                                                        {business.plan}
+                                                    </span>
+                                                </td>
+                                                <td className="py-4 px-6 font-bold text-sm text-text-main">{business.devices}</td>
+                                                <td className="py-4 px-6 font-bold text-sm text-text-main">{business.visitors.toLocaleString()}</td>
+                                                <td className="py-4 px-6">
+                                                    <span className={`inline-flex px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${business.status === 'active' ? 'bg-green-50 text-green-600' :
+                                                        business.status === 'pending' ? 'bg-yellow-50 text-yellow-600' :
+                                                            'bg-red-50 text-red-600'
+                                                        }`}>
+                                                        {business.status}
+                                                    </span>
+                                                </td>
+                                                <td className="py-4 px-6 text-sm text-text-secondary font-bold">{business.joined}</td>
+                                                <td className="py-4 px-6 text-right" onClick={(e) => e.stopPropagation()}>
+                                                    <div className="flex items-center justify-end gap-1">
+                                                        <button
+                                                            onClick={() => {
+                                                                setSelectedBusiness(business);
+                                                                setIsAddModalOpen(true);
+                                                            }}
+                                                            className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all"
+                                                            title="Edit"
+                                                        >
+                                                            <span className="material-icons-round text-lg">edit</span>
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleToggleStatus(business.id)}
+                                                            className={`p-2 rounded-lg transition-all ${business.status === 'suspended'
+                                                                ? 'text-green-500 hover:bg-green-50'
+                                                                : 'text-orange-500 hover:bg-orange-50'
+                                                                }`}
+                                                            title={business.status === 'suspended' ? 'Activate' : 'Suspend'}
+                                                        >
+                                                            <span className="material-icons-round text-lg">
+                                                                {business.status === 'suspended' ? 'check_circle' : 'block'}
+                                                            </span>
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDelete(business.id)}
+                                                            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                                                            title="Delete"
+                                                        >
+                                                            <span className="material-icons-round text-lg">delete</span>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {/* Expanded Details Row */}
+                                            {expandedBusinessId === business.id && (
+                                                <tr className="bg-gray-50">
+                                                    <td colSpan={9} className="p-0">
+                                                        <div className="p-6 animate-in slide-in-from-top-2 duration-300">
+                                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                                                {/* Contact Information */}
+                                                                <div className="bg-white rounded-xl p-6 border border-gray-200">
+                                                                    <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">
+                                                                        Contact Information
+                                                                    </h4>
+                                                                    <div className="space-y-3">
+                                                                        <div>
+                                                                            <p className="text-xs text-gray-400 font-bold mb-1">Business Name</p>
+                                                                            <p className="text-sm font-bold text-text-main">{business.name}</p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <p className="text-xs text-gray-400 font-bold mb-1">Owner</p>
+                                                                            <p className="text-sm font-bold text-text-main">{business.owner}</p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <p className="text-xs text-gray-400 font-bold mb-1">Email</p>
+                                                                            <p className="text-sm font-medium text-primary">{business.email}</p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <p className="text-xs text-gray-400 font-bold mb-1">Phone</p>
+                                                                            <p className="text-sm font-medium text-text-secondary">{business.phone}</p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <p className="text-xs text-gray-400 font-bold mb-1">Address</p>
+                                                                            <p className="text-sm font-medium text-text-secondary">
+                                                                                {business.address}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                {/* Subscription Details */}
+                                                                <div className="bg-white rounded-xl p-6 border border-gray-200">
+                                                                    <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">
+                                                                        Subscription Details
+                                                                    </h4>
+                                                                    <div className="space-y-3">
+                                                                        <div>
+                                                                            <p className="text-xs text-gray-400 font-bold mb-1">Current Plan</p>
+                                                                            <span className={`inline-flex px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${business.plan === 'Enterprise' ? 'bg-purple-50 text-purple-600' :
+                                                                                business.plan === 'Premium' ? 'bg-blue-50 text-blue-600' :
+                                                                                    business.plan === 'Basic' ? 'bg-green-50 text-green-600' :
+                                                                                        'bg-gray-100 text-gray-500'
+                                                                                }`}>
+                                                                                {business.plan}
+                                                                            </span>
+                                                                        </div>
+                                                                        <div>
+                                                                            <p className="text-xs text-gray-400 font-bold mb-1">Status</p>
+                                                                            <span className={`inline-flex px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${business.status === 'active' ? 'bg-green-50 text-green-600' :
+                                                                                business.status === 'pending' ? 'bg-yellow-50 text-yellow-600' :
+                                                                                    'bg-red-50 text-red-600'
+                                                                                }`}>
+                                                                                {business.status}
+                                                                            </span>
+                                                                        </div>
+                                                                        <div>
+                                                                            <p className="text-xs text-gray-400 font-bold mb-1">Joined Date</p>
+                                                                            <p className="text-sm font-bold text-text-main">{business.joined}</p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <p className="text-xs text-gray-400 font-bold mb-1">Next Billing</p>
+                                                                            <p className="text-sm font-medium text-text-secondary">{business.nextBilling}</p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <p className="text-xs text-gray-400 font-bold mb-1">Monthly Revenue</p>
+                                                                            <p className="text-sm font-bold text-green-600">
+                                                                                {business.plan === 'Enterprise' ? '₦150,000' :
+                                                                                    business.plan === 'Premium' ? '₦45,000' :
+                                                                                        business.plan === 'Basic' ? '₦15,000' : '₦0'}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                {/* Activity & Devices */}
+                                                                <div className="bg-white rounded-xl p-6 border border-gray-200">
+                                                                    <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">
+                                                                        Activity & Devices
+                                                                    </h4>
+                                                                    <div className="space-y-3">
+                                                                        <div>
+                                                                            <p className="text-xs text-gray-400 font-bold mb-1">Total Visitors</p>
+                                                                            <p className="text-2xl font-bold text-primary">{business.visitors.toLocaleString()}</p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <p className="text-xs text-gray-400 font-bold mb-1">Active Devices</p>
+                                                                            <p className="text-2xl font-bold text-text-main">{business.devices}</p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <p className="text-xs text-gray-400 font-bold mb-1">Last Activity</p>
+                                                                            <p className="text-sm font-medium text-text-secondary">{business.lastActivity}</p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <p className="text-xs text-gray-400 font-bold mb-1">Avg. Daily Visitors</p>
+                                                                            <p className="text-sm font-bold text-text-main">
+                                                                                {Math.floor(business.visitors / 30).toLocaleString()}
+                                                                            </p>
+                                                                        </div>
+                                                                        <div className="pt-2">
+                                                                            <button className="w-full py-2 px-4 bg-primary text-white text-xs font-bold rounded-lg hover:bg-primary-hover transition-all">
+                                                                                View Full Analytics
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </React.Fragment>
                                     ))
                                 )}
                             </tbody>
@@ -334,6 +465,17 @@ export default function AdminBusinessesPage() {
                             required
                             className="w-full h-12 px-4 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all font-bold text-sm"
                             placeholder="Full legal name"
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Business Physical Address</label>
+                        <input
+                            name="address"
+                            defaultValue={selectedBusiness?.address}
+                            required
+                            className="w-full h-12 px-4 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all font-bold text-sm"
+                            placeholder="Street, City, State"
                         />
                     </div>
 

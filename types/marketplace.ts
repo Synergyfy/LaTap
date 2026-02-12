@@ -11,6 +11,7 @@ export interface Product {
     tag: string;
     tagColor: string;
     action: 'cart' | 'quote' | 'download';
+    moq?: number;
 }
 
 export interface TieredPrice {
@@ -48,6 +49,7 @@ export interface ProductDetail {
     }[];
     features: string[];
     tieredPricing?: TieredPrice[];
+    moq?: number;
 }
 
 export type ProductsResponse = {

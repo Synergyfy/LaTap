@@ -9,6 +9,8 @@ export interface PricingPlan {
     isPopular?: boolean;
     buttonText: string;
     color: string;
+    visitorLimit: number;
+    tagLimit: number;
 }
 
 export interface HardwareOption {

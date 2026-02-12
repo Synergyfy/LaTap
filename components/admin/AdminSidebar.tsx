@@ -185,6 +185,7 @@ export default function AdminSidebar({ children, activePage }: AdminSidebarProps
                                                     <Link
                                                         key={subItem.href}
                                                         href={subItem.href}
+                                                        onClick={(e) => e.stopPropagation()}
                                                         className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive(subItem.href)
                                                             ? 'bg-primary text-white'
                                                             : 'text-text-secondary hover:bg-gray-50 hover:text-text-main'
