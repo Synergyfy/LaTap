@@ -164,7 +164,7 @@ export const RedemptionVerifier: React.FC<{ className?: string }> = ({ className
                                                 <User className="w-4 h-4 text-emerald-600" />
                                                 <span className="text-[10px] font-black uppercase tracking-widest text-emerald-900/40">Member ID</span>
                                             </div>
-                                            <p className="font-display font-black text-slate-900 text-lg uppercase"># {result.redemption.userId.substring(0, 8)}</p>
+                                            <p className="font-display font-black text-slate-900 text-lg uppercase"># {result.redemption?.userId?.substring(0, 8)}</p>
                                             <p className="text-[10px] text-emerald-600 font-black uppercase tracking-widest">Valid Entry Point</p>
                                         </div>
                                     </div>
