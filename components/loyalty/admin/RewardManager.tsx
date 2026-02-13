@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Trash2, Edit2, Gift, Ticket, Tag, Clock, Save, X, Eye } from 'lucide-react';
+import { Plus, Trash2, Edit2, Gift, Ticket, Tag, Clock, Save, X, Eye, ImageIcon, Upload, Image as ImageIcon2 } from 'lucide-react';
 import { Reward, RewardType } from '@/types/loyalty';
 import { cn } from '@/lib/utils';
 import { notify } from '@/lib/notify';
@@ -26,13 +26,16 @@ const REWARD_TYPE_ICONS: Record<RewardType, any> = {
 export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate, onUpdate, className }) => {
     const [isAdding, setIsAdding] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
     const [formData, setFormData] = useState<Partial<Reward>>({
         name: '',
         description: '',
         rewardType: 'free_item',
         pointCost: 100,
         validityDays: 30,
-        isActive: true
+        isActive: true,
+        imageUrl: '' // New field for Section 11 of PRD
     });
 
     const resetForm = () => {
@@ -42,10 +45,24 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
             rewardType: 'free_item',
             pointCost: 100,
             validityDays: 30,
-            isActive: true
+            isActive: true,
+            imageUrl: ''
         });
         setIsAdding(false);
         setEditingId(null);
+    };
+
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            // In a real app, you'd upload to Supabase/S3 here. 
+            // For mock/development, we use a Local Preview URL.
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFormData(prev => ({ ...prev, imageUrl: reader.result as string }));
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     const handleEdit = (reward: Reward) => {
@@ -93,6 +110,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 {/* Rewards List */}
+                {/* Rewards List Update snippet */}
                 <div className="lg:col-span-7 space-y-4">
                     {rewards.length === 0 ? (
                         <div className="py-20 bg-slate-50 border border-dashed border-slate-200 text-center">
@@ -107,23 +125,45 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                     layout
                                     key={reward.id}
                                     className={cn(
-                                        "p-5 bg-white border transition-all flex items-center justify-between group",
+                                        "p-4 bg-white border transition-all flex items-center justify-between group hover:shadow-md hover:border-primary/20",
                                         reward.isActive ? "border-slate-200" : "border-slate-100 opacity-60"
                                     )}
                                 >
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-12 h-12 bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-                                            <Icon className="w-6 h-6" />
+                                    <div className="flex items-center gap-5">
+                                        {/* THE NEW IMAGE SHAPE */}
+                                        <div className="relative w-16 h-16 shrink-0 bg-slate-100 border border-slate-200 overflow-hidden">
+                                            {reward.imageUrl ? (
+                                                <img
+                                                    src={reward.imageUrl}
+                                                    alt={reward.name}
+                                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center">
+                                                    <Icon className="w-6 h-6 text-slate-300" />
+                                                </div>
+                                            )}
+                                            {/* Small Status Badge on Image */}
+                                            {!reward.isActive && (
+                                                <div className="absolute inset-0 bg-slate-900/60 flex items-center justify-center">
+                                                    <span className="text-[8px] font-black text-white uppercase tracking-tighter">Inactive</span>
+                                                </div>
+                                            )}
                                         </div>
+
                                         <div>
                                             <h4 className="font-bold text-slate-900 text-sm uppercase tracking-tight">{reward.name}</h4>
-                                            <div className="flex items-center gap-3 mt-1">
-                                                <span className="text-[10px] font-black text-primary uppercase tracking-widest">{reward.pointCost} Pts</span>
+                                            <div className="flex items-center gap-3 mt-1.5">
+                                                <div className="flex items-center gap-1">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                                                    <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">{reward.pointCost} Pts</span>
+                                                </div>
                                                 <span className="w-1 h-1 rounded-full bg-slate-200" />
                                                 <span className="text-[10px] font-medium text-slate-400 capitalize">{reward.rewardType.replace('_', ' ')}</span>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div className="flex items-center gap-2">
                                         <button
                                             onClick={() => handleEdit(reward)}
@@ -140,7 +180,6 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                         })
                     )}
                 </div>
-
                 {/* Form Modal/Sidepanel */}
                 <div className="lg:col-span-5">
                     <AnimatePresence mode="wait">
@@ -149,7 +188,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                 initial={{ opacity: 0, x: 20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: 20 }}
-                                className="bg-slate-900 p-8 text-white relative shadow-2xl"
+                                className="bg-slate-900 p-8 text-white relative shadow-2xl overflow-y-auto max-h-[85vh] scrollbar-hide"
                             >
                                 <button
                                     onClick={resetForm}
@@ -168,13 +207,43 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                 </div>
 
                                 <div className="space-y-6">
+                                    {/* Image Upload Section */}
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Reward Cover Image</label>
+                                        <div
+                                            onClick={() => fileInputRef.current?.click()}
+                                            className="group relative w-full h-40 bg-white/5 border-2 border-dashed border-white/10 hover:border-primary/50 transition-all cursor-pointer flex flex-col items-center justify-center gap-2 overflow-hidden"
+                                        >
+                                            {formData.imageUrl ? (
+                                                <>
+                                                    <img src={formData.imageUrl} alt="Preview" className="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity" />
+                                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <Upload className="w-6 h-6 text-white" />
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <ImageIcon2 className="w-8 h-8 text-white/20 group-hover:text-primary/50" />
+                                                    <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Click to upload</span>
+                                                </>
+                                            )}
+                                        </div>
+                                        <input
+                                            type="file"
+                                            ref={fileInputRef}
+                                            onChange={handleImageUpload}
+                                            accept="image/*"
+                                            className="hidden"
+                                        />
+                                    </div>
+
                                     <div className="space-y-2">
                                         <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Reward Name</label>
                                         <input
                                             type="text"
                                             value={formData.name}
                                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                            className="w-full bg-white/5 border border-white/10 h-12 px-4 font-bold outline-none focus:border-primary transition-all"
+                                            className="w-full bg-white/5 border border-white/10 h-12 px-4 font-bold outline-none focus:border-primary transition-all text-sm"
                                             placeholder="e.g. Free Nigerian Coffee"
                                         />
                                     </div>
@@ -185,7 +254,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                             <select
                                                 value={formData.rewardType}
                                                 onChange={(e) => setFormData({ ...formData, rewardType: e.target.value as RewardType })}
-                                                className="w-full bg-white/5 border border-white/10 h-12 px-4 font-bold outline-none focus:border-primary transition-all capitalize"
+                                                className="w-full bg-white/5 border border-white/10 h-12 px-4 font-bold outline-none focus:border-primary transition-all capitalize text-xs"
                                             >
                                                 {['discount', 'free_item', 'service', 'cashback', 'gift'].map(t => (
                                                     <option key={t} value={t} className="bg-slate-900 text-white">{t.replace('_', ' ')}</option>
@@ -198,7 +267,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                                 type="number"
                                                 value={formData.pointCost}
                                                 onChange={(e) => setFormData({ ...formData, pointCost: Number(e.target.value) })}
-                                                className="w-full bg-white/5 border border-white/10 h-12 px-4 font-bold outline-none focus:border-primary transition-all"
+                                                className="w-full bg-white/5 border border-white/10 h-12 px-4 font-bold outline-none focus:border-primary transition-all text-sm"
                                             />
                                         </div>
                                     </div>
@@ -208,7 +277,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                         <textarea
                                             value={formData.description}
                                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                            className="w-full bg-white/5 border border-white/10 p-4 font-medium text-sm outline-none focus:border-primary transition-all min-h-[100px]"
+                                            className="w-full bg-white/5 border border-white/10 p-4 font-medium text-sm outline-none focus:border-primary transition-all min-h-[80px]"
                                             placeholder="Explain what the customer gets..."
                                         />
                                     </div>
@@ -222,7 +291,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                                     type="number"
                                                     value={formData.validityDays}
                                                     onChange={(e) => setFormData({ ...formData, validityDays: Number(e.target.value) })}
-                                                    className="w-full bg-white/5 border border-white/10 h-12 pl-12 pr-4 font-bold outline-none focus:border-primary transition-all"
+                                                    className="w-full bg-white/5 border border-white/10 h-12 pl-12 pr-4 font-bold outline-none focus:border-primary transition-all text-sm"
                                                 />
                                             </div>
                                         </div>
