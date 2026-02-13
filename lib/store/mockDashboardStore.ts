@@ -5,9 +5,12 @@ export interface Visitor {
   id: string;
   name: string;
   phone: string;
+  email?: string;
   time: string;
   timestamp: number;
   status: 'new' | 'returning';
+  optIn?: boolean;
+  surveyAnswers?: Record<string, any>;
 }
 
 export interface ActivityPoint {
