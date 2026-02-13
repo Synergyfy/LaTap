@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { presets } from './presets';
+import { EngagementTiles } from './EngagementTiles';
 
 interface StepOutcomeProps {
     config: any;
@@ -11,6 +12,8 @@ interface StepOutcomeProps {
     onDownload: () => void;
     onFinish: () => void;
     onRestart: () => void;
+    onEngagement?: (type: 'review' | 'social' | 'feedback') => void;
+    engagementSettings?: any;
 }
 
 export const StepOutcome: React.FC<StepOutcomeProps> = ({
@@ -21,7 +24,9 @@ export const StepOutcome: React.FC<StepOutcomeProps> = ({
     isDownloading,
     onDownload,
     onFinish,
-    onRestart
+    onRestart,
+    onEngagement,
+    engagementSettings
 }) => {
     return (
         <motion.div key="outcome" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className={presets.card}>
@@ -30,13 +35,13 @@ export const StepOutcome: React.FC<StepOutcomeProps> = ({
                     <span className="material-symbols-outlined text-4xl">{config.specificIcon}</span>
                 </div>
                 <h1 className={presets.title}>{customSuccessMessage || config.outcomeTitle}</h1>
-                <p className={`${presets.body} mt-4 mb-10`}>{config.outcomeDesc}</p>
+                <p className={`${presets.body} mt-4 mb-4`}>{config.outcomeDesc}</p>
 
                 {hasRewardSetup && (
                     <motion.div
                         initial={{ y: 20, opacity: 0 }}
                         whileInView={{ y: 0, opacity: 1 }}
-                        className="w-full bg-linear-to-br from-primary to-primary-dark rounded-2xl p-8 text-white relative overflow-hidden mb-10 text-left shadow-2xl shadow-primary/20"
+                        className="w-full bg-linear-to-br from-primary to-primary-dark rounded-2xl p-8 text-white relative overflow-hidden mb-8 text-left shadow-2xl shadow-primary/20"
                     >
                         <div className="z-10 relative">
                             <p className="text-[10px] font-black uppercase tracking-widest opacity-60 mb-1">Your Reward</p>
@@ -46,7 +51,7 @@ export const StepOutcome: React.FC<StepOutcomeProps> = ({
                             <button
                                 onClick={onDownload}
                                 disabled={isDownloading}
-                                className="w-full h-12 bg-white text-primary font-black uppercase tracking-widest text-[10px] rounded-xl flex items-center justify-center gap-2 hover:bg-gray-50 transition-all"
+                                className="w-full h-12 bg-white text-primary font-black uppercase tracking-widest text-[10px] rounded-xl flex items-center justify-center gap-2 hover:bg-gray-50 transition-all font-sans"
                             >
                                 {isDownloading ? <span className="animate-spin material-symbols-outlined text-sm">sync</span> : <span className="material-symbols-outlined text-sm">file_download</span>}
                                 {isDownloading ? 'Processing...' : 'Save Reward to Phone'}
@@ -55,7 +60,15 @@ export const StepOutcome: React.FC<StepOutcomeProps> = ({
                     </motion.div>
                 )}
 
-                <div className="w-full space-y-4">
+                {/* Engagement Layer */}
+                {onEngagement && (
+                    <EngagementTiles
+                        onAction={onEngagement}
+                        settings={engagementSettings}
+                    />
+                )}
+
+                <div className="w-full space-y-4 mt-8">
                     {!hasRewardSetup && (
                         <button onClick={onFinish} className={presets.button}>Finish</button>
                     )}

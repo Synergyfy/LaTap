@@ -4,7 +4,7 @@ import React from 'react';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import Link from 'next/link';
-import { Store, Bell, Nfc, Users, Puzzle, MessageSquare, Shield, ArrowRight } from 'lucide-react';
+import { Store, Bell, Nfc, Users, Puzzle, MessageSquare, Shield, ArrowRight, Star } from 'lucide-react';
 
 export default function SettingsPage() {
     const settingsCategories = [
@@ -14,6 +14,7 @@ export default function SettingsPage() {
         { title: 'Team Management', desc: 'Invite staff and manage permissions', icon: Users, href: '/dashboard/staff' },
         { title: 'Integrations', desc: 'Connect with POS and CRM tools', icon: Puzzle, href: '/dashboard/settings/integrations' },
         { title: 'Message Settings', desc: 'Customize welcome and success messages', icon: MessageSquare, href: '/dashboard/settings/messages' },
+        { title: 'Engagement', desc: 'Configure post-tap engagement tiles & surveys', icon: Star, href: '/dashboard/settings/engagement' },
         { title: 'Data & Privacy', desc: 'Manage data retention and compliance', icon: Shield, href: '/dashboard/settings/privacy' },
     ];
 

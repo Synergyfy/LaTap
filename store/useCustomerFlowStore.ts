@@ -12,6 +12,7 @@ export type CustomerStep =
     | 'PRIVACY' 
     | 'FORM' 
     | 'OUTCOME'
+    | 'SURVEY'
     | 'FINAL_SUCCESS';
 
 export type BusinessType = 'RESTAURANT' | 'RETAIL' | 'GYM' | 'EVENT';
@@ -117,6 +118,21 @@ interface CustomerFlowState {
     logoUrl: string | null;
     redemptionStatus: 'none' | 'pending' | 'approved' | 'declined';
     lastRedemptionId: string | null;
+
+    // Engagement & Survey Settings
+    engagementSettings: {
+        showReview: boolean;
+        showSocial: boolean;
+        showFeedback: boolean;
+        reviewUrl: string;
+        socialUrl: string;
+    };
+    surveyQuestions: Array<{
+        id: string;
+        text: string;
+        type: 'rating' | 'choice' | 'text';
+        options?: string[];
+    }>;
     
     // Actions
     setStep: (step: CustomerStep) => void;
@@ -178,6 +194,19 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
     logoUrl: null,
     redemptionStatus: 'none',
     lastRedemptionId: null,
+
+    engagementSettings: {
+        showReview: true,
+        showSocial: true,
+        showFeedback: true,
+        reviewUrl: 'https://g.page/review/eliztap',
+        socialUrl: 'https://instagram.com/eliztap'
+    },
+    surveyQuestions: [
+        { id: 'q1', text: 'How was your experience today?', type: 'rating' },
+        { id: 'q2', text: 'Would you recommend us?', type: 'choice', options: ['Yes', 'No', 'Maybe'] },
+        { id: 'q3', text: 'Any other feedback?', type: 'text' }
+    ],
 
     setStep: (step) => set({ currentStep: step }),
     setUserData: (data) => {

@@ -15,7 +15,11 @@ import SendMessageModal from '@/components/dashboard/SendMessageModal';
 import DeleteConfirmationModal from '@/components/dashboard/DeleteConfirmationModal';
 import VisitorDetailsModal from '@/components/dashboard/VisitorDetailsModal';
 import PreviewRewardModal from '@/components/dashboard/PreviewRewardModal';
-import { Users, UserPlus, Repeat, Star, Download, Search, Edit, Trash2, MoreVertical, Send, MessageSquare, Gift } from 'lucide-react';
+import {
+    Users, UserPlus, Repeat, Star, Download, Search, Edit,
+    Trash2, MoreVertical, Send, MessageSquare, Gift,
+    CheckCircle2, Timer, MessageCircle
+} from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function AllVisitorsPage() {
@@ -53,7 +57,8 @@ export default function AllVisitorsPage() {
                 phone: data.phone,
                 time: 'Just now',
                 timestamp: Date.now(),
-                status: data.status as any
+                status: data.status as any,
+                optIn: true
             };
             return dashboardApi.addVisitor(newVisitor);
         },
@@ -70,8 +75,8 @@ export default function AllVisitorsPage() {
 
     const handleExportCSV = () => {
         const csvContent = [
-            ['Name', 'Phone', 'Status'],
-            ...visitors.map((v: Visitor) => [v.name, v.phone, v.status])
+            ['Name', 'Phone', 'Email', 'Status', 'Opt-in'],
+            ...visitors.map((v: Visitor) => [v.name, v.phone, v.email || '', v.status, v.optIn ? 'Yes' : 'No'])
         ].map(row => row.join(',')).join('\n');
 
         const blob = new Blob([csvContent], { type: 'text/csv' });
@@ -115,7 +120,8 @@ export default function AllVisitorsPage() {
     const filteredVisitors = visitors.filter((visitor: Visitor) => {
         const matchesSearch = searchQuery === '' ||
             visitor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            visitor.phone.includes(searchQuery);
+            visitor.phone.includes(searchQuery) ||
+            visitor.email?.toLowerCase().includes(searchQuery.toLowerCase());
 
         const matchesStatus = filterStatus === 'all' ||
             visitor.status.toLowerCase() === filterStatus.toLowerCase();
@@ -138,11 +144,45 @@ export default function AllVisitorsPage() {
                 </div>
             )
         },
-        { header: 'Phone Number', accessor: 'phone' },
         {
-            header: 'Last Seen',
+            header: 'Contact Info',
             accessor: (item: Visitor) => (
-                <span className="text-sm text-text-secondary font-medium">{item.time}</span>
+                <div className="space-y-0.5">
+                    <p className="text-sm text-text-main font-medium">{item.phone}</p>
+                    {item.email && <p className="text-[10px] text-text-secondary">{item.email}</p>}
+                </div>
+            )
+        },
+        {
+            header: 'Consent',
+            accessor: (item: Visitor) => (
+                <div className="flex items-center gap-2">
+                    {item.optIn ? (
+                        <div className="flex items-center gap-1.5 text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest">
+                            <CheckCircle2 size={10} />
+                            Opt-in
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-1.5 text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest">
+                            <Timer size={10} />
+                            24h Purge
+                        </div>
+                    )}
+                </div>
+            )
+        },
+        {
+            header: 'Engagement',
+            accessor: (item: Visitor) => (
+                <div className="flex items-center gap-2">
+                    {item.surveyAnswers ? (
+                        <div className="size-6 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center" title="Has survey responses">
+                            <MessageCircle size={14} />
+                        </div>
+                    ) : (
+                        <span className="text-[10px] text-slate-300 font-bold uppercase tracking-widest">None</span>
+                    )}
+                </div>
             )
         },
         {

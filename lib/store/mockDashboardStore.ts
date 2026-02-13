@@ -138,11 +138,56 @@ export interface DashboardState {
 }
 
 const initialVisitors: Visitor[] = [
-  { id: '1', name: 'John Doe', phone: '+234 801 234 5678', time: '2 mins ago', timestamp: Date.now() - 120000, status: 'new' },
-  { id: '2', name: 'Jane Smith', phone: '+234 802 345 6789', time: '15 mins ago', timestamp: Date.now() - 900000, status: 'returning' },
-  { id: '3', name: 'Mike Johnson', phone: '+234 803 456 7890', time: '1 hour ago', timestamp: Date.now() - 3600000, status: 'new' },
-  { id: '4', name: 'Sarah Williams', phone: '+234 804 567 8901', time: '2 hours ago', timestamp: Date.now() - 7200000, status: 'returning' },
-  { id: '5', name: 'David Brown', phone: '+234 805 678 9012', time: '3 hours ago', timestamp: Date.now() - 10800000, status: 'new' },
+  { 
+    id: '1', 
+    name: 'John Doe', 
+    phone: '+234 801 234 5678', 
+    email: 'john.doe@example.com',
+    time: '2 mins ago', 
+    timestamp: Date.now() - 120000, 
+    status: 'new',
+    optIn: true,
+    surveyAnswers: { q1: 5, q2: 'Yes' }
+  },
+  { 
+    id: '2', 
+    name: 'Jane Smith', 
+    phone: '+234 802 345 6789', 
+    email: 'jane@smith.io',
+    time: '15 mins ago', 
+    timestamp: Date.now() - 900000, 
+    status: 'returning',
+    optIn: true,
+    surveyAnswers: { q1: 4, q2: 'Maybe', q3: 'Great service!' }
+  },
+  { 
+    id: '3', 
+    name: 'Mike Johnson', 
+    phone: '+234 803 456 7890', 
+    time: '1 hour ago', 
+    timestamp: Date.now() - 3600000, 
+    status: 'new',
+    optIn: false 
+  },
+  { 
+    id: '4', 
+    name: 'Sarah Williams', 
+    phone: '+234 804 567 8901', 
+    email: 'sarah.w@gmail.com',
+    time: '2 hours ago', 
+    timestamp: Date.now() - 7200000, 
+    status: 'returning',
+    optIn: true 
+  },
+  { 
+    id: '5', 
+    name: 'David Brown', 
+    phone: '+234 805 678 9012', 
+    time: '3 hours ago', 
+    timestamp: Date.now() - 10800000, 
+    status: 'new',
+    optIn: false 
+  },
 ];
 
 const initialActivityData: ActivityPoint[] = [

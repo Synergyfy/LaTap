@@ -16,6 +16,7 @@ import { StepIdentifying } from '@/components/visitor/StepIdentifying';
 import { StepForm } from '@/components/visitor/StepForm';
 import { StepWelcomeBack } from '@/components/visitor/StepWelcomeBack';
 import { StepOutcome } from '@/components/visitor/StepOutcome';
+import { StepSurvey } from '@/components/visitor/StepSurvey';
 import { StepFinalSuccess } from '@/components/visitor/StepFinalSuccess';
 import { useLoyaltyStore } from '@/store/loyaltyStore';
 import { EarnPointsModal } from '@/components/loyalty/EarnPointsModal';
@@ -26,7 +27,8 @@ export default function UserStepPage() {
         getBusinessConfig, customWelcomeMessage, customSuccessMessage,
         customPrivacyMessage, customRewardMessage, hasRewardSetup,
         setBusinessType, userData, logoUrl, visitCount, rewardVisitThreshold,
-        redemptionStatus, lastRedemptionId, requestRedemption, setRedemptionStatus, resetVisitCountAfterRedemption
+        redemptionStatus, lastRedemptionId, requestRedemption, setRedemptionStatus, resetVisitCountAfterRedemption,
+        engagementSettings, surveyQuestions
     } = useCustomerFlowStore();
 
     const addRedemptionRequest = useMockDashboardStore(state => state.addRedemptionRequest);
@@ -172,6 +174,22 @@ export default function UserStepPage() {
         toast.success('Redemption request sent to staff!');
     };
 
+    const handleEngagement = (type: 'review' | 'social' | 'feedback') => {
+        if (type === 'review') {
+            window.open(engagementSettings.reviewUrl, '_blank');
+        } else if (type === 'social') {
+            window.open(engagementSettings.socialUrl, '_blank');
+        } else if (type === 'feedback') {
+            setStep('SURVEY');
+        }
+    };
+
+    const handleSurveyComplete = (answers: Record<string, any>) => {
+        console.log('Survey completed:', answers);
+        toast.success('Thank you for your feedback!');
+        setStep('FINAL_SUCCESS');
+    };
+
     return (
         <VisitorLayout
             onReset={resetFlow}
@@ -253,6 +271,16 @@ export default function UserStepPage() {
                         onDownload={handleDownloadReward}
                         onFinish={() => setStep('FINAL_SUCCESS')}
                         onRestart={resetFlow}
+                        onEngagement={handleEngagement}
+                        engagementSettings={engagementSettings}
+                    />
+                )}
+
+                {currentStep === 'SURVEY' && (
+                    <StepSurvey
+                        questions={surveyQuestions}
+                        onComplete={handleSurveyComplete}
+                        onSkip={() => setStep('FINAL_SUCCESS')}
                     />
                 )}
 

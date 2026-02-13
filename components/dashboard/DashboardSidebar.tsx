@@ -11,7 +11,7 @@ import { dashboardApi } from '@/lib/api/dashboard';
 import { Notification } from '@/lib/store/mockDashboardStore';
 import {
     Home, Users, Nfc, Send, Gift, BarChart, Users2, Settings,
-    ChevronDown, LogOut, Bell, Search, HelpCircle, Menu, X
+    ChevronDown, LogOut, Bell, Search, HelpCircle, Menu, X, Zap, MessageSquare
 } from 'lucide-react';
 import Logo from '@/components/brand/Logo';
 
@@ -107,6 +107,20 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                 { label: 'Templates', href: '/dashboard/campaigns/templates' },
                 { label: 'Settings', href: '/dashboard/settings/messages' },
             ]
+        },
+        {
+            id: 'surveys',
+            label: 'Surveys',
+            icon: MessageSquare,
+            href: '/dashboard/surveys',
+            roles: ['owner', 'manager']
+        },
+        {
+            id: 'automations',
+            label: 'Automations',
+            icon: Zap,
+            href: '/dashboard/automations',
+            roles: ['owner', 'manager']
         },
         {
             id: 'loyalty',
