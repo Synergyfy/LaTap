@@ -19,7 +19,7 @@ export default function SolutionHero() {
                     <span className="text-gradient">physical space</span>
                 </h1>
                 <p className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed font-medium">
-                    From high-street retail to exclusive events, discover how LaTap transforms visitor interactions into valuable digital connections.
+                    From high-street retail to exclusive events, discover how VemTap transforms visitor interactions into valuable digital connections.
                 </p>
             </div>
         </section>

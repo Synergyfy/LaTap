@@ -219,7 +219,5 @@ min-qusntity
 --now create a place for the bussines to generatee links for nfc hardware--also qr code for each link generated
 --bussiness profiles
 --bussiness can put thier profile link ,update logo
---users should close
-
---rules education by bussiness owner
+--users should close auto closeb
 --once they submit thier thier  data it will automatically create the account and login eg. send an email link

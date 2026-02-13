@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Nfc } from 'lucide-react';
+import Image from 'next/image';
 
 interface LogoProps {
     className?: string;
@@ -13,21 +13,22 @@ interface LogoProps {
 
 export default function Logo({
     className = "flex items-center gap-2",
-    iconSize = 24,
+    iconSize = 32,
     fontSize = "text-xl",
     withText = true,
     textClassName = "font-display font-bold tracking-tight text-text-main"
 }: LogoProps) {
     return (
         <div className={className}>
-            <span
-                className="material-icons-round text-primary select-none"
-                style={{ fontSize: iconSize }}
-            >
-                nfc
-            </span>
+            <Image
+                src="/assets/VEMTAP_PNG.png"
+                alt="VemTap Logo"
+                width={iconSize}
+                height={iconSize}
+                className="object-contain"
+            />
             {withText && (
-                <span className={`${fontSize} ${textClassName}`}>ElizTap</span>
+                <span className={`${fontSize} ${textClassName}`}>VemTap</span>
             )}
         </div>
     );
