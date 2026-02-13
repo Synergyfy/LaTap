@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { getBusinessBySlug, getBusinessByNfcId } from '@/lib/businessService';
 import { useCustomerFlowStore } from '@/store/useCustomerFlowStore';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useLoyaltyStore } from '@/store/loyaltyStore';
 import { useMockDashboardStore } from '@/lib/store/mockDashboardStore';
 import { motion } from 'framer-motion';
 import { useMemo } from 'react';
@@ -80,6 +81,16 @@ export default function MultiDeviceTapPage() {
                         ...identity,
                         phone: (identity as any).phone || ''
                     });
+
+                    // Loyalty Integration: Earn points if user is logged in
+                    if (user) {
+                        const { earnPoints } = useLoyaltyStore.getState();
+                        earnPoints({
+                            userId: user.id || 'current-user',
+                            businessId: business.id,
+                            isVisit: true
+                        }).catch(err => console.error('Failed to earn loyalty points:', err));
+                    }
 
                     // If it was a known user, go to welcome back
                     if (userDataStore || storedIdentity) {

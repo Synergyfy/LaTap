@@ -279,6 +279,172 @@ export const fetchProductDetail = async (id: string) => {
                 { minQuantity: 500, maxQuantity: 999, price: 400 },
                 { minQuantity: 1000, price: 350 }
             ]
+        },
+        'sl025m-module': {
+            id: 'sl025m-module',
+            sku: 'SL-025M-13MHZ',
+            name: 'SL025M 13.56MHz RFID Reader/Writer Module',
+            brand: 'StrongLink',
+            price: 15400,
+            description: 'Embedded module for custom hardware integration.',
+            longDescription: 'The SL025M is a highly integrated 13.56MHz RFID reader/writer module designed for embedded applications. It supports ISO14443A/B protocols and MIFARE cards. Perfect for custom hardware integration, access control systems, and IoT applications. Features UART interface for easy microcontroller integration.',
+            images: [
+                "https://m.media-amazon.com/images/I/61+yV+J+d3L._AC_SL1000_.jpg"
+            ],
+            mainImage: "https://m.media-amazon.com/images/I/61+yV+J+d3L._AC_SL1000_.jpg",
+            tag: 'In Stock',
+            tagColor: 'bg-green-100 text-green-800',
+            specifications: {
+                'Interface': 'UART (TTL)',
+                'Frequency': '13.56 MHz',
+                'Supported Cards': 'ISO14443A/B, MIFARE Classic, MIFARE Ultralight',
+                'Operating Voltage': '5V DC',
+                'Operating Distance': 'Up to 50mm',
+                'Dimensions': '45mm x 35mm x 8mm'
+            },
+            documents: [
+                { name: 'SL025M Datasheet', size: '800 KB', date: 'EN', downloads: 450, type: 'pdf' }
+            ],
+            relatedProducts: [],
+            features: ['Ships in 24-48 Hours', 'Developer Friendly'],
+            tieredPricing: [
+                { minQuantity: 1, maxQuantity: 10, price: 15400 },
+                { minQuantity: 11, maxQuantity: 50, price: 14000 },
+                { minQuantity: 51, price: 12500 }
+            ]
+        },
+        'nfc-wristband': {
+            id: 'nfc-wristband',
+            sku: 'ELIZTAP-WRIST-50',
+            name: 'Silicone NFC Wristband (Pack of 50)',
+            brand: 'ElizTap',
+            price: 800,
+            description: 'Waterproof wristbands for event access.',
+            longDescription: 'Durable silicone NFC wristbands perfect for events, festivals, gyms, and access control. These waterproof wristbands feature NTAG213 chips with 144 bytes of usable memory. Comfortable, adjustable design suitable for all wrist sizes. Available in multiple colors for easy identification and branding.',
+            images: [
+                "https://sc04.alicdn.com/kf/H835260171a3949989506684724495537t.jpg"
+            ],
+            mainImage: "https://sc04.alicdn.com/kf/H835260171a3949989506684724495537t.jpg",
+            tag: 'In Stock',
+            tagColor: 'bg-green-100 text-green-800',
+            specifications: {
+                'Chip Type': 'NTAG213',
+                'Memory': '180 Bytes (144 Bytes usable)',
+                'Material': 'Medical-grade Silicone',
+                'Water Resistance': 'IP68 Waterproof',
+                'Adjustable': 'Yes, fits all wrist sizes',
+                'Colors Available': 'Blue, Red, Green, Black, White'
+            },
+            documents: [
+                { name: 'NTAG213 Specifications', size: '600 KB', date: 'Updated 2023', downloads: 800, type: 'pdf' }
+            ],
+            relatedProducts: [],
+            features: ['Waterproof', 'Comfortable Wear'],
+            tieredPricing: [
+                { minQuantity: 50, maxQuantity: 199, price: 800 },
+                { minQuantity: 200, maxQuantity: 499, price: 700 },
+                { minQuantity: 500, price: 600 }
+            ]
+        },
+        'ntag216-keyfob': {
+            id: 'ntag216-keyfob',
+            sku: 'NXP-NTAG216-FOB',
+            name: 'NTAG216 Epoxy Keyfob (Pack of 50)',
+            brand: 'NXP',
+            price: 600,
+            description: 'Durable epoxy finish, 888 bytes memory.',
+            longDescription: 'Premium quality NTAG216 keyfobs with durable epoxy coating. These keyfobs feature 888 bytes of usable memory, making them ideal for access control, loyalty programs, and asset tracking. The epoxy finish provides excellent protection against wear and tear. Compact design easily attaches to keychains.',
+            images: [
+                "https://m.media-amazon.com/images/I/61kQqnyv7BL._AC_SX679_.jpg"
+            ],
+            mainImage: "https://m.media-amazon.com/images/I/61kQqnyv7BL._AC_SX679_.jpg",
+            tag: 'In Stock',
+            tagColor: 'bg-green-100 text-green-800',
+            specifications: {
+                'Chip Type': 'NXP NTAG216',
+                'Memory': '924 Bytes (888 Bytes usable)',
+                'Standard': 'ISO/IEC 14443A',
+                'Frequency': '13.56 MHz',
+                'Material': 'Epoxy Resin',
+                'Dimensions': '30mm diameter x 5mm thick'
+            },
+            documents: [
+                { name: 'NTAG216 Technical Guide', size: '1.3 MB', date: 'Updated 2023', downloads: 1500, type: 'pdf' }
+            ],
+            relatedProducts: [],
+            features: ['Durable Epoxy Coating', 'High Memory Capacity'],
+            tieredPricing: [
+                { minQuantity: 50, maxQuantity: 199, price: 600 },
+                { minQuantity: 200, maxQuantity: 499, price: 500 },
+                { minQuantity: 500, price: 450 }
+            ]
+        },
+        'acr122u-reader': {
+            id: 'acr122u-reader',
+            sku: 'ACS-122U-USB',
+            name: 'ACS ACR122U USB NFC Reader',
+            brand: 'ACS',
+            price: 45000,
+            description: 'Popular NFC reader for desktop applications.',
+            longDescription: 'The ACR122U is one of the most popular PC-linked contactless smart card readers in the market. It supports ISO 14443 Type A and B cards, MIFARE, FeliCa, and all 4 types of NFC tags. With its USB full-speed interface, the ACR122U is perfect for desktop applications, development, and testing. CCID compliant for easy integration.',
+            images: [
+                "https://m.media-amazon.com/images/I/61+yV+J+d3L._AC_SL1000_.jpg"
+            ],
+            mainImage: "https://m.media-amazon.com/images/I/61+yV+J+d3L._AC_SL1000_.jpg",
+            tag: 'In Stock',
+            tagColor: 'bg-green-100 text-green-800',
+            specifications: {
+                'Interface': 'USB 2.0 Full Speed',
+                'Supported Standards': 'ISO 14443 Type A & B, MIFARE, FeliCa, NFC',
+                'Operating Distance': 'Up to 50mm',
+                'LED Indicators': 'Bi-color LED for card detection',
+                'Buzzer': 'Built-in buzzer for audio feedback',
+                'Dimensions': '98mm x 65mm x 12.8mm'
+            },
+            documents: [
+                { name: 'ACR122U User Manual', size: '2.1 MB', date: 'EN', downloads: 5000, type: 'pdf' },
+                { name: 'SDK and Sample Code', size: '15 MB', date: 'Updated 2024', downloads: 2500, type: 'sdk' }
+            ],
+            relatedProducts: [],
+            features: ['Ships in 24-48 Hours', 'CCID Compliant', 'Developer Friendly'],
+            tieredPricing: [
+                { minQuantity: 1, maxQuantity: 5, price: 45000 },
+                { minQuantity: 6, maxQuantity: 20, price: 42000 },
+                { minQuantity: 21, price: 38000 }
+            ]
+        },
+        'metal-nfc-card': {
+            id: 'metal-nfc-card',
+            sku: 'ELIZTAP-METAL-CARD',
+            name: 'Premium Metal NFC Business Card',
+            brand: 'ElizTap',
+            price: 15000,
+            description: 'Matte black metal finish with laser engraving.',
+            longDescription: 'Make a lasting impression with our premium metal NFC business cards. Featuring a sleek matte black finish with custom laser engraving, these cards combine elegance with cutting-edge technology. Each card contains an NTAG216 chip that can be programmed with your contact information, website, or social media profiles. Simply tap to share your details instantly.',
+            images: [
+                "https://m.media-amazon.com/images/I/61kQqnyv7BL._AC_SX679_.jpg"
+            ],
+            mainImage: "https://m.media-amazon.com/images/I/61kQqnyv7BL._AC_SX679_.jpg",
+            tag: 'In Stock',
+            tagColor: 'bg-green-100 text-green-800',
+            specifications: {
+                'Material': 'Stainless Steel',
+                'Finish': 'Matte Black with Laser Engraving',
+                'Chip Type': 'NTAG216',
+                'Memory': '888 Bytes usable',
+                'Dimensions': '85.6mm x 54mm x 0.8mm (Standard card size)',
+                'Weight': '28 grams'
+            },
+            documents: [
+                { name: 'Customization Guide', size: '500 KB', date: 'EN', downloads: 300, type: 'pdf' }
+            ],
+            relatedProducts: [],
+            features: ['Premium Quality', 'Custom Laser Engraving Available'],
+            tieredPricing: [
+                { minQuantity: 5, maxQuantity: 24, price: 15000 },
+                { minQuantity: 25, maxQuantity: 99, price: 12000 },
+                { minQuantity: 100, price: 10000 }
+            ]
         }
     };
 

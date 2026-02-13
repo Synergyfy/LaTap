@@ -136,7 +136,7 @@ export default function AdminQuotesPage() {
                                                         href={`/marketplace/product/${quote.productId}`}
                                                         className="flex items-center gap-3 group/product"
                                                     >
-                                                        <div className="relative w-12 h-12 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0">
+                                                        <div className="relative w-12 h-12 rounded-lg overflow-hidden border border-gray-200 shrink-0">
                                                             <Image
                                                                 src={quote.productImage}
                                                                 alt={quote.productName}

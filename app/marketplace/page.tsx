@@ -176,11 +176,6 @@ export default function MarketplacePage() {
                                     </Link>
                                 </div>
                             </div>
-                            {['New Arrivals', 'Best Sellers', 'Deals', 'Support'].map((item) => (
-                                <Link key={item} href="#" className="text-sm font-bold text-gray-500 hover:text-primary transition-colors">
-                                    {item}
-                                </Link>
-                            ))}
                         </nav>
                     </div>
 

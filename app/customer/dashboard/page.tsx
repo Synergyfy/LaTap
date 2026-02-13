@@ -11,21 +11,37 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useLoyaltyStore } from '@/store/loyaltyStore';
 import { notify } from '@/lib/notify';
 
 export default function CustomerDashboardPage() {
     const { user, isAuthenticated } = useAuthStore();
+    const { profiles, fetchLoyaltyProfile } = useLoyaltyStore();
     const router = useRouter();
     const [showIdModal, setShowIdModal] = useState(false);
     const [showRewardAnimation, setShowRewardAnimation] = useState(false);
     const [currentReward, setCurrentReward] = useState<{ name: string; points: number; icon?: React.ReactNode } | null>(null);
-    const [userPoints, setUserPoints] = useState(1250);
+
+    const businessId = 'bistro_001';
+    const profile = profiles[businessId];
+    // Local state for demo purposes as found in the existing logic
+    const [localPoints, setLocalPoints] = useState(0);
+
+    useEffect(() => {
+        if (profile) {
+            setLocalPoints(profile.currentPointsBalance);
+        }
+    }, [profile]);
+
+    const userPoints = localPoints;
 
     useEffect(() => {
         if (!isAuthenticated || user?.role !== 'customer') {
             router.push('/login');
+        } else if (user?.id) {
+            fetchLoyaltyProfile(user.id, businessId);
         }
-    }, [isAuthenticated, user, router]);
+    }, [isAuthenticated, user, router, fetchLoyaltyProfile]);
 
     if (!isAuthenticated || user?.role !== 'customer') {
         return null;
@@ -48,8 +64,8 @@ export default function CustomerDashboardPage() {
         setCurrentReward({ name: reward, points, icon });
         setShowRewardAnimation(true);
 
-        // Deduct points
-        setUserPoints(prev => prev - points);
+        // Deduct points (UI only for simulation)
+        setLocalPoints((prev: number) => prev - points);
 
         // Close animation after some time
         setTimeout(() => {

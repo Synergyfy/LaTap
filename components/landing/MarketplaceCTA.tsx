@@ -6,7 +6,7 @@ import { ShoppingBag, ArrowRight, Package, Shield, Zap } from 'lucide-react';
 
 export default function MarketplaceCTA() {
     return (
-        <section className="py-24 bg-gradient-to-br from-primary/5 via-white to-primary/5 overflow-hidden relative">
+        <section className="py-24 bg-linear-to-br from-primary/5 via-white to-primary/5 overflow-hidden relative">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                     {/* Left Content */}
@@ -127,7 +127,7 @@ export default function MarketplaceCTA() {
             </div>
 
             {/* Background Decoration */}
-            <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary/5 to-transparent pointer-events-none" />
+            <div className="absolute top-0 right-0 w-1/3 h-full bg-linear-to-l from-primary/5 to-transparent pointer-events-none" />
         </section>
     );
 }

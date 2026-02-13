@@ -116,6 +116,12 @@ export default function AdminSidebar({ children, activePage }: AdminSidebarProps
             href: '/admin/analytics',
         },
         {
+            id: 'loyalty',
+            label: 'Loyalty Control',
+            icon: Gift,
+            href: '/admin/loyalty',
+        },
+        {
             id: 'support',
             label: 'Support Tickets',
             icon: MessageSquare,

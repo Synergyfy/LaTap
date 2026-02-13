@@ -170,36 +170,6 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 ElizTap<span className="text-primary">.Market</span>
                             </span>
                         </Link>
-                        <nav className="hidden lg:flex items-center gap-8">
-                            <div className="relative group">
-                                <button className="flex items-center gap-1 text-sm font-bold text-slate-500 hover:text-primary transition-all py-2">
-                                    Solutions
-                                    <span className="material-icons-round text-lg transition-transform group-hover:rotate-180">expand_more</span>
-                                </button>
-                                <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-none shadow-2xl border border-slate-100 p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                                    <Link href="/solutions/hardware" className="flex items-center gap-3 p-3 hover:bg-slate-50 transition-colors">
-                                        <div className="size-10 bg-blue-50 text-blue-600 rounded-none flex items-center justify-center">
-                                            <span className="material-icons-round">nfc</span>
-                                        </div>
-                                        <div>
-                                            <p className="text-slate-900 text-[10px] font-black uppercase tracking-wider">Hardware</p>
-                                            <p className="text-[10px] text-slate-500 font-medium whitespace-nowrap">NFC Plates & Cards</p>
-                                        </div>
-                                    </Link>
-                                    <Link href="/solutions/software" className="flex items-center gap-3 p-3 hover:bg-slate-50 transition-colors">
-                                        <div className="size-10 bg-primary/10 text-primary rounded-none flex items-center justify-center">
-                                            <span className="material-icons-round">terminal</span>
-                                        </div>
-                                        <div>
-                                            <p className="text-slate-900 text-[10px] font-black uppercase tracking-wider">Software</p>
-                                            <p className="text-[10px] text-slate-500 font-medium whitespace-nowrap">Management Dashboard</p>
-                                        </div>
-                                    </Link>
-                                </div>
-                            </div>
-                            <Link href="/marketplace" className="text-sm font-bold text-primary underline underline-offset-4 decoration-2">Marketplace</Link>
-                            <Link href="/support" className="text-sm font-bold text-slate-500 hover:text-primary transition-colors">Support</Link>
-                        </nav>
                     </div>
 
                     <div className="flex items-center gap-6">
@@ -322,7 +292,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                             {tier.minQuantity} - {tier.maxQuantity || '∞'} units
                                         </span>
                                         <span className="text-lg font-bold text-slate-900">
-                                            {typeof tier.price === 'number' ? `₦${tier.price.toLocaleString()}` : 'Contact for quote'}
+                                            {typeof tier.price === 'number' ? `₦${tier.price.toLocaleString()}/unit` : 'Contact for quote'}
                                         </span>
                                     </div>
                                 ))}

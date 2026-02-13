@@ -80,9 +80,9 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
         },
         {
             id: 'rewards',
-            label: 'My Rewards',
+            label: 'Loyalty Rewards',
             icon: Gift,
-            href: '/customer/rewards',
+            href: '/customer/loyalty',
         },
         {
             id: 'support',

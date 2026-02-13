@@ -17,6 +17,8 @@ import { StepForm } from '@/components/visitor/StepForm';
 import { StepWelcomeBack } from '@/components/visitor/StepWelcomeBack';
 import { StepOutcome } from '@/components/visitor/StepOutcome';
 import { StepFinalSuccess } from '@/components/visitor/StepFinalSuccess';
+import { useLoyaltyStore } from '@/store/loyaltyStore';
+import { EarnPointsModal } from '@/components/loyalty/EarnPointsModal';
 
 export default function UserStepPage() {
     const {
@@ -31,6 +33,7 @@ export default function UserStepPage() {
     const redemptionRequests = useMockDashboardStore(state => state.redemptionRequests);
 
     const { user } = useAuthStore();
+    const { lastEarnedResponse, setLastEarnedResponse } = useLoyaltyStore();
     const config = getBusinessConfig();
 
     // Live Sync Simulation: Listen for approvals/declines from the business dashboard
@@ -116,9 +119,21 @@ export default function UserStepPage() {
         }
     }, [currentStep, setStep, storedIdentity, userData]);
 
-    const onFormSubmit = (data: any) => {
+    const onFormSubmit = async (data: any) => {
         localStorage.setItem('google_identity', JSON.stringify(data));
         setUserData(data);
+
+        // Loyalty Integration: Earn points for the visit after identity is provided
+        const businessId = useCustomerFlowStore.getState().businessId;
+        if (businessId) {
+            const { earnPoints } = useLoyaltyStore.getState();
+            earnPoints({
+                userId: data.email || data.phone || data.uniqueId || 'anonymous',
+                businessId: businessId,
+                isVisit: true
+            }).catch(err => console.error('Failed to earn points after form submit:', err));
+        }
+
         setStep('OUTCOME');
     };
 
@@ -205,7 +220,22 @@ export default function UserStepPage() {
                         hasRewardSetup={hasRewardSetup}
                         redemptionStatus={redemptionStatus}
                         onRedeem={handleRedeem}
-                        onContinue={() => setStep('OUTCOME')}
+                        onContinue={() => {
+                            // Loyalty Integration: Earn points if not already triggered by a logged-in session
+                            if (!user && (userData || storedIdentity)) {
+                                const businessId = useCustomerFlowStore.getState().businessId;
+                                if (businessId) {
+                                    const { earnPoints } = useLoyaltyStore.getState();
+                                    const identity = userData || storedIdentity;
+                                    earnPoints({
+                                        userId: identity.email || identity.phone || identity.uniqueId || 'recognized-visitor',
+                                        businessId: businessId,
+                                        isVisit: true
+                                    }).catch(err => console.error('Failed to earn points on welcome back:', err));
+                                }
+                            }
+                            setStep('OUTCOME');
+                        }}
                         onClear={() => {
                             localStorage.removeItem('google_identity');
                             resetFlow();
@@ -233,6 +263,16 @@ export default function UserStepPage() {
                     />
                 )}
             </AnimatePresence>
+
+            {/* Loyalty Integration: Earn Points Modal */}
+            <EarnPointsModal
+                isOpen={!!lastEarnedResponse}
+                onClose={() => setLastEarnedResponse(null)}
+                pointsEarned={lastEarnedResponse?.pointsEarned || 0}
+                newBalance={lastEarnedResponse?.newBalance || 0}
+                message={lastEarnedResponse?.message || ''}
+                breakdown={lastEarnedResponse?.breakdown}
+            />
         </VisitorLayout>
     );
 }

@@ -62,7 +62,7 @@ export default function CustomerHistoryPage() {
                                     <th className="text-left py-6 px-8 text-[10px] font-black uppercase tracking-widest text-text-secondary">Venue & Identity</th>
                                     <th className="text-left py-6 px-8 text-[10px] font-black uppercase tracking-widest text-text-secondary">Date & Time</th>
                                     <th className="text-left py-6 px-8 text-[10px] font-black uppercase tracking-widest text-text-secondary">Category</th>
-                                    <th className="text-right py-6 px-8 text-[10px] font-black uppercase tracking-widest text-text-secondary">Value & Points</th>
+                                    <th className="text-right py-6 px-8 text-[10px] font-black uppercase tracking-widest text-text-secondary">Amount & Points</th>
                                     <th className="text-center py-6 px-8 text-[10px] font-black uppercase tracking-widest text-text-secondary">Actions</th>
                                 </tr>
                             </thead>

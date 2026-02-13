@@ -82,7 +82,7 @@ export default function Team() {
                             className="group cursor-pointer"
                         >
                             {/* Image Container */}
-                            <div className="relative aspect-[3/4] bg-gray-100 mb-4 overflow-hidden">
+                            <div className="relative aspect-3/4 bg-gray-100 mb-4 overflow-hidden">
                                 <img
                                     src={member.image}
                                     alt={member.name}
