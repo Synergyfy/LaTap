@@ -9,7 +9,7 @@ import { dashboardApi } from '@/lib/api/dashboard';
 import { Notification } from '@/lib/store/mockDashboardStore';
 import {
     Home, Store, Users, Nfc, CreditCard, BarChart, MessageSquare,
-    Settings, ChevronDown, Shield, LogOut, LayoutGrid, Search, Bell, HelpCircle, Package, FileText, Tag, Menu, X
+    Settings, ChevronDown, Shield, LogOut, LayoutGrid,Gift, Search, Bell, HelpCircle, Package, FileText, Tag, Menu, X
 } from 'lucide-react';
 import Logo from '@/components/brand/Logo';
 
