@@ -16,6 +16,7 @@ import VisitorDetailsModal from '@/components/dashboard/VisitorDetailsModal';
 import PreviewRewardModal from '@/components/dashboard/PreviewRewardModal';
 import { useSubscriptionStore } from '@/store/subscriptionStore';
 
+
 export default function DashboardPage() {
     const queryClient = useQueryClient();
     const router = useRouter();
@@ -117,14 +118,12 @@ export default function DashboardPage() {
 
     if (isLoading) {
         return (
-            <DashboardSidebar>
                 <div className="flex items-center justify-center p-8 h-screen">
                     <div className="animate-pulse flex flex-col items-center">
                         <div className="w-12 h-12 bg-gray-200 rounded-full mb-4"></div>
                         <div className="h-4 w-32 bg-gray-200 rounded"></div>
                     </div>
                 </div>
-            </DashboardSidebar>
         );
     }
 
