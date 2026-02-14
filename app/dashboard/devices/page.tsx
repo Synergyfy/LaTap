@@ -8,6 +8,7 @@ import { notify } from '@/lib/notify';
 import AddDeviceModal from '@/components/dashboard/AddDeviceModal';
 import EditDeviceModal from '@/components/dashboard/EditDeviceModal';
 import Link from 'next/link';
+import LogoIcon from '@/components/brand/LogoIcon';
 
 export default function DevicesPage() {
     const queryClient = useQueryClient();
@@ -117,8 +118,8 @@ export default function DevicesPage() {
                         <div key={device.id} className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow">
                             <div className="flex items-start justify-between mb-4">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                                        <span className="material-icons-round text-primary text-xl">nfc</span>
+                                    <div className="w-12 h-12 rounded-xl flex items-center justify-center">
+                                        <LogoIcon size={32} />
                                     </div>
                                     <div>
                                         <h3 className="font-bold text-text-main">{device.name}</h3>

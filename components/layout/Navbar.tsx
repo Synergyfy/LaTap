@@ -2,9 +2,20 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Logo from '@/components/brand/Logo';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { user, isAuthenticated } = useAuthStore();
+
+    const getInitials = (name: string) => {
+        return name
+            .split(' ')
+            .map((n) => n[0])
+            .join('')
+            .toUpperCase()
+            .slice(0, 2);
+    };
 
     return (
         <>
@@ -12,7 +23,7 @@ export default function Navbar() {
                 <nav className={`bg-white/80 text-text-main rounded-full py-3 px-6 flex items-center shadow-xl shadow-gray-200/20 border border-gray-200/50 max-w-5xl w-full justify-between backdrop-blur-xl transition-all duration-300`}>
                     <div className="flex items-center gap-2">
                         <Link href="/" className="flex items-center gap-2">
-                            <Logo iconSize={40} fontSize="text-2xl" />
+                            <Logo iconSize={56} fontSize="text-2xl" withText className="flex items-center gap-3" />
                         </Link>
                     </div>
 
@@ -59,12 +70,28 @@ export default function Navbar() {
                     </div>
 
                     <div className="hidden md:flex items-center gap-3">
-                        <Link href="/login" className="text-text-main font-bold text-sm px-5 py-2 hover:text-primary transition-colors cursor-pointer text-center">
-                            Login
-                        </Link>
-                        <Link href="/get-started" className="bg-primary text-white font-bold text-sm px-6 py-2.5 rounded-full hover:bg-primary-hover transition-all shadow-lg shadow-primary/20 cursor-pointer">
-                            Get Started
-                        </Link>
+                        {isAuthenticated && user ? (
+                            <Link href="/dashboard" className="flex items-center gap-2 pl-2 pr-4 py-1.5 bg-gray-50 hover:bg-gray-100 rounded-full border border-gray-200 transition-all group">
+                                <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold ring-2 ring-white">
+                                    {getInitials(user.name)}
+                                </div>
+                                <div className="flex flex-col text-left">
+                                    <span className="text-xs font-bold text-text-main leading-tight group-hover:text-primary transition-colors">
+                                        {user.businessName || user.name.split(' ')[0]}
+                                    </span>
+                                    <span className="text-[10px] text-text-secondary font-medium leading-tight">Dashboard</span>
+                                </div>
+                            </Link>
+                        ) : (
+                            <>
+                                <Link href="/login" className="text-text-main font-bold text-sm px-5 py-2 hover:text-primary transition-colors cursor-pointer text-center">
+                                    Login
+                                </Link>
+                                <Link href="/get-started" className="bg-primary text-white font-bold text-sm px-6 py-2.5 rounded-full hover:bg-primary-hover transition-all shadow-lg shadow-primary/20 cursor-pointer">
+                                    Get Started
+                                </Link>
+                            </>
+                        )}
                     </div>
 
                     <button
@@ -81,7 +108,7 @@ export default function Navbar() {
                 <div className={`absolute right-0 top-0 bottom-0 w-[80%] max-w-sm bg-white shadow-2xl transition-transform duration-500 transform ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} p-8 flex flex-col`}>
                     <div className="flex justify-between items-center mb-12">
                         <div className="flex items-center gap-2">
-                            <Logo iconSize={40} fontSize="text-2xl" />
+                            <Logo iconSize={48} fontSize="text-2xl" withText />
                         </div>
                         <button onClick={() => setIsMenuOpen(false)} className="size-10 rounded-full bg-gray-50 text-text-main flex items-center justify-center cursor-pointer">
                             <span className="material-icons-round">close</span>

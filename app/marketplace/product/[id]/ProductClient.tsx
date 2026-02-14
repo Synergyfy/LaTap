@@ -17,6 +17,7 @@ import toast from 'react-hot-toast';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useQuoteStore } from '@/store/quoteStore';
 import { calculateQuotePrice } from '@/lib/utils/calculateQuotePrice';
+import { sendVerificationEmail } from '@/lib/api/notifications';
 
 export default function ProductClient({ id }: { id: string }) {
     const router = useRouter();
@@ -141,6 +142,42 @@ export default function ProductClient({ id }: { id: string }) {
             message: quoteData.notes,
             estimatedValue,
         });
+
+        // Auto-signup logic for guest users
+        if (!user) {
+            const signupPromise = async () => {
+                try {
+                    // Create prompt user account
+                    const userData = {
+                        email: quoteData.email,
+                        name: `${quoteData.firstName} ${quoteData.lastName}`,
+                        businessName: quoteData.company,
+                        phone: quoteData.phone,
+                        role: 'owner' as any
+                    };
+
+                    // 1. Sign up the user (this also logs them in via useAuthStore)
+                    // We generate a random password for them in a real app, or send a magic link
+                    // For this demo, we'll assume the store handles the "guest conversion"
+                    const { useAuthStore } = await import('@/store/useAuthStore');
+                    await useAuthStore.getState().signup(userData);
+
+                    // 2. Send verification email
+                    await sendVerificationEmail(quoteData.email, userData.name);
+
+                    return "Account created & verification email sent";
+                } catch (error) {
+                    console.error("Auto-signup failed", error);
+                    throw new Error("Failed to create account");
+                }
+            };
+
+            toast.promise(signupPromise(), {
+                loading: 'Creating your account...',
+                success: (msg) => `${msg}`,
+                error: 'Could not create account automatically',
+            });
+        }
 
         toast.success(`Quote request sent for ${product.name}!`);
         setActiveTab('specs');
@@ -510,6 +547,18 @@ export default function ProductClient({ id }: { id: string }) {
                                                 </div>
                                             </div>
                                             <div>
+                                                <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Quantity Needed</label>
+                                                <input
+                                                    type="number"
+                                                    value={quoteData.quantity}
+                                                    onChange={(e) => setQuoteData({ ...quoteData, quantity: e.target.value })}
+                                                    placeholder="e.g. 100"
+                                                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                                    required
+                                                    min="1"
+                                                />
+                                            </div>
+                                            <div>
                                                 <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Additional Notes</label>
                                                 <textarea
                                                     rows={4}
@@ -799,6 +848,18 @@ export default function ProductClient({ id }: { id: string }) {
                                             required
                                         />
                                     </div>
+                                </div>
+                                <div>
+                                    <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Quantity Needed</label>
+                                    <input
+                                        type="number"
+                                        value={quoteData.quantity}
+                                        onChange={(e) => setQuoteData({ ...quoteData, quantity: e.target.value })}
+                                        placeholder="e.g. 100"
+                                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                        required
+                                        min="1"
+                                    />
                                 </div>
                                 <div>
                                     <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Additional Notes</label>
