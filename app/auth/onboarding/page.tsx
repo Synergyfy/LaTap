@@ -1,15 +1,15 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
 import { Loader2, CheckCircle2, ShieldCheck, Rocket } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
-export default function OnboardingPage() {
+function OnboardingContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { signup, login } = useAuthStore();
+    const { signup } = useAuthStore();
     const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
     const [message, setMessage] = useState('Initializing secure onboarding...');
 
@@ -18,7 +18,7 @@ export default function OnboardingPage() {
             const email = searchParams.get('email');
             const businessName = searchParams.get('businessName') || 'New Business';
             const name = searchParams.get('name') || 'Business Owner';
-            
+
             if (!email) {
                 setStatus('error');
                 setMessage('Missing required onboarding information. Please contact support.');
@@ -44,12 +44,12 @@ export default function OnboardingPage() {
                 if (result.success) {
                     setMessage('Setting up your dashboard workspace...');
                     await new Promise(resolve => setTimeout(resolve, 1000));
-                    
+
                     setStatus('success');
                     setMessage('Success! Redirecting you to your new dashboard...');
-                    
+
                     toast.success('Account created successfully! Welcome to VemTap.');
-                    
+
                     setTimeout(() => {
                         router.push('/dashboard');
                     }, 2000);
@@ -90,7 +90,7 @@ export default function OnboardingPage() {
                                     <ShieldCheck size={48} />
                                 </div>
                             )}
-                            
+
                             {/* Decorative Dots */}
                             <div className="absolute -top-2 -right-2 size-6 bg-white rounded-full flex items-center justify-center shadow-sm">
                                 <div className="size-2 bg-primary rounded-full animate-pulse" />
@@ -153,3 +153,17 @@ export default function OnboardingPage() {
         </div>
     );
 }
+
+export default function OnboardingPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6">
+                <Loader2 size={40} className="text-primary animate-spin" />
+                <p className="mt-4 text-text-secondary font-medium">Loading session...</p>
+            </div>
+        }>
+            <OnboardingContent />
+        </Suspense>
+    );
+}
+
