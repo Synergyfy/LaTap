@@ -159,6 +159,7 @@ interface CustomerFlowState {
         logoUrl?: string;
         rewardVisitThreshold?: number;
     }) => void;
+    updateEngagementSettings: (settings: Partial<CustomerFlowState['engagementSettings']>) => void;
     recordVisit: () => void;
     incrementVisits: () => void;
     requestRedemption: (rewardTitle: string) => void;
@@ -289,6 +290,12 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
         hasRewardSetup: settings.rewardEnabled ?? state.hasRewardSetup,
         logoUrl: settings.logoUrl ?? state.logoUrl,
         rewardVisitThreshold: settings.rewardVisitThreshold ?? state.rewardVisitThreshold
+    })),
+    updateEngagementSettings: (settings) => set((state) => ({
+        engagementSettings: {
+            ...state.engagementSettings,
+            ...settings
+        }
     })),
     recordVisit: () => set((state) => ({ 
         isReturningUser: true,
