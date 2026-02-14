@@ -5,8 +5,12 @@ import Footer from '@/components/layout/Footer';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Pricing',
-    description: 'Simple, transparent pricing for growing businesses. Explore VemTap plans designed for every stage of your business growth.',
+    title: 'Pricing Plans | VemTap',
+    description: 'Choose the perfect plan for your business. From individual starters to enterprise solutions, VemTap offers transparent pricing with no hidden fees.',
+    openGraph: {
+        title: 'Pricing Plans | VemTap',
+        description: 'Simple, transparent pricing for growing businesses. Start for free and scale as you grow.',
+    }
 };
 
 export default function PricingPage() {

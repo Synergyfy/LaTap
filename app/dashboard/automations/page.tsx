@@ -101,7 +101,7 @@ export default function AutomationsPage() {
                 />
                 <button
                     onClick={() => setIsAdding(true)}
-                    className="h-12 px-6 bg-primary text-white font-black uppercase tracking-widest text-xs rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all flex items-center gap-2"
+                    className="h-12 px-6 bg-primary text-white font-black uppercase tracking-widest text-xs rounded-lg shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all flex items-center gap-2"
                 >
                     <Plus size={18} />
                     Create New Rule
@@ -122,11 +122,11 @@ export default function AutomationsPage() {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, x: -20 }}
-                                    className={`bg-white rounded-2xl border ${rule.active ? 'border-gray-200 shadow-sm' : 'border-gray-100 opacity-60'} p-6 transition-all`}
+                                    className={`bg-white rounded-lg border ${rule.active ? 'border-gray-200 shadow-sm' : 'border-gray-100 opacity-60'} p-6 transition-all`}
                                 >
                                     <div className="flex items-center justify-between gap-6">
                                         <div className="flex items-center gap-6 flex-1">
-                                            <div className={`size-12 rounded-2xl ${rule.active ? 'bg-primary/10 text-primary' : 'bg-gray-100 text-gray-400'} flex items-center justify-center shrink-0`}>
+                                            <div className={`size-12 rounded-lg ${rule.active ? 'bg-primary/10 text-primary' : 'bg-gray-100 text-gray-400'} flex items-center justify-center shrink-0`}>
                                                 {eventInfo?.icon && <eventInfo.icon size={24} />}
                                             </div>
                                             <div className="flex-1">
@@ -145,13 +145,13 @@ export default function AutomationsPage() {
                                         <div className="flex items-center gap-4">
                                             <button
                                                 onClick={() => toggleRule(rule.id)}
-                                                className={`size-10 rounded-xl flex items-center justify-center transition-all ${rule.active ? 'bg-amber-50 text-amber-500 hover:bg-amber-100' : 'bg-emerald-50 text-emerald-500 hover:bg-emerald-100'}`}
+                                                className={`size-10 rounded-lg flex items-center justify-center transition-all ${rule.active ? 'bg-amber-50 text-amber-500 hover:bg-amber-100' : 'bg-emerald-50 text-emerald-500 hover:bg-emerald-100'}`}
                                             >
                                                 {rule.active ? <Pause size={18} /> : <Play size={18} />}
                                             </button>
                                             <button
                                                 onClick={() => deleteRule(rule.id)}
-                                                className="size-10 rounded-xl bg-red-50 text-red-400 flex items-center justify-center hover:bg-red-100 transition-all"
+                                                className="size-10 rounded-lg bg-red-50 text-red-400 flex items-center justify-center hover:bg-red-100 transition-all"
                                             >
                                                 <Trash2 size={18} />
                                             </button>
@@ -163,7 +163,7 @@ export default function AutomationsPage() {
                     </AnimatePresence>
 
                     {rules.length === 0 && (
-                        <div className="text-center py-20 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+                        <div className="text-center py-20 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
                             <Zap size={48} className="mx-auto text-gray-200 mb-4" />
                             <p className="text-sm font-bold text-text-secondary">No automation rules yet</p>
                         </div>
@@ -172,7 +172,7 @@ export default function AutomationsPage() {
 
                 {/* Quick Stats / Guide */}
                 <div className="space-y-6">
-                    <div className="bg-text-main rounded-2xl p-8 text-white relative overflow-hidden">
+                    <div className="bg-text-main rounded-lg p-8 text-white relative overflow-hidden">
                         <Zap className="absolute -right-4 -top-4 size-32 text-white/5 rotate-12" />
                         <h4 className="text-lg font-black italic mb-4">Automation Success</h4>
                         <div className="space-y-4 relative z-10">
@@ -191,7 +191,7 @@ export default function AutomationsPage() {
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-2xl border border-gray-200 p-8">
+                    <div className="bg-white rounded-lg border border-gray-200 p-8">
                         <h4 className="text-xs font-black uppercase tracking-widest text-text-main mb-4">Popular Recipes</h4>
                         <div className="space-y-3">
                             {[
@@ -199,8 +199,8 @@ export default function AutomationsPage() {
                                 { label: 'Lost Customer Flow', icon: Timer },
                                 { label: 'VIP Welcome', icon: Star }
                             ].map((r, i) => (
-                                <button key={i} className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-all text-left">
-                                    <div className="size-8 rounded-lg bg-gray-100 flex items-center justify-center text-text-secondary">
+                                <button key={i} className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-all text-left">
+                                    <div className="size-8 rounded-md bg-gray-100 flex items-center justify-center text-text-secondary">
                                         <r.icon size={16} />
                                     </div>
                                     <span className="text-xs font-bold text-text-secondary">{r.label}</span>
@@ -226,7 +226,7 @@ export default function AutomationsPage() {
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="relative bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden"
+                            className="relative bg-white w-full max-w-lg rounded-lg shadow-2xl overflow-hidden"
                         >
                             <div className="p-8">
                                 <h3 className="text-xl font-bold text-text-main mb-6">Create New Automation</h3>
@@ -239,7 +239,7 @@ export default function AutomationsPage() {
                                             value={newRule.name || ''}
                                             onChange={(e) => setNewRule({ ...newRule, name: e.target.value })}
                                             placeholder="e.g. Welcome Message"
-                                            className="w-full h-12 px-4 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
+                                            className="w-full h-12 px-4 bg-gray-50 border border-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                                         />
                                     </div>
 
@@ -249,7 +249,7 @@ export default function AutomationsPage() {
                                             <select
                                                 value={newRule.event}
                                                 onChange={(e) => setNewRule({ ...newRule, event: e.target.value })}
-                                                className="w-full h-12 px-4 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none font-medium"
+                                                className="w-full h-12 px-4 bg-gray-50 border border-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none font-medium"
                                             >
                                                 {EVENT_OPTIONS.map(opt => (
                                                     <option key={opt.id} value={opt.id}>{opt.label}</option>
@@ -261,7 +261,7 @@ export default function AutomationsPage() {
                                             <select
                                                 value={newRule.action}
                                                 onChange={(e) => setNewRule({ ...newRule, action: e.target.value })}
-                                                className="w-full h-12 px-4 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none font-medium"
+                                                className="w-full h-12 px-4 bg-gray-50 border border-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none font-medium"
                                             >
                                                 {ACTION_OPTIONS.map(opt => (
                                                     <option key={opt.id} value={opt.id}>{opt.label}</option>
@@ -270,16 +270,32 @@ export default function AutomationsPage() {
                                         </div>
                                     </div>
 
+                                    <div>
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1 mb-2 block">Time Delay</label>
+                                        <select
+                                            value={newRule.condition}
+                                            onChange={(e) => setNewRule({ ...newRule, condition: e.target.value })}
+                                            className="w-full h-12 px-4 bg-gray-50 border border-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none font-medium"
+                                        >
+                                            <option value="immediate">Immediately</option>
+                                            <option value="1_hour">After 1 Hour</option>
+                                            <option value="24_hours">After 24 Hours</option>
+                                            <option value="3_days">After 3 Days</option>
+                                            <option value="7_days">After 7 Days</option>
+                                            <option value="30_days">After 30 Days</option>
+                                        </select>
+                                    </div>
+
                                     <div className="flex gap-4 pt-4">
                                         <button
                                             onClick={() => setIsAdding(false)}
-                                            className="flex-1 h-12 bg-gray-50 text-text-secondary font-bold rounded-xl hover:bg-gray-100 transition-all"
+                                            className="flex-1 h-12 bg-gray-50 text-text-secondary font-bold rounded-lg hover:bg-gray-100 transition-all"
                                         >
                                             Cancel
                                         </button>
                                         <button
                                             onClick={addRule}
-                                            className="flex-1 h-12 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all"
+                                            className="flex-1 h-12 bg-primary text-white font-bold rounded-lg shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all"
                                         >
                                             Create Rule
                                         </button>

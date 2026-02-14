@@ -65,7 +65,7 @@ export const RedemptionVerifier: React.FC<{ className?: string }> = ({ className
 
     return (
         <div className={cn("max-w-4xl mx-auto space-y-6", className)}>
-            <div className="bg-slate-900 p-8 text-white shadow-2xl relative overflow-hidden">
+            <div className="bg-white p-8 text-slate-900 shadow-xl relative overflow-hidden rounded-2xl border border-slate-200">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full translate-x-32 -translate-y-32 blur-3xl"></div>
 
                 <div className="relative z-10">

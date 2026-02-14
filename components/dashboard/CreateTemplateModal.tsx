@@ -58,10 +58,11 @@ export default function CreateTemplateModal({ isOpen, onClose, onSubmit, isLoadi
                             {...register('category')}
                             className="w-full h-12 px-4 bg-slate-50 border border-slate-100 rounded-lg focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all font-bold text-sm appearance-none cursor-pointer"
                         >
-                            <option value="Onboarding">Onboarding</option>
-                            <option value="Marketing">Marketing</option>
-                            <option value="Retention">Retention</option>
-                            <option value="Special">Special / Occasion</option>
+                            <option value="Promo offers">Promo offers</option>
+                            <option value="Thank-you messages">Thank-you messages</option>
+                            <option value="Survey invites">Survey invites</option>
+                            <option value="Review requests">Review requests</option>
+                            <option value="Reminders">Reminders</option>
                             <option value="Custom">Custom</option>
                         </select>
                     </div>

@@ -237,7 +237,7 @@ export default function MarketplacePage() {
                                 <div
                                     key={product.id}
                                     onClick={() => handleCardClick(product.id)}
-                                    className="group bg-white rounded-3xl border border-gray-200 hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300 flex flex-col overflow-hidden relative cursor-pointer"
+                                    className="group bg-white rounded-2xl border border-gray-200 hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300 flex flex-col overflow-hidden relative cursor-pointer"
                                 >
 
                                     {/* Image Area */}
@@ -303,7 +303,7 @@ export default function MarketplacePage() {
                     )}
 
                     {!isLoading && !isError && products.length === 0 && (
-                        <div className="py-20 text-center bg-gray-50 rounded-3xl border border-dashed border-gray-200">
+                        <div className="py-20 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200">
                             <p className="text-text-secondary font-medium">No products match your search.</p>
                         </div>
                     )}
@@ -398,11 +398,11 @@ export default function MarketplacePage() {
                 isQuoteModalOpen && selectedQuoteProduct && (
                     <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
                         <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={() => setIsQuoteModalOpen(false)}></div>
-                        <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-4xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col md:flex-row">
+                        <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col md:flex-row">
                             {/* Signup Suggestion Side Panel */}
                             {!user && !showOTPStep && (
                                 <div className="w-full md:w-80 bg-primary/5 p-8 border-b md:border-b-0 md:border-r border-primary/10 flex flex-col justify-center">
-                                    <div className="w-12 h-12 bg-primary/10 text-primary rounded-none flex items-center justify-center mb-6">
+                                    <div className="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-6">
                                         <Star size={24} className="fill-primary" />
                                     </div>
                                     <h4 className="font-display font-bold text-xl text-text-main mb-3">Save your quotes</h4>
@@ -432,7 +432,7 @@ export default function MarketplacePage() {
                             {/* OTP Verification Side Panel */}
                             {!user && showOTPStep && (
                                 <div className="w-full md:w-80 bg-primary/5 p-8 border-b md:border-b-0 md:border-r border-primary/10 flex flex-col justify-center">
-                                    <div className="w-12 h-12 bg-primary/10 text-primary rounded-none flex items-center justify-center mb-6">
+                                    <div className="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-6">
                                         <Star size={24} className="fill-primary" />
                                     </div>
                                     <h4 className="font-display font-bold text-xl text-text-main mb-3">Almost there!</h4>
@@ -469,7 +469,7 @@ export default function MarketplacePage() {
                                                         placeholder="John"
                                                         value={quoteFormData.firstName}
                                                         onChange={(e) => setQuoteFormData({ ...quoteFormData, firstName: e.target.value })}
-                                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                                         required
                                                     />
                                                 </div>
@@ -480,7 +480,7 @@ export default function MarketplacePage() {
                                                         placeholder="Doe"
                                                         value={quoteFormData.lastName}
                                                         onChange={(e) => setQuoteFormData({ ...quoteFormData, lastName: e.target.value })}
-                                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                                         required
                                                     />
                                                 </div>
@@ -493,7 +493,7 @@ export default function MarketplacePage() {
                                                         placeholder="john@company.com"
                                                         value={quoteFormData.email}
                                                         onChange={(e) => setQuoteFormData({ ...quoteFormData, email: e.target.value })}
-                                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                                         required
                                                     />
                                                 </div>
@@ -504,7 +504,7 @@ export default function MarketplacePage() {
                                                         placeholder="+234 800 000 0000"
                                                         value={quoteFormData.phone}
                                                         onChange={(e) => setQuoteFormData({ ...quoteFormData, phone: e.target.value })}
-                                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                                         required
                                                     />
                                                 </div>
@@ -517,7 +517,7 @@ export default function MarketplacePage() {
                                                         placeholder="e.g. 50"
                                                         value={quoteFormData.quantity}
                                                         onChange={(e) => setQuoteFormData({ ...quoteFormData, quantity: e.target.value })}
-                                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                                         required
                                                     />
                                                 </div>
@@ -528,7 +528,7 @@ export default function MarketplacePage() {
                                                         placeholder="Lagos, Nigeria"
                                                         value={quoteFormData.location}
                                                         onChange={(e) => setQuoteFormData({ ...quoteFormData, location: e.target.value })}
-                                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                                         required
                                                     />
                                                 </div>
@@ -621,7 +621,7 @@ export default function MarketplacePage() {
                 isSuccessModalOpen && (
                     <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
                         <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={() => setIsSuccessModalOpen(false)}></div>
-                        <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-200 text-center p-8">
+                        <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-200 text-center p-8">
                             <div className="w-16 h-16 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
                                 <CheckCircle2 size={32} />
                             </div>

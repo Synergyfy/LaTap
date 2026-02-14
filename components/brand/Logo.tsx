@@ -13,8 +13,8 @@ interface LogoProps {
 
 export default function Logo({
     className = "flex items-center gap-2",
-    iconSize = 48,
-    fontSize = "text-xl",
+    iconSize = 56,
+    fontSize = "text-3xl",
     withText = false,
     textClassName = "font-display font-bold tracking-tight text-text-main"
 }: LogoProps) {

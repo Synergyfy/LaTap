@@ -68,7 +68,7 @@ function OnboardingContent() {
     }, [searchParams, signup, router]);
 
     return (
-        <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
+        <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] bg-size-[16px_16px]">
             <div className="max-w-md w-full bg-white rounded-[2.5rem] border border-gray-100 shadow-2xl p-10 text-center relative overflow-hidden">
                 {/* Background glow */}
                 <div className="absolute -top-24 -left-24 size-48 bg-primary/10 rounded-full blur-3xl" />
@@ -76,7 +76,7 @@ function OnboardingContent() {
 
                 <div className="relative z-10">
                     <div className="mb-10 inline-flex">
-                        <div className="size-20 bg-primary/5 rounded-[2rem] flex items-center justify-center relative">
+                        <div className="size-20 bg-primary/5 rounded-4xl flex items-center justify-center relative">
                             {status === 'loading' && (
                                 <Loader2 size={40} className="text-primary animate-spin" />
                             )}

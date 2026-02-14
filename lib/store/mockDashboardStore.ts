@@ -59,6 +59,7 @@ export interface Template {
   type: 'WhatsApp' | 'SMS' | 'Email' | 'Any';
   content: string;
   textColor?: string;
+  isSystem?: boolean;
 }
 
 export interface Staff {
@@ -132,6 +133,7 @@ export interface DashboardState {
   updateVisitor: (id: string, updates: Partial<Visitor>) => void;
   deleteVisitor: (id: string) => void;
   addTemplate: (template: Template) => void;
+  updateTemplate: (id: string, updates: Partial<Template>) => void;
   deleteTemplate: (id: string) => void;
   addRedemptionRequest: (request: Omit<RedemptionRequest, 'id' | 'status' | 'timestamp'>) => void;
   approveRedemption: (id: string) => void;
@@ -287,9 +289,9 @@ const initialDevices: Device[] = [
 ];
 
 const initialTemplates: Template[] = [
-    { id: '1', title: 'Welcome Message', category: 'Onboarding', type: 'Any', content: "Hello {name}! Welcome to {business}. We're glad to have you!", textColor: 'blue' },
-    { id: '2', title: 'Weekend Promo', category: 'Marketing', type: 'WhatsApp', content: "Hey {name}, check out our weekend specials! 20% off all items.", textColor: 'green' },
-    { id: '3', title: 'We Miss You', category: 'Retention', type: 'SMS', content: "Hi {name}, it's been a while. Come back and get a free coffee!", textColor: 'purple' },
+    { id: '1', title: 'Welcome Message', category: 'Onboarding', type: 'Any', content: "Hello {name}! Welcome to {business}. We're glad to have you!", textColor: 'blue', isSystem: true },
+    { id: '2', title: 'Weekend Promo', category: 'Marketing', type: 'WhatsApp', content: "Hey {name}, check out our weekend specials! 20% off all items.", textColor: 'green', isSystem: true },
+    { id: '3', title: 'We Miss You', category: 'Retention', type: 'SMS', content: "Hi {name}, it's been a while. Come back and get a free coffee!", textColor: 'purple', isSystem: true },
 ];
 
 const initialStats = {
@@ -385,6 +387,9 @@ export const useMockDashboardStore = create<DashboardState>()(
         visitors: state.visitors.filter(v => v.id !== id)
       })),
       addTemplate: (template) => set((state) => ({ templates: [...state.templates, template] })),
+      updateTemplate: (id, updates) => set((state) => ({
+        templates: state.templates.map(t => t.id === id ? { ...t, ...updates } : t)
+      })),
       deleteTemplate: (id) => set((state) => ({ templates: state.templates.filter(t => t.id !== id) })),
       recordExternalTap: (visitorData) => set((state) => {
         const existingIndex = state.visitors.findIndex(v => 

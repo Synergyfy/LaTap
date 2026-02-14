@@ -35,6 +35,12 @@ export const dashboardApi = {
     return id;
   },
 
+  updateTemplate: async ({ id, updates }: { id: string, updates: any }) => {
+    await delay(500);
+    useMockDashboardStore.getState().updateTemplate(id, updates);
+    return { id, updates };
+  },
+
   addVisitor: async (visitor: Visitor) => {
     await delay(500);
     useMockDashboardStore.getState().addVisitor(visitor);

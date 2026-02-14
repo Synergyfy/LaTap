@@ -7,8 +7,9 @@ import { Visitor } from '@/lib/store/mockDashboardStore';
 import toast from 'react-hot-toast';
 import {
     Users, UserPlus, Repeat, Calendar, TrendingUp, TrendingDown,
-    ChevronDown, Trash, Send, Nfc, Download, Gift, ArrowRight, MessageSquare, Zap
+    ChevronDown, Trash, Send, Download, Gift, ArrowRight, MessageSquare, Zap
 } from 'lucide-react';
+import LogoIcon from '@/components/brand/LogoIcon';
 import { useRouter } from 'next/navigation';
 import Modal from '@/components/ui/Modal';
 import SendMessageModal from '@/components/dashboard/SendMessageModal';
@@ -118,12 +119,12 @@ export default function DashboardPage() {
 
     if (isLoading) {
         return (
-                <div className="flex items-center justify-center p-8 h-screen">
-                    <div className="animate-pulse flex flex-col items-center">
-                        <div className="w-12 h-12 bg-gray-200 rounded-full mb-4"></div>
-                        <div className="h-4 w-32 bg-gray-200 rounded"></div>
-                    </div>
+            <div className="flex items-center justify-center p-8 h-screen">
+                <div className="animate-pulse flex flex-col items-center">
+                    <div className="w-12 h-12 bg-gray-200 rounded-full mb-4"></div>
+                    <div className="h-4 w-32 bg-gray-200 rounded"></div>
                 </div>
+            </div>
         );
     }
 
@@ -271,7 +272,7 @@ export default function DashboardPage() {
                         {[
                             { label: 'Manual Entry', desc: 'Add visitor manually', icon: UserPlus, route: '/dashboard/visitors/all', color: 'bg-orange-50 text-orange-600', hover: 'hover:border-orange-200' },
                             { label: 'New Message', desc: 'Reach your customers', icon: MessageSquare, route: '/dashboard/campaigns', color: 'bg-indigo-50 text-indigo-600', hover: 'hover:border-indigo-200' },
-                            { label: 'Add Device', desc: 'Setup NFC terminal', icon: Nfc, route: '/dashboard/settings/devices', color: 'bg-blue-50 text-blue-600', hover: 'hover:border-blue-200' },
+                            { label: 'Add Device', desc: 'Setup NFC terminal', icon: LogoIcon, route: '/dashboard/settings/devices', color: 'bg-blue-50 text-blue-600', hover: 'hover:border-blue-200' },
                             { label: 'Export Data', desc: 'Download CSV reports', icon: Download, route: '/dashboard/visitors/all', color: 'bg-green-50 text-green-600', hover: 'hover:border-green-200' }
                         ].map((action, i) => (
                             <button

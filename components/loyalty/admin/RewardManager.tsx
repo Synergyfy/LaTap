@@ -145,7 +145,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                             )}
                                             {/* Small Status Badge on Image */}
                                             {!reward.isActive && (
-                                                <div className="absolute inset-0 bg-slate-900/60 flex items-center justify-center">
+                                                <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
                                                     <span className="text-[8px] font-black text-white uppercase tracking-tighter">Inactive</span>
                                                 </div>
                                             )}
@@ -188,7 +188,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                 initial={{ opacity: 0, x: 20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: 20 }}
-                                className="bg-slate-900 p-8 text-white relative shadow-2xl overflow-y-auto max-h-[85vh] scrollbar-hide rounded-[2.5rem]"
+                                className="bg-white p-8 text-slate-900 relative shadow-2xl overflow-y-auto max-h-[85vh] scrollbar-hide rounded-2xl border border-slate-200"
                             >
                                 <button
                                     onClick={resetForm}
@@ -257,7 +257,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                                 className="w-full bg-white/5 border border-white/10 h-12 px-4 font-bold outline-none focus:border-primary transition-all capitalize text-xs rounded-xl"
                                             >
                                                 {['discount', 'free_item', 'service', 'cashback', 'gift'].map(t => (
-                                                    <option key={t} value={t} className="bg-slate-900 text-white">{t.replace('_', ' ')}</option>
+                                                    <option key={t} value={t} className="bg-white text-slate-900">{t.replace('_', ' ')}</option>
                                                 ))}
                                             </select>
                                         </div>
@@ -321,7 +321,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                 </div>
                             </motion.div>
                         ) : (
-                            <div className="bg-slate-50 border border-slate-200 border-dashed p-10 text-center space-y-4 rounded-3xl">
+                            <div className="bg-slate-50 border border-slate-200 border-dashed p-10 text-center space-y-4 rounded-2xl">
                                 <div className="w-16 h-16 bg-white border border-slate-100 flex items-center justify-center mx-auto shadow-sm rounded-2xl">
                                     <Eye className="w-8 h-8 text-slate-300" />
                                 </div>

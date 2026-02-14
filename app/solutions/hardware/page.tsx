@@ -5,10 +5,11 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Link from 'next/link';
 import {
-    Cpu, Nfc, Sparkles, Zap, ShieldCheck, ArrowRight,
+    Cpu, Sparkles, Zap, ShieldCheck, ArrowRight,
     MousePointer2, Smartphone, Layers, Radio, Globe,
     HardDrive, Cog, Box, ShieldAlert, CheckCircle2
 } from 'lucide-react';
+import LogoIcon from '@/components/brand/LogoIcon';
 
 import Nfc1 from "@/assets/nfc/Card NFC Plate White Spec branded.avif"
 import Nfc2 from "@/assets/nfc/Chip_tag_NFC215.avif"
@@ -58,7 +59,7 @@ export default function HardwareSolutionPage() {
 
                                 <div className="flex-1 space-y-8 text-left">
                                     <div className="size-16 bg-primary text-white rounded-2xl flex items-center justify-center shadow-xl shadow-primary/20">
-                                        <Nfc size={32} />
+                                        <LogoIcon size={32} />
                                     </div>
                                     <h3 className="text-3xl font-display font-bold">The Signature NFC Plate</h3>
                                     <p className="text-text-secondary font-medium leading-relaxed">
@@ -79,7 +80,7 @@ export default function HardwareSolutionPage() {
                                 <div className="flex-1 relative group">
                                     <div className="aspect-square bg-linear-to-br from-gray-900 via-gray-800 to-black rounded-[2.5rem] p-10 flex flex-col justify-end transform hover:rotate-3 transition-all duration-700 shadow-2xl">
                                         <div className="absolute top-10 right-10 text-white/10 group-hover:text-primary transition-colors duration-500">
-                                            <Nfc size={120} />
+                                            <LogoIcon size={120} />
                                         </div>
                                         <div className="space-y-4">
                                             <div className="h-6 w-32 bg-white/10 rounded-full animate-pulse"></div>

@@ -50,6 +50,8 @@ export interface ProductDetail {
     features: string[];
     tieredPricing?: TieredPrice[];
     moq?: number;
+    reviews?: number; // Added for product detail page compatibility
+    rating?: number; // Added for compatibility
 }
 
 export type ProductsResponse = {

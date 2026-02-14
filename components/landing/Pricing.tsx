@@ -62,7 +62,7 @@ export default function Pricing() {
                             <div
                                 key={index}
                                 className={`
-                                    relative flex flex-col p-5 rounded-3xl transition-all duration-300
+                                    relative flex flex-col p-5 rounded-2xl transition-all duration-300
                                     ${highlight
                                         ? 'bg-primary shadow-xl shadow-primary/20 text-white z-10 border-2 border-white/10'
                                         : 'bg-white border border-gray-100 shadow-lg hover:shadow-xl'
@@ -100,19 +100,17 @@ export default function Pricing() {
                                 </ul>
 
                                 <button
-                                    onClick={() => isCurrentPlan ? null : handleSubscription(plan)}
-                                    disabled={isCurrentPlan}
+                                    onClick={() => handleSubscription(plan)}
+                                    // Subscription logic kept, but display logic updated
                                     className={`
                                         w-full py-2.5 rounded-lg text-xs font-bold text-center transition-all cursor-pointer
-                                        ${isCurrentPlan
-                                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed shadow-none'
-                                            : highlight
-                                                ? 'bg-white text-primary hover:bg-gray-50 shadow-lg shadow-white/10'
-                                                : 'bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/10'
+                                        ${highlight
+                                            ? 'bg-white text-primary hover:bg-gray-50 shadow-lg shadow-white/10'
+                                            : 'bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/10'
                                         }
                                     `}
                                 >
-                                    {isCurrentPlan ? 'Current Plan' : plan.id === 'free' ? 'Get Started' : 'Subscribe'}
+                                    {plan.id === 'free' ? 'Get Started' : 'Subscribe'}
                                 </button>
                             </div>
                         );
@@ -124,7 +122,7 @@ export default function Pricing() {
                     const isCurrentPlan = user?.planId === enterprisePlan.id;
                     return (
                         <div className="max-w-5xl mx-auto">
-                            <div className="relative flex flex-col md:flex-row items-center gap-8 p-6 md:p-8 rounded-3xl bg-primary text-white shadow-xl shadow-primary/10 border border-white/10">
+                            <div className="relative flex flex-col md:flex-row items-center gap-8 p-6 md:p-8 rounded-2xl bg-primary text-white shadow-xl shadow-primary/10 border border-white/10">
                                 <div className="flex-1 text-center md:text-left">
                                     <div className="inline-block px-2.5 py-1 bg-white/20 text-white text-[8px] font-black rounded-full uppercase tracking-widest mb-3">
                                         Enterprise

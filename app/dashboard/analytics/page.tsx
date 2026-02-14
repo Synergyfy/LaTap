@@ -74,14 +74,14 @@ export default function AnalyticsDashboardPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.1 }}
-                        className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all group"
+                        className="bg-white p-6 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-all group"
                     >
                         <div className="flex items-start justify-between mb-4">
-                            <div className={`size-12 rounded-2xl ${stat.bg} ${stat.color} flex items-center justify-center transition-transform group-hover:scale-110`}>
+                            <div className={`size-12 rounded-lg ${stat.bg} ${stat.color} flex items-center justify-center transition-transform group-hover:scale-110`}>
                                 <stat.icon size={24} />
                             </div>
                             <div className={`flex items-center gap-1 text-[10px] font-black px-2 py-1 rounded-full ${stat.isUp ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'}`}>
-                                {stat.isUp ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
+                                <ArrowUpRight size={12} />
                                 {stat.trend}
                             </div>
                         </div>
@@ -91,9 +91,33 @@ export default function AnalyticsDashboardPage() {
                 ))}
             </div>
 
+            {/* Messaging ROI Section */}
+            <div className="mb-10">
+                <h3 className="text-xl font-display font-bold text-text-main mb-6 flex items-center gap-2">
+                    <MessageSquare size={24} className="text-primary" />
+                    Messaging ROI
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    {[
+                        { label: 'Sent', value: '12,450', color: 'text-blue-500', bg: 'bg-blue-50' },
+                        { label: 'Delivered', value: '12,200', sub: '98%', color: 'text-emerald-500', bg: 'bg-emerald-50' },
+                        { label: 'Opened', value: '8,450', sub: '69%', color: 'text-purple-500', bg: 'bg-purple-50' },
+                        { label: 'Clicked', value: '3,120', sub: '25%', color: 'text-amber-500', bg: 'bg-amber-50' },
+                        { label: 'Failed', value: '250', sub: '2%', color: 'text-red-500', bg: 'bg-red-50' },
+                        { label: 'Unsub', value: '45', sub: '0.3%', color: 'text-gray-500', bg: 'bg-gray-50' },
+                    ].map((stat, i) => (
+                        <div key={i} className="bg-white p-4 rounded-lg border border-gray-100 flex flex-col items-center justify-center text-center hover:shadow-md transition-all">
+                            <span className={`text-[10px] font-black uppercase tracking-widest ${stat.color} mb-1`}>{stat.label}</span>
+                            <span className="text-2xl font-black text-text-main tracking-tight">{stat.value}</span>
+                            {stat.sub && <span className="text-xs font-bold text-gray-400 mt-1">{stat.sub}</span>}
+                        </div>
+                    ))}
+                </div>
+            </div>
+
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Hourly Traffic Chart */}
-                <div className="lg:col-span-2 bg-white p-8 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden">
+                <div className="lg:col-span-2 bg-white p-8 rounded-lg border border-gray-100 shadow-sm relative overflow-hidden">
                     <div className="relative z-10">
                         <h4 className="text-xl font-black italic mb-2 tracking-tight text-text-main">Peak Traffic Times</h4>
                         <p className="text-sm text-text-secondary font-medium mb-12">Identify your busiest hours to optimize staffing</p>
@@ -107,7 +131,7 @@ export default function AnalyticsDashboardPage() {
                                             animate={{ height: `${t.value}%` }}
                                             className="w-full bg-text-main rounded-xl relative overflow-hidden group-hover:bg-primary transition-colors cursor-pointer"
                                         >
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                                            <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
                                         </motion.div>
                                         {t.value > 80 && (
                                             <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-primary text-white text-[8px] font-black py-1 px-2 rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity uppercase tracking-widest shadow-lg">Peak Hour</div>
@@ -122,7 +146,7 @@ export default function AnalyticsDashboardPage() {
 
                 {/* Engagement Metrics */}
                 <div className="space-y-6">
-                    <div className="bg-text-main p-8 rounded-2xl text-white relative overflow-hidden">
+                    <div className="bg-text-main p-8 rounded-lg text-white relative overflow-hidden">
                         <Star className="absolute -right-6 -top-6 size-40 text-white/5 rotate-12" />
                         <h4 className="text-xl font-black italic mb-6 tracking-tight relative z-10">Engagement Quality</h4>
                         <div className="space-y-6 relative z-10">
@@ -156,7 +180,7 @@ export default function AnalyticsDashboardPage() {
                         </div>
                     </div>
 
-                    <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+                    <div className="bg-white p-8 rounded-lg border border-gray-100 shadow-sm">
                         <h4 className="text-xs font-black uppercase tracking-[0.2em] text-text-secondary mb-6">Top Performers</h4>
                         <div className="space-y-4">
                             {[

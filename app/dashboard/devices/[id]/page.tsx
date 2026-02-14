@@ -6,9 +6,10 @@ import { useQuery } from '@tanstack/react-query';
 import { dashboardApi } from '@/lib/api/dashboard';
 import Link from 'next/link';
 import {
-    Nfc, ArrowLeft, BarChart2, Users, MousePointer2,
+    ArrowLeft, BarChart2, Users, MousePointer2,
     Calendar, TrendingUp, Clock, MapPin, Battery
 } from 'lucide-react';
+import LogoIcon from '@/components/brand/LogoIcon';
 import ChartCard from '@/components/dashboard/ChartCard';
 import StatsCard from '@/components/dashboard/StatsCard';
 
@@ -36,7 +37,7 @@ export default function DeviceStatsPage() {
         return (
             <div className="p-8 flex flex-col items-center justify-center min-h-[60vh] text-center">
                 <div className="w-20 h-20 rounded-3xl bg-gray-50 flex items-center justify-center text-gray-400 mb-6">
-                    <Nfc size={40} />
+                    <LogoIcon size={40} />
                 </div>
                 <h2 className="text-2xl font-display font-bold text-text-main mb-2">Device Not Found</h2>
                 <p className="text-text-secondary mb-8">The hardware point you're looking for doesn't exist or has been removed.</p>

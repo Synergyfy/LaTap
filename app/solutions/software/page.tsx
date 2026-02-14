@@ -54,7 +54,7 @@ export default function SoftwareSolutionPage() {
                         {/* Software Visualization */}
                         <div className="relative max-w-5xl mx-auto group perspective-[2000px]">
                             <div className="absolute -inset-1 bg-linear-to-r from-purple-500/30 to-primary/30 rounded-[3rem] blur opacity-20 animate-pulse"></div>
-                            <div className="relative bg-white rounded-[3rem] shadow-2xl border border-gray-100 p-8 md:p-12 flex flex-col md:flex-row items-center gap-12 overflow-hidden">
+                            <div className="relative bg-white rounded-4xl shadow-2xl border border-gray-100 p-8 md:p-12 flex flex-col md:flex-row items-center gap-12 overflow-hidden">
                                 <div className="absolute top-0 left-0 w-full h-full bg-gray-50/50 -z-10 -rotate-1 translate-y-12"></div>
 
                                 <div className="flex-1 space-y-8 text-left">
@@ -114,28 +114,28 @@ export default function SoftwareSolutionPage() {
                             <div className="order-2 lg:order-1 relative">
                                 <div className="absolute -inset-10 bg-primary/5 blur-[100px] -z-10"></div>
                                 <div className="grid grid-cols-2 gap-6">
-                                    <div className="p-8 bg-white border border-gray-100 rounded-[2.5rem] shadow-xl hover:shadow-2xl transition-all space-y-4 translate-y-8">
+                                    <div className="p-8 bg-white border border-gray-100 rounded-4xl shadow-xl hover:shadow-2xl transition-all space-y-4 translate-y-8">
                                         <div className="size-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center">
                                             <MessageSquare size={24} />
                                         </div>
                                         <h4 className="font-bold text-lg">Auto-Retention</h4>
                                         <p className="text-xs text-text-secondary font-medium leading-relaxed">Smart SMS and email triggers that bring customers back when they reach specific visit milestones.</p>
                                     </div>
-                                    <div className="p-8 bg-white border border-gray-100 rounded-[2.5rem] shadow-xl hover:shadow-2xl transition-all space-y-4">
+                                    <div className="p-8 bg-white border border-gray-100 rounded-4xl shadow-xl hover:shadow-2xl transition-all space-y-4">
                                         <div className="size-12 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center">
                                             <UserCheck size={24} />
                                         </div>
                                         <h4 className="font-bold text-lg">CRM Intelligence</h4>
                                         <p className="text-xs text-text-secondary font-medium leading-relaxed">Build rich profiles including visit frequency, average spend, and personal preferences automatically.</p>
                                     </div>
-                                    <div className="p-8 bg-white border border-gray-100 rounded-[2.5rem] shadow-xl hover:shadow-2xl transition-all space-y-4 translate-y-8">
+                                    <div className="p-8 bg-white border border-gray-100 rounded-4xl shadow-xl hover:shadow-2xl transition-all space-y-4 translate-y-8">
                                         <div className="size-12 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center">
                                             <Trophy size={24} />
                                         </div>
                                         <h4 className="font-bold text-lg">Loyalty Logic</h4>
                                         <p className="text-xs text-text-secondary font-medium leading-relaxed">Customize your own "Tap-to-Earn" rules and reward structures with ease from the central panel.</p>
                                     </div>
-                                    <div className="p-8 bg-white border border-gray-100 rounded-[2.5rem] shadow-xl hover:shadow-2xl transition-all space-y-4">
+                                    <div className="p-8 bg-white border border-gray-100 rounded-4xl shadow-xl hover:shadow-2xl transition-all space-y-4">
                                         <div className="size-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">
                                             <Database size={24} />
                                         </div>
@@ -159,7 +159,7 @@ export default function SoftwareSolutionPage() {
                                         'Real-time behavioral heatmaps for staff'
                                     ].map((item, i) => (
                                         <li key={i} className="flex items-center gap-4 text-sm font-bold text-text-main">
-                                            <div className="size-6 bg-primary/10 text-primary rounded-full flex items-center justify-center flex-shrink-0">
+                                            <div className="size-6 bg-primary/10 text-primary rounded-full flex items-center justify-center shrink-0">
                                                 <CheckCircle2 size={14} />
                                             </div>
                                             {item}
@@ -229,7 +229,7 @@ export default function SoftwareSolutionPage() {
                 {/* FINAL CALL TO ACTION */}
                 <section className="py-48 px-4 bg-white text-center">
                     <div className="max-w-4xl mx-auto space-y-12">
-                        <div className="size-24 bg-primary/10 text-primary rounded-[2rem] flex items-center justify-center mx-auto mb-8">
+                        <div className="size-24 bg-primary/10 text-primary rounded-4xl flex items-center justify-center mx-auto mb-8">
                             <Sparkles size={48} />
                         </div>
                         <h2 className="text-4xl md:text-7xl font-display font-bold tracking-tight">Ready to activate your space?</h2>
@@ -249,6 +249,6 @@ export default function SoftwareSolutionPage() {
             </main>
 
             <Footer />
-        </div>
+        </div >
     );
 }
