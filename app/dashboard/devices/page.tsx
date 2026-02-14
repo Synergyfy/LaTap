@@ -188,16 +188,19 @@ export default function DevicesPage() {
                 isLoading={addDeviceMutation.isPending}
             />
 
-            <EditDeviceModal
-                isOpen={isEditModalOpen}
-                onClose={() => {
-                    setIsEditModalOpen(false);
-                    setSelectedDevice(null);
-                }}
-                onSubmit={(id, updates) => updateDeviceMutation.mutate({ id, updates })}
-                onDelete={(id) => deleteDeviceMutation.mutate(id)}
-                isLoading={updateDeviceMutation.isPending || deleteDeviceMutation.isPending}
-            />
+            {selectedDevice && (
+                <EditDeviceModal
+                    isOpen={isEditModalOpen}
+                    onClose={() => {
+                        setIsEditModalOpen(false);
+                        setSelectedDevice(null);
+                    }}
+                    device={selectedDevice}
+                    onSubmit={(id, updates) => updateDeviceMutation.mutate({ id, updates })}
+                    onDelete={(id) => deleteDeviceMutation.mutate(id)}
+                    isLoading={updateDeviceMutation.isPending || deleteDeviceMutation.isPending}
+                />
+            )}
         </>
     );
 }
