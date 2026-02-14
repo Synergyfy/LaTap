@@ -15,7 +15,7 @@ import { HelpCircle, X, CheckCircle2, Gift, ArrowRight, MessageSquare, Smartphon
 
 export default function MessageSettingsPage() {
     const store = useCustomerFlowStore();
-    const [activeTab, setActiveTab] = useState<'welcome' | 'success' | 'rewards'>('welcome');
+    const [activeTab, setActiveTab] = useState<'welcome' | 'new_welcome' | 'success' | 'rewards'>('welcome');
     const [showRulesModal, setShowRulesModal] = useState(false);
     const [previewIndex, setPreviewIndex] = useState(0);
     const queryClient = useQueryClient();
@@ -35,8 +35,9 @@ export default function MessageSettingsPage() {
     // Auto-sync tab with preview screen
     React.useEffect(() => {
         if (activeTab === 'welcome') setPreviewIndex(0);
-        else if (activeTab === 'success') setPreviewIndex(1);
-        else if (activeTab === 'rewards') setPreviewIndex(2);
+        else if (activeTab === 'new_welcome') setPreviewIndex(1); // Preview for new user? Maybe we need a Screen D
+        else if (activeTab === 'success') setPreviewIndex(2);
+        else if (activeTab === 'rewards') setPreviewIndex(3);
     }, [activeTab]);
 
     // Local state for preview updates before saving
@@ -45,6 +46,9 @@ export default function MessageSettingsPage() {
         welcomeTitle: store.customWelcomeTitle || 'Hi, {name}!',
         welcomeButton: store.customWelcomeButton || 'Continue to Experience',
         welcomeTag: store.customWelcomeTag || 'Welcome back',
+        newUserWelcomeMessage: store.customNewUserWelcomeMessage || 'Leave your details to stay in touch and earn rewards.',
+        newUserWelcomeTitle: store.customNewUserWelcomeTitle || 'Connect with us',
+        newUserWelcomeTag: store.customNewUserWelcomeTag || 'Quick Link',
         successMessage: store.customSuccessMessage || 'Check-in successful! You are all set. Thank you for visiting us.',
         successTitle: store.customSuccessTitle || 'Successfully Linked!',
         successButton: store.customSuccessButton || 'Finish Process',
@@ -82,10 +86,16 @@ export default function MessageSettingsPage() {
                     {/* Tabs */}
                     <div className="flex bg-gray-100 p-1.5 rounded-xl">
                         <button
+                            onClick={() => setActiveTab('new_welcome')}
+                            className={`flex-1 py-3 text-xs font-bold rounded-lg transition-all ${activeTab === 'new_welcome' ? 'bg-white shadow-md text-primary' : 'text-text-secondary hover:bg-gray-200/50'}`}
+                        >
+                            New visitor
+                        </button>
+                        <button
                             onClick={() => setActiveTab('welcome')}
                             className={`flex-1 py-3 text-xs font-bold rounded-lg transition-all ${activeTab === 'welcome' ? 'bg-white shadow-md text-primary' : 'text-text-secondary hover:bg-gray-200/50'}`}
                         >
-                            Returning message
+                            Returning visitor
                         </button>
                         <button
                             onClick={() => setActiveTab('success')}
@@ -105,6 +115,62 @@ export default function MessageSettingsPage() {
                         <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full translate-x-16 -translate-y-16 blur-2xl"></div>
 
                         <AnimatePresence mode="wait">
+                            {activeTab === 'new_welcome' && (
+                                <motion.div
+                                    key="new_welcome"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    className="space-y-6"
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div className="size-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                                            <Smartphone size={24} />
+                                        </div>
+                                        <div>
+                                            <h3 className="font-display font-bold text-lg text-text-main">New visitor message</h3>
+                                            <p className="text-xs text-text-secondary font-medium">Shown to customers on their very first tap.</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-3">
+                                                <label className="text-[10px] font-bold text-text-secondary ml-1">Small tag</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full bg-gray-50 border border-gray-100 rounded-xl px-5 py-3 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm"
+                                                    value={settings.newUserWelcomeTag}
+                                                    onChange={(e) => setSettings({ ...settings, newUserWelcomeTag: e.target.value })}
+                                                    placeholder="e.g. Special Offer"
+                                                />
+                                            </div>
+                                            <div className="space-y-3">
+                                                <label className="text-[10px] font-bold text-text-secondary ml-1">Screen heading</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full bg-gray-50 border border-gray-100 rounded-xl px-5 py-3 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm"
+                                                    value={settings.newUserWelcomeTitle}
+                                                    onChange={(e) => setSettings({ ...settings, newUserWelcomeTitle: e.target.value })}
+                                                    placeholder="e.g. Join our Loyalty Program"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-3">
+                                            <label className="text-[10px] font-bold text-text-secondary ml-1">Message content</label>
+                                            <textarea
+                                                rows={4}
+                                                className="w-full bg-gray-50 border border-gray-100 rounded-xl p-5 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm resize-none"
+                                                value={settings.newUserWelcomeMessage}
+                                                onChange={(e) => setSettings({ ...settings, newUserWelcomeMessage: e.target.value })}
+                                                placeholder="e.g. Leave your details to stay in touch and earn rewards."
+                                            />
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            )}
+
                             {activeTab === 'welcome' && (
                                 <motion.div
                                     key="welcome"
@@ -326,19 +392,25 @@ export default function MessageSettingsPage() {
                                     onClick={() => setPreviewIndex(0)}
                                     className={`px-3 py-1 text-[10px] font-bold transition-all rounded-md ${previewIndex === 0 ? 'bg-white shadow-sm text-primary' : 'text-text-secondary hover:text-text-main'}`}
                                 >
-                                    Screen A
+                                    New User
                                 </button>
                                 <button
                                     onClick={() => setPreviewIndex(1)}
                                     className={`px-3 py-1 text-[10px] font-bold transition-all rounded-md ${previewIndex === 1 ? 'bg-white shadow-sm text-primary' : 'text-text-secondary hover:text-text-main'}`}
                                 >
-                                    Screen B
+                                    Returning
                                 </button>
                                 <button
                                     onClick={() => setPreviewIndex(2)}
                                     className={`px-3 py-1 text-[10px] font-bold transition-all rounded-md ${previewIndex === 2 ? 'bg-white shadow-sm text-primary' : 'text-text-secondary hover:text-text-main'}`}
                                 >
-                                    Screen C
+                                    Success
+                                </button>
+                                <button
+                                    onClick={() => setPreviewIndex(3)}
+                                    className={`px-3 py-1 text-[10px] font-bold transition-all rounded-md ${previewIndex === 3 ? 'bg-white shadow-sm text-primary' : 'text-text-secondary hover:text-text-main'}`}
+                                >
+                                    Reward
                                 </button>
                             </div>
                         </div>
@@ -352,23 +424,56 @@ export default function MessageSettingsPage() {
                                 dragConstraints={{ left: 0, right: 0 }}
                                 onDragEnd={(e, { offset, velocity }) => {
                                     const swipe = offset.x;
-                                    if (swipe < -50 && previewIndex === 0) {
-                                        setPreviewIndex(1);
-                                    } else if (swipe > 50 && previewIndex === 1) {
-                                        setPreviewIndex(0);
+                                    if (swipe < -50 && previewIndex < 3) {
+                                        setPreviewIndex(previewIndex + 1);
+                                    } else if (swipe > 50 && previewIndex > 0) {
+                                        setPreviewIndex(previewIndex - 1);
                                     }
                                 }}
-                                initial={{ opacity: 0, x: previewIndex === 0 ? -100 : 100 }}
+                                initial={{ opacity: 0, x: -100 }}
                                 animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: previewIndex === 0 ? 100 : -100 }}
+                                exit={{ opacity: 0, x: 100 }}
                                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
                                 className="w-full max-w-[380px] cursor-grab active:cursor-grabbing"
                             >
                                 {previewIndex === 0 ? (
-                                    /* Device 1: Returning / Welcome */
+                                    /* Device 0: New Visitor / Form */
                                     <div className="space-y-6">
                                         <div className="flex flex-col items-center gap-1">
                                             <p className="text-[10px] font-bold text-text-secondary">Screen A</p>
+                                            <p className="text-xs font-bold text-text-main">First-time visitor flow</p>
+                                        </div>
+                                        <div className="bg-gray-900 rounded-3xl p-4 shadow-2xl border-[6px] border-gray-800 aspect-10/18 relative overflow-hidden">
+                                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-gray-800 rounded-b-xl z-50"></div>
+                                            <div className="bg-white w-full h-full rounded-xl overflow-hidden relative flex flex-col">
+                                                <div className="flex-1 overflow-y-auto pt-10 px-5 bg-white">
+                                                    <div className="scale-[0.85] origin-top">
+                                                        <StepWelcomeBack
+                                                            storeName={store.storeName}
+                                                            logoUrl={store.logoUrl}
+                                                            customWelcomeTag={settings.newUserWelcomeTag}
+                                                            customWelcomeTitle={settings.newUserWelcomeTitle}
+                                                            customWelcomeMessage={settings.newUserWelcomeMessage}
+                                                            customWelcomeButton="Submit & Get Reward"
+                                                            visitCount={0}
+                                                            userData={null}
+                                                            rewardVisitThreshold={settings.rewardVisitThreshold}
+                                                            hasRewardSetup={settings.rewardEnabled}
+                                                            redemptionStatus="none"
+                                                            onRedeem={() => { }}
+                                                            onContinue={() => { }}
+                                                            onClear={() => { }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : previewIndex === 1 ? (
+                                    /* Device 1: Returning / Welcome */
+                                    <div className="space-y-6">
+                                        <div className="flex flex-col items-center gap-1">
+                                            <p className="text-[10px] font-bold text-text-secondary">Screen B</p>
                                             <p className="text-xs font-bold text-text-main">Returning user flow</p>
                                         </div>
                                         <div className="bg-gray-900 rounded-3xl p-4 shadow-2xl border-[6px] border-gray-800 aspect-10/18 relative overflow-hidden">
@@ -395,11 +500,11 @@ export default function MessageSettingsPage() {
                                             </div>
                                         </div>
                                     </div>
-                                ) : previewIndex === 1 ? (
+                                ) : previewIndex === 2 ? (
                                     /* Device 2: Final Success */
                                     <div className="space-y-6">
                                         <div className="flex flex-col items-center gap-1">
-                                            <p className="text-[10px] font-bold text-text-secondary">Screen B</p>
+                                            <p className="text-[10px] font-bold text-text-secondary">Screen C</p>
                                             <p className="text-xs font-bold text-text-main">Completion success</p>
                                         </div>
                                         <div className="bg-gray-900 rounded-3xl p-4 shadow-2xl border-[6px] border-gray-800 aspect-10/18 relative overflow-hidden">
@@ -421,12 +526,12 @@ export default function MessageSettingsPage() {
                                     /* Device 3: Reward Unlocked */
                                     <div className="space-y-6">
                                         <div className="flex flex-col items-center gap-1">
-                                            <p className="text-[10px] font-bold text-text-secondary">Screen C</p>
+                                            <p className="text-[10px] font-bold text-text-secondary">Screen D</p>
                                             <p className="text-xs font-bold text-text-main">Reward Unlocked</p>
                                         </div>
-                                        <div className="bg-gray-900 rounded-lg p-4 shadow-2xl border-[6px] border-gray-800 aspect-10/18 relative overflow-hidden">
+                                        <div className="bg-gray-900 rounded-3xl p-4 shadow-2xl border-[6px] border-gray-800 aspect-10/18 relative overflow-hidden">
                                             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-gray-800 rounded-b-xl z-50"></div>
-                                            <div className="bg-white w-full h-full rounded-lg overflow-hidden relative flex flex-col">
+                                            <div className="bg-white w-full h-full rounded-xl overflow-hidden relative flex flex-col">
                                                 <div className="flex-1 overflow-y-auto pt-12 px-5 bg-gray-50">
                                                     <StepWelcomeBack
                                                         storeName={store.storeName}

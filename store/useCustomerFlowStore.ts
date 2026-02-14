@@ -109,6 +109,9 @@ interface CustomerFlowState {
     customWelcomeTitle: string | null;
     customWelcomeButton: string | null;
     customWelcomeTag: string | null;
+    customNewUserWelcomeMessage: string | null;
+    customNewUserWelcomeTitle: string | null;
+    customNewUserWelcomeTag: string | null;
     customSuccessMessage: string | null;
     customSuccessTitle: string | null;
     customSuccessButton: string | null;
@@ -149,6 +152,9 @@ interface CustomerFlowState {
         welcomeTitle?: string;
         welcomeButton?: string;
         welcomeTag?: string;
+        newUserWelcomeMessage?: string;
+        newUserWelcomeTitle?: string;
+        newUserWelcomeTag?: string;
         successMessage?: string;
         successTitle?: string;
         successButton?: string;
@@ -186,6 +192,9 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
     customWelcomeTitle: null,
     customWelcomeButton: null,
     customWelcomeTag: null,
+    customNewUserWelcomeMessage: null,
+    customNewUserWelcomeTitle: null,
+    customNewUserWelcomeTag: null,
     customSuccessMessage: null,
     customSuccessTitle: null,
     customSuccessButton: null,
@@ -281,6 +290,9 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
         customWelcomeTitle: settings.welcomeTitle ?? state.customWelcomeTitle,
         customWelcomeButton: settings.welcomeButton ?? state.customWelcomeButton,
         customWelcomeTag: settings.welcomeTag ?? state.customWelcomeTag,
+        customNewUserWelcomeMessage: settings.newUserWelcomeMessage ?? state.customNewUserWelcomeMessage,
+        customNewUserWelcomeTitle: settings.newUserWelcomeTitle ?? state.customNewUserWelcomeTitle,
+        customNewUserWelcomeTag: settings.newUserWelcomeTag ?? state.customNewUserWelcomeTag,
         customSuccessMessage: settings.successMessage ?? state.customSuccessMessage,
         customSuccessTitle: settings.successTitle ?? state.customSuccessTitle,
         customSuccessButton: settings.successButton ?? state.customSuccessButton,

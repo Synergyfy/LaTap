@@ -18,6 +18,8 @@ interface StepFormProps {
     storeName: string;
     logoUrl?: string | null;
     customWelcomeMessage?: string | null;
+    customWelcomeTitle?: string | null;
+    customWelcomeTag?: string | null;
     customPrivacyMessage?: string | null;
     initialData?: any;
     isSyncingReal?: boolean;
@@ -30,6 +32,8 @@ export const StepForm: React.FC<StepFormProps> = ({
     storeName,
     logoUrl,
     customWelcomeMessage,
+    customWelcomeTitle,
+    customWelcomeTag,
     customPrivacyMessage,
     initialData,
     isSyncingReal,
@@ -81,12 +85,12 @@ export const StepForm: React.FC<StepFormProps> = ({
             <VisitorHeader logoUrl={logoUrl} storeName={storeName} />
 
             <div className="mb-6">
-                <span className={presets.tag}>Quick Link</span>
+                <span className={presets.tag}>{customWelcomeTag || "Quick Link"}</span>
                 <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-tight mb-2 text-left">
-                    {customWelcomeMessage || "Connect with us"}
+                    {customWelcomeTitle || "Connect with us"}
                 </h1>
                 <p className="text-sm font-medium text-slate-500 leading-relaxed text-left">
-                    Leave your details to stay in touch and earn rewards.
+                    {customWelcomeMessage || "Leave your details to stay in touch and earn rewards."}
                 </p>
             </div>
 

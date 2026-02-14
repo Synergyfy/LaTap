@@ -226,7 +226,7 @@ min-qusntity
 
 ==================================
 
-[7:16 PM, 2/12/2026] Oyelakin Tobiloba: STEP 1: The 5-Second Core Flow (Non-Negotiable)
+STEP 1: The 5-Second Core Flow (Non-Negotiable)
 
 Customer taps NFC →
 

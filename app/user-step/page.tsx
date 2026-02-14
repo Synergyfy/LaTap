@@ -28,7 +28,8 @@ export default function UserStepPage() {
         customPrivacyMessage, customRewardMessage, hasRewardSetup,
         setBusinessType, userData, logoUrl, visitCount, rewardVisitThreshold,
         redemptionStatus, lastRedemptionId, requestRedemption, setRedemptionStatus, resetVisitCountAfterRedemption,
-        engagementSettings, surveyQuestions
+        engagementSettings, surveyQuestions,
+        customNewUserWelcomeMessage, customNewUserWelcomeTitle, customNewUserWelcomeTag
     } = useCustomerFlowStore();
 
     const addRedemptionRequest = useMockDashboardStore(state => state.addRedemptionRequest);
@@ -115,7 +116,7 @@ export default function UserStepPage() {
                 } else {
                     setStep('FORM');
                 }
-            }, 2000);
+            }, (storedIdentity || userData) ? 500 : 2000);
 
             return () => clearTimeout(syncTimeout);
         }
@@ -178,7 +179,7 @@ export default function UserStepPage() {
         if (type === 'review') {
             window.open(engagementSettings.reviewUrl, '_blank');
         } else if (type === 'social') {
-            window.open(engagementSettings.socialUrl, '_blank');
+            // Handled by the component's internal modal
         } else if (type === 'feedback') {
             setStep('SURVEY');
         } else if (type === 'rewards') {
@@ -220,7 +221,9 @@ export default function UserStepPage() {
                     <StepForm
                         storeName={storeName}
                         logoUrl={logoUrl}
-                        customWelcomeMessage={customWelcomeMessage}
+                        customWelcomeMessage={customNewUserWelcomeMessage}
+                        customWelcomeTitle={customNewUserWelcomeTitle}
+                        customWelcomeTag={customNewUserWelcomeTag}
                         customPrivacyMessage={customPrivacyMessage}
                         initialData={userData || storedIdentity || user}
                         isSyncingReal={isSyncingReal}
