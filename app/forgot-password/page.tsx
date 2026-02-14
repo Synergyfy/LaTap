@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import AuthSidePanel from '@/components/auth/AuthSidePanel';
+import Logo from '@/components/brand/Logo';
 
 export default function ForgotPasswordPage() {
     const [submitted, setSubmitted] = useState(false);
@@ -14,11 +15,9 @@ export default function ForgotPasswordPage() {
             {/* Left Side: Form */}
             <div className="w-full lg:w-[60%] flex flex-col overflow-y-auto">
                 <div className="p-8 md:p-16 lg:p-24">
-                    <Link href="/" className="flex items-center gap-2 mb-24">
-                        <span className="material-icons-round text-primary text-2xl">nfc</span>
-                        <span className="font-display font-semibold text-xl tracking-tight text-text-main">VemTap</span>
+                    <Link href="/" className="mb-24 block w-fit">
+                        <Logo iconSize={40} fontSize="text-2xl" withText />
                     </Link>
-
                     <div className="max-w-md w-full mx-auto lg:mx-0">
                         <AnimatePresence mode="wait">
                             {!submitted ? (

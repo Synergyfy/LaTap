@@ -18,6 +18,7 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { useQuoteStore } from '@/store/quoteStore';
 import { calculateQuotePrice } from '@/lib/utils/calculateQuotePrice';
 import { sendVerificationEmail } from '@/lib/api/notifications';
+import Logo from '@/components/brand/Logo';
 
 export default function ProductClient({ id }: { id: string }) {
     const router = useRouter();
@@ -179,7 +180,10 @@ export default function ProductClient({ id }: { id: string }) {
             });
         }
 
+
+
         toast.success(`Quote request sent for ${product.name}!`);
+        setIsQuoteModalOpen(false); // Auto-close modal
         setActiveTab('specs');
         setQuoteData({
             firstName: user?.name?.split(' ')[0] || '',
@@ -199,13 +203,8 @@ export default function ProductClient({ id }: { id: string }) {
             <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
                 <div className="max-w-[1400px] mx-auto px-4 md:px-8 h-20 flex items-center justify-between gap-8">
                     <div className="flex items-center gap-12">
-                        <Link href="/" className="flex items-center gap-3 group">
-                            <div className="w-14 h-14 flex items-center justify-center transition-all duration-300">
-                                <LogoIcon size={48} />
-                            </div>
-                            <span className="font-display font-bold text-2xl tracking-tight text-slate-900">
-                                VemTap<span className="text-primary">.Market</span>
-                            </span>
+                        <Link href="/" className="block">
+                            <Logo iconSize={48} fontSize="text-2xl" withText textClassName="font-display font-bold tracking-tight text-slate-900" />
                         </Link>
                     </div>
 

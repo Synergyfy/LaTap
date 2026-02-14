@@ -7,6 +7,7 @@ import AuthSidePanel from '@/components/auth/AuthSidePanel';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import Logo from '@/components/brand/Logo';
 
 export default function GetStarted() {
     const router = useRouter();
@@ -69,10 +70,7 @@ export default function GetStarted() {
             {/* Left Side: Form */}
             <div className="w-full lg:w-1/2 flex flex-col overflow-y-auto">
                 <div className="p-8 md:p-16 lg:p-24">
-                    <Link href="/" className="flex items-center gap-2 mb-16">
-                        <span className="material-icons-round text-primary text-2xl">nfc</span>
-                        <span className="font-display font-semibold text-xl tracking-tight text-text-main">VemTap</span>
-                    </Link>
+                    <Logo iconSize={56} fontSize="text-2xl" className="flex items-center gap-3" />
 
                     <div className="max-w-md w-full mx-auto lg:mx-0">
                         {/* Progress Bar */}
