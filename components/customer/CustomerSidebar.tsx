@@ -152,7 +152,7 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
                         </div>
                         <div className="flex-1 min-w-0">
                             <p className="text-sm font-bold text-text-main truncate">{user?.name || 'Customer'}</p>
-                            <p className="text-xs text-text-secondary truncate">{user?.email || 'customer@eliztap.com'}</p>
+                            <p className="text-xs text-text-secondary truncate">{user?.email || 'customer@vemtap.com'}</p>
                         </div>
                     </div>
                     <button

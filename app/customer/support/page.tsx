@@ -29,7 +29,7 @@ export default function CustomerSupportPage() {
     };
 
     const faqs = [
-        { q: 'How do I earn points?', a: 'Just tap your phone on any ElizTap terminal at participating businesses.' },
+        { q: 'How do I earn points?', a: 'Just tap your phone on any VemTap terminal at participating businesses.' },
         { q: 'Can I transfer points?', a: 'Currently, points are tied to your specific identity and cannot be transferred.' },
         { q: 'What happens if a reward expires?', a: 'Expired rewards cannot be reclaimed, but you can always earn new ones!' },
     ];
@@ -41,7 +41,7 @@ export default function CustomerSupportPage() {
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                     <div>
                         <h1 className="text-3xl font-display font-bold text-text-main tracking-tight">Help & Resolution</h1>
-                        <p className="text-text-secondary font-medium mt-1">We're here to ensure your ElizTap experience is seamless</p>
+                        <p className="text-text-secondary font-medium mt-1">We're here to ensure your VemTap experience is seamless</p>
                     </div>
                     <button
                         onClick={() => setIsCreateModalOpen(true)}

@@ -6,7 +6,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: 'How It Works',
-    description: 'Learn how ElizTap uses NFC technology to bridge the gap between physical visitors and digital data capture.',
+    description: 'Learn how VemTap uses NFC technology to bridge the gap between physical visitors and digital data capture.',
 };
 
 export default function HowItWorks() {
@@ -20,7 +20,7 @@ export default function HowItWorks() {
         {
             number: '02',
             title: 'Place NFC Tags',
-            description: 'Position your ElizTap NFC tags at strategic walk-in points—receptions, tables, or checkout counters.',
+            description: 'Position your VemTap NFC tags at strategic walk-in points—receptions, tables, or checkout counters.',
             icon: 'nfc'
         },
         {
@@ -51,7 +51,7 @@ export default function HowItWorks() {
                             <span className="text-gradient">Physical & Digital</span>
                         </h1>
                         <p className="text-xl text-text-secondary font-medium leading-relaxed max-w-2xl mx-auto">
-                            ElizTap uses NFC technology to eliminate the friction in customer interactions. Here is how we help you capture every visitor.
+                            VemTap uses NFC technology to eliminate the friction in customer interactions. Here is how we help you capture every visitor.
                         </p>
                     </div>
                 </section>
@@ -140,7 +140,7 @@ export default function HowItWorks() {
                     <div className="max-w-4xl mx-auto px-4">
                         <h2 className="text-4xl md:text-5xl font-display font-bold mb-8">Ready to digitize your venue?</h2>
                         <p className="text-xl opacity-70 mb-12 max-w-2xl mx-auto">
-                            Join thousands of businesses using ElizTap to bridge the gap between their physical visits and digital data.
+                            Join thousands of businesses using VemTap to bridge the gap between their physical visits and digital data.
                         </p>
                         <div className="flex flex-col sm:flex-row justify-center gap-4">
                             <Link href="/get-started" className="bg-primary text-white font-bold px-10 py-4 rounded-full hover:bg-primary-hover transition-all">

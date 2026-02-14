@@ -17,11 +17,11 @@ interface SocialMediaModalProps {
 
 export const SocialMediaModal: React.FC<SocialMediaModalProps> = ({ isOpen, onClose, socialLinks }) => {
     const socials = [
-        { name: 'Instagram', icon: Instagram, color: 'text-pink-600', bg: 'bg-pink-50', url: socialLinks?.instagram || '#' },
-        { name: 'X / Twitter', icon: Twitter, color: 'text-slate-900', bg: 'bg-slate-50', url: socialLinks?.twitter || '#' },
-        { name: 'Facebook', icon: Facebook, color: 'text-blue-600', bg: 'bg-blue-50', url: socialLinks?.facebook || '#' },
-        { name: 'LinkedIn', icon: Linkedin, color: 'text-blue-700', bg: 'bg-blue-50', url: socialLinks?.linkedin || '#' },
-    ];
+        { name: 'Instagram', icon: Instagram, color: 'text-pink-600', bg: 'bg-pink-50', url: socialLinks?.instagram },
+        { name: 'X / Twitter', icon: Twitter, color: 'text-slate-900', bg: 'bg-slate-50', url: socialLinks?.twitter },
+        { name: 'Facebook', icon: Facebook, color: 'text-blue-600', bg: 'bg-blue-50', url: socialLinks?.facebook },
+        { name: 'LinkedIn', icon: Linkedin, color: 'text-blue-700', bg: 'bg-blue-50', url: socialLinks?.linkedin },
+    ].filter(s => s.url && s.url !== '');
 
     return (
         <AnimatePresence>

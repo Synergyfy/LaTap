@@ -22,7 +22,7 @@ export default function MarketplaceCTA() {
                         </h2>
                         <p className="text-lg text-text-secondary font-medium mb-8 leading-relaxed">
                             Browse our curated selection of enterprise-grade NFC readers, smart cards, and access control hardware.
-                            All products are tested, certified, and ready to integrate with your ElizTap system.
+                            All products are tested, certified, and ready to integrate with your VemTap system.
                         </p>
 
                         {/* Features Grid */}

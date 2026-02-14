@@ -24,7 +24,7 @@ export default function Process() {
                         {
                             step: '2. The Connect',
                             heading: 'Capture customer info',
-                            desc: 'Getting customer details is easy. ElizTap captures info in under 2 seconds without them needing to download any app.',
+                            desc: 'Getting customer details is easy. VemTap captures info in under 2 seconds without them needing to download any app.',
                             img: 'https://images.unsplash.com/photo-1556740758-90eb39f3203c?auto=format&fit=crop&q=80&w=800',
                             color: 'bg-primary-dark'
                         },

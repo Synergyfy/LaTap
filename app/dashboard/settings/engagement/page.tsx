@@ -58,8 +58,8 @@ export default function EngagementSettingsPage() {
                                 <Star size={24} />
                             </div>
                             <div>
-                                <h3 className="font-display font-bold text-text-main">Review Engine</h3>
-                                <p className="text-[10px] font-black uppercase tracking-widest text-text-secondary">Capture 5-Star ratings</p>
+                                <h3 className="font-display font-bold text-text-main">Google Business Review</h3>
+                                <p className="text-[10px] font-black uppercase tracking-widest text-text-secondary">Capture 5-Star ratings on Google</p>
                             </div>
                         </div>
                         <Toggle
@@ -107,17 +107,58 @@ export default function EngagementSettingsPage() {
                     </div>
 
                     <div className="space-y-6">
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Primary Social Link</label>
-                            <div className="relative">
-                                <MessageCircle size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                                <input
-                                    type="text"
-                                    placeholder="instagram.com/your-business"
-                                    value={localSettings.socialUrl}
-                                    onChange={(e) => setLocalSettings((prev: any) => ({ ...prev, socialUrl: e.target.value }))}
-                                    className="w-full h-14 bg-gray-50 border border-gray-100 rounded-2xl pl-12 pr-4 text-sm font-bold focus:bg-white focus:ring-4 focus:ring-primary/10 transition-all outline-none"
-                                />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label className="text-[9px] font-black uppercase tracking-widest text-text-secondary ml-1">Instagram</label>
+                                <div className="relative">
+                                    <LinkIcon size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-pink-500" />
+                                    <input
+                                        type="text"
+                                        placeholder="instagram.com/user"
+                                        value={localSettings.instagram || ''}
+                                        onChange={(e) => setLocalSettings((prev: any) => ({ ...prev, instagram: e.target.value }))}
+                                        className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-10 pr-4 text-xs font-bold focus:bg-white focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[9px] font-black uppercase tracking-widest text-text-secondary ml-1">X / Twitter</label>
+                                <div className="relative">
+                                    <LinkIcon size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-900" />
+                                    <input
+                                        type="text"
+                                        placeholder="x.com/user"
+                                        value={localSettings.twitter || ''}
+                                        onChange={(e) => setLocalSettings((prev: any) => ({ ...prev, twitter: e.target.value }))}
+                                        className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-10 pr-4 text-xs font-bold focus:bg-white focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[9px] font-black uppercase tracking-widest text-text-secondary ml-1">Facebook</label>
+                                <div className="relative">
+                                    <LinkIcon size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-600" />
+                                    <input
+                                        type="text"
+                                        placeholder="facebook.com/page"
+                                        value={localSettings.facebook || ''}
+                                        onChange={(e) => setLocalSettings((prev: any) => ({ ...prev, facebook: e.target.value }))}
+                                        className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-10 pr-4 text-xs font-bold focus:bg-white focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[9px] font-black uppercase tracking-widest text-text-secondary ml-1">LinkedIn</label>
+                                <div className="relative">
+                                    <LinkIcon size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-700" />
+                                    <input
+                                        type="text"
+                                        placeholder="linkedin.com/company"
+                                        value={localSettings.linkedin || ''}
+                                        onChange={(e) => setLocalSettings((prev: any) => ({ ...prev, linkedin: e.target.value }))}
+                                        className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-10 pr-4 text-xs font-bold focus:bg-white focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>

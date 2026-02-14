@@ -27,7 +27,7 @@ export default function HardwareWhitepaperPage() {
         },
         {
             title: "White-Label Sovereignty",
-            desc: "Complete brand autonomy. Your clients never see 'ElizTap'—they only see your brand, your colors, and your ecosystem.",
+            desc: "Complete brand autonomy. Your clients never see 'VemTap'—they only see your brand, your colors, and your ecosystem.",
             items: [
                 "Custom CNAME (your-app.com)",
                 "Branded Administration Panel",
@@ -93,7 +93,7 @@ export default function HardwareWhitepaperPage() {
                                 NFC Hardware & <br /> White-Label Infrastructure
                             </h1>
                             <p className="text-lg md:text-xl text-slate-500 font-medium max-w-2xl leading-relaxed mb-10">
-                                A comprehensive guide to scaling your business identity with ElizTap's decentralized hardware solutions.
+                                A comprehensive guide to scaling your business identity with VemTap's decentralized hardware solutions.
                             </p>
 
                             <div className="flex flex-wrap justify-center gap-4">
@@ -181,7 +181,7 @@ export default function HardwareWhitepaperPage() {
                             <div>
                                 <h2 className="text-4xl font-display font-bold mb-6">The Elite White-Label <br /> Partnership</h2>
                                 <p className="text-lg text-slate-400 font-medium mb-10 leading-relaxed">
-                                    Remove all traces of ElizTap and present our technology as your own proprietary solution. Perfect for agencies, franchises, and large-scale enterprises.
+                                    Remove all traces of VemTap and present our technology as your own proprietary solution. Perfect for agencies, franchises, and large-scale enterprises.
                                 </p>
 
                                 <div className="space-y-6">
@@ -236,13 +236,13 @@ export default function HardwareWhitepaperPage() {
                     <div className="mt-20 text-center">
                         <p className="text-sm text-slate-400 font-bold uppercase tracking-widest mb-4">Have questions?</p>
                         <div className="flex justify-center gap-8">
-                            <a href="mailto:sales@eliztap.com" className="flex items-center gap-2 text-slate-600 font-bold hover:text-primary transition-colors">
+                            <a href="mailto:sales@vemtap.com" className="flex items-center gap-2 text-slate-600 font-bold hover:text-primary transition-colors">
                                 <Mail size={18} />
-                                sales@eliztap.com
+                                sales@vemtap.com
                             </a>
-                            <a href="tel:+234800ELIZTAP" className="flex items-center gap-2 text-slate-600 font-bold hover:text-primary transition-colors">
+                            <a href="tel:+234800VEMTAP" className="flex items-center gap-2 text-slate-600 font-bold hover:text-primary transition-colors">
                                 <Phone size={18} />
-                                +234 800-ELIZTAP
+                                +234 800-VEMTAP
                             </a>
                         </div>
                     </div>

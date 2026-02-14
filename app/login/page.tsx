@@ -77,11 +77,11 @@ export default function LoginPage() {
 
                                     <div className="grid grid-cols-2 md:grid-cols-5 gap-4 relative z-10">
                                         {[
-                                            { id: 'owner', label: 'Business Owner', icon: 'storefront', email: 'business@eliztap.com', pass: 'business123', route: '/dashboard' },
-                                            { id: 'manager', label: 'Store Manager', icon: 'supervisor_account', email: 'manager@eliztap.com', pass: 'manager123', route: '/dashboard' },
-                                            { id: 'staff', label: 'Staff Member', icon: 'badge', email: 'staff@eliztap.com', pass: 'staff123', route: '/dashboard' },
-                                            { id: 'customer', label: 'Customer/User', icon: 'person', email: 'customer@eliztap.com', pass: 'customer123', route: '/customer/dashboard' },
-                                            { id: 'admin', label: 'Platform Admin', icon: 'admin_panel_settings', email: 'admin@eliztap.com', pass: 'admin123', route: '/admin/dashboard' }
+                                            { id: 'owner', label: 'Business Owner', icon: 'storefront', email: 'business@vemtap.com', pass: 'business123', route: '/dashboard' },
+                                            { id: 'manager', label: 'Store Manager', icon: 'supervisor_account', email: 'manager@vemtap.com', pass: 'manager123', route: '/dashboard' },
+                                            { id: 'staff', label: 'Staff Member', icon: 'badge', email: 'staff@vemtap.com', pass: 'staff123', route: '/dashboard' },
+                                            { id: 'customer', label: 'Customer/User', icon: 'person', email: 'customer@vemtap.com', pass: 'customer123', route: '/customer/dashboard' },
+                                            { id: 'admin', label: 'Platform Admin', icon: 'admin_panel_settings', email: 'admin@vemtap.com', pass: 'admin123', route: '/admin/dashboard' }
                                         ].map((demo) => (
                                             <button
                                                 key={demo.id}
@@ -209,7 +209,7 @@ export default function LoginPage() {
                             </motion.div>
 
                             <p className="text-xs text-center lg:text-left text-text-secondary font-bold uppercase tracking-[0.2em] mt-16">
-                                Don't have an ElizTap business account? <Link href="/get-started" className="text-primary hover:underline underline-offset-4">Join now</Link>
+                                Don't have an VemTap business account? <Link href="/get-started" className="text-primary hover:underline underline-offset-4">Join now</Link>
                             </p>
                         </div>
                     </div>

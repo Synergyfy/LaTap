@@ -144,7 +144,7 @@ export default function MarketplacePage() {
                                 <span className="material-icons-round text-primary text-4xl select-none">nfc</span>
                             </div>
                             <span className="font-display font-bold text-xl tracking-tight text-text-main">
-                                ElizTap<span className="text-primary">.Market</span>
+                                VemTap<span className="text-primary">.Market</span>
                             </span>
                         </Link>
 
@@ -155,9 +155,9 @@ export default function MarketplacePage() {
                                     Solutions
                                     <span className="material-icons-round text-lg transition-transform group-hover:rotate-180">expand_more</span>
                                 </button>
-                                <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-none shadow-2xl border border-gray-100 p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                                    <Link href="/solutions/hardware" className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors">
-                                        <div className="size-10 bg-blue-50 text-blue-600 rounded-none flex items-center justify-center">
+                                <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                                    <Link href="/solutions/hardware" className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors rounded-xl">
+                                        <div className="size-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
                                             <span className="material-icons-round">nfc</span>
                                         </div>
                                         <div>
@@ -165,8 +165,8 @@ export default function MarketplacePage() {
                                             <p className="text-[10px] text-text-secondary font-medium whitespace-nowrap">NFC Plates & Cards</p>
                                         </div>
                                     </Link>
-                                    <Link href="/solutions/software" className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors">
-                                        <div className="size-10 bg-primary/10 text-primary rounded-none flex items-center justify-center">
+                                    <Link href="/solutions/software" className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors rounded-xl">
+                                        <div className="size-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
                                             <span className="material-icons-round">terminal</span>
                                         </div>
                                         <div>
@@ -183,8 +183,8 @@ export default function MarketplacePage() {
                     <div className="flex items-center gap-3 sm:gap-6">
                         <div className="h-8 w-px bg-gray-200 hidden sm:block"></div>
 
-                        <button className="hidden sm:flex items-center gap-3 hover:bg-gray-50 p-1.5 pr-3 rounded-none border border-transparent hover:border-gray-200 transition-all">
-                            <div className="w-9 h-9 rounded-none bg-linear-to-br from-gray-100 to-gray-200 border border-gray-200 overflow-hidden flex items-center justify-center">
+                        <button className="hidden sm:flex items-center gap-3 hover:bg-gray-50 p-1.5 pr-3 rounded-2xl border border-transparent hover:border-gray-200 transition-all">
+                            <div className="w-9 h-9 rounded-xl bg-linear-to-br from-gray-100 to-gray-200 border border-gray-200 overflow-hidden flex items-center justify-center">
                                 <span className="font-bold text-gray-500">JP</span>
                             </div>
                             <span className="text-sm font-bold text-gray-700">Account</span>
@@ -219,12 +219,12 @@ export default function MarketplacePage() {
                     {/* Error State */}
                     {isError && (
                         <div className="flex-1 flex flex-col items-center justify-center p-20 text-center">
-                            <div className="w-16 h-16 bg-red-50 text-red-500 rounded-none flex items-center justify-center mb-4">
+                            <div className="w-16 h-16 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center mb-4">
                                 <X size={32} />
                             </div>
                             <h3 className="text-xl font-bold text-gray-900 mb-2">Failed to load products</h3>
                             <p className="text-gray-500 mb-6">Something went wrong while fetching the marketplace data.</p>
-                            <button onClick={() => window.location.reload()} className="px-6 py-2 bg-primary text-white rounded-none font-bold hover:bg-primary-hover transition-colors">
+                            <button onClick={() => window.location.reload()} className="px-6 py-2 bg-primary text-white rounded-xl font-bold hover:bg-primary-hover transition-colors">
                                 Try Again
                             </button>
                         </div>
@@ -237,13 +237,13 @@ export default function MarketplacePage() {
                                 <div
                                     key={product.id}
                                     onClick={() => handleCardClick(product.id)}
-                                    className="group bg-white rounded-none border border-gray-200 hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300 flex flex-col overflow-hidden relative cursor-pointer"
+                                    className="group bg-white rounded-3xl border border-gray-200 hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300 flex flex-col overflow-hidden relative cursor-pointer"
                                 >
 
                                     {/* Image Area */}
                                     <div className="relative aspect-square p-8 bg-white group-hover:bg-gray-50 transition-colors duration-500 flex items-center justify-center border-b border-gray-100">
                                         <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
-                                            <span className={`self-start px-3 py-1 rounded-none text-[10px] font-bold uppercase tracking-wider text-white shadow-sm ${product.tagColor}`}>
+                                            <span className={`self-start px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider text-white shadow-sm ${product.tagColor}`}>
                                                 {product.tag}
                                             </span>
                                         </div>
@@ -259,7 +259,7 @@ export default function MarketplacePage() {
                                     {/* Content */}
                                     <div className="p-6 flex-1 flex flex-col">
                                         <div className="mb-4 flex items-center justify-between">
-                                            <div className="flex items-center gap-1.5 bg-primary/10 px-2 py-1 rounded-none">
+                                            <div className="flex items-center gap-1.5 bg-primary/10 px-2 py-1 rounded-lg">
                                                 <Star size={12} className="text-primary fill-primary" />
                                                 <span className="text-xs font-bold text-primary">{product.rating}</span>
                                             </div>
@@ -291,7 +291,7 @@ export default function MarketplacePage() {
 
                                             <button
                                                 onClick={(e) => handleAction(e, product)}
-                                                className="w-full py-3 rounded-none text-sm font-bold flex items-center justify-center gap-1 transition-all active:scale-95 text-primary hover:text-primary-hover hover:underline shadow-none"
+                                                className="w-full py-3 rounded-2xl text-sm font-bold flex items-center justify-center gap-1 transition-all active:scale-95 text-primary hover:text-primary-hover hover:underline shadow-none"
                                             >
                                                 Request Quote <ArrowRight size={16} />
                                             </button>
@@ -303,7 +303,7 @@ export default function MarketplacePage() {
                     )}
 
                     {!isLoading && !isError && products.length === 0 && (
-                        <div className="py-20 text-center bg-gray-50 rounded-none border border-dashed border-gray-200">
+                        <div className="py-20 text-center bg-gray-50 rounded-3xl border border-dashed border-gray-200">
                             <p className="text-text-secondary font-medium">No products match your search.</p>
                         </div>
                     )}
@@ -319,7 +319,7 @@ export default function MarketplacePage() {
                                 <button
                                     onClick={() => setPage(Math.max(1, currentPage - 1))}
                                     disabled={currentPage === 1}
-                                    className="p-2 rounded-none border border-gray-200 text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-gray-300 transition-all"
+                                    className="p-2 rounded-xl border border-gray-200 text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-gray-300 transition-all"
                                 >
                                     <ChevronLeft size={20} />
                                 </button>
@@ -328,7 +328,7 @@ export default function MarketplacePage() {
                                     <button
                                         key={page}
                                         onClick={() => setPage(page)}
-                                        className={`w-10 h-10 rounded-none text-sm font-bold transition-all ${currentPage === page
+                                        className={`w-10 h-10 rounded-xl text-sm font-bold transition-all ${currentPage === page
                                             ? 'bg-primary text-white shadow-lg shadow-primary/20'
                                             : 'text-gray-600 hover:bg-gray-50 border border-transparent hover:border-gray-200'
                                             }`}
@@ -340,7 +340,7 @@ export default function MarketplacePage() {
                                 <button
                                     onClick={() => setPage(Math.min(totalPages, currentPage + 1))}
                                     disabled={currentPage === totalPages}
-                                    className="p-2 rounded-none border border-gray-200 text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-gray-300 transition-all"
+                                    className="p-2 rounded-xl border border-gray-200 text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-gray-300 transition-all"
                                 >
                                     <ChevronRight size={20} />
                                 </button>
@@ -357,10 +357,10 @@ export default function MarketplacePage() {
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                         <div className="col-span-2">
                             <div className="flex items-center gap-2 mb-6">
-                                <div className="bg-primary p-2 rounded-none text-white">
+                                <div className="bg-primary p-2 rounded-xl text-white">
                                     <Grid size={24} />
                                 </div>
-                                <span className="text-xl font-bold tracking-tight text-slate-900">ElizTap</span>
+                                <span className="text-xl font-bold tracking-tight text-slate-900">VemTap</span>
                             </div>
                             <p className="text-slate-500 text-sm max-w-xs">
                                 The leading marketplace for secure access hardware, NFC readers, and enterprise connectivity solutions.
@@ -384,7 +384,7 @@ export default function MarketplacePage() {
                         </div>
                     </div>
                     <div className="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
-                        <p>© {new Date().getFullYear()} ElizTap. All rights reserved.</p>
+                        <p>© {new Date().getFullYear()} VemTap. All rights reserved.</p>
                         <div className="flex gap-6">
                             <Link href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
                             <Link href="/terms" className="hover:text-primary transition-colors">Terms of Service</Link>
@@ -398,7 +398,7 @@ export default function MarketplacePage() {
                 isQuoteModalOpen && selectedQuoteProduct && (
                     <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
                         <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={() => setIsQuoteModalOpen(false)}></div>
-                        <div className="relative bg-white rounded-none shadow-2xl w-full max-w-4xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col md:flex-row">
+                        <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-4xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col md:flex-row">
                             {/* Signup Suggestion Side Panel */}
                             {!user && !showOTPStep && (
                                 <div className="w-full md:w-80 bg-primary/5 p-8 border-b md:border-b-0 md:border-r border-primary/10 flex flex-col justify-center">
@@ -456,7 +456,7 @@ export default function MarketplacePage() {
                                                 <h3 className="font-display font-bold text-xl text-text-main">Request Quote</h3>
                                                 <p className="text-sm text-text-secondary">Bulk pricing for {selectedQuoteProduct.name}</p>
                                             </div>
-                                            <button onClick={() => setIsQuoteModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-none transition-colors text-gray-500">
+                                            <button onClick={() => setIsQuoteModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-500">
                                                 <X size={20} />
                                             </button>
                                         </div>
@@ -540,7 +540,7 @@ export default function MarketplacePage() {
                                                     placeholder="Company Ltd."
                                                     value={quoteFormData.businessName}
                                                     onChange={(e) => setQuoteFormData({ ...quoteFormData, businessName: e.target.value })}
-                                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                                     required
                                                 />
                                             </div>
@@ -551,14 +551,14 @@ export default function MarketplacePage() {
                                                     placeholder="Any specific requirements?"
                                                     value={quoteFormData.notes}
                                                     onChange={(e) => setQuoteFormData({ ...quoteFormData, notes: e.target.value })}
-                                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium resize-none"
+                                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium resize-none"
                                                 ></textarea>
                                             </div>
                                             <div className="pt-2">
                                                 <button
                                                     type="submit"
                                                     disabled={isCreatingAccount}
-                                                    className="w-full py-4 bg-primary text-white font-bold rounded-none hover:bg-primary-hover shadow-lg shadow-primary/20 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                                    className="w-full py-4 bg-primary text-white font-bold rounded-2xl hover:bg-primary-hover shadow-lg shadow-primary/20 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                                 >
                                                     {isCreatingAccount ? (
                                                         <>
@@ -582,7 +582,7 @@ export default function MarketplacePage() {
                                             <button onClick={() => {
                                                 setIsQuoteModalOpen(false);
                                                 setShowOTPStep(false);
-                                            }} className="p-2 hover:bg-gray-100 rounded-none transition-colors text-gray-500">
+                                            }} className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-500">
                                                 <X size={20} />
                                             </button>
                                         </div>
@@ -595,7 +595,7 @@ export default function MarketplacePage() {
                                                     maxLength={6}
                                                     value={otp}
                                                     onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                                                    className="w-full px-4 py-4 bg-gray-50 border-2 border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none font-bold text-2xl text-center tracking-widest"
+                                                    className="w-full px-4 py-4 bg-gray-50 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none font-bold text-2xl text-center tracking-widest"
                                                     required
                                                 />
                                                 <p className="text-xs text-text-secondary text-center mt-3">
@@ -604,7 +604,7 @@ export default function MarketplacePage() {
                                             </div>
                                             <button
                                                 type="submit"
-                                                className="w-full py-4 bg-primary text-white font-bold rounded-none hover:bg-primary-hover shadow-lg shadow-primary/20 transition-all active:scale-[0.98]"
+                                                className="w-full py-4 bg-primary text-white font-bold rounded-2xl hover:bg-primary-hover shadow-lg shadow-primary/20 transition-all active:scale-[0.98]"
                                             >
                                                 Verify & Submit Quote
                                             </button>
@@ -621,13 +621,13 @@ export default function MarketplacePage() {
                 isSuccessModalOpen && (
                     <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
                         <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={() => setIsSuccessModalOpen(false)}></div>
-                        <div className="relative bg-white rounded-none shadow-2xl w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-200 text-center p-8">
-                            <div className="w-16 h-16 bg-green-50 text-green-500 rounded-none flex items-center justify-center mx-auto mb-6">
+                        <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-200 text-center p-8">
+                            <div className="w-16 h-16 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
                                 <CheckCircle2 size={32} />
                             </div>
                             <h3 className="font-display font-bold text-2xl text-text-main mb-2">Request Sent!</h3>
                             <p className="text-sm text-text-secondary mb-8">We've received your quote request. A member of our sales team will contact you shortly.</p>
-                            <button onClick={() => setIsSuccessModalOpen(false)} className="w-full py-3 bg-gray-100 hover:bg-gray-200 text-text-main font-bold rounded-none transition-colors">
+                            <button onClick={() => setIsSuccessModalOpen(false)} className="w-full py-3 bg-gray-100 hover:bg-gray-200 text-text-main font-bold rounded-2xl transition-colors">
                                 Continue Browsing
                             </button>
                         </div>

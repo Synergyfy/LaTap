@@ -93,7 +93,7 @@ export default function CustomerDashboardPage() {
                                 {user?.name?.split(' ')[0] || 'Customer'}!
                             </h1>
                             <p className="text-blue-50 text-base md:text-lg max-w-lg mb-8 font-medium leading-relaxed opacity-90">
-                                Visit participating venues and tap your phone at the ElizTap terminal to earn rewards instantly.
+                                Visit participating venues and tap your phone at the VemTap terminal to earn rewards instantly.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                                 <button

@@ -128,7 +128,11 @@ interface CustomerFlowState {
         showSocial: boolean;
         showFeedback: boolean;
         reviewUrl: string;
-        socialUrl: string;
+        socialUrl: string; // Maintain for legacy
+        instagram?: string;
+        twitter?: string;
+        facebook?: string;
+        linkedin?: string;
     };
     surveyQuestions: Array<{
         id: string;
@@ -210,7 +214,11 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
         showSocial: true,
         showFeedback: true,
         reviewUrl: 'https://g.page/review/vemtap',
-        socialUrl: 'https://instagram.com/vemtap'
+        socialUrl: 'https://instagram.com/vemtap',
+        instagram: 'https://instagram.com/vemtap',
+        twitter: '',
+        facebook: '',
+        linkedin: ''
     },
     surveyQuestions: [
         { id: 'q1', text: 'How was your experience today?', type: 'rating' },

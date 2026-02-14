@@ -5,7 +5,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: 'Terms of Service',
-    description: 'Read the Terms of Service for ElizTap. Understand your rights and responsibilities when using our NFC-based visitor capture and management software.',
+    description: 'Read the Terms of Service for VemTap. Understand your rights and responsibilities when using our NFC-based visitor capture and management software.',
 };
 
 export default function TermsOfService() {
@@ -26,14 +26,14 @@ export default function TermsOfService() {
                         <section>
                             <h2 className="text-2xl font-bold text-text-main mb-4 font-display">1. Acceptance of Terms</h2>
                             <p className="text-text-secondary leading-relaxed font-medium">
-                                By accessing and using ElizTap (the "Service"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our service. The Service is provided by ElizTap Inc., and these terms constitute a legally binding agreement between you and us.
+                                By accessing and using VemTap (the "Service"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our service. The Service is provided by VemTap Inc., and these terms constitute a legally binding agreement between you and us.
                             </p>
                         </section>
 
                         <section>
                             <h2 className="text-2xl font-bold text-text-main mb-4 font-display">2. Description of Service</h2>
                             <p className="text-text-secondary leading-relaxed font-medium">
-                                ElizTap provides NFC-based visitor capture and management software. You are responsible for obtaining the necessary hardware (NFC pucks) and internet access required to use the Service. We reserve the right to modify or discontinue the Service at any time.
+                                VemTap provides NFC-based visitor capture and management software. You are responsible for obtaining the necessary hardware (NFC pucks) and internet access required to use the Service. We reserve the right to modify or discontinue the Service at any time.
                             </p>
                         </section>
 
@@ -61,7 +61,7 @@ export default function TermsOfService() {
                         <section>
                             <h2 className="text-2xl font-bold text-text-main mb-4 font-display">6. Limitation of Liability</h2>
                             <p className="text-text-secondary leading-relaxed font-medium italic">
-                                To the maximum extent permitted by law, ElizTap shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly.
+                                To the maximum extent permitted by law, VemTap shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly.
                             </p>
                         </section>
                     </div>
@@ -69,7 +69,7 @@ export default function TermsOfService() {
                     <div className="mt-20 p-8 rounded-3xl bg-gray-50 border border-gray-100">
                         <h4 className="font-bold text-text-main mb-2">Need clarification?</h4>
                         <p className="text-sm text-text-secondary font-medium mb-6">If you have any questions regarding these terms, please reach out to our legal department.</p>
-                        <button className="text-primary font-bold text-sm hover:underline">legal@eliztap.io</button>
+                        <button className="text-primary font-bold text-sm hover:underline">legal@vemtap.io</button>
                     </div>
                 </div>
             </main>

@@ -101,7 +101,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                 </div>
                 <button
                     onClick={() => setIsAdding(true)}
-                    className="bg-primary text-white px-6 py-3 font-black text-xs uppercase tracking-widest shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center gap-2"
+                    className="bg-primary text-white px-6 py-3 font-black text-xs uppercase tracking-widest shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center gap-2 rounded-2xl"
                 >
                     <Plus className="w-4 h-4" />
                     Create New Reward
@@ -125,13 +125,13 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                     layout
                                     key={reward.id}
                                     className={cn(
-                                        "p-4 bg-white border transition-all flex items-center justify-between group hover:shadow-md hover:border-primary/20",
+                                        "p-4 bg-white border transition-all flex items-center justify-between group hover:shadow-md hover:border-primary/20 rounded-2xl",
                                         reward.isActive ? "border-slate-200" : "border-slate-100 opacity-60"
                                     )}
                                 >
                                     <div className="flex items-center gap-5">
                                         {/* THE NEW IMAGE SHAPE */}
-                                        <div className="relative w-16 h-16 shrink-0 bg-slate-100 border border-slate-200 overflow-hidden">
+                                        <div className="relative w-16 h-16 shrink-0 bg-slate-100 border border-slate-200 overflow-hidden rounded-xl">
                                             {reward.imageUrl ? (
                                                 <img
                                                     src={reward.imageUrl}
@@ -188,7 +188,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                 initial={{ opacity: 0, x: 20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: 20 }}
-                                className="bg-slate-900 p-8 text-white relative shadow-2xl overflow-y-auto max-h-[85vh] scrollbar-hide"
+                                className="bg-slate-900 p-8 text-white relative shadow-2xl overflow-y-auto max-h-[85vh] scrollbar-hide rounded-[2.5rem]"
                             >
                                 <button
                                     onClick={resetForm}
@@ -212,7 +212,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                         <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Reward Cover Image</label>
                                         <div
                                             onClick={() => fileInputRef.current?.click()}
-                                            className="group relative w-full h-40 bg-white/5 border-2 border-dashed border-white/10 hover:border-primary/50 transition-all cursor-pointer flex flex-col items-center justify-center gap-2 overflow-hidden"
+                                            className="group relative w-full h-40 bg-white/5 border-2 border-dashed border-white/10 hover:border-primary/50 transition-all cursor-pointer flex flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl"
                                         >
                                             {formData.imageUrl ? (
                                                 <>
@@ -243,7 +243,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                             type="text"
                                             value={formData.name}
                                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                            className="w-full bg-white/5 border border-white/10 h-12 px-4 font-bold outline-none focus:border-primary transition-all text-sm"
+                                            className="w-full bg-white/5 border border-white/10 h-12 px-4 font-bold outline-none focus:border-primary transition-all text-sm rounded-xl"
                                             placeholder="e.g. Free Nigerian Coffee"
                                         />
                                     </div>
@@ -254,7 +254,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                             <select
                                                 value={formData.rewardType}
                                                 onChange={(e) => setFormData({ ...formData, rewardType: e.target.value as RewardType })}
-                                                className="w-full bg-white/5 border border-white/10 h-12 px-4 font-bold outline-none focus:border-primary transition-all capitalize text-xs"
+                                                className="w-full bg-white/5 border border-white/10 h-12 px-4 font-bold outline-none focus:border-primary transition-all capitalize text-xs rounded-xl"
                                             >
                                                 {['discount', 'free_item', 'service', 'cashback', 'gift'].map(t => (
                                                     <option key={t} value={t} className="bg-slate-900 text-white">{t.replace('_', ' ')}</option>
@@ -267,7 +267,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                                 type="number"
                                                 value={formData.pointCost}
                                                 onChange={(e) => setFormData({ ...formData, pointCost: Number(e.target.value) })}
-                                                className="w-full bg-white/5 border border-white/10 h-12 px-4 font-bold outline-none focus:border-primary transition-all text-sm"
+                                                className="w-full bg-white/5 border border-white/10 h-12 px-4 font-bold outline-none focus:border-primary transition-all text-sm rounded-xl"
                                             />
                                         </div>
                                     </div>
@@ -277,7 +277,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                         <textarea
                                             value={formData.description}
                                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                            className="w-full bg-white/5 border border-white/10 p-4 font-medium text-sm outline-none focus:border-primary transition-all min-h-[80px]"
+                                            className="w-full bg-white/5 border border-white/10 p-4 font-medium text-sm outline-none focus:border-primary transition-all min-h-[80px] rounded-xl"
                                             placeholder="Explain what the customer gets..."
                                         />
                                     </div>
@@ -291,7 +291,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                                     type="number"
                                                     value={formData.validityDays}
                                                     onChange={(e) => setFormData({ ...formData, validityDays: Number(e.target.value) })}
-                                                    className="w-full bg-white/5 border border-white/10 h-12 pl-12 pr-4 font-bold outline-none focus:border-primary transition-all text-sm"
+                                                    className="w-full bg-white/5 border border-white/10 h-12 pl-12 pr-4 font-bold outline-none focus:border-primary transition-all text-sm rounded-xl"
                                                 />
                                             </div>
                                         </div>
@@ -313,7 +313,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
 
                                     <button
                                         onClick={handleSubmit}
-                                        className="w-full bg-primary text-white h-14 font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/40 hover:bg-primary/90 transition-all flex items-center justify-center gap-2 mt-4"
+                                        className="w-full bg-primary text-white h-14 font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/40 hover:bg-primary/90 transition-all flex items-center justify-center gap-2 mt-4 rounded-2xl"
                                     >
                                         <Save className="w-5 h-5" />
                                         {editingId ? 'Update Reward' : 'Generate Reward'}
@@ -321,8 +321,8 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                 </div>
                             </motion.div>
                         ) : (
-                            <div className="bg-slate-50 border border-slate-200 border-dashed p-10 text-center space-y-4">
-                                <div className="w-16 h-16 bg-white border border-slate-100 flex items-center justify-center mx-auto shadow-sm">
+                            <div className="bg-slate-50 border border-slate-200 border-dashed p-10 text-center space-y-4 rounded-3xl">
+                                <div className="w-16 h-16 bg-white border border-slate-100 flex items-center justify-center mx-auto shadow-sm rounded-2xl">
                                     <Eye className="w-8 h-8 text-slate-300" />
                                 </div>
                                 <h4 className="text-sm font-bold text-slate-900 uppercase tracking-widest italic leading-relaxed">

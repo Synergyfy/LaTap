@@ -10,14 +10,14 @@ export default function IntegrationsPage() {
         { name: 'Mailchimp', desc: 'Sync visitor emails to your marketing segments.', icon: 'email', status: 'Connect', color: 'yellow' },
         { name: 'Shopify', desc: 'Track online vs offline visitor behavior.', icon: 'shopping_bag', status: 'Connect', color: 'indigo' },
         { name: 'Twilio SMS', desc: 'Provider for all SMS-based visitor notifications.', icon: 'textsms', status: 'Connected', color: 'red' },
-        { name: 'Zapier', desc: 'Connect ElizTap with 5000+ other web applications.', icon: 'bolt', status: 'Connect', color: 'orange' },
+        { name: 'Zapier', desc: 'Connect VemTap with 5000+ other web applications.', icon: 'bolt', status: 'Connect', color: 'orange' },
     ];
 
     return (
         <div className="p-8">
             <PageHeader
                 title="Integrations"
-                description="Connect ElizTap with your favorite tools and platforms"
+                description="Connect VemTap with your favorite tools and platforms"
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

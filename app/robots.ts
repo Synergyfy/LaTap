@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/dashboard/',
     },
-    sitemap: 'https://eliztap.io/sitemap.xml',
+    sitemap: 'https://vemtap.io/sitemap.xml',
   }
 }

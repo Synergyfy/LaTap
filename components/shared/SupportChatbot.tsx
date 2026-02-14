@@ -20,7 +20,7 @@ export default function SupportChatbot({ onRequestConsultation }: SupportChatbot
     const [messages, setMessages] = useState<Message[]>([
         {
             id: '1',
-            text: 'Hi! 👋 I\'m your ElizTap AI assistant. How can I help you today?',
+            text: 'Hi! 👋 I\'m your VemTap AI assistant. How can I help you today?',
             sender: 'bot',
             timestamp: new Date()
         }
@@ -64,7 +64,7 @@ export default function SupportChatbot({ onRequestConsultation }: SupportChatbot
 
         // Features
         if (lowerMessage.includes('feature') || lowerMessage.includes('what can') || lowerMessage.includes('capabilities')) {
-            return 'ElizTap offers visitor data capture, real-time analytics, CRM integration, automated follow-ups, and much more! We help businesses convert physical foot traffic into digital leads. What specific feature interests you?';
+            return 'VemTap offers visitor data capture, real-time analytics, CRM integration, automated follow-ups, and much more! We help businesses convert physical foot traffic into digital leads. What specific feature interests you?';
         }
 
         // Support
@@ -188,7 +188,7 @@ export default function SupportChatbot({ onRequestConsultation }: SupportChatbot
                             </div>
                             <div>
                                 <h3 className="text-white font-bold text-lg">
-                                    {handedToAgent ? 'Agent Sarah' : 'ElizTap Support'}
+                                    {handedToAgent ? 'Agent Sarah' : 'VemTap Support'}
                                 </h3>
                                 <p className="text-white/80 text-xs font-medium">
                                     {handedToAgent ? 'Support Agent' : 'AI Assistant • Online'}

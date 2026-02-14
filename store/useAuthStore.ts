@@ -34,7 +34,7 @@ interface AuthState {
 const MOCK_USERS: Record<string, any> = {
   owner: {
     id: 'OW-001',
-    email: 'business@eliztap.com',
+    email: 'business@vemtap.com',
     password: 'business123',
     name: 'John Smith',
     role: 'owner' as UserRole,
@@ -45,7 +45,7 @@ const MOCK_USERS: Record<string, any> = {
   },
   manager: {
     id: 'MG-001',
-    email: 'manager@eliztap.com',
+    email: 'manager@vemtap.com',
     password: 'manager123',
     name: 'Sarah Supervisor',
     role: 'manager' as UserRole,
@@ -56,7 +56,7 @@ const MOCK_USERS: Record<string, any> = {
   },
   staff: {
     id: 'ST-001',
-    email: 'staff@eliztap.com',
+    email: 'staff@vemtap.com',
     password: 'staff123',
     name: 'Michael Cashier',
     role: 'staff' as UserRole,
@@ -67,14 +67,14 @@ const MOCK_USERS: Record<string, any> = {
   },
   admin: {
     id: 'AD-001',
-    email: 'admin@eliztap.com',
+    email: 'admin@vemtap.com',
     password: 'admin123',
     name: 'Admin User',
     role: 'admin' as UserRole
   },
   customer: {
     id: 'CS-2847',
-    email: 'customer@eliztap.com',
+    email: 'customer@vemtap.com',
     password: 'customer123',
     name: 'Jane Customer',
     role: 'customer' as UserRole,

@@ -16,7 +16,7 @@ export default function FAQPage() {
             questions: [
                 {
                     q: "Do visitors need to download an app?",
-                    a: "No. That's the beauty of ElizTap. Visitors simply tap their phone against the NFC tag, and your custom landing page opens instantly in their default mobile browser. It works with 99% of modern smartphones."
+                    a: "No. That's the beauty of VemTap. Visitors simply tap their phone against the NFC tag, and your custom landing page opens instantly in their default mobile browser. It works with 99% of modern smartphones."
                 },
                 {
                     q: "What is NFC and how does it work?",
@@ -24,7 +24,7 @@ export default function FAQPage() {
                 },
                 {
                     q: "What happens if a visitor doesn't have NFC?",
-                    a: "Every ElizTap tag comes with a high-resolution, branded QR code. If a visitor has an older device without NFC, they can simply scan the QR code to access the same experience."
+                    a: "Every VemTap tag comes with a high-resolution, branded QR code. If a visitor has an older device without NFC, they can simply scan the QR code to access the same experience."
                 }
             ]
         },
@@ -35,7 +35,7 @@ export default function FAQPage() {
             questions: [
                 {
                     q: "How do I set up the NFC tags?",
-                    a: "Setup takes less than 2 minutes. Once you receive your ElizTap tags, enter the activation code in your dashboard, choose your destination URL, and place the tag on any non-metallic surface."
+                    a: "Setup takes less than 2 minutes. Once you receive your VemTap tags, enter the activation code in your dashboard, choose your destination URL, and place the tag on any non-metallic surface."
                 },
                 {
                     q: "Where should I place my tags?",
@@ -54,7 +54,7 @@ export default function FAQPage() {
             questions: [
                 {
                     q: "Does it integrate with my existing CRM?",
-                    a: "Yes. ElizTap integrates seamlessly with HubSpot, Salesforce, Mailchimp, and thousands of other apps via Zapier or our direct API. Your leads are synced the moment they tap."
+                    a: "Yes. VemTap integrates seamlessly with HubSpot, Salesforce, Mailchimp, and thousands of other apps via Zapier or our direct API. Your leads are synced the moment they tap."
                 },
                 {
                     q: "How secure is the visitor data?",
@@ -81,7 +81,7 @@ export default function FAQPage() {
                             <span className="text-gradient">Questions</span>
                         </h1>
                         <p className="text-lg text-text-secondary font-medium leading-relaxed max-w-2xl mx-auto">
-                            Find answers to common questions about ElizTap's NFC technology, platform integrations, and data security.
+                            Find answers to common questions about VemTap's NFC technology, platform integrations, and data security.
                         </p>
                     </div>
 

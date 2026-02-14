@@ -318,7 +318,7 @@ Businesses need:
 You create:
 - Surve…TEP 4: Smart Engagement Logic
 
-Inside Eliztap backend:
+Inside VemTap backend:
 
 Business sets rules:
 
@@ -328,7 +328,7 @@ After visit:
 ☑ Send promo after 7 days
 
 
-Now Eliztap becomes:
+Now VemTap becomes:
 - A Customer Growth Engine.
 Not just NFC.
 

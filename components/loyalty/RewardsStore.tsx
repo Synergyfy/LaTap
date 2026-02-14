@@ -26,7 +26,7 @@ export const RewardsStore: React.FC<RewardsStoreProps> = ({ rewards, userPoints,
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.3, delay: index * 0.1 }}
                         className={cn(
-                            "group relative flex flex-col bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all overflow-hidden",
+                            "group relative flex flex-col bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all overflow-hidden rounded-3xl",
                             isLocked ? "opacity-75" : "hover:border-primary/50"
                         )}
                     >
@@ -51,7 +51,7 @@ export const RewardsStore: React.FC<RewardsStoreProps> = ({ rewards, userPoints,
 
                             <div className="absolute top-4 right-4">
                                 <span className={cn(
-                                    "text-xs font-black uppercase tracking-widest px-3 py-1.5 rounded-none border shadow-sm",
+                                    "text-xs font-black uppercase tracking-widest px-3 py-1.5 rounded-xl border shadow-sm",
                                     isLocked ? "bg-slate-50 text-slate-400 border-slate-200" : "bg-white text-primary border-primary/20"
                                 )}>
                                     {reward.pointCost.toLocaleString()} Pts
@@ -66,7 +66,7 @@ export const RewardsStore: React.FC<RewardsStoreProps> = ({ rewards, userPoints,
                                         {reward.name}
                                     </h4>
                                     {reward.totalRedeemed > 50 && (
-                                        <span className="text-[10px] bg-amber-50 text-amber-600 border border-amber-100 px-1.5 py-0.5 rounded-none font-bold uppercase tracking-tighter">
+                                        <span className="text-[10px] bg-amber-50 text-amber-600 border border-amber-100 px-1.5 py-0.5 rounded-lg font-bold uppercase tracking-tighter">
                                             Popular
                                         </span>
                                     )}
@@ -92,7 +92,7 @@ export const RewardsStore: React.FC<RewardsStoreProps> = ({ rewards, userPoints,
                                     disabled={isLocked}
                                     onClick={() => onRedeem(reward)}
                                     className={cn(
-                                        "w-full py-3 font-black text-xs uppercase tracking-widest transition-all active:scale-95 flex items-center justify-center gap-2",
+                                        "w-full py-3 font-black text-xs uppercase tracking-widest transition-all active:scale-95 flex items-center justify-center gap-2 rounded-2xl",
                                         isLocked
                                             ? "bg-slate-100 text-slate-400 cursor-not-allowed"
                                             : "bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/10"

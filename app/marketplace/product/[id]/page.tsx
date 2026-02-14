@@ -87,7 +87,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
     const handleShare = async () => {
         const shareData = {
-            title: `ElizTap - ${product.name}`,
+            title: `VemTap - ${product.name}`,
             text: product.description,
             url: window.location.href
         };
@@ -167,7 +167,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 <span className="material-icons-round text-primary text-4xl select-none">nfc</span>
                             </div>
                             <span className="font-display font-bold text-xl tracking-tight text-slate-900">
-                                ElizTap<span className="text-primary">.Market</span>
+                                VemTap<span className="text-primary">.Market</span>
                             </span>
                         </Link>
                     </div>
@@ -193,7 +193,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                     {/* Left Column: Images */}
                     <div className="lg:col-span-7 space-y-6">
-                        <div className="aspect-square bg-white rounded-none border border-slate-200 overflow-hidden relative group shadow-sm">
+                        <div className="aspect-square bg-white rounded-3xl border border-slate-200 overflow-hidden relative group shadow-sm">
                             <div className="h-full w-full" ref={emblaRef}>
                                 <div className="flex h-full">
                                     {product.images.map((img: string, i: number) => (
@@ -208,7 +208,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 </div>
                             </div>
                             <div className="absolute top-6 left-6 z-10">
-                                <span className={`px-3 py-1 rounded-none text-xs font-bold uppercase tracking-wider ${product.tagColor}`}>
+                                <span className={`px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider ${product.tagColor}`}>
                                     {product.tag}
                                 </span>
                             </div>
@@ -217,7 +217,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             <div className="absolute inset-y-0 left-4 flex items-center z-20">
                                 <button
                                     onClick={() => emblaApi?.scrollPrev()}
-                                    className="p-3 bg-white/90 hover:bg-white text-slate-900 rounded-none shadow-xl border border-slate-100 transition-all active:scale-95 group"
+                                    className="p-3 bg-white/90 hover:bg-white text-slate-900 rounded-xl shadow-xl border border-slate-100 transition-all active:scale-95 group"
                                 >
                                     <ChevronLeft size={24} className="group-hover:-translate-x-0.5 transition-transform" />
                                 </button>
@@ -225,7 +225,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             <div className="absolute inset-y-0 right-4 flex items-center z-20">
                                 <button
                                     onClick={() => emblaApi?.scrollNext()}
-                                    className="p-3 bg-white/90 hover:bg-white text-slate-900 rounded-none shadow-xl border border-slate-100 transition-all active:scale-95 group"
+                                    className="p-3 bg-white/90 hover:bg-white text-slate-900 rounded-xl shadow-xl border border-slate-100 transition-all active:scale-95 group"
                                 >
                                     <ChevronRight size={24} className="group-hover:translate-x-0.5 transition-transform" />
                                 </button>
@@ -236,7 +236,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 <button
                                     key={i}
                                     onClick={() => scrollToImage(i)}
-                                    className={`aspect-square rounded-none border-2 overflow-hidden bg-white hover:opacity-100 transition-all ${selectedImage === i ? 'border-primary opacity-100 shadow-lg shadow-primary/10' : 'border-slate-200 opacity-60 hover:border-slate-300'}`}
+                                    className={`aspect-square rounded-xl border-2 overflow-hidden bg-white hover:opacity-100 transition-all ${selectedImage === i ? 'border-primary opacity-100 shadow-lg shadow-primary/10' : 'border-slate-200 opacity-60 hover:border-slate-300'}`}
                                 >
                                     <img src={img} alt={`View ${i + 1}`} className="w-full h-full object-contain p-2" />
                                 </button>
@@ -248,7 +248,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     <div className="lg:col-span-5 space-y-8">
                         <div className="space-y-4">
                             <div className="flex items-center gap-4">
-                                <span className="inline-block px-2.5 py-0.5 rounded-none text-xs font-semibold bg-green-100 text-green-800">
+                                <span className="inline-block px-2.5 py-0.5 rounded-lg text-xs font-semibold bg-green-100 text-green-800">
                                     In Stock
                                 </span>
                                 <button
@@ -283,7 +283,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         </div>
 
                         {/* Pricing Tiers */}
-                        <div className="bg-slate-50 p-6 rounded-none border border-slate-200 space-y-4">
+                        <div className="bg-slate-50 p-6 rounded-3xl border border-slate-200 space-y-4">
                             <h4 className="text-sm font-bold text-slate-600 uppercase tracking-wider">Volume Pricing</h4>
                             <div className="space-y-2">
                                 {product.tieredPricing?.map((tier: any, index: number) => (
@@ -300,7 +300,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         </div>
 
                         {/* Minimum Order Display */}
-                        <div className="bg-primary/5 p-6 rounded-none border border-primary/10 space-y-4 shadow-sm">
+                        <div className="bg-primary/5 p-6 rounded-3xl border border-primary/10 space-y-4 shadow-sm">
                             <div className="flex items-center justify-between">
                                 <span className="text-sm font-bold text-slate-600 uppercase tracking-wider">Minimum Quantity</span>
                                 <span className="text-2xl font-black text-primary">{product.moq || product.tieredPricing?.[0]?.minQuantity || 1} Pieces</span>
@@ -314,7 +314,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             </div>
                             <button
                                 onClick={() => setIsQuoteModalOpen(true)}
-                                className="w-full mt-4 py-4 bg-primary text-white font-bold rounded-none hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 group"
+                                className="w-full mt-4 py-4 bg-primary text-white font-bold rounded-2xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 group"
                             >
                                 Request Bulk Quote
                                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -322,7 +322,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         </div>
 
                         {/* Low MOQ Quote */}
-                        <div className="bg-amber-50 p-6 rounded-none border border-amber-200 space-y-3">
+                        <div className="bg-amber-50 p-6 rounded-3xl border border-amber-200 space-y-3">
                             <h4 className="text-sm font-bold text-amber-900 uppercase tracking-wider">Need Less Than {product.tieredPricing?.[0]?.minQuantity || 1} Units?</h4>
                             <p className="text-sm text-amber-800 font-medium">Contact us for special pricing on smaller quantities</p>
                             <div className="flex items-center gap-2 text-sm font-bold text-amber-900">
@@ -331,7 +331,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             </div>
                             <button
                                 onClick={() => setIsQuoteModalOpen(true)}
-                                className="w-full py-3 bg-amber-600 text-white font-bold rounded-none hover:bg-amber-700 transition-all flex items-center justify-center gap-2"
+                                className="w-full py-3 bg-amber-600 text-white font-bold rounded-2xl hover:bg-amber-700 transition-all flex items-center justify-center gap-2"
                             >
                                 Request Low MOQ Quote
                             </button>
@@ -386,14 +386,14 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     {/* Video Showcase Section */}
                                     <div className="space-y-6">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-primary/10 rounded-none flex items-center justify-center text-primary">
+                                            <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
                                                 <Play size={20} fill="currentColor" />
                                             </div>
                                             <h3 className="text-2xl font-bold text-slate-900">Product Demonstration</h3>
                                         </div>
-                                        <div className="relative aspect-video bg-slate-900 rounded-none overflow-hidden group border border-slate-200">
+                                        <div className="relative aspect-video bg-slate-900 rounded-3xl overflow-hidden group border border-slate-200">
                                             <video
-                                                src="/assets/videos/ElizTap_Video.mp4"
+                                                src="/assets/videos/VemTap_Video.mp4"
                                                 autoPlay
                                                 muted
                                                 loop
@@ -410,12 +410,12 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                                     <div className="space-y-4">
                                         <h3 className="text-2xl font-bold text-slate-900">Technical Specifications</h3>
-                                        <div className="prose prose-slate max-w-none bg-slate-50 p-6 rounded-none border border-slate-100">
+                                        <div className="prose prose-slate max-w-none bg-slate-50 p-6 rounded-xl border border-slate-100">
                                             <p className="text-slate-600 leading-relaxed text-lg">{product.longDescription || product.description}</p>
                                         </div>
                                     </div>
 
-                                    <div className="bg-white border border-slate-200 rounded-none overflow-hidden shadow-sm">
+                                    <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
                                         <table className="w-full text-sm text-left">
                                             <tbody className="divide-y divide-slate-100">
                                                 {Object.entries(product.specifications || {}).map(([key, value]) => (
@@ -432,7 +432,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                             {activeTab === 'quote' && (
                                 <section className="animate-in slide-in-from-bottom-4 duration-500 space-y-6">
-                                    <div className="bg-slate-50 p-8 border border-slate-200">
+                                    <div className="bg-slate-50 p-8 border border-slate-200 rounded-3xl">
                                         <h3 className="text-2xl font-bold text-slate-900 mb-2">Bulk Pricing Request</h3>
                                         <p className="text-slate-600 mb-8">Fill in the details below and our hardware team will reach out with customized pricing for {product.name}.</p>
 
@@ -445,7 +445,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                         value={quoteData.firstName}
                                                         onChange={(e) => setQuoteData({ ...quoteData, firstName: e.target.value })}
                                                         placeholder="John"
-                                                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                                         required
                                                     />
                                                 </div>
@@ -456,7 +456,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                         value={quoteData.lastName}
                                                         onChange={(e) => setQuoteData({ ...quoteData, lastName: e.target.value })}
                                                         placeholder="Doe"
-                                                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                                         required
                                                     />
                                                 </div>
@@ -469,7 +469,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                         value={quoteData.email}
                                                         onChange={(e) => setQuoteData({ ...quoteData, email: e.target.value })}
                                                         placeholder="john@company.com"
-                                                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                                         required
                                                     />
                                                 </div>
@@ -480,7 +480,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                         value={quoteData.phone || ''}
                                                         onChange={(e) => setQuoteData({ ...quoteData, phone: e.target.value })}
                                                         placeholder="+234 800 000 0000"
-                                                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                                         required
                                                     />
                                                 </div>
@@ -493,7 +493,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                         value={quoteData.location}
                                                         onChange={(e) => setQuoteData({ ...quoteData, location: e.target.value })}
                                                         placeholder="Lagos, Nigeria"
-                                                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                                         required
                                                     />
                                                 </div>
@@ -504,7 +504,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                         value={quoteData.company}
                                                         onChange={(e) => setQuoteData({ ...quoteData, company: e.target.value })}
                                                         placeholder="Company Ltd."
-                                                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                                         required
                                                     />
                                                 </div>
@@ -516,10 +516,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                     value={quoteData.notes}
                                                     onChange={(e) => setQuoteData({ ...quoteData, notes: e.target.value })}
                                                     placeholder="Any specific requirements?"
-                                                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium resize-none"
+                                                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium resize-none"
                                                 ></textarea>
                                             </div>
-                                            <button type="submit" className="w-full py-5 bg-primary text-white font-bold rounded-none hover:bg-primary-hover shadow-xl shadow-primary/20 transition-all active:scale-[0.98]">
+                                            <button type="submit" className="w-full py-5 bg-primary text-white font-bold rounded-2xl hover:bg-primary-hover shadow-xl shadow-primary/20 transition-all active:scale-[0.98]">
                                                 Submit Request
                                             </button>
                                         </form>
@@ -538,7 +538,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                                     {/* Review Success Message */}
                                     {showReviewSuccess && (
-                                        <div className="bg-green-50 border border-green-200 p-4 rounded-none">
+                                        <div className="bg-green-50 border border-green-200 p-4 rounded-xl">
                                             <div className="flex items-start gap-3">
                                                 <CheckCircle2 size={20} className="text-green-600 mt-0.5" />
                                                 <div>
@@ -555,7 +555,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     {/* Approved Reviews */}
                                     <div className="space-y-6">
                                         {reviews.filter(r => r.approved).map((review) => (
-                                            <div key={review.id} className="p-6 border border-slate-100 bg-slate-50/50">
+                                            <div key={review.id} className="p-6 border border-slate-100 bg-slate-50/50 rounded-2xl">
                                                 <div className="flex justify-between items-center mb-4">
                                                     <div className="flex items-center gap-1">
                                                         {[...Array(5)].map((_, i) => (
@@ -571,7 +571,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     </div>
 
                                     {/* Add Review Form */}
-                                    <div className="bg-white border border-slate-200 p-6 rounded-none">
+                                    <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm">
                                         <h4 className="text-lg font-bold text-slate-900 mb-4">Write a Review</h4>
                                         <form onSubmit={(e) => {
                                             e.preventDefault();
@@ -619,13 +619,13 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                     value={newReview.comment}
                                                     onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
                                                     placeholder="Share your experience with this product..."
-                                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium resize-none"
+                                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium resize-none"
                                                     required
                                                 />
                                             </div>
                                             <button
                                                 type="submit"
-                                                className="w-full py-3 bg-primary text-white font-bold rounded-none hover:bg-primary-hover transition-all"
+                                                className="w-full py-3 bg-primary text-white font-bold rounded-2xl hover:bg-primary-hover transition-all"
                                             >
                                                 Submit Review (Pending Approval)
                                             </button>
@@ -638,7 +638,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                     {/* Right / Sidebar removal placeholder - now spanning 8/12 grid but we can adjust to centered if needed or just keep empty */}
                     <div className="hidden lg:block lg:col-span-4">
-                        <div className="bg-primary/5 p-8 border border-primary/10 space-y-6">
+                        <div className="bg-primary/5 p-8 border border-primary/10 space-y-6 rounded-3xl">
                             <Headset size={40} className="text-primary" />
                             <h4 className="text-xl font-bold text-slate-900">Need Customization?</h4>
                             <p className="text-sm text-slate-600 font-medium">Our hardware team specializes in custom NFC builds for large-scale enterprise deployments.</p>
@@ -656,10 +656,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                         <div className="col-span-2">
                             <div className="flex items-center gap-2 mb-6">
-                                <div className="bg-primary p-2 rounded-none text-white">
+                                <div className="bg-primary p-2 rounded-xl text-white">
                                     <Grid size={24} />
                                 </div>
-                                <span className="text-xl font-bold tracking-tight text-slate-900">ElizTap</span>
+                                <span className="text-xl font-bold tracking-tight text-slate-900">VemTap</span>
                             </div>
                             <p className="text-slate-500 text-sm max-w-xs">
                                 The leading marketplace for secure access hardware, NFC readers, and enterprise connectivity solutions.
@@ -683,7 +683,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         </div>
                     </div>
                     <div className="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
-                        <p>© {new Date().getFullYear()} ElizTap. All rights reserved.</p>
+                        <p>© {new Date().getFullYear()} VemTap. All rights reserved.</p>
                         <div className="flex gap-6">
                             <Link href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
                             <Link href="/terms" className="hover:text-primary transition-colors">Terms of Service</Link>
@@ -696,11 +696,11 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             {isQuoteModalOpen && (
                 <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
                     <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={() => setIsQuoteModalOpen(false)}></div>
-                    <div className="relative bg-white rounded-none shadow-2xl w-full max-w-4xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col md:flex-row">
+                    <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-4xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col md:flex-row">
                         {/* Signup Suggestion Side Panel */}
                         {!user && (
                             <div className="w-full md:w-80 bg-primary/5 p-8 border-b md:border-b-0 md:border-r border-primary/10 flex flex-col justify-center">
-                                <div className="w-12 h-12 bg-primary/10 text-primary rounded-none flex items-center justify-center mb-6">
+                                <div className="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-6">
                                     <Star size={24} className="fill-primary" />
                                 </div>
                                 <h4 className="font-display font-bold text-xl text-slate-900 mb-3">Save your quotes</h4>
@@ -709,7 +709,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 </p>
                                 <Link
                                     href="/get-started"
-                                    className="w-full py-3 bg-white border border-primary text-primary font-bold text-center hover:bg-primary hover:text-white transition-all text-sm"
+                                    className="w-full py-3 bg-white border border-primary text-primary font-bold text-center hover:bg-primary hover:text-white transition-all text-sm rounded-2xl"
                                 >
                                     Create Account
                                 </Link>
@@ -721,9 +721,9 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             <div className="p-6 border-b border-gray-100 flex items-center justify-between">
                                 <div>
                                     <h3 className="font-display font-bold text-xl text-text-main">Request Bulk Quote</h3>
-                                    <p className="text-sm text-text-secondary">ElizTap specialized pricing for {product.name}</p>
+                                    <p className="text-sm text-text-secondary">VemTap specialized pricing for {product.name}</p>
                                 </div>
-                                <button onClick={() => setIsQuoteModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-none transition-colors text-gray-500">
+                                <button onClick={() => setIsQuoteModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-500">
                                     <X size={20} />
                                 </button>
                             </div>
@@ -736,7 +736,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                             value={quoteData.firstName}
                                             onChange={(e) => setQuoteData({ ...quoteData, firstName: e.target.value })}
                                             placeholder="John"
-                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                             required
                                         />
                                     </div>
@@ -747,7 +747,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                             value={quoteData.lastName}
                                             onChange={(e) => setQuoteData({ ...quoteData, lastName: e.target.value })}
                                             placeholder="Doe"
-                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                             required
                                         />
                                     </div>
@@ -760,7 +760,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                             value={quoteData.email}
                                             onChange={(e) => setQuoteData({ ...quoteData, email: e.target.value })}
                                             placeholder="john@company.com"
-                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                             required
                                         />
                                     </div>
@@ -771,7 +771,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                             value={quoteData.location}
                                             onChange={(e) => setQuoteData({ ...quoteData, location: e.target.value })}
                                             placeholder="Lagos, Nigeria"
-                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                             required
                                         />
                                     </div>
@@ -784,7 +784,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                             value={quoteData.quantity}
                                             onChange={(e) => setQuoteData({ ...quoteData, quantity: e.target.value })}
                                             placeholder="e.g. 100"
-                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                             required
                                         />
                                     </div>
@@ -795,7 +795,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                             value={quoteData.company}
                                             onChange={(e) => setQuoteData({ ...quoteData, company: e.target.value })}
                                             placeholder="Company Ltd."
-                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                             required
                                         />
                                     </div>

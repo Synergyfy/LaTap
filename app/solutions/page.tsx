@@ -7,7 +7,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: 'Solutions',
-    description: 'Tailored NFC solutions for retail, hospitality, and events. See how ElizTap transforms physical experiences into digital growth.',
+    description: 'Tailored NFC solutions for retail, hospitality, and events. See how VemTap transforms physical experiences into digital growth.',
 };
 
 export default function SolutionsPage() {

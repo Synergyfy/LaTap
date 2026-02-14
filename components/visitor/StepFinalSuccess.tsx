@@ -45,6 +45,27 @@ export const StepFinalSuccess: React.FC<StepFinalSuccessProps> = ({
                 {finalSuccessMessage || "Your profile has been successfully updated."}
             </p>
 
+            {/* Prominent Google Review CTA */}
+            {engagementSettings?.showReview && engagementSettings?.reviewUrl && (
+                <div className="mb-6 p-1 bg-amber-50 rounded-3xl border border-amber-100">
+                    <button
+                        onClick={() => window.open(engagementSettings.reviewUrl, '_blank')}
+                        className="w-full h-20 bg-white rounded-[1.4rem] shadow-sm border border-amber-200/50 flex items-center justify-between px-6 hover:shadow-md transition-all group"
+                    >
+                        <div className="flex items-center gap-4">
+                            <div className="size-12 bg-amber-500 text-white rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/20 group-hover:scale-110 transition-transform">
+                                <span className="material-symbols-outlined !text-2xl">star</span>
+                            </div>
+                            <div className="text-left">
+                                <h4 className="text-sm font-black text-slate-900 leading-tight">Rate us on Google</h4>
+                                <p className="text-[10px] font-bold text-amber-600 mt-0.5">TAP TO LEAVE A 5-STAR REVIEW</p>
+                            </div>
+                        </div>
+                        <span className="material-symbols-outlined text-amber-500 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </button>
+                </div>
+            )}
+
             {/* Engagement Layer preserved in final step */}
             {onEngagement && (
                 <div className="mb-8">

@@ -35,7 +35,7 @@ const mockProducts: Product[] = [
     {
         id: 'sdk-bundle',
         name: 'Universal NFC Developer SDK',
-        brand: 'ElizTap',
+        brand: 'VemTap',
         category: 'Development Kits',
         rating: 5.0,
         price: 499000,

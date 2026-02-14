@@ -128,7 +128,7 @@ export default function CustomerSettingsPage() {
                                 </label>
                                 <input
                                     type="email"
-                                    defaultValue="customer@eliztap.com"
+                                    defaultValue="customer@vemtap.com"
                                     className="w-full h-14 px-5 border border-gray-200 rounded-2xl text-sm font-bold bg-gray-50/50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all outline-none"
                                 />
                             </div>
@@ -201,7 +201,7 @@ export default function CustomerSettingsPage() {
                                 <h3 className="text-xl font-display font-bold">Data Purge Protocol</h3>
                             </div>
                             <p className="text-sm text-red-700/80 mb-8 font-medium leading-relaxed max-w-xl text-balance">
-                                Initiating an account deletion will permanently erase your check-in history, earned points, and active vouchers from the ElizTap decentralized ledger. This action is irreversible.
+                                Initiating an account deletion will permanently erase your check-in history, earned points, and active vouchers from the VemTap decentralized ledger. This action is irreversible.
                             </p>
                             <button className="h-14 px-8 border-2 border-red-200 text-red-600 font-black uppercase tracking-widest text-[10px] rounded-lg hover:bg-red-600 hover:text-white hover:border-red-600 transition-all active:scale-95 shadow-lg shadow-red-200/50">
                                 Request Account Termination

@@ -65,7 +65,7 @@ export default function ContactPage() {
             action: 'Open WhatsApp',
             color: 'from-green-500 to-green-600',
             onClick: () => {
-                window.open('https://wa.me/2348012345678?text=Hi, I need help with ElizTap', '_blank');
+                window.open('https://wa.me/2348012345678?text=Hi, I need help with VemTap', '_blank');
             }
         }
     ];
@@ -92,7 +92,7 @@ export default function ContactPage() {
                             We're Here to Help
                         </h1>
                         <p className="text-lg text-text-secondary font-medium leading-relaxed">
-                            Choose your preferred way to reach us. Our team is ready to assist you with any questions about ElizTap.
+                            Choose your preferred way to reach us. Our team is ready to assist you with any questions about VemTap.
                         </p>
                     </div>
                 </div>
@@ -265,7 +265,7 @@ export default function ContactPage() {
                                 <Mail className="text-primary" size={24} />
                             </div>
                             <h3 className="font-bold text-text-main mb-2">Email Us</h3>
-                            <p className="text-text-secondary font-medium">support@eliztap.com</p>
+                            <p className="text-text-secondary font-medium">support@vemtap.com</p>
                         </div>
 
                         <div>

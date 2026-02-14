@@ -22,7 +22,7 @@ export default function CookieBanner() {
     });
 
     useEffect(() => {
-        const consent = localStorage.getItem('eliztap-cookie-consent');
+        const consent = localStorage.getItem('vemtap-cookie-consent');
         if (!consent) {
             setIsVisible(true);
         }
@@ -43,7 +43,7 @@ export default function CookieBanner() {
     };
 
     const saveConsent = (data: CookieSettings) => {
-        localStorage.setItem('eliztap-cookie-consent', JSON.stringify(data));
+        localStorage.setItem('vemtap-cookie-consent', JSON.stringify(data));
         setIsVisible(false);
     };
 

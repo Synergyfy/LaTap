@@ -11,7 +11,7 @@ export default function AdminUsersPage() {
     const [selectedUser, setSelectedUser] = useState<any>(null);
 
     const [users, setUsers] = useState([
-        { id: 1, name: 'Daniel Admin', email: 'daniel@ElizTap.com', role: 'Admin', status: 'active', lastLogin: '2 mins ago', joined: '2023-11-01' },
+        { id: 1, name: 'Daniel Admin', email: 'daniel@VemTap.com', role: 'Admin', status: 'active', lastLogin: '2 mins ago', joined: '2023-11-01' },
         { id: 2, name: 'John Smith', email: 'john@greenterrace.com', role: 'Business Owner', status: 'active', lastLogin: '1 hour ago', joined: '2024-01-15' },
         { id: 3, name: 'Sarah Johnson', email: 'sarah@techhub.ng', role: 'Business Owner', status: 'active', lastLogin: '3 hours ago', joined: '2024-01-10' },
         { id: 4, name: 'Mike Williams', email: 'mike@fashion.com', role: 'Business Owner', status: 'pending', lastLogin: '1 day ago', joined: '2024-02-01' },

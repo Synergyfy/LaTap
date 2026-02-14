@@ -23,7 +23,7 @@ const teamMembers: TeamMember[] = [
         expertise: ["NFC Architecture", "IoT Systems", "Enterprise Security", "Hardware Design"],
         linkedin: "#",
         twitter: "#",
-        email: "michael@eliztap.com"
+        email: "michael@vemtap.com"
     },
     {
         name: "Chandler Rigs",
@@ -33,7 +33,7 @@ const teamMembers: TeamMember[] = [
         expertise: ["Cloud Architecture", "System Design", "API Development", "DevOps"],
         linkedin: "#",
         twitter: "#",
-        email: "chandler@eliztap.com"
+        email: "chandler@vemtap.com"
     },
     {
         name: "Isabella Rodriguez",
@@ -42,7 +42,7 @@ const teamMembers: TeamMember[] = [
         bio: "Isabella specializes in user-centric design and seamless integration. With a background in fintech and retail tech, she ensures our solutions are both powerful and intuitive.",
         expertise: ["UX Architecture", "Integration Design", "Customer Analytics", "Product Strategy"],
         linkedin: "#",
-        email: "isabella@eliztap.com"
+        email: "isabella@vemtap.com"
     },
     {
         name: "Ava Wilson",
@@ -52,7 +52,7 @@ const teamMembers: TeamMember[] = [
         expertise: ["3D Modeling", "Product Visualization", "Brand Design", "Motion Graphics"],
         linkedin: "#",
         twitter: "#",
-        email: "ava@eliztap.com"
+        email: "ava@vemtap.com"
     }
 ];
 

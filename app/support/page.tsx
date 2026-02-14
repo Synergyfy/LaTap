@@ -46,7 +46,7 @@ export default function SupportPage() {
         {
             title: "Email Support",
             status: "Avg. response: 2h",
-            value: "support@eliztap.com",
+            value: "support@vemtap.com",
             icon: "alternate_email",
             buttonLabel: "Send Message"
         },

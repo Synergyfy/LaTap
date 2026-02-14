@@ -64,7 +64,7 @@ const allProducts: Product[] = [
     {
         id: 'nfc-wristband',
         name: 'Silicone NFC Wristband (Pack of 50)',
-        brand: 'ElizTap',
+        brand: 'VemTap',
         category: 'Accessory',
         rating: 4.6,
         price: 800, // Price per unit
@@ -109,7 +109,7 @@ const allProducts: Product[] = [
     {
         id: 'metal-nfc-card',
         name: 'Premium Metal NFC Business Card',
-        brand: 'ElizTap',
+        brand: 'VemTap',
         category: 'Smart Cards',
         rating: 4.9,
         price: 15000,
@@ -315,9 +315,9 @@ export const fetchProductDetail = async (id: string) => {
         },
         'nfc-wristband': {
             id: 'nfc-wristband',
-            sku: 'ELIZTAP-WRIST-50',
+            sku: 'VEMTAP-WRIST-50',
             name: 'Silicone NFC Wristband (Pack of 50)',
-            brand: 'ElizTap',
+            brand: 'VemTap',
             price: 800,
             description: 'Waterproof wristbands for event access.',
             longDescription: 'Durable silicone NFC wristbands perfect for events, festivals, gyms, and access control. These waterproof wristbands feature NTAG213 chips with 144 bytes of usable memory. Comfortable, adjustable design suitable for all wrist sizes. Available in multiple colors for easy identification and branding.',
@@ -415,9 +415,9 @@ export const fetchProductDetail = async (id: string) => {
         },
         'metal-nfc-card': {
             id: 'metal-nfc-card',
-            sku: 'ELIZTAP-METAL-CARD',
+            sku: 'VEMTAP-METAL-CARD',
             name: 'Premium Metal NFC Business Card',
-            brand: 'ElizTap',
+            brand: 'VemTap',
             price: 15000,
             description: 'Matte black metal finish with laser engraving.',
             longDescription: 'Make a lasting impression with our premium metal NFC business cards. Featuring a sleek matte black finish with custom laser engraving, these cards combine elegance with cutting-edge technology. Each card contains an NTAG216 chip that can be programmed with your contact information, website, or social media profiles. Simply tap to share your details instantly.',
@@ -455,7 +455,7 @@ export const fetchProductDetail = async (id: string) => {
         id: id,
         sku: `${id.toUpperCase()}-GEN`,
         name: `Product ${id}`,
-        brand: 'ElizTap',
+        brand: 'VemTap',
         price: 99999,
         description: 'Universal NFC hardware for enterprise solutions.',
         longDescription: 'Detailed information for this specific product is currently being updated. This product meets all industry standards for NFC connectivity and security. Please contact our support for specific technical data.',

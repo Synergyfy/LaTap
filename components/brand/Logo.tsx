@@ -13,9 +13,9 @@ interface LogoProps {
 
 export default function Logo({
     className = "flex items-center gap-2",
-    iconSize = 32,
+    iconSize = 48,
     fontSize = "text-xl",
-    withText = true,
+    withText = false,
     textClassName = "font-display font-bold tracking-tight text-text-main"
 }: LogoProps) {
     return (
