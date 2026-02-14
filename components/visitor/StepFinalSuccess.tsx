@@ -10,7 +10,7 @@ interface StepFinalSuccessProps {
     customSuccessButton?: string | null;
     customSuccessTag?: string | null;
     onFinish: () => void;
-    onEngagement?: (type: 'review' | 'social' | 'feedback') => void;
+    onEngagement?: (type: 'review' | 'social' | 'feedback' | 'rewards') => void;
     engagementSettings?: any;
     socialLinks?: any;
 }
@@ -27,7 +27,7 @@ export const StepFinalSuccess: React.FC<StepFinalSuccessProps> = ({
 }) => {
     const [isSocialModalOpen, setIsSocialModalOpen] = React.useState(false);
 
-    const handleEngagement = (type: 'review' | 'social' | 'feedback') => {
+    const handleEngagement = (type: 'review' | 'social' | 'feedback' | 'rewards') => {
         if (type === 'social') {
             setIsSocialModalOpen(true);
         }

@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import PageHeader from '@/components/dashboard/PageHeader';
 import PremiumFeatureWrapper from '@/components/dashboard/PremiumFeatureWrapper';
-import {LoyaltyAnalytics} from '@/components/loyalty/admin/LoyaltyAnalytics';
+import { LoyaltyAnalytics } from '@/components/loyalty/admin/LoyaltyAnalytics';
 import { Gift, Users, Settings, Smartphone, ArrowRight, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
