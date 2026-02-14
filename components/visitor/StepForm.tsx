@@ -81,12 +81,12 @@ export const StepForm: React.FC<StepFormProps> = ({
             <VisitorHeader logoUrl={logoUrl} storeName={storeName} />
 
             <div className="mb-6">
-                <span className={presets.tag}>Welcome</span>
+                <span className={presets.tag}>Quick Link</span>
                 <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-tight mb-2 text-left">
-                    {customWelcomeMessage || "Just a few details"}
+                    {customWelcomeMessage || "Connect with us"}
                 </h1>
                 <p className="text-sm font-medium text-slate-500 leading-relaxed text-left">
-                    We'll use this to send your reward and keep you updated.
+                    Leave your details to stay in touch and earn rewards.
                 </p>
             </div>
 
@@ -116,6 +116,7 @@ export const StepForm: React.FC<StepFormProps> = ({
                             id="name"
                             type="text"
                             {...register('name')}
+                            autoComplete="name"
                             placeholder="Enter your name"
                             className={`${presets.input} ${errors.name ? 'border-red-500 ring-2 ring-red-500/10' : ''}`}
                         />
@@ -133,6 +134,7 @@ export const StepForm: React.FC<StepFormProps> = ({
                             id="phone"
                             type="tel"
                             {...register('phone')}
+                            autoComplete="tel"
                             placeholder="Phone number"
                             className={`${presets.input} ${errors.phone ? 'border-red-500 ring-2 ring-red-500/10' : ''}`}
                         />
@@ -150,6 +152,7 @@ export const StepForm: React.FC<StepFormProps> = ({
                             id="email"
                             type="email"
                             {...register('email')}
+                            autoComplete="email"
                             placeholder="Optional email"
                             className={`${presets.input} ${errors.email ? 'border-red-500 ring-2 ring-red-500/10' : ''}`}
                         />
@@ -175,7 +178,7 @@ export const StepForm: React.FC<StepFormProps> = ({
                 </div>
 
                 <button type="submit" disabled={!hasConsented || !isValid} className={presets.button}>
-                    <span>Check-in & Get Reward</span>
+                    <span>Submit & Get Reward</span>
                     <span className="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
                 </button>
             </form>

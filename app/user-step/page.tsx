@@ -146,7 +146,7 @@ export default function UserStepPage() {
             setStep('FINAL_SUCCESS');
             const link = document.createElement('a');
             link.href = '#';
-            link.download = `ElizTap_Reward_${storeName.replace(/\s+/g, '_')}.pdf`;
+            link.download = `VemTap_Reward_${storeName.replace(/\s+/g, '_')}.pdf`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -174,13 +174,16 @@ export default function UserStepPage() {
         toast.success('Redemption request sent to staff!');
     };
 
-    const handleEngagement = (type: 'review' | 'social' | 'feedback') => {
+    const handleEngagement = (type: 'review' | 'social' | 'feedback' | 'rewards') => {
         if (type === 'review') {
             window.open(engagementSettings.reviewUrl, '_blank');
         } else if (type === 'social') {
             window.open(engagementSettings.socialUrl, '_blank');
         } else if (type === 'feedback') {
             setStep('SURVEY');
+        } else if (type === 'rewards') {
+            // Logic for rewards - maybe a toast or a new step?
+            toast.success('Reward points added to your account!');
         }
     };
 
@@ -273,6 +276,10 @@ export default function UserStepPage() {
                         onRestart={resetFlow}
                         onEngagement={handleEngagement}
                         engagementSettings={engagementSettings}
+                        socialLinks={{
+                            instagram: engagementSettings.socialUrl,
+                            // Add other placeholder or config links here
+                        }}
                     />
                 )}
 
@@ -286,8 +293,16 @@ export default function UserStepPage() {
 
                 {currentStep === 'FINAL_SUCCESS' && (
                     <StepFinalSuccess
-                        finalSuccessMessage={customSuccessMessage || config.finalSuccessMessage}
+                        customSuccessTag={useCustomerFlowStore.getState().customSuccessTag}
+                        customSuccessTitle={useCustomerFlowStore.getState().customSuccessTitle}
+                        finalSuccessMessage={useCustomerFlowStore.getState().customSuccessMessage || config.finalSuccessMessage}
+                        customSuccessButton={useCustomerFlowStore.getState().customSuccessButton}
                         onFinish={resetFlow}
+                        onEngagement={handleEngagement}
+                        engagementSettings={engagementSettings}
+                        socialLinks={{
+                            instagram: engagementSettings.socialUrl,
+                        }}
                     />
                 )}
             </AnimatePresence>

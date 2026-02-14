@@ -245,135 +245,133 @@ export default function AllVisitorsPage() {
     ];
 
     return (
-        <DashboardSidebar>
-            <div className="p-4 md:p-8">
-                <PageHeader
-                    title="All Visitors"
-                    description="View and manage your entire customer database"
-                    actions={
-                        <div className="flex items-center gap-3">
-                            <button
-                                onClick={handleExportCSV}
-                                className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm shadow-sm"
-                            >
-                                <Download size={18} />
-                                Export CSV
-                            </button>
-                            <button
-                                onClick={() => setIsAddModalOpen(true)}
-                                className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20"
-                            >
-                                <UserPlus size={18} />
-                                Add Visitor
-                            </button>
-                        </div>
-                    }
-                />
-
-                <AddVisitorModal
-                    isOpen={isAddModalOpen}
-                    onClose={() => setIsAddModalOpen(false)}
-                    onSubmit={handleAddVisitor}
-                    isLoading={isLoading || addVisitorMutation.isPending}
-                />
-
-                <SendMessageModal
-                    isOpen={!!selectedVisitorForMsg}
-                    onClose={() => setSelectedVisitorForMsg(null)}
-                    recipientName={selectedVisitorForMsg?.name || ''}
-                    recipientPhone={selectedVisitorForMsg?.phone}
-                    type="welcome"
-                />
-
-                <VisitorDetailsModal
-                    isOpen={!!selectedVisitorForDetails}
-                    onClose={() => setSelectedVisitorForDetails(null)}
-                    visitor={selectedVisitorForDetails}
-                />
-
-                <PreviewRewardModal
-                    isOpen={!!rewardPreviewVisitor}
-                    onClose={() => setRewardPreviewVisitor(null)}
-                    rewardTitle="Free Coffee or Pastry"
-                    businessName={storeData?.businessName || 'Your Business'}
-                />
-
-                <DeleteConfirmationModal
-                    isOpen={!!deleteVisitorId}
-                    onClose={() => setDeleteVisitorId(null)}
-                    onConfirm={confirmDeleteVisitor}
-                    title="Delete Visitor?"
-                    description="This action cannot be undone. All visitor history and data will be permanently removed."
-                    isLoading={deleteMutation.isPending}
-                />
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    {stats.map((stat, index) => (
-                        <StatsCard key={index} {...stat} />
-                    ))}
-                </div>
-
-                <div className="bg-white rounded-xl p-6 border border-gray-200 mb-6 flex flex-col md:flex-row gap-4">
-                    <div className="flex-1 relative">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                        <input
-                            type="text"
-                            placeholder="Search by name, email, or phone..."
-                            className="w-full h-12 bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                    </div>
-                    <div className="flex gap-3">
-                        <select
-                            className="h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-text-main outline-none focus:ring-2 focus:ring-primary/20"
-                            value={filterStatus}
-                            onChange={(e) => setFilterStatus(e.target.value)}
-                        >
-                            <option value="all">All Status</option>
-                            <option value="new">New</option>
-                            <option value="returning">Returning</option>
-                        </select>
+        <div className="p-4 md:p-8">
+            <PageHeader
+                title="All Visitors"
+                description="View and manage your entire customer database"
+                actions={
+                    <div className="flex items-center gap-3">
                         <button
-                            onClick={handleSendMessage}
-                            className="h-12 px-6 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm"
+                            onClick={handleExportCSV}
+                            className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm shadow-sm"
                         >
-                            Send Message
+                            <Download size={18} />
+                            Export CSV
+                        </button>
+                        <button
+                            onClick={() => setIsAddModalOpen(true)}
+                            className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20"
+                        >
+                            <UserPlus size={18} />
+                            Add Visitor
                         </button>
                     </div>
+                }
+            />
+
+            <AddVisitorModal
+                isOpen={isAddModalOpen}
+                onClose={() => setIsAddModalOpen(false)}
+                onSubmit={handleAddVisitor}
+                isLoading={isLoading || addVisitorMutation.isPending}
+            />
+
+            <SendMessageModal
+                isOpen={!!selectedVisitorForMsg}
+                onClose={() => setSelectedVisitorForMsg(null)}
+                recipientName={selectedVisitorForMsg?.name || ''}
+                recipientPhone={selectedVisitorForMsg?.phone}
+                type="welcome"
+            />
+
+            <VisitorDetailsModal
+                isOpen={!!selectedVisitorForDetails}
+                onClose={() => setSelectedVisitorForDetails(null)}
+                visitor={selectedVisitorForDetails}
+            />
+
+            <PreviewRewardModal
+                isOpen={!!rewardPreviewVisitor}
+                onClose={() => setRewardPreviewVisitor(null)}
+                rewardTitle="Free Coffee or Pastry"
+                businessName={storeData?.businessName || 'Your Business'}
+            />
+
+            <DeleteConfirmationModal
+                isOpen={!!deleteVisitorId}
+                onClose={() => setDeleteVisitorId(null)}
+                onConfirm={confirmDeleteVisitor}
+                title="Delete Visitor?"
+                description="This action cannot be undone. All visitor history and data will be permanently removed."
+                isLoading={deleteMutation.isPending}
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                {stats.map((stat, index) => (
+                    <StatsCard key={index} {...stat} />
+                ))}
+            </div>
+
+            <div className="bg-white rounded-xl p-6 border border-gray-200 mb-6 flex flex-col md:flex-row gap-4">
+                <div className="flex-1 relative">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                    <input
+                        type="text"
+                        placeholder="Search by name, email, or phone..."
+                        className="w-full h-12 bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
                 </div>
-
-                <DataTable
-                    columns={columns}
-                    data={filteredVisitors}
-                    isLoading={isLoading}
-                    onRowClick={(visitor) => {
-                        setSelectedVisitorForDetails(visitor);
-                    }}
-                    emptyState={
-                        <EmptyState
-                            icon="people"
-                            title={searchQuery || filterStatus !== 'all' ? "No visitors found" : "No visitors yet"}
-                            description={searchQuery || filterStatus !== 'all'
-                                ? "Try adjusting your search or filters"
-                                : "Start collecting visitor data by placing your NFC devices at your business location."}
-                            action={{
-                                label: "Add Visitor",
-                                onClick: () => setIsAddModalOpen(true),
-                                icon: "person_add"
-                            }}
-                        />
-                    }
-                />
-
-                <div className="mt-6 flex items-center justify-between px-2">
-                    <p className="text-sm text-text-secondary font-medium">
-                        Showing {filteredVisitors.length} of {visitors.length} visitors
-                        {searchQuery && ` (filtered by "${searchQuery}")`}
-                        {filterStatus !== 'all' && ` (status: ${filterStatus})`}
-                    </p>
+                <div className="flex gap-3">
+                    <select
+                        className="h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-text-main outline-none focus:ring-2 focus:ring-primary/20"
+                        value={filterStatus}
+                        onChange={(e) => setFilterStatus(e.target.value)}
+                    >
+                        <option value="all">All Status</option>
+                        <option value="new">New</option>
+                        <option value="returning">Returning</option>
+                    </select>
+                    <button
+                        onClick={handleSendMessage}
+                        className="h-12 px-6 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm"
+                    >
+                        Send Message
+                    </button>
                 </div>
             </div>
-        </DashboardSidebar>
+
+            <DataTable
+                columns={columns}
+                data={filteredVisitors}
+                isLoading={isLoading}
+                onRowClick={(visitor) => {
+                    setSelectedVisitorForDetails(visitor);
+                }}
+                emptyState={
+                    <EmptyState
+                        icon="people"
+                        title={searchQuery || filterStatus !== 'all' ? "No visitors found" : "No visitors yet"}
+                        description={searchQuery || filterStatus !== 'all'
+                            ? "Try adjusting your search or filters"
+                            : "Start collecting visitor data by placing your NFC devices at your business location."}
+                        action={{
+                            label: "Add Visitor",
+                            onClick: () => setIsAddModalOpen(true),
+                            icon: "person_add"
+                        }}
+                    />
+                }
+            />
+
+            <div className="mt-6 flex items-center justify-between px-2">
+                <p className="text-sm text-text-secondary font-medium">
+                    Showing {filteredVisitors.length} of {visitors.length} visitors
+                    {searchQuery && ` (filtered by "${searchQuery}")`}
+                    {filterStatus !== 'all' && ` (status: ${filterStatus})`}
+                </p>
+            </div>
+        </div>
     );
 }

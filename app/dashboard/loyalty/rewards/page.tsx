@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect } from 'react';
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import { RewardManager } from '@/components/loyalty/admin/RewardManager';
 import { useLoyaltyStore } from '@/store/loyaltyStore';
@@ -26,25 +25,23 @@ export default function RewardManagementPage() {
     };
 
     return (
-        <DashboardSidebar>
-            <div className="p-8 space-y-8">
-                <PageHeader
-                    title="Reward Catalog"
-                    description="Create and manage what your customers can redeem"
-                />
+        <div className="p-8 space-y-8">
+            <PageHeader
+                title="Reward Catalog"
+                description="Create and manage what your customers can redeem"
+            />
 
-                {isLoading && availableRewards.length === 0 ? (
-                    <div className="flex items-center justify-center p-24">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-                    </div>
-                ) : (
-                    <RewardManager
-                        rewards={availableRewards}
-                        onCreate={handleCreate}
-                        onUpdate={handleUpdate}
-                    />
-                )}
-            </div>
-        </DashboardSidebar>
+            {isLoading && availableRewards.length === 0 ? (
+                <div className="flex items-center justify-center p-24">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                </div>
+            ) : (
+                <RewardManager
+                    rewards={availableRewards}
+                    onCreate={handleCreate}
+                    onUpdate={handleUpdate}
+                />
+            )}
+        </div>
     );
 }

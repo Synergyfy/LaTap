@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import DataTable, { Column } from '@/components/dashboard/DataTable';
 import EmptyState from '@/components/dashboard/EmptyState';
@@ -81,14 +80,14 @@ export default function ScheduledMessagesPage() {
             header: 'Actions',
             accessor: (item: ScheduledMessage) => (
                 <div className="flex items-center gap-2">
-                    <button 
+                    <button
                         onClick={() => handleStop(item.id)}
                         className="p-1.5 text-text-secondary hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                         title="Stop Message"
                     >
                         <XCircle size={18} />
                     </button>
-                    <button 
+                    <button
                         onClick={() => handleEdit(item.id)}
                         className="p-1.5 text-text-secondary hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
                         title="Edit Message"
@@ -101,39 +100,37 @@ export default function ScheduledMessagesPage() {
     ];
 
     return (
-        <DashboardSidebar>
-            <div className="p-8">
-                <PageHeader
-                    title="Scheduled Messages"
-                    description="View and manage your upcoming marketing messages"
-                    actions={
-                        <button 
-                            onClick={handleCalendarView}
-                            className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20"
-                        >
-                            <span className="material-icons-round text-lg">calendar_month</span>
-                            Calendar View
-                        </button>
-                    }
-                />
+        <div className="p-8">
+            <PageHeader
+                title="Scheduled Messages"
+                description="View and manage your upcoming marketing messages"
+                actions={
+                    <button
+                        onClick={handleCalendarView}
+                        className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20"
+                    >
+                        <span className="material-icons-round text-lg">calendar_month</span>
+                        Calendar View
+                    </button>
+                }
+            />
 
-                <DataTable
-                    columns={columns}
-                    data={messages}
-                    emptyState={
-                        <EmptyState
-                            icon="event_busy"
-                            title="No scheduled messages"
-                            description="You don't have any upcoming messages. Keep your audience engaged by scheduling regular updates."
-                            action={{
-                                label: "Create Message",
-                                onClick: () => router.push('/dashboard/campaigns/new'),
-                                icon: "add"
-                            }}
-                        />
-                    }
-                />
-            </div>
-        </DashboardSidebar>
+            <DataTable
+                columns={columns}
+                data={messages}
+                emptyState={
+                    <EmptyState
+                        icon="event_busy"
+                        title="No scheduled messages"
+                        description="You don't have any upcoming messages. Keep your audience engaged by scheduling regular updates."
+                        action={{
+                            label: "Create Message",
+                            onClick: () => router.push('/dashboard/campaigns/new'),
+                            icon: "add"
+                        }}
+                    />
+                }
+            />
+        </div>
     );
 }

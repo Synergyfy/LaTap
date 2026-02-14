@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import CustomerSidebar from '@/components/customer/CustomerSidebar';
 import { LoyaltyCard } from '@/components/loyalty/LoyaltyCard';
 import { RewardsStore } from '@/components/loyalty/RewardsStore';
 import { PointsHistory } from '@/components/loyalty/PointsHistory';
@@ -62,16 +61,14 @@ export default function LoyaltyPage() {
 
     if (!profile && isLoading) {
         return (
-            <CustomerSidebar>
-                <div className="flex items-center justify-center p-24">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-                </div>
-            </CustomerSidebar>
+            <div className="flex items-center justify-center p-24">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
         );
     }
 
     return (
-        <CustomerSidebar>
+        <>
             <div className="max-w-6xl mx-auto space-y-8 pb-12">
                 {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -178,6 +175,6 @@ export default function LoyaltyPage() {
                     </div>
                 )}
             </AnimatePresence>
-        </CustomerSidebar>
+        </>
     );
 }

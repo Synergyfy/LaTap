@@ -100,63 +100,61 @@ export default function ReturningVisitorsPage() {
     ];
 
     return (
-        <DashboardSidebar>
-            <div className="p-4 md:p-8">
-                <PageHeader
-                    title="Returning Visitors"
-                    description="Monitor loyalty and reward your repeat customers"
-                    actions={
-                        <button
-                            onClick={() => setIsCreateModalOpen(true)}
-                            className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20"
-                        >
-                            <Gift size={18} />
-                            Create Reward
-                        </button>
-                    }
-                />
+        <div className="p-4 md:p-8">
+            <PageHeader
+                title="Returning Visitors"
+                description="Monitor loyalty and reward your repeat customers"
+                actions={
+                    <button
+                        onClick={() => setIsCreateModalOpen(true)}
+                        className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20"
+                    >
+                        <Gift size={18} />
+                        Create Reward
+                    </button>
+                }
+            />
 
-                <CreateRewardModal
-                    isOpen={isCreateModalOpen}
-                    onClose={() => setIsCreateModalOpen(false)}
-                    onSubmit={handleCreateReward}
-                    isLoading={createRewardMutation.isPending}
-                />
+            <CreateRewardModal
+                isOpen={isCreateModalOpen}
+                onClose={() => setIsCreateModalOpen(false)}
+                onSubmit={handleCreateReward}
+                isLoading={createRewardMutation.isPending}
+            />
 
-                <SendMessageModal
-                    isOpen={!!selectedVisitorForMsg}
-                    onClose={() => setSelectedVisitorForMsg(null)}
-                    recipientName={selectedVisitorForMsg?.name || ''}
-                    recipientPhone={selectedVisitorForMsg?.phone}
-                    type="reward"
-                />
+            <SendMessageModal
+                isOpen={!!selectedVisitorForMsg}
+                onClose={() => setSelectedVisitorForMsg(null)}
+                recipientName={selectedVisitorForMsg?.name || ''}
+                recipientPhone={selectedVisitorForMsg?.phone}
+                type="reward"
+            />
 
-                <VisitorDetailsModal
-                    isOpen={!!selectedVisitorForDetails}
-                    onClose={() => setSelectedVisitorForDetails(null)}
-                    visitor={selectedVisitorForDetails}
-                />
+            <VisitorDetailsModal
+                isOpen={!!selectedVisitorForDetails}
+                onClose={() => setSelectedVisitorForDetails(null)}
+                visitor={selectedVisitorForDetails}
+            />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    {stats.map((stat, index) => (
-                        <StatsCard key={index} {...stat} />
-                    ))}
-                </div>
-
-                <DataTable
-                    columns={columns}
-                    data={returningVisitors}
-                    isLoading={isLoading}
-                    onRowClick={(visitor) => setSelectedVisitorForDetails(visitor)}
-                    emptyState={
-                        <EmptyState
-                            icon="loop"
-                            title="No returning visitors yet"
-                            description="Focus on your welcome campaigns to encourage customers to return to your business."
-                        />
-                    }
-                />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                {stats.map((stat, index) => (
+                    <StatsCard key={index} {...stat} />
+                ))}
             </div>
-        </DashboardSidebar>
+
+            <DataTable
+                columns={columns}
+                data={returningVisitors}
+                isLoading={isLoading}
+                onRowClick={(visitor) => setSelectedVisitorForDetails(visitor)}
+                emptyState={
+                    <EmptyState
+                        icon="loop"
+                        title="No returning visitors yet"
+                        description="Focus on your welcome campaigns to encourage customers to return to your business."
+                    />
+                }
+            />
+        </div>
     );
 }

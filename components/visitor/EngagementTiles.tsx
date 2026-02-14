@@ -28,17 +28,18 @@ const EngagementTile: React.FC<EngagementTileProps> = ({ icon, label, descriptio
 );
 
 interface EngagementTilesProps {
-    onAction: (type: 'review' | 'social' | 'feedback') => void;
+    onAction: (type: 'review' | 'social' | 'feedback' | 'rewards') => void;
     settings?: {
         showReview?: boolean;
         showSocial?: boolean;
         showFeedback?: boolean;
+        showRewards?: boolean;
     };
 }
 
 export const EngagementTiles: React.FC<EngagementTilesProps> = ({
     onAction,
-    settings = { showReview: true, showSocial: true, showFeedback: true }
+    settings = { showReview: true, showSocial: true, showFeedback: true, showRewards: true }
 }) => {
     return (
         <div className="w-full space-y-3 mt-8">
@@ -73,6 +74,16 @@ export const EngagementTiles: React.FC<EngagementTilesProps> = ({
                     description="Help us improve our service"
                     color="bg-purple-50 text-purple-500"
                     onClick={() => onAction('feedback')}
+                />
+            )}
+
+            {settings.showRewards && (
+                <EngagementTile
+                    icon="redeem"
+                    label="Claim Rewards"
+                    description="Unlock exclusive benefits"
+                    color="bg-emerald-50 text-emerald-500"
+                    onClick={() => onAction('rewards')}
                 />
             )}
         </div>

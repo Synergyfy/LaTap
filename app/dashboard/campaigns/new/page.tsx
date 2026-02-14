@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { dashboardApi } from '@/lib/api/dashboard';
 import { Check, Rocket, MessageSquare, Mail, Send, Calendar, Users, ArrowLeft, ArrowRight } from 'lucide-react';
 import toast from 'react-hot-toast';
+import PremiumFeatureWrapper from '@/components/dashboard/PremiumFeatureWrapper';
 
 export default function NewCampaignPage() {
     const router = useRouter();
@@ -58,7 +58,10 @@ export default function NewCampaignPage() {
     };
 
     return (
-        <DashboardSidebar>
+        <PremiumFeatureWrapper
+            featureName="Automated Marketing"
+            description="Send WhatsApp, SMS, and Email campaigns to your entire visitor base."
+        >
             <div className="p-8 max-w-4xl mx-auto">
                 <PageHeader
                     title="Create Bulk Message"
@@ -267,6 +270,6 @@ export default function NewCampaignPage() {
                     </div>
                 </div>
             </div>
-        </DashboardSidebar>
+        </PremiumFeatureWrapper>
     );
 }

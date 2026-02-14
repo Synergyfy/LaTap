@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import AdminSidebar from '@/components/admin/AdminSidebar';
 
 export default function AdminAnalyticsPage() {
     const [dateRange, setDateRange] = useState('30days');
@@ -37,98 +36,96 @@ export default function AdminAnalyticsPage() {
     ];
 
     return (
-        <AdminSidebar>
-            <div className="p-8">
-                {/* Page Header */}
-                <div className="flex items-center justify-between mb-8">
-                    <div>
-                        <h1 className="text-3xl font-display font-bold text-text-main mb-2">Platform Analytics</h1>
-                        <p className="text-text-secondary font-medium">Holistic view of platform growth and engagement</p>
-                    </div>
-                    <select
-                        value={dateRange}
-                        onChange={(e) => setDateRange(e.target.value)}
-                        className="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-bold text-text-main focus:outline-none focus:ring-2 focus:ring-primary/20"
-                    >
-                        <option value="7days">Last 7 Days</option>
-                        <option value="30days">Last 30 Days</option>
-                        <option value="90days">Last 3 Months</option>
-                        <option value="1year">Last Year</option>
-                    </select>
+        <div className="p-8">
+            {/* Page Header */}
+            <div className="flex items-center justify-between mb-8">
+                <div>
+                    <h1 className="text-3xl font-display font-bold text-text-main mb-2">Platform Analytics</h1>
+                    <p className="text-text-secondary font-medium">Holistic view of platform growth and engagement</p>
                 </div>
+                <select
+                    value={dateRange}
+                    onChange={(e) => setDateRange(e.target.value)}
+                    className="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-bold text-text-main focus:outline-none focus:ring-2 focus:ring-primary/20"
+                >
+                    <option value="7days">Last 7 Days</option>
+                    <option value="30days">Last 30 Days</option>
+                    <option value="90days">Last 3 Months</option>
+                    <option value="1year">Last Year</option>
+                </select>
+            </div>
 
-                {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    {stats.map((stat, index) => (
-                        <div key={index} className="bg-white rounded-xl p-6 border border-gray-200">
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                                    <span className="material-icons-round text-primary">{stat.icon}</span>
-                                </div>
-                                <span className={`flex items-center text-xs font-bold ${stat.trend === 'up' ? 'text-green-600 bg-green-50' : 'text-red-600 bg-red-50'} px-2 py-1 rounded-full`}>
-                                    {stat.trend === 'up' ? '↑' : '↓'} {stat.change}
-                                </span>
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                {stats.map((stat, index) => (
+                    <div key={index} className="bg-white rounded-xl p-6 border border-gray-200">
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                                <span className="material-icons-round text-primary">{stat.icon}</span>
                             </div>
-                            <p className="text-sm text-text-secondary font-medium mb-1">{stat.label}</p>
-                            <p className="text-3xl font-display font-bold text-text-main">{stat.value}</p>
+                            <span className={`flex items-center text-xs font-bold ${stat.trend === 'up' ? 'text-green-600 bg-green-50' : 'text-red-600 bg-red-50'} px-2 py-1 rounded-full`}>
+                                {stat.trend === 'up' ? '↑' : '↓'} {stat.change}
+                            </span>
                         </div>
-                    ))}
+                        <p className="text-sm text-text-secondary font-medium mb-1">{stat.label}</p>
+                        <p className="text-3xl font-display font-bold text-text-main">{stat.value}</p>
+                    </div>
+                ))}
+            </div>
+
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Growth Chart */}
+                <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 p-6">
+                    <div className="flex items-center justify-between mb-8">
+                        <h2 className="text-lg font-bold text-text-main">Monthly Taps Growth</h2>
+                        <button className="text-primary text-sm font-bold hover:underline">View Report</button>
+                    </div>
+
+                    <div className="h-64 flex items-end justify-between gap-2">
+                        {monthlyData.map((data, index) => (
+                            <div key={index} className="flex-1 flex flex-col items-center gap-2 group">
+                                <div
+                                    className="w-full bg-primary/10 rounded-t-lg group-hover:bg-primary/20 transition-all relative overflow-hidden"
+                                    style={{ height: `${(data.value / 200) * 100}%` }}
+                                >
+                                    <div className="absolute bottom-0 w-full bg-primary/30 h-0 group-hover:h-full transition-all duration-500"></div>
+                                </div>
+                                <span className="text-xs text-text-secondary font-medium">{data.month}</span>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
-                {/* Main Content Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Growth Chart */}
-                    <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 p-6">
-                        <div className="flex items-center justify-between mb-8">
-                            <h2 className="text-lg font-bold text-text-main">Monthly Taps Growth</h2>
-                            <button className="text-primary text-sm font-bold hover:underline">View Report</button>
-                        </div>
-
-                        <div className="h-64 flex items-end justify-between gap-2">
-                            {monthlyData.map((data, index) => (
-                                <div key={index} className="flex-1 flex flex-col items-center gap-2 group">
-                                    <div
-                                        className="w-full bg-primary/10 rounded-t-lg group-hover:bg-primary/20 transition-all relative overflow-hidden"
-                                        style={{ height: `${(data.value / 200) * 100}%` }}
-                                    >
-                                        <div className="absolute bottom-0 w-full bg-primary/30 h-0 group-hover:h-full transition-all duration-500"></div>
-                                    </div>
-                                    <span className="text-xs text-text-secondary font-medium">{data.month}</span>
-                                </div>
-                            ))}
-                        </div>
+                {/* Top Businesses */}
+                <div className="bg-white rounded-xl border border-gray-200 p-6">
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-lg font-bold text-text-main">Top Performers</h2>
                     </div>
-
-                    {/* Top Businesses */}
-                    <div className="bg-white rounded-xl border border-gray-200 p-6">
-                        <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-lg font-bold text-text-main">Top Performers</h2>
-                        </div>
-                        <div className="space-y-6">
-                            {topBusinesses.map((biz, index) => (
-                                <div key={index} className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-500">
-                                            {index + 1}
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-bold text-text-main">{biz.name}</p>
-                                            <p className="text-xs text-text-secondary">{biz.taps} taps</p>
-                                        </div>
+                    <div className="space-y-6">
+                        {topBusinesses.map((biz, index) => (
+                            <div key={index} className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-500">
+                                        {index + 1}
                                     </div>
-                                    <div className="text-right">
-                                        <p className="text-sm font-bold text-green-600">{biz.growth}</p>
-                                        <p className="text-xs text-text-secondary">this month</p>
+                                    <div>
+                                        <p className="text-sm font-bold text-text-main">{biz.name}</p>
+                                        <p className="text-xs text-text-secondary">{biz.taps} taps</p>
                                     </div>
                                 </div>
-                            ))}
-                        </div>
-                        <button className="w-full mt-6 py-2 text-primary font-bold text-sm hover:bg-primary/5 rounded-lg transition-colors">
-                            View All Leaders
-                        </button>
+                                <div className="text-right">
+                                    <p className="text-sm font-bold text-green-600">{biz.growth}</p>
+                                    <p className="text-xs text-text-secondary">this month</p>
+                                </div>
+                            </div>
+                        ))}
                     </div>
+                    <button className="w-full mt-6 py-2 text-primary font-bold text-sm hover:bg-primary/5 rounded-lg transition-colors">
+                        View All Leaders
+                    </button>
                 </div>
             </div>
-        </AdminSidebar>
+        </div>
     );
 }

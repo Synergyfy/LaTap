@@ -10,7 +10,7 @@ const testimonials = [
         id: 1,
         metric: '8X',
         metricLabel: 'More Sales',
-        quote: "Using LaTap at our events changed everything. We collected 8 times more customer contacts than when we used paper.",
+        quote: "Using VemTap at our events changed everything. We collected 8 times more customer contacts than when we used paper.",
         author: "David Okon",
         role: "Head of Marketing, Jara",
         avatar: "https://i.pravatar.cc/150?u=1",

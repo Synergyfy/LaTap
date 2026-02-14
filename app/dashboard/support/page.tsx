@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import { MessageSquare, LifeBuoy, Clock, Search, Filter, Plus, ChevronRight, HelpCircle, ShieldAlert } from 'lucide-react';
 import CreateTicketModal from '@/components/ui/CreateTicketModal';
 import { notify } from '@/lib/notify';
@@ -29,7 +28,7 @@ export default function BusinessSupportPage() {
     };
 
     return (
-        <DashboardSidebar>
+        <>
             <div className="p-8">
                 {/* Header */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
@@ -66,8 +65,8 @@ export default function BusinessSupportPage() {
                                                 <h4 className="font-bold text-text-main mt-3 group-hover:text-primary transition-colors text-base">{ticket.subject}</h4>
                                             </div>
                                             <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${ticket.status === 'Open' ? 'bg-green-100 text-green-700' :
-                                                    ticket.status === 'In Progress' ? 'bg-blue-100 text-blue-700' :
-                                                        'bg-gray-100 text-gray-400'
+                                                ticket.status === 'In Progress' ? 'bg-blue-100 text-blue-700' :
+                                                    'bg-gray-100 text-gray-400'
                                                 }`}>
                                                 {ticket.status}
                                             </span>
@@ -133,13 +132,12 @@ export default function BusinessSupportPage() {
                     </div>
                 </div>
             </div>
-
             <CreateTicketModal
                 isOpen={isCreateModalOpen}
                 onClose={() => setIsCreateModalOpen(false)}
                 onSubmit={handleCreateTicket}
                 userType="business"
             />
-        </DashboardSidebar>
+        </>
     );
 }

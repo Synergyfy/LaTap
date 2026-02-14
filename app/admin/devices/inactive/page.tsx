@@ -1,11 +1,9 @@
 'use client';
 
 import React from 'react';
-import AdminSidebar from '@/components/admin/AdminSidebar';
-
 export default function AdminInactiveDevicesPage() {
     return (
-        <AdminSidebar>
+        <>
             <div className="p-8">
                 <div className="mb-8">
                     <h1 className="text-2xl font-display font-black text-text-main tracking-tight">Inactive Inventory</h1>
@@ -19,6 +17,6 @@ export default function AdminInactiveDevicesPage() {
                     <p className="text-gray-500">Inventory tracking module pending.</p>
                 </div>
             </div>
-        </AdminSidebar>
+        </>
     );
 }

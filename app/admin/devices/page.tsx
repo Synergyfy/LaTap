@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import AdminSidebar from '@/components/admin/AdminSidebar';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { dashboardApi } from '@/lib/api/dashboard';
 import { notify } from '@/lib/notify';
@@ -79,7 +78,7 @@ export default function AdminDevicesPage() {
     });
 
     return (
-        <AdminSidebar>
+        <>
             <div className="p-8">
                 {/* Page Header */}
                 <div className="flex items-center justify-between mb-8">
@@ -102,9 +101,9 @@ export default function AdminDevicesPage() {
                         <div key={index} className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
                             <div className="flex items-center gap-4">
                                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.color === 'green' ? 'bg-green-50 text-green-600' :
-                                        stat.color === 'orange' ? 'bg-orange-50 text-orange-600' :
-                                            stat.color === 'red' ? 'bg-red-50 text-red-600' :
-                                                'bg-blue-50 text-blue-600'
+                                    stat.color === 'orange' ? 'bg-orange-50 text-orange-600' :
+                                        stat.color === 'red' ? 'bg-red-50 text-red-600' :
+                                            'bg-blue-50 text-blue-600'
                                     }`}>
                                     <span className="material-icons-round text-xl">{stat.icon}</span>
                                 </div>
@@ -252,78 +251,80 @@ export default function AdminDevicesPage() {
             </div>
 
             {/* Register Modal */}
-            {isRegisterModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-black/60 backdrop-blur-md animate-in fade-in duration-300" onClick={() => setIsRegisterModalOpen(false)}></div>
-                    <div className="relative w-full max-w-md bg-white rounded-3xl p-8 shadow-2xl animate-in fade-in zoom-in slide-in-from-bottom-4 duration-300">
-                        <div className="flex items-center justify-between mb-8">
-                            <div>
-                                <h2 className="text-2xl font-display font-bold text-text-main">Device Provisioning</h2>
-                                <p className="text-sm text-text-secondary font-medium">Add new NFC hardware to the global fleet</p>
-                            </div>
-                            <button onClick={() => setIsRegisterModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                                <Plus size={24} className="rotate-45 text-text-secondary" />
-                            </button>
-                        </div>
-
-                        <form onSubmit={handleRegisterDevice} className="space-y-6">
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary ml-1">Serial Number (UID)</label>
-                                <div className="relative">
-                                    <Cpu className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                                    <input
-                                        name="id"
-                                        required
-                                        placeholder="NFC-XXXX-XXXX"
-                                        className="w-full h-12 pl-12 pr-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/30 focus:bg-white transition-all font-mono text-sm font-bold"
-                                    />
+            {
+                isRegisterModalOpen && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                        <div className="absolute inset-0 bg-black/60 backdrop-blur-md animate-in fade-in duration-300" onClick={() => setIsRegisterModalOpen(false)}></div>
+                        <div className="relative w-full max-w-md bg-white rounded-3xl p-8 shadow-2xl animate-in fade-in zoom-in slide-in-from-bottom-4 duration-300">
+                            <div className="flex items-center justify-between mb-8">
+                                <div>
+                                    <h2 className="text-2xl font-display font-bold text-text-main">Device Provisioning</h2>
+                                    <p className="text-sm text-text-secondary font-medium">Add new NFC hardware to the global fleet</p>
                                 </div>
+                                <button onClick={() => setIsRegisterModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                                    <Plus size={24} className="rotate-45 text-text-secondary" />
+                                </button>
                             </div>
 
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary ml-1">Hardware Form Factor</label>
-                                <select
-                                    name="type"
-                                    className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/30 focus:bg-white transition-all font-bold text-sm"
+                            <form onSubmit={handleRegisterDevice} className="space-y-6">
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary ml-1">Serial Number (UID)</label>
+                                    <div className="relative">
+                                        <Cpu className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                                        <input
+                                            name="id"
+                                            required
+                                            placeholder="NFC-XXXX-XXXX"
+                                            className="w-full h-12 pl-12 pr-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/30 focus:bg-white transition-all font-mono text-sm font-bold"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary ml-1">Hardware Form Factor</label>
+                                    <select
+                                        name="type"
+                                        className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/30 focus:bg-white transition-all font-bold text-sm"
+                                    >
+                                        <option value="Card">Premium NFC Card</option>
+                                        <option value="Sticker">Smart Sticker</option>
+                                        <option value="Fob">Rugged Key Fob</option>
+                                        <option value="Plate">Metal Venue Plate</option>
+                                    </select>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary ml-1">Assign to Business Account (Link)</label>
+                                    <div className="relative">
+                                        <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                                        <input
+                                            name="assignedTo"
+                                            placeholder="e.g. Green Terrace Cafe"
+                                            className="w-full h-12 pl-12 pr-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/30 focus:bg-white transition-all font-bold text-sm"
+                                        />
+                                    </div>
+                                    <p className="text-[10px] text-text-secondary italic ml-1 font-medium">Leave blank to keep in global inventory</p>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    disabled={addDeviceMutation.isPending}
+                                    className="w-full h-14 bg-primary text-white font-bold rounded-2xl hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3 mt-4 active:scale-95 disabled:opacity-50"
                                 >
-                                    <option value="Card">Premium NFC Card</option>
-                                    <option value="Sticker">Smart Sticker</option>
-                                    <option value="Fob">Rugged Key Fob</option>
-                                    <option value="Plate">Metal Venue Plate</option>
-                                </select>
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary ml-1">Assign to Business Account (Link)</label>
-                                <div className="relative">
-                                    <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                                    <input
-                                        name="assignedTo"
-                                        placeholder="e.g. Green Terrace Cafe"
-                                        className="w-full h-12 pl-12 pr-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/30 focus:bg-white transition-all font-bold text-sm"
-                                    />
-                                </div>
-                                <p className="text-[10px] text-text-secondary italic ml-1 font-medium">Leave blank to keep in global inventory</p>
-                            </div>
-
-                            <button
-                                type="submit"
-                                disabled={addDeviceMutation.isPending}
-                                className="w-full h-14 bg-primary text-white font-bold rounded-2xl hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3 mt-4 active:scale-95 disabled:opacity-50"
-                            >
-                                {addDeviceMutation.isPending ? (
-                                    <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                ) : (
-                                    <>
-                                        <Cpu size={20} />
-                                        Authorize & Link Device
-                                    </>
-                                )}
-                            </button>
-                        </form>
+                                    {addDeviceMutation.isPending ? (
+                                        <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                    ) : (
+                                        <>
+                                            <Cpu size={20} />
+                                            Authorize & Link Device
+                                        </>
+                                    )}
+                                </button>
+                            </form>
+                        </div>
                     </div>
-                </div>
-            )}
-        </AdminSidebar>
+                )
+            }
+        </>
     );
 }

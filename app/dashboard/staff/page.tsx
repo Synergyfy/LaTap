@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import DataTable, { Column } from '@/components/dashboard/DataTable';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -10,7 +9,7 @@ import { Staff } from '@/lib/store/mockDashboardStore';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
 import toast from 'react-hot-toast';
-import { UserPlus, Shield, Edit3, Trash2, X, Check, Lock, Eye, Settings as SettingsIcon, MessageSquare, BarChart3, Users as UsersIcon } from 'lucide-react';
+import { UserPlus, Shield, Edit3, Trash2, Eye, MessageSquare, BarChart3, Users as UsersIcon, Settings as SettingsIcon } from 'lucide-react';
 import Modal from '@/components/ui/Modal';
 
 const PERMISSIONS = [
@@ -166,7 +165,7 @@ export default function StaffManagementPage() {
     ];
 
     return (
-        <DashboardSidebar>
+        <>
             <div className="p-8">
                 <PageHeader
                     title="Staff Management"
@@ -322,7 +321,6 @@ export default function StaffManagementPage() {
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                             {PERMISSIONS.map((p) => {
                                 const Icon = p.icon;
-                                // In a real app, editingStaff would have permissions. Here we simulate.
                                 const isSelected = selectedPermissions.includes(p.id);
                                 return (
                                     <button
@@ -368,6 +366,6 @@ export default function StaffManagementPage() {
                     </button>
                 </div>
             </Modal>
-        </DashboardSidebar>
+        </>
     );
 }

@@ -74,16 +74,22 @@ export const StepSurvey: React.FC<StepSurveyProps> = ({ questions, onComplete, o
                     </h2>
 
                     {currentQuestion.type === 'rating' && (
-                        <div className="flex justify-between gap-2">
-                            {[1, 2, 3, 4, 5].map((num) => (
-                                <button
-                                    key={num}
-                                    onClick={() => handleAnswer(num)}
-                                    className="flex-1 aspect-square rounded-2xl border border-gray-100 bg-gray-50 flex items-center justify-center text-lg font-black text-slate-400 hover:bg-primary hover:text-white hover:border-primary transition-all active:scale-90"
-                                >
-                                    {num}
-                                </button>
-                            ))}
+                        <div className="space-y-4">
+                            <div className="flex justify-between px-1">
+                                <span className="text-[10px] font-black text-red-500 uppercase tracking-widest">Bad</span>
+                                <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Good</span>
+                            </div>
+                            <div className="flex justify-between gap-2">
+                                {[1, 2, 3, 4, 5].map((num) => (
+                                    <button
+                                        key={num}
+                                        onClick={() => handleAnswer(num)}
+                                        className="flex-1 aspect-square rounded-2xl border border-gray-100 bg-gray-50 flex items-center justify-center text-lg font-black text-slate-400 hover:bg-primary hover:text-white hover:border-primary transition-all active:scale-90"
+                                    >
+                                        {num}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     )}
 

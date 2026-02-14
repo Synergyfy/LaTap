@@ -90,63 +90,61 @@ export default function NewVisitorsPage() {
     ];
 
     return (
-        <DashboardSidebar>
-            <div className="p-4 md:p-8">
-                <PageHeader
-                    title="New Visitors"
-                    description="Identify and welcome your first-time customers"
-                    actions={
-                        <button
-                            onClick={handleSendWelcomeMessage}
-                            className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20"
-                        >
-                            <Send size={18} />
-                            Send Welcome Message
-                        </button>
-                    }
-                />
+        <div className="p-4 md:p-8">
+            <PageHeader
+                title="New Visitors"
+                description="Identify and welcome your first-time customers"
+                actions={
+                    <button
+                        onClick={handleSendWelcomeMessage}
+                        className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20"
+                    >
+                        <Send size={18} />
+                        Send Welcome Message
+                    </button>
+                }
+            />
 
-                <SendMessageModal
-                    isOpen={!!selectedVisitorForMsg}
-                    onClose={() => setSelectedVisitorForMsg(null)}
-                    recipientName={selectedVisitorForMsg?.name || ''}
-                    recipientPhone={selectedVisitorForMsg?.phone}
-                    type="welcome"
-                />
+            <SendMessageModal
+                isOpen={isBulkMsgOpen}
+                onClose={() => setIsBulkMsgOpen(false)}
+                recipientName={`${newVisitors.length} New Visitors`}
+                type="welcome"
+            />
 
-                <SendMessageModal
-                    isOpen={isBulkMsgOpen}
-                    onClose={() => setIsBulkMsgOpen(false)}
-                    recipientName={`${newVisitors.length} New Visitors`}
-                    type="welcome"
-                />
+            <SendMessageModal
+                isOpen={!!selectedVisitorForMsg}
+                onClose={() => setSelectedVisitorForMsg(null)}
+                recipientName={selectedVisitorForMsg?.name || ''}
+                recipientPhone={selectedVisitorForMsg?.phone}
+                type="welcome"
+            />
 
-                <VisitorDetailsModal
-                    isOpen={!!selectedVisitorForDetails}
-                    onClose={() => setSelectedVisitorForDetails(null)}
-                    visitor={selectedVisitorForDetails}
-                />
+            <VisitorDetailsModal
+                isOpen={!!selectedVisitorForDetails}
+                onClose={() => setSelectedVisitorForDetails(null)}
+                visitor={selectedVisitorForDetails}
+            />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    {stats.map((stat, index) => (
-                        <StatsCard key={index} {...stat} />
-                    ))}
-                </div>
-
-                <DataTable
-                    columns={columns}
-                    data={newVisitors}
-                    isLoading={isLoading}
-                    onRowClick={(visitor) => setSelectedVisitorForDetails(visitor)}
-                    emptyState={
-                        <EmptyState
-                            icon="person_add"
-                            title="No new visitors today"
-                            description="All visitors today are returning customers. That's great for loyalty!"
-                        />
-                    }
-                />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                {stats.map((stat, index) => (
+                    <StatsCard key={index} {...stat} />
+                ))}
             </div>
-        </DashboardSidebar>
+
+            <DataTable
+                columns={columns}
+                data={newVisitors}
+                isLoading={isLoading}
+                onRowClick={(visitor) => setSelectedVisitorForDetails(visitor)}
+                emptyState={
+                    <EmptyState
+                        icon="person_add"
+                        title="No new visitors today"
+                        description="All visitors today are returning customers. That's great for loyalty!"
+                    />
+                }
+            />
+        </div>
     );
 }

@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import Link from 'next/link';
 import { Store, Bell, Nfc, Users, Puzzle, MessageSquare, Shield, ArrowRight, Star } from 'lucide-react';
@@ -19,33 +18,31 @@ export default function SettingsPage() {
     ];
 
     return (
-        <DashboardSidebar>
-            <div className="p-8">
-                <PageHeader
-                    title="Settings"
-                    description="Configure and manage your ElizTap account preferences"
-                />
+        <div className="p-8">
+            <PageHeader
+                title="Settings"
+                description="Configure and manage your ElizTap account preferences"
+            />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {settingsCategories.map((item, i) => (
-                        <Link
-                            key={i}
-                            href={item.href}
-                            className="bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-lg hover:border-primary/20 transition-all group overflow-hidden relative"
-                        >
-                            <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center mb-4 group-hover:bg-primary text-primary group-hover:text-white transition-all shadow-sm">
-                                <item.icon size={24} />
-                            </div>
-                            <h3 className="text-lg font-display font-bold text-text-main mb-1 tracking-tight">{item.title}</h3>
-                            <p className="text-sm text-text-secondary font-medium leading-relaxed">{item.desc}</p>
-                            <div className="mt-4 flex items-center text-primary text-xs font-black uppercase tracking-widest gap-1 group-hover:gap-2 transition-all">
-                                Manage
-                                <ArrowRight size={14} />
-                            </div>
-                        </Link>
-                    ))}
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {settingsCategories.map((item, i) => (
+                    <Link
+                        key={i}
+                        href={item.href}
+                        className="bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-lg hover:border-primary/20 transition-all group overflow-hidden relative"
+                    >
+                        <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center mb-4 group-hover:bg-primary text-primary group-hover:text-white transition-all shadow-sm">
+                            <item.icon size={24} />
+                        </div>
+                        <h3 className="text-lg font-display font-bold text-text-main mb-1 tracking-tight">{item.title}</h3>
+                        <p className="text-sm text-text-secondary font-medium leading-relaxed">{item.desc}</p>
+                        <div className="mt-4 flex items-center text-primary text-xs font-black uppercase tracking-widest gap-1 group-hover:gap-2 transition-all">
+                            Manage
+                            <ArrowRight size={14} />
+                        </div>
+                    </Link>
+                ))}
             </div>
-        </DashboardSidebar>
+        </div>
     );
 }

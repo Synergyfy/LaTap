@@ -40,7 +40,7 @@ export default function Hero() {
                     {/* Right Column: Video Showcase (Portrait Refined) */}
                     <div className="relative animate-in fade-in slide-in-from-right-32 duration-1000 delay-200 flex justify-center lg:justify-end">
                         <div className="relative w-full max-w-[320px] p-3 bg-gray-50/50 rounded-[2.5rem] border border-gray-100 shadow-sm">
-                            <div className="relative aspect-[9/16] bg-gray-900 rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-gray-900">
+                            <div className="relative aspect-9/16 bg-gray-900 rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-gray-900">
                                 <video
                                     autoPlay
                                     loop
@@ -48,7 +48,7 @@ export default function Hero() {
                                     playsInline
                                     className="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity duration-700"
                                 >
-                                    <source src="/assets/videos/ElizTap_Video.mp4" type="video/mp4" />
+                                    <source src="/assets/videos/VemTap_Video.mp4" type="video/mp4" />
                                 </video>
                                 <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
                             </div>
@@ -75,7 +75,7 @@ export default function Hero() {
                                     <div className="size-2.5 rounded-full bg-green-400/60"></div>
                                 </div>
                                 <div className="bg-white px-4 py-1 rounded-lg text-[10px] text-gray-400 font-bold flex-1 text-center max-w-[280px] mx-auto border border-gray-100 uppercase tracking-widest">
-                                    app.eliztap.io/dashboard
+                                    app.vemtap.io/dashboard
                                 </div>
                             </div>
 
@@ -83,8 +83,8 @@ export default function Hero() {
                                 {/* Sidebar Mockup */}
                                 <div className="col-span-3 bg-gray-50/50 border-r border-gray-100 p-8 hidden md:block">
                                     <div className="flex items-center gap-3 mb-10">
-                                        <div className="size-10 rounded-xl bg-primary flex items-center justify-center text-white text-xs font-black shadow-lg shadow-primary/20">ET</div>
-                                        <div className="font-display font-black text-text-main text-sm">ElizTap</div>
+                                        <div className="size-10 rounded-xl bg-primary flex items-center justify-center text-white text-xs font-black shadow-lg shadow-primary/20">VT</div>
+                                        <div className="font-display font-black text-text-main text-sm">VemTap</div>
                                     </div>
                                     <div className="space-y-3 text-left">
                                         <div className="flex items-center gap-3 px-4 py-2.5 text-primary bg-primary/5 rounded-xl text-xs font-bold uppercase tracking-wider">

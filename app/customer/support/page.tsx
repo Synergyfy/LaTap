@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import CustomerSidebar from '@/components/customer/CustomerSidebar';
 import { MessageSquare, LifeBuoy, Clock, Search, Filter, Plus, ChevronRight, HelpCircle } from 'lucide-react';
+import { AnimatePresence } from 'framer-motion';
 import CreateTicketModal from '@/components/ui/CreateTicketModal';
 import { notify } from '@/lib/notify';
 
@@ -35,7 +35,7 @@ export default function CustomerSupportPage() {
     ];
 
     return (
-        <CustomerSidebar>
+        <>
             <div className="max-w-5xl mx-auto space-y-10 pb-20">
                 {/* Header */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -70,8 +70,8 @@ export default function CustomerSupportPage() {
                                                 <h4 className="font-bold text-text-main mt-2 group-hover:text-primary transition-colors">{ticket.subject}</h4>
                                             </div>
                                             <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${ticket.status === 'Open' ? 'bg-green-100 text-green-700' :
-                                                    ticket.status === 'In Progress' ? 'bg-blue-100 text-blue-700' :
-                                                        'bg-gray-100 text-gray-500'
+                                                ticket.status === 'In Progress' ? 'bg-blue-100 text-blue-700' :
+                                                    'bg-gray-100 text-gray-500'
                                                 }`}>
                                                 {ticket.status}
                                             </span>
@@ -127,12 +127,16 @@ export default function CustomerSupportPage() {
                 </div>
             </div>
 
-            <CreateTicketModal
-                isOpen={isCreateModalOpen}
-                onClose={() => setIsCreateModalOpen(false)}
-                onSubmit={handleCreateTicket}
-                userType="customer"
-            />
-        </CustomerSidebar>
+            <AnimatePresence>
+                {isCreateModalOpen && (
+                    <CreateTicketModal
+                        isOpen={isCreateModalOpen}
+                        onClose={() => setIsCreateModalOpen(false)}
+                        onSubmit={handleCreateTicket}
+                        userType="customer"
+                    />
+                )}
+            </AnimatePresence>
+        </>
     );
 }

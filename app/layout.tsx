@@ -16,14 +16,14 @@ import "./globals.css";
 
 export const metadata: Metadata = {
     title: {
-        default: "ElizTap - Offline-to-Online Data Capture",
-        template: "%s | ElizTap"
+        default: "VemTap - Visitor Engagement Management",
+        template: "%s | VemTap"
     },
-    description: "Seamless offline-to-online visitor data capture. Turn physical foot traffic into digital leads instantly with our NFC-powered platform.",
-    keywords: ["NFC data capture", "offline to online", "lead generation", "visitor management", "digital marketing"],
-    authors: [{ name: "ElizTap Team" }],
-    creator: "ElizTap",
-    publisher: "ElizTap",
+    description: "Visitor Engagement Management - Tap. Seamless offline-to-online visitor data capture with our NFC-powered platform.",
+    keywords: ["VemTap", "NFC data capture", "offline to online", "lead generation", "visitor management", "digital marketing"],
+    authors: [{ name: "VemTap Team" }],
+    creator: "VemTap",
+    publisher: "VemTap",
     formatDetection: {
         email: false,
         address: false,
@@ -32,28 +32,28 @@ export const metadata: Metadata = {
     openGraph: {
         type: "website",
         locale: "en_GB",
-        url: "https://eliztap.io/",
-        siteName: "ElizTap",
-        title: "ElizTap - Offline-to-Online Data Capture",
-        description: "Seamless offline-to-online visitor data capture. Turn physical foot traffic into digital leads instantly with our NFC-powered platform.",
+        url: "https://vemtap.io/",
+        siteName: "VemTap",
+        title: "VemTap - Visitor Engagement Management",
+        description: "Seamless offline-to-online visitor data capture. Visitor Engagement Management - Tap.",
         images: [
             {
-                url: "/logo.png",
+                url: "/assets/VEMTAP_PNG.png",
                 width: 800,
                 height: 600,
-                alt: "ElizTap Logo",
+                alt: "VemTap Logo",
             },
         ],
     },
     twitter: {
         card: "summary_large_image",
-        title: "ElizTap - Offline-to-Online Data Capture",
-        description: "Seamless offline-to-online visitor data capture. Turn physical foot traffic into digital leads instantly with our NFC-powered platform.",
-        images: ["/logo.png"],
+        title: "VemTap - Visitor Engagement Management",
+        description: "Seamless offline-to-online visitor data capture. Visitor Engagement Management - Tap.",
+        images: ["/assets/VEMTAP_PNG.png"],
     },
     icons: {
-        icon: "/icon.png",
-        apple: "/icon.png",
+        icon: "/assets/VEMTAP_PNG.png",
+        apple: "/assets/VEMTAP_PNG.png",
     },
 };
 

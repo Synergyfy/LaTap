@@ -46,63 +46,69 @@ export default function Pricing() {
 
     return (
         <section id="pricing" className="py-20 bg-white overflow-hidden relative border-t border-gray-100">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div className="text-center max-w-3xl mx-auto mb-16">
-                    <h2 className="text-3xl md:text-4xl font-display font-bold mb-4 text-text-main tracking-tight">Smart plans for every scale</h2>
-                    <p className="text-base text-text-secondary font-medium">Clear pricing with no hidden fees. All plans include secure NFC technology.</p>
+            <div className="max-w-7xl mx-auto px-6 sm:px-10 py-16">
+                <div className="text-center max-w-2xl mx-auto mb-12">
+                    <h2 className="text-3xl md:text-5xl font-display font-bold text-text-main mb-3">Enterprise-Grade <span className="text-primary italic">Licensing</span></h2>
+                    <p className="text-base text-text-secondary font-medium">Clear pricing with no hidden fees.</p>
                 </div>
 
-                {/* Static Grid Pricing Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                {/* Pricing Cards Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
                     {mainPlans.map((plan, index) => {
                         const highlight = plan.isPopular;
-                        const tagLabel = highlight ? "Best Value" : null;
                         const isCurrentPlan = user?.planId === plan.id;
 
                         return (
                             <div
                                 key={index}
                                 className={`
-                                    relative flex flex-col p-6 rounded-2xl transition-all duration-300 
+                                    relative flex flex-col p-5 rounded-3xl transition-all duration-300
                                     ${highlight
-                                        ? 'bg-primary shadow-xl shadow-primary/20 text-white scale-[1.02] md:scale-105 z-10'
-                                        : 'bg-white border border-gray-100 shadow-sm hover:shadow-md'
+                                        ? 'bg-primary shadow-xl shadow-primary/20 text-white z-10 border-2 border-white/10'
+                                        : 'bg-white border border-gray-100 shadow-lg hover:shadow-xl'
                                     }
                                 `}
                             >
-                                {tagLabel && (
-                                    <div className="absolute top-4 right-4 bg-white/20 text-white text-[8px] font-black px-2 py-1 rounded-full uppercase tracking-widest">
-                                        {tagLabel}
+                                {highlight && (
+                                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white text-primary text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-sm">
+                                        Most Popular
                                     </div>
                                 )}
-                                <h3 className={`text-lg font-bold mb-1 font-display ${highlight ? 'text-white' : 'text-text-main'}`}>
-                                    {plan.name}
-                                </h3>
-                                <p className={`text-xs mb-6 font-medium leading-relaxed ${highlight ? 'text-white/80' : 'text-text-secondary'}`}>
-                                    {plan.description}
-                                </p>
-                                <div className={`flex items-baseline mb-6 ${highlight ? 'text-white' : ''}`}>
-                                    <span className={`text-3xl font-bold ${!highlight ? 'text-text-main' : ''}`}>{plan.price}</span>
-                                    {plan.period && <span className={`ml-1.5 font-bold text-xs ${highlight ? 'opacity-70' : 'text-text-secondary'}`}>{plan.period}</span>}
+                                <div className="mb-4">
+                                    <h3 className={`text-lg font-display font-bold mb-1 ${highlight ? 'text-white' : 'text-text-main'}`}>
+                                        {plan.name}
+                                    </h3>
+                                    <p className={`text-xs font-medium ${highlight ? 'text-white/80' : 'text-text-secondary'}`}>
+                                        {plan.description}
+                                    </p>
                                 </div>
-                                <ul className={`space-y-3 mb-8 flex-1 ${highlight ? 'text-white' : ''}`}>
-                                    {plan.features.map((item, i) => (
-                                        <li key={i} className="flex items-start text-xs font-semibold gap-2.5 leading-tight">
-                                            <CheckCircle2 size={14} className={`mt-0.5 shrink-0 ${highlight ? 'text-white' : 'text-primary'}`} />
-                                            <span>{item}</span>
+                                <div className="mb-4">
+                                    <span className="text-3xl font-display font-bold">{plan.price}</span>
+                                    <span className={`text-xs font-medium ml-1 ${highlight ? 'text-white/70' : 'text-text-secondary'}`}>
+                                        {plan.period}
+                                    </span>
+                                </div>
+                                <ul className="space-y-2 mb-6 flex-1">
+                                    {plan.features.slice(0, 4).map((feature, fIndex) => (
+                                        <li key={fIndex} className="flex items-start gap-2 text-[10px] font-medium leading-tight">
+                                            <CheckCircle2 className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${highlight ? 'text-white' : 'text-primary'}`} />
+                                            <span className={highlight ? 'text-white/90' : 'text-text-secondary'}>
+                                                {feature}
+                                            </span>
                                         </li>
                                     ))}
                                 </ul>
+
                                 <button
                                     onClick={() => isCurrentPlan ? null : handleSubscription(plan)}
                                     disabled={isCurrentPlan}
                                     className={`
-                                        w-full py-3 rounded-xl text-sm font-bold text-center transition-all cursor-pointer shadow-md
+                                        w-full py-2.5 rounded-lg text-xs font-bold text-center transition-all cursor-pointer
                                         ${isCurrentPlan
                                             ? 'bg-gray-100 text-gray-400 cursor-not-allowed shadow-none'
                                             : highlight
-                                                ? 'bg-white text-primary hover:bg-gray-50'
-                                                : 'bg-primary text-white hover:bg-primary/90'
+                                                ? 'bg-white text-primary hover:bg-gray-50 shadow-lg shadow-white/10'
+                                                : 'bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/10'
                                         }
                                     `}
                                 >
@@ -118,21 +124,21 @@ export default function Pricing() {
                     const isCurrentPlan = user?.planId === enterprisePlan.id;
                     return (
                         <div className="max-w-5xl mx-auto">
-                            <div className="relative flex flex-col md:flex-row items-center gap-8 p-6 md:p-8 rounded-2xl bg-text-main text-white shadow-xl border border-white/5">
-                                <div className="flex-1">
-                                    <div className="inline-block px-2.5 py-1 bg-white/10 text-white text-[8px] font-black rounded-full uppercase tracking-widest mb-3">
+                            <div className="relative flex flex-col md:flex-row items-center gap-8 p-6 md:p-8 rounded-3xl bg-primary text-white shadow-xl shadow-primary/10 border border-white/10">
+                                <div className="flex-1 text-center md:text-left">
+                                    <div className="inline-block px-2.5 py-1 bg-white/20 text-white text-[8px] font-black rounded-full uppercase tracking-widest mb-3">
                                         Enterprise
                                     </div>
                                     <h3 className="text-xl md:text-2xl font-bold mb-1 font-display tracking-tight text-white">
                                         {enterprisePlan.name}
                                     </h3>
-                                    <p className="text-xs mb-6 font-medium text-white/70 max-w-xl">
+                                    <p className="text-xs mb-6 font-medium text-white/80 max-w-xl">
                                         {enterprisePlan.description}
                                     </p>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
                                         {enterprisePlan.features.slice(0, 4).map((item, i) => (
-                                            <li key={i} className="flex items-center text-xs font-semibold gap-2.5 list-none">
-                                                <CheckCircle2 size={14} className="text-emerald-400 shrink-0" />
+                                            <li key={i} className="flex items-center text-xs font-semibold gap-2.5 list-none justify-center md:justify-start">
+                                                <CheckCircle2 size={14} className="text-white shrink-0" />
                                                 <span className="text-white/90">{item}</span>
                                             </li>
                                         ))}
@@ -147,10 +153,10 @@ export default function Pricing() {
                                         onClick={() => isCurrentPlan ? null : handleSubscription(enterprisePlan)}
                                         disabled={isCurrentPlan}
                                         className={`
-                                            px-8 py-3 rounded-xl text-sm font-bold text-center transition-all shadow-lg whitespace-nowrap
+                                            px-8 py-3 rounded-xl text-sm font-bold text-center transition-all bg-white text-primary shadow-lg shadow-white/10 hover:scale-[1.02] active:scale-[0.98]
                                             ${isCurrentPlan
-                                                ? 'bg-white/10 text-white/40 cursor-not-allowed shadow-none'
-                                                : 'bg-primary text-white hover:scale-[1.02]'
+                                                ? 'opacity-50 cursor-not-allowed shadow-none'
+                                                : ''
                                             }
                                         `}
                                     >
@@ -170,6 +176,6 @@ export default function Pricing() {
                     />
                 )}
             </div>
-        </section>
+        </section >
     );
 }

@@ -171,7 +171,7 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
         (set, get) => ({
     currentStep: 'SELECT_TYPE',
     serialNumber: 'LT-8829-X',
-    storeName: 'ElizTap Venue',
+    storeName: 'VemTap Venue',
     businessType: 'RESTAURANT',
     visitCount: 1,
     rewardVisitThreshold: 5,
@@ -199,8 +199,8 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
         showReview: true,
         showSocial: true,
         showFeedback: true,
-        reviewUrl: 'https://g.page/review/eliztap',
-        socialUrl: 'https://instagram.com/eliztap'
+        reviewUrl: 'https://g.page/review/vemtap',
+        socialUrl: 'https://instagram.com/vemtap'
     },
     surveyQuestions: [
         { id: 'q1', text: 'How was your experience today?', type: 'rating' },

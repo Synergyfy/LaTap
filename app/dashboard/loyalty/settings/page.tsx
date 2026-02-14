@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect } from 'react';
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import { LoyaltySettings } from '@/components/loyalty/admin/LoyaltySettings';
 import { useLoyaltyStore } from '@/store/loyaltyStore';
@@ -22,24 +21,22 @@ export default function LoyaltySettingsPage() {
     };
 
     return (
-        <DashboardSidebar>
-            <div className="p-8 space-y-8">
-                <PageHeader
-                    title="Program Settings"
-                    description="Configure how your loyalty program operates"
-                />
+        <div className="p-8 space-y-8">
+            <PageHeader
+                title="Program Settings"
+                description="Configure how your loyalty program operates"
+            />
 
-                {isLoading && !rules ? (
-                    <div className="flex items-center justify-center p-24">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-                    </div>
-                ) : rules ? (
-                    <LoyaltySettings
-                        rules={rules}
-                        onSave={handleSave}
-                    />
-                ) : null}
-            </div>
-        </DashboardSidebar>
+            {isLoading && !rules ? (
+                <div className="flex items-center justify-center p-24">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                </div>
+            ) : rules ? (
+                <LoyaltySettings
+                    rules={rules}
+                    onSave={handleSave}
+                />
+            ) : null}
+        </div>
     );
 }

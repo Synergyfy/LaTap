@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import DataTable, { Column } from '@/components/dashboard/DataTable';
 import { useLoyaltyStore } from '@/store/loyaltyStore';
@@ -84,38 +83,36 @@ export default function LoyaltyCustomersPage() {
     ];
 
     return (
-        <DashboardSidebar>
-            <div className="p-8 space-y-8">
-                <PageHeader
-                    title="Member Directory"
-                    description="Manage and engage your loyal customer base"
-                />
+        <div className="p-8 space-y-8">
+            <PageHeader
+                title="Member Directory"
+                description="Manage and engage your loyal customer base"
+            />
 
-                <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white p-4 border border-slate-200 shadow-sm">
-                    <div className="relative flex-1 w-full">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                        <input
-                            type="text"
-                            placeholder="Search by User ID or Member ID..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full h-11 pl-11 pr-4 bg-slate-50 border border-slate-100 text-sm font-medium outline-none focus:border-primary transition-all"
-                        />
-                    </div>
-                    <button className="flex items-center gap-2 px-6 h-11 border border-slate-200 text-xs font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-all">
-                        <Filter className="w-4 h-4" />
-                        More Filters
-                    </button>
-                </div>
-
-                <div className="bg-white border border-slate-200 shadow-sm overflow-hidden">
-                    <DataTable
-                        columns={columns}
-                        data={customerList.filter(c => c.userId.toLowerCase().includes(searchTerm.toLowerCase()))}
-                        onRowClick={(item) => console.log('Customer clicked:', item)}
+            <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white p-4 border border-slate-200 shadow-sm">
+                <div className="relative flex-1 w-full">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                    <input
+                        type="text"
+                        placeholder="Search by User ID or Member ID..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full h-11 pl-11 pr-4 bg-slate-50 border border-slate-100 text-sm font-medium outline-none focus:border-primary transition-all"
                     />
                 </div>
+                <button className="flex items-center gap-2 px-6 h-11 border border-slate-200 text-xs font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-all">
+                    <Filter className="w-4 h-4" />
+                    More Filters
+                </button>
             </div>
-        </DashboardSidebar>
+
+            <div className="bg-white border border-slate-200 shadow-sm overflow-hidden">
+                <DataTable
+                    columns={columns}
+                    data={customerList.filter(c => c.userId.toLowerCase().includes(searchTerm.toLowerCase()))}
+                    onRowClick={(item) => console.log('Customer clicked:', item)}
+                />
+            </div>
+        </div>
     );
 }

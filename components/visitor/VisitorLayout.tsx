@@ -30,7 +30,7 @@ export const VisitorLayout: React.FC<VisitorLayoutProps> = ({ children, onReset,
                     <div className="size-8 rounded-xl bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20 group-hover:rotate-12 transition-transform">
                         <span className="material-symbols-outlined text-[18px]">nfc</span>
                     </div>
-                    <span className="font-display font-black text-xl tracking-tighter text-slate-900">ElizTap</span>
+                    <span className="font-display font-black text-xl tracking-tighter text-slate-900">VemTap</span>
                 </Link>
 
                 <div className="flex items-center gap-4 pointer-events-auto">

@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { presets } from './presets';
 import { EngagementTiles } from './EngagementTiles';
+import { SocialMediaModal } from '@/components/ui/SocialMediaModal';
 
 interface StepOutcomeProps {
     config: any;
@@ -12,8 +13,9 @@ interface StepOutcomeProps {
     onDownload: () => void;
     onFinish: () => void;
     onRestart: () => void;
-    onEngagement?: (type: 'review' | 'social' | 'feedback') => void;
+    onEngagement?: (type: 'review' | 'social' | 'feedback' | 'rewards') => void;
     engagementSettings?: any;
+    socialLinks?: any;
 }
 
 export const StepOutcome: React.FC<StepOutcomeProps> = ({
@@ -26,15 +28,24 @@ export const StepOutcome: React.FC<StepOutcomeProps> = ({
     onFinish,
     onRestart,
     onEngagement,
-    engagementSettings
+    engagementSettings,
+    socialLinks
 }) => {
+    const [isSocialModalOpen, setIsSocialModalOpen] = React.useState(false);
+
+    const handleEngagement = (type: 'review' | 'social' | 'feedback' | 'rewards') => {
+        if (type === 'social') {
+            setIsSocialModalOpen(true);
+        }
+        onEngagement?.(type);
+    };
     return (
         <motion.div key="outcome" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className={presets.card}>
             <div className="flex flex-col items-center text-center">
-                <div className="size-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mb-8 shadow-inner">
-                    <span className="material-symbols-outlined text-4xl">{config.specificIcon}</span>
+                <div className="size-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mb-6 shadow-inner">
+                    <span className="material-symbols-outlined text-4xl">check_circle</span>
                 </div>
-                <h1 className={presets.title}>{customSuccessMessage || config.outcomeTitle}</h1>
+                <h1 className={presets.title}>{customSuccessMessage || "Visit recorded successfully!"}</h1>
                 <p className={`${presets.body} mt-4 mb-4`}>{config.outcomeDesc}</p>
 
                 {hasRewardSetup && (
@@ -63,7 +74,7 @@ export const StepOutcome: React.FC<StepOutcomeProps> = ({
                 {/* Engagement Layer */}
                 {onEngagement && (
                     <EngagementTiles
-                        onAction={onEngagement}
+                        onAction={handleEngagement}
                         settings={engagementSettings}
                     />
                 )}
@@ -74,6 +85,12 @@ export const StepOutcome: React.FC<StepOutcomeProps> = ({
                     )}
                     <button onClick={onRestart} className="text-[10px] font-black text-gray-300 uppercase tracking-widest hover:text-red-400 transition-colors">Return to Start</button>
                 </div>
+
+                <SocialMediaModal
+                    isOpen={isSocialModalOpen}
+                    onClose={() => setIsSocialModalOpen(false)}
+                    socialLinks={socialLinks}
+                />
             </div>
         </motion.div>
     );

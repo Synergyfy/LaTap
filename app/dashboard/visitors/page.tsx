@@ -120,88 +120,86 @@ export default function VisitorsOverviewPage() {
     ];
 
     return (
-        <DashboardSidebar>
-            <div className="p-4 md:p-8">
-                <PageHeader
-                    title="Visitors Overview"
-                    description="Monitor your customer footfall and engagement levels"
-                    actions={
-                        <div className="flex items-center gap-3">
-                            <button
-                                onClick={() => setSelectedVisitorForMsg({ visitor: {} as Visitor, type: 'general' })}
-                                className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-lg shadow-primary/20"
-                            >
-                                <Plus size={18} />
-                                Compose
-                            </button>
-                            <button
-                                onClick={handleExportCSV}
-                                className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm shadow-sm"
-                            >
-                                <Download size={18} />
-                                Export
-                            </button>
-                        </div>
-                    }
-                />
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    {stats.map((stat, index) => (
-                        <StatsCard key={index} {...stat} />
-                    ))}
-                </div>
-
-                <div className="bg-white rounded-xl p-6 border border-gray-200 mb-6 flex flex-col md:flex-row gap-4">
-                    <div className="flex-1 relative">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                        <input
-                            type="text"
-                            placeholder="Search visitors..."
-                            className="w-full h-12 bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
+        <div className="p-4 md:p-8">
+            <PageHeader
+                title="Visitors Overview"
+                description="Monitor your customer footfall and engagement levels"
+                actions={
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={() => setSelectedVisitorForMsg({ visitor: {} as Visitor, type: 'general' })}
+                            className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-lg shadow-primary/20"
+                        >
+                            <Plus size={18} />
+                            Compose
+                        </button>
+                        <button
+                            onClick={handleExportCSV}
+                            className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm shadow-sm"
+                        >
+                            <Download size={18} />
+                            Export
+                        </button>
                     </div>
-                    <select
-                        className="h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-text-main outline-none focus:ring-2 focus:ring-primary/20"
-                        value={filterStatus}
-                        onChange={(e) => setFilterStatus(e.target.value)}
-                    >
-                        <option value="all">All Status</option>
-                        <option value="new">New</option>
-                        <option value="returning">Returning</option>
-                        <option value="vip">VIP Only</option>
-                    </select>
-                </div>
+                }
+            />
 
-                <DataTable
-                    columns={columns}
-                    data={filteredVisitors}
-                    isLoading={isLoading}
-                    onRowClick={(visitor) => setSelectedVisitorForDetails(visitor)}
-                    emptyState={
-                        <EmptyState
-                            icon="people"
-                            title="No visitors activity"
-                            description="Tap the 'Simulate Check-in' button on the dashboard to see data here."
-                        />
-                    }
-                />
-
-                <SendMessageModal
-                    isOpen={!!selectedVisitorForMsg}
-                    onClose={() => setSelectedVisitorForMsg(null)}
-                    recipientName={selectedVisitorForMsg?.visitor.name || ''}
-                    recipientPhone={selectedVisitorForMsg?.visitor.phone}
-                    type={selectedVisitorForMsg?.type || 'general'}
-                />
-
-                <VisitorDetailsModal
-                    isOpen={!!selectedVisitorForDetails}
-                    onClose={() => setSelectedVisitorForDetails(null)}
-                    visitor={selectedVisitorForDetails}
-                />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                {stats.map((stat, index) => (
+                    <StatsCard key={index} {...stat} />
+                ))}
             </div>
-        </DashboardSidebar>
+
+            <div className="bg-white rounded-xl p-6 border border-gray-200 mb-6 flex flex-col md:flex-row gap-4">
+                <div className="flex-1 relative">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                    <input
+                        type="text"
+                        placeholder="Search visitors..."
+                        className="w-full h-12 bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                </div>
+                <select
+                    className="h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-text-main outline-none focus:ring-2 focus:ring-primary/20"
+                    value={filterStatus}
+                    onChange={(e) => setFilterStatus(e.target.value)}
+                >
+                    <option value="all">All Status</option>
+                    <option value="new">New</option>
+                    <option value="returning">Returning</option>
+                    <option value="vip">VIP Only</option>
+                </select>
+            </div>
+
+            <DataTable
+                columns={columns}
+                data={filteredVisitors}
+                isLoading={isLoading}
+                onRowClick={(visitor) => setSelectedVisitorForDetails(visitor)}
+                emptyState={
+                    <EmptyState
+                        icon="people"
+                        title="No visitors activity"
+                        description="Tap the 'Simulate Check-in' button on the dashboard to see data here."
+                    />
+                }
+            />
+
+            <SendMessageModal
+                isOpen={!!selectedVisitorForMsg}
+                onClose={() => setSelectedVisitorForMsg(null)}
+                recipientName={selectedVisitorForMsg?.visitor.name || ''}
+                recipientPhone={selectedVisitorForMsg?.visitor.phone}
+                type={selectedVisitorForMsg?.type || 'general'}
+            />
+
+            <VisitorDetailsModal
+                isOpen={!!selectedVisitorForDetails}
+                onClose={() => setSelectedVisitorForDetails(null)}
+                visitor={selectedVisitorForDetails}
+            />
+        </div>
     );
 }

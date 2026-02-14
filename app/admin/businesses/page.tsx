@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import AdminSidebar from '@/components/admin/AdminSidebar';
 import Modal from '@/components/ui/Modal';
 import { notify } from '@/lib/notify';
 
@@ -86,7 +85,7 @@ export default function AdminBusinessesPage() {
     });
 
     return (
-        <AdminSidebar>
+        <>
             <div className="p-4 md:p-8">
                 {/* Page Header */}
                 <div className="flex items-center justify-between mb-8">
@@ -422,7 +421,7 @@ export default function AdminBusinessesPage() {
                 </div>
             </div>
 
-            {/* Add/Edit Business Modal */}
+            {/* Add / Edit Business Modal */}
             <Modal
                 isOpen={isAddModalOpen}
                 onClose={() => { setIsAddModalOpen(false); setSelectedBusiness(null); }}
@@ -521,6 +520,6 @@ export default function AdminBusinessesPage() {
                     </div>
                 </form>
             </Modal>
-        </AdminSidebar>
+        </>
     );
 }

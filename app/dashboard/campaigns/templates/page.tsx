@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import { Plus, Trash2 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -10,6 +9,7 @@ import { dashboardApi } from '@/lib/api/dashboard';
 import { Template } from '@/lib/store/mockDashboardStore';
 import CreateTemplateModal from '@/components/dashboard/CreateTemplateModal';
 import toast from 'react-hot-toast';
+import PremiumFeatureWrapper from '@/components/dashboard/PremiumFeatureWrapper';
 
 export default function CampaignTemplatesPage() {
     const router = useRouter();
@@ -53,7 +53,10 @@ export default function CampaignTemplatesPage() {
     const templates = data?.templates || [];
 
     return (
-        <DashboardSidebar>
+        <PremiumFeatureWrapper
+            featureName="Marketing Templates"
+            description="Use pre-built message formats to launch your campaigns faster."
+        >
             <div className="p-8">
                 <PageHeader
                     title="Message Templates"
@@ -140,6 +143,6 @@ export default function CampaignTemplatesPage() {
                     </div>
                 )}
             </div>
-        </DashboardSidebar>
+        </PremiumFeatureWrapper>
     );
 }

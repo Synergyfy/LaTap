@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import StatsCard from '@/components/dashboard/StatsCard';
 import DataTable, { Column } from '@/components/dashboard/DataTable';
@@ -256,12 +255,10 @@ function MessagesContent() {
 
 export default function AllMessagesPage() {
     return (
-        <DashboardSidebar>
-            <div className="p-4 md:p-8">
-                <Suspense fallback={<div className="p-8"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>}>
-                    <MessagesContent />
-                </Suspense>
-            </div>
-        </DashboardSidebar>
+        <div className="p-4 md:p-8">
+            <Suspense fallback={<div className="p-8"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>}>
+                <MessagesContent />
+            </Suspense>
+        </div>
     );
 }

@@ -37,18 +37,26 @@ export default function AutomationsPage() {
     const [rules, setRules] = useState<Rule[]>([
         {
             id: '1',
-            name: 'Welcome Series',
+            name: 'Review Booster (2h)',
             event: 'first_tag',
-            condition: 'any',
-            action: 'send_whatsapp',
+            condition: 'delay: 2 hours',
+            action: 'push_review',
             active: true
         },
         {
             id: '2',
-            name: 'Review Booster',
+            name: 'Feedback Survey (24h)',
+            event: 'first_tag',
+            condition: 'delay: 24 hours',
+            action: 'push_review', // Survey action
+            active: true
+        },
+        {
+            id: '3',
+            name: 'Loyalty Promo (7d)',
             event: 'repeat_tag',
-            condition: 'frequency > 3',
-            action: 'push_review',
+            condition: 'delay: 7 days',
+            action: 'send_whatsapp',
             active: true
         }
     ]);

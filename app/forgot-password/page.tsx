@@ -16,7 +16,7 @@ export default function ForgotPasswordPage() {
                 <div className="p-8 md:p-16 lg:p-24">
                     <Link href="/" className="flex items-center gap-2 mb-24">
                         <span className="material-icons-round text-primary text-2xl">nfc</span>
-                        <span className="font-display font-semibold text-xl tracking-tight text-text-main">LaTap</span>
+                        <span className="font-display font-semibold text-xl tracking-tight text-text-main">VemTap</span>
                     </Link>
 
                     <div className="max-w-md w-full mx-auto lg:mx-0">
