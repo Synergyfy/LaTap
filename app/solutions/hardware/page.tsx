@@ -5,9 +5,14 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Link from 'next/link';
 import {
-    Cpu, Sparkles, Zap, ShieldCheck, ArrowRight,
-    MousePointer2, Smartphone, Layers, Radio, Globe,
-    HardDrive, Cog, Box, ShieldAlert, CheckCircle2
+    ArrowRight,
+    Radio,
+    Globe,
+    HardDrive,
+    Cog,
+    ShieldAlert,
+    CheckCircle2,
+    Smartphone
 } from 'lucide-react';
 import LogoIcon from '@/components/brand/LogoIcon';
 

@@ -16,7 +16,7 @@ import MarketplaceCTA from '@/components/landing/MarketplaceCTA';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'V - Meaningful Connections, Instant Results',
+  title: 'V - Visitor Engagement Management',
   description: 'The all-in-one NFC platform for modern businesses. Capture data, engage customers, and drive loyalty with a single tap.',
 };
 

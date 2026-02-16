@@ -10,7 +10,7 @@ interface LogoProps {
 
 export default function Logo({
     className = "flex items-center gap-2",
-    iconSize = 73
+    iconSize = 80
 }: LogoProps) {
     return (
         <div className={className}>
