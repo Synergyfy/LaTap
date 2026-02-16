@@ -214,10 +214,10 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                 fixed inset-y-0 left-0 z-70 w-64 bg-white border-r border-gray-200 flex flex-col transition-transform duration-300 lg:static lg:translate-x-0
                 ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}
             `}>
-                {/* Logo with Wordmark */}
+                {/* Logo  */}
                 <div className="h-16 flex items-center px-6 border-b border-gray-200">
                     <Link href="/dashboard" className="flex items-center gap-2">
-                        <Logo iconSize={40} fontSize="text-2xl" />
+                        <Logo iconSize={68} fontSize="text-2xl" />
                     </Link>
                 </div>
 

@@ -70,7 +70,7 @@ export default function GetStarted() {
             {/* Left Side: Form */}
             <div className="w-full lg:w-1/2 flex flex-col overflow-y-auto">
                 <div className="p-8 md:p-16 lg:p-24">
-                    <Logo iconSize={56} fontSize="text-2xl" className="flex items-center gap-3" />
+                    <Logo iconSize={68} fontSize="text-2xl" className="flex items-center gap-3" />
 
                     <div className="max-w-md w-full mx-auto lg:mx-0">
                         {/* Progress Bar */}

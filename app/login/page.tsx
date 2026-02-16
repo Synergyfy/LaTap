@@ -51,7 +51,7 @@ export default function LoginPage() {
             <div className="w-full lg:w-1/2 flex flex-col overflow-y-auto">
                 <div className="p-8 md:p-12 lg:p-20 flex flex-col min-h-full">
                     <Link href="/" className="mb-12 md:mb-20 block w-fit">
-                        <Logo iconSize={56} fontSize="text-2xl" />
+                        <Logo iconSize={68} fontSize="text-2xl" />
                     </Link>
 
                     <div className="flex-1 flex flex-col justify-center">

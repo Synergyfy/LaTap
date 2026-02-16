@@ -141,7 +141,7 @@ export default function MarketplacePage() {
                     {/* Logo Area */}
                     <div className="flex items-center gap-12">
                         <Link href="/" className="block">
-                            <Logo iconSize={56} fontSize="text-2xl" className="flex items-center gap-3" withText />
+                            <Logo iconSize={68} fontSize="text-2xl" className="flex items-center gap-3" />
                         </Link>
 
                         {/* Desktop Nav */}

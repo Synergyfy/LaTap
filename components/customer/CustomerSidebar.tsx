@@ -107,7 +107,7 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
                 {/* Logo */}
                 <div className="h-20 flex items-center px-6 border-b border-gray-100">
                     <Link href="/customer/dashboard" className="flex items-center gap-2">
-                        <Logo iconSize={24} fontSize="text-lg" />
+                        <Logo iconSize={68} fontSize="text-lg" />
                     </Link>
                 </div>
 

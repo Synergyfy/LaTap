@@ -169,7 +169,7 @@ export default function AdminSidebar({ children, activePage }: AdminSidebarProps
                 {/* Logo with Wordmark */}
                 <div className="h-16 flex items-center px-6 border-b border-gray-200">
                     <Link href="/admin/dashboard" className="flex items-center gap-2">
-                        <Logo iconSize={28} fontSize="text-lg" />
+                        <Logo iconSize={68} fontSize="text-lg" />
                     </Link>
                 </div>
 

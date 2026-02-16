@@ -204,7 +204,7 @@ export default function ProductClient({ id }: { id: string }) {
                 <div className="max-w-[1400px] mx-auto px-4 md:px-8 h-20 flex items-center justify-between gap-8">
                     <div className="flex items-center gap-12">
                         <Link href="/" className="block">
-                            <Logo iconSize={48} fontSize="text-2xl" withText textClassName="font-display font-bold tracking-tight text-slate-900" />
+                            <Logo iconSize={68} fontSize="text-2xl"  textClassName="font-display font-bold tracking-tight text-slate-900" />
                         </Link>
                     </div>
 
@@ -327,9 +327,17 @@ export default function ProductClient({ id }: { id: string }) {
                                         <span className="text-sm font-medium text-slate-600">
                                             {tier.minQuantity} - {tier.maxQuantity || '∞'} units
                                         </span>
-                                        <span className="text-lg font-bold text-slate-900">
-                                            {typeof tier.price === 'number' ? `₦${tier.price.toLocaleString()}/unit` : 'Contact for quote'}
+  `                                                                          <div className="flex items-baseline gap-1">
+                                    <span className="text-2xl font-black text-slate-900 tracking-tight">
+                                        {typeof tier.price === 'number' ? `₦${tier.price.toLocaleString()}` : 'Contact for quote'}
+                                    </span>
+                                    
+                                    {typeof tier.price === 'number' && (
+                                        <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                                        / unit
                                         </span>
+  )}
+</div>
                                     </div>
                                 ))}
                             </div>

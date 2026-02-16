@@ -9,7 +9,7 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
                     <div className="col-span-1 md:col-span-2">
                         <Link href="/" className="mb-8 block w-fit">
-                            <Logo iconSize={56} fontSize="text-3xl" />
+                            <Logo iconSize={68} fontSize="text-3xl" />
                         </Link>
                         <p className="text-text-secondary max-w-sm mb-10 font-bold leading-relaxed">
                             The easiest way to collect customer data instantly from your shop or event to your phone.
