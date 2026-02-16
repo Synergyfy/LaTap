@@ -107,7 +107,7 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
                 {/* Logo */}
                 <div className="h-20 flex items-center px-6 border-b border-gray-100">
                     <Link href="/customer/dashboard" className="flex items-center gap-2">
-                        <Logo iconSize={68} fontSize="text-lg" />
+                        <Logo />
                     </Link>
                 </div>
 
@@ -168,7 +168,7 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
             {/* Mobile Header (Visible only on small screens) */}
             <div className="lg:hidden absolute top-0 left-0 w-full h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 z-10">
                 <Link href="/customer/dashboard" className="flex items-center gap-2">
-                    <Logo iconSize={20} fontSize="text-base" />
+                    <Logo />
                 </Link>
                 <button className="p-2 text-text-main">
                     <Menu size={24} />

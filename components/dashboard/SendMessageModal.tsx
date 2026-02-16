@@ -3,8 +3,9 @@
 import React, { useState } from 'react';
 import Modal from '@/components/ui/Modal';
 import { useCustomerFlowStore } from '@/store/useCustomerFlowStore';
-import { MessageSquare, Send, Smartphone, Edit3, Check, ChevronDown } from 'lucide-react';
+import { MessageSquare, Send, Smartphone, Edit3, Check, ChevronDown, Users } from 'lucide-react';
 import { notify } from '@/lib/notify';
+import LogoIcon from '@/components/brand/LogoIcon';
 
 interface SendMessageModalProps {
     isOpen: boolean;
@@ -16,12 +17,25 @@ interface SendMessageModalProps {
 
 export default function SendMessageModal({ isOpen, onClose, recipientName, recipientPhone, type }: SendMessageModalProps) {
     const store = useCustomerFlowStore();
+    const [selectedChannel, setSelectedChannel] = useState<'WhatsApp' | 'SMS' | 'Email'>('WhatsApp');
+    const [selectedType, setSelectedType] = useState(type);
+    const [name, setName] = useState(recipientName || '');
+    const [message, setMessage] = useState('');
+    const [title, setTitle] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
-    // Get template from store
-    const getTemplate = (t: string) => {
-        if (t === 'welcome') return store.customWelcomeMessage || 'Welcome back! We are so glad to see you again. Enjoy your stay!';
+    // Get template from store or defaults based on channel
+    const getTemplate = (t: string, channel: string) => {
+        if (t === 'welcome') {
+            const base = store.customWelcomeMessage || 'Welcome back! We are so glad to see you again. Enjoy your stay!';
+            if (channel === 'Email') return `${base}\n\nBest regards,\n${store.storeName || 'The Team'}`;
+            return base;
+        }
         if (t === 'reward') return store.customRewardMessage || 'Congratulations! You have earned a reward for your loyalty.';
-        if (t === 'general') return 'Hello {name}, thank you for visiting us! We have a special offer for you.';
+        if (t === 'general') {
+            if (channel === 'Email') return 'Hello {name},\n\nThank you for visiting us! We have a special announcement for our loyal customers.\n\nVisit us again soon!';
+            return 'Hello {name}, thank you for visiting us! We have a special offer for you.';
+        }
         return '';
     };
 
@@ -31,26 +45,31 @@ export default function SendMessageModal({ isOpen, onClose, recipientName, recip
         return 'Special Message for {name}';
     };
 
-    const [selectedType, setSelectedType] = useState(type);
-    const [name, setName] = useState(recipientName || '');
-    const [message, setMessage] = useState(getTemplate(type));
-    const [title, setTitle] = useState(getTitle(type));
-    const [isLoading, setIsLoading] = useState(false);
-
-    const templates = [
-        { id: 'welcome', label: 'Welcome Template', icon: MessageSquare },
-        { id: 'reward', label: 'Reward Template', icon: Send },
-        { id: 'general', label: 'General Announcement', icon: Smartphone },
-        { id: 'custom', label: 'Custom Message', icon: Edit3 }
+    const allTemplates = [
+        { id: 'welcome', label: 'Welcome Template', icon: MessageSquare, channels: ['WhatsApp', 'SMS', 'Email'] },
+        { id: 'reward', label: 'Reward Template', icon: Send, channels: ['WhatsApp', 'SMS'] },
+        { id: 'general', label: 'General Announcement', icon: Smartphone, channels: ['WhatsApp', 'SMS', 'Email'] },
+        { id: 'custom', label: 'Custom Message', icon: Edit3, channels: ['WhatsApp', 'SMS', 'Email'] }
     ];
 
-    // Sync with store if it changes or if template selection changes
+    const filteredTemplates = allTemplates.filter(t => t.channels.includes(selectedChannel));
+
+    // Sync template when selection or channel changes
     React.useEffect(() => {
         if (selectedType !== 'custom') {
-            setMessage(getTemplate(selectedType));
+            setMessage(getTemplate(selectedType, selectedChannel));
             setTitle(getTitle(selectedType));
         }
-    }, [selectedType, store.customWelcomeMessage, store.customRewardMessage]);
+    }, [selectedType, selectedChannel, store.customWelcomeMessage, store.customRewardMessage]);
+
+    // Handle channel change: reset template if current one isn't available
+    const handleChannelChange = (channel: 'WhatsApp' | 'SMS' | 'Email') => {
+        setSelectedChannel(channel);
+        const templateExists = allTemplates.find(t => t.id === selectedType && t.channels.includes(channel));
+        if (!templateExists) {
+            setSelectedType('custom' as any);
+        }
+    };
 
     const handleSend = async () => {
         setIsLoading(true);
@@ -58,14 +77,14 @@ export default function SendMessageModal({ isOpen, onClose, recipientName, recip
         await new Promise(resolve => setTimeout(resolve, 1500));
 
         // Update store as requested: "edit from the pop up modal should reflect in the template"
-        if (type === 'welcome') {
+        if (selectedType === 'welcome') {
             store.updateCustomSettings({ welcomeMessage: message, welcomeTitle: title });
-        } else if (type === 'reward') {
+        } else if (selectedType === 'reward') {
             store.updateCustomSettings({ rewardMessage: message });
         }
 
         setIsLoading(false);
-        notify.success(`Message sent to ${recipientName} successfully!`);
+        notify.success(`Message sent to ${recipientName || name} via ${selectedChannel} successfully!`);
         onClose();
     };
 
@@ -85,6 +104,22 @@ export default function SendMessageModal({ isOpen, onClose, recipientName, recip
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-4">
                 {/* Editor */}
                 <div className="space-y-6">
+                    {/* Channel Selection - NOW FIRST */}
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Select Channel</label>
+                        <div className="flex bg-gray-100 p-1 rounded-xl">
+                            {(['WhatsApp', 'SMS', 'Email'] as const).map((channel) => (
+                                <button
+                                    key={channel}
+                                    onClick={() => handleChannelChange(channel)}
+                                    className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${selectedChannel === channel ? 'bg-white shadow-sm text-primary' : 'text-text-secondary hover:bg-gray-200/50'}`}
+                                >
+                                    {channel}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
                     {!recipientName && (
                         <div className="space-y-2">
                             <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Recipient Name</label>
@@ -101,7 +136,7 @@ export default function SendMessageModal({ isOpen, onClose, recipientName, recip
                     <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Select Template</label>
                         <div className="grid grid-cols-2 gap-2">
-                            {templates.map((t) => (
+                            {filteredTemplates.map((t) => (
                                 <button
                                     key={t.id}
                                     onClick={() => setSelectedType(t.id as any)}
@@ -128,7 +163,7 @@ export default function SendMessageModal({ isOpen, onClose, recipientName, recip
                     <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Message Content</label>
                         <textarea
-                            rows={6}
+                            rows={selectedChannel === 'Email' ? 10 : 6}
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
                             className="w-full bg-gray-50 border border-gray-100 rounded-xl p-5 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm resize-none"
@@ -142,7 +177,7 @@ export default function SendMessageModal({ isOpen, onClose, recipientName, recip
                                 onClick={() => {
                                     setMessage('');
                                     setTitle('');
-                                    setSelectedType('custom');
+                                    setSelectedType('custom' as any);
                                 }}
                                 className="text-[10px] font-bold text-primary hover:underline flex items-center gap-1"
                             >
@@ -168,7 +203,7 @@ export default function SendMessageModal({ isOpen, onClose, recipientName, recip
                             ) : (
                                 <>
                                     <Send size={18} />
-                                    Send Message
+                                    Send {selectedChannel}
                                 </>
                             )}
                         </button>
@@ -177,29 +212,54 @@ export default function SendMessageModal({ isOpen, onClose, recipientName, recip
 
                 {/* Live Preview */}
                 <div className="bg-gray-50 rounded-3xl p-6 border border-gray-100 flex flex-col items-center">
-                    <div className="w-full max-w-[240px] aspect-9/16 bg-gray-900 rounded-[2.5rem] border-4 border-gray-800 shadow-2xl relative overflow-hidden flex flex-col">
+                    <div className={`w-full max-w-[280px] aspect-9/16 bg-gray-900 rounded-[2.5rem] border-4 border-gray-800 shadow-2xl relative overflow-hidden flex flex-col transition-all duration-500 ${selectedChannel === 'Email' ? 'max-w-[340px] aspect-square' : ''}`}>
                         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-4 bg-gray-800 rounded-b-xl z-10"></div>
-                        <div className="flex-1 bg-white m-1 rounded-4xl overflow-hidden flex flex-col p-4 pt-10">
-                            <div className="size-10 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-4 mx-auto">
-                                <MessageSquare size={20} />
-                            </div>
-                            <h4 className="text-sm font-display font-black text-text-main text-center leading-tight mb-2">
-                                {previewTitle}
-                            </h4>
-                            <p className="text-[10px] text-text-secondary font-medium text-center leading-relaxed">
-                                {previewMessage}
-                            </p>
-
-                            <div className="mt-auto pt-4">
-                                <button className="w-full py-2 bg-primary text-white text-[10px] font-bold rounded-lg shadow-md shadow-primary/20">
-                                    View Details
-                                </button>
-                            </div>
+                        <div className={`flex-1 bg-white m-1 rounded-4xl overflow-hidden flex flex-col p-4 pt-10 ${selectedChannel === 'WhatsApp' ? 'bg-[#e5ddd5]' : ''}`}>
+                            {selectedChannel === 'WhatsApp' ? (
+                                <div className="space-y-2">
+                                    <div className="bg-white p-3 rounded-lg rounded-tl-none shadow-sm relative max-w-[90%]">
+                                        <div className="absolute top-0 -left-2 w-0 h-0 border-t-8 border-t-white border-l-8 border-l-transparent"></div>
+                                        <p className="text-[10px] font-bold text-blue-600 mb-1">{previewTitle}</p>
+                                        <p className="text-[11px] text-gray-800 whitespace-pre-wrap">{previewMessage}</p>
+                                        <p className="text-[8px] text-gray-400 text-right mt-1">12:00 PM</p>
+                                    </div>
+                                </div>
+                            ) : selectedChannel === 'SMS' ? (
+                                <div className="space-y-4">
+                                    <div className="flex flex-col items-center gap-1 mb-4">
+                                        <div className="size-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-500">
+                                            <Users size={16} />
+                                        </div>
+                                        <span className="text-[8px] font-bold text-gray-500">VemTap</span>
+                                    </div>
+                                    <div className="bg-gray-100 p-3 rounded-2xl self-start max-w-[90%]">
+                                        <p className="text-[11px] text-gray-800 whitespace-pre-wrap">{previewMessage}</p>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="space-y-4 flex flex-col h-full">
+                                    <div className="border-b border-gray-100 pb-2">
+                                        <p className="text-[10px] text-gray-400">Subject: <span className="text-gray-900 font-bold">{previewTitle}</span></p>
+                                        <p className="text-[10px] text-gray-400">From: <span className="text-gray-900">VemTap Support</span></p>
+                                    </div>
+                                    <div className="flex-1 text-[11px] text-gray-600 whitespace-pre-wrap py-2">
+                                        {previewMessage}
+                                    </div>
+                                    <div className="mt-auto border-t border-gray-100 pt-4 flex flex-col items-center gap-2">
+                                        <div className="size-8 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                                            <LogoIcon size={16} />
+                                        </div>
+                                        <p className="text-[8px] text-gray-400">© 2026 VemTap. All rights reserved.</p>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                     <div className="mt-4 flex items-center gap-2 text-text-secondary">
                         <Smartphone size={14} />
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-text-secondary">Smartphone Preview</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-text-secondary">
+                            {selectedChannel} Preview
+                        </span>
                     </div>
                 </div>
             </div>

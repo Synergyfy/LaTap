@@ -16,7 +16,7 @@ export default function ForgotPasswordPage() {
             <div className="w-full lg:w-[60%] flex flex-col overflow-y-auto">
                 <div className="p-8 md:p-16 lg:p-24">
                     <Link href="/" className="mb-24 block w-fit">
-                        <Logo iconSize={68} fontSize="text-2xl" withText />
+                        <Logo />
                     </Link>
                     <div className="max-w-md w-full mx-auto lg:mx-0">
                         <AnimatePresence mode="wait">

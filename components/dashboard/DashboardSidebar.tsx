@@ -217,7 +217,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                 {/* Logo  */}
                 <div className="h-16 flex items-center px-6 border-b border-gray-200">
                     <Link href="/dashboard" className="flex items-center gap-2">
-                        <Logo iconSize={68} fontSize="text-2xl" />
+                        <Logo />
                     </Link>
                 </div>
 

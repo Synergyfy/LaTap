@@ -38,7 +38,7 @@ export const metadata: Metadata = {
         description: "Seamless offline-to-online visitor data capture. Visitor Engagement Management - Tap.",
         images: [
             {
-                url: "/assets/VEMTAP_PNG.png",
+                url: "/assets/vemtap_v.png",
                 width: 800,
                 height: 600,
                 alt: "VemTap Logo",
@@ -49,11 +49,11 @@ export const metadata: Metadata = {
         card: "summary_large_image",
         title: "VemTap - Visitor Engagement Management",
         description: "Seamless offline-to-online visitor data capture. Visitor Engagement Management - Tap.",
-        images: ["/assets/VEMTAP_PNG.png"],
+        images: ["/assets/vemtap_v.png"],
     },
     icons: {
-        icon: "/assets/VEMTAP_PNG.png",
-        apple: "/assets/VEMTAP_PNG.png",
+        icon: "/assets/vemtap_v.png",
+        apple: "/assets/vemtap_v.png",
     },
 };
 

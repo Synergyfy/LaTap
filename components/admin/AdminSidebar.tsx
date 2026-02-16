@@ -9,7 +9,7 @@ import { dashboardApi } from '@/lib/api/dashboard';
 import { Notification } from '@/lib/store/mockDashboardStore';
 import {
     Home, Store, Users, Nfc, CreditCard, BarChart, MessageSquare,
-    Settings, ChevronDown, Shield, LogOut,Gift, Search, Bell, HelpCircle, Package, FileText, Tag, Menu, X
+    Settings, ChevronDown, Shield, LogOut, Gift, Search, Bell, HelpCircle, Package, FileText, Tag, Menu, X
 } from 'lucide-react';
 import Logo from '@/components/brand/Logo';
 
@@ -169,7 +169,7 @@ export default function AdminSidebar({ children, activePage }: AdminSidebarProps
                 {/* Logo with Wordmark */}
                 <div className="h-16 flex items-center px-6 border-b border-gray-200">
                     <Link href="/admin/dashboard" className="flex items-center gap-2">
-                        <Logo iconSize={68} fontSize="text-lg" />
+                        <Logo />
                     </Link>
                 </div>
 
