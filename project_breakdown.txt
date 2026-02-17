@@ -339,4 +339,25 @@ If customer:
 - Leaves 5-star review → send reward coupon
 - Leaves low rating → trigger private feedback flow
 - Doesn’t respond → resend reminder
-- Visits 3 times → send loyalty offer
+- Visits 3 times → send loyalty 
+
+
+
+
+======================
+when a dropdown c is open others are supposed to close when on load no dropdown is supposed to clopse any sub links in the dropdown clicked should still have the dropdown open unless toggled to close please 
+--please on the bussiness dashboard stanardize only one picing
+
+-- the  reward form  is not descrptive add tooltips
+
+--nfc modal to pop up so that we can edit
+
+-- check why bussiness id is not working on another computer
+
+--make qr code to be pdf instead of png
+
+--increase the width and hieght of the qr code 
+the copy button should be in front of the url and the button should be in front of the download code for nf-manager tab
+--once you change the url update the qr code
+--emails are optional,optional for visitors but mostly use email
+--add the emeail list 

@@ -56,7 +56,7 @@ export const StepOutcome: React.FC<StepOutcomeProps> = ({
                     >
                         <div className="z-10 relative">
                             <p className="text-[10px] font-black uppercase tracking-widest opacity-60 mb-1">Your Reward</p>
-                            <h3 className="text-2xl font-black italic mb-8 tracking-tighter">
+                            <h3 className="text-2xl font-black  mb-8 tracking-tighter">
                                 {customRewardMessage || "Access Granted"}
                             </h3>
                             <button

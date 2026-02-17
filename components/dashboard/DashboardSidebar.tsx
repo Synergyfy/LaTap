@@ -27,12 +27,12 @@ export default function DashboardSidebar({ children }: SidebarProps) {
 
     // Auto-expand the menu corresponding to the current path
     const [expandedMenus, setExpandedMenus] = useState<string[]>(() => {
+        // Only expand based on current path logic initially
         const pathParts = pathname.split('/');
-        // If we're in a sub-path like /dashboard/visitors/new, expand 'visitors'
         if (pathParts.length > 2) {
             return [pathParts[2]];
         }
-        return ['visitors'];
+        return [];
     });
     const [showNotifications, setShowNotifications] = useState(false);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -68,10 +68,14 @@ export default function DashboardSidebar({ children }: SidebarProps) {
         router.push('/login');
     };
 
+    // Accordion Logic: Only allow one menu to be open at a time
     const toggleMenu = (menu: string) => {
-        setExpandedMenus(prev =>
-            prev.includes(menu) ? prev.filter(m => m !== menu) : [...prev, menu]
-        );
+        setExpandedMenus(prev => {
+            if (prev.includes(menu)) {
+                return []; // Close if already open
+            }
+            return [menu]; // Open the new one, closing others
+        });
     };
 
     const menuItems = [
@@ -105,16 +109,15 @@ export default function DashboardSidebar({ children }: SidebarProps) {
             ]
         },
         {
-            id: 'campaigns',
-            label: 'Messages',
-            icon: Send,
+            id: 'messaging-center',
+            label: 'Messaging Center',
+            icon: MessageSquare, // Changed from Send to MessageSquare for broader context
             roles: ['owner', 'manager'],
             submenu: [
-                { label: 'All Messages', href: '/dashboard/campaigns' },
-                { label: 'Create New', href: '/dashboard/campaigns/new' },
-                { label: 'Scheduled', href: '/dashboard/campaigns/scheduled' },
-                { label: 'Templates', href: '/dashboard/campaigns/templates' },
-                { label: 'Settings', href: '/dashboard/settings/messages' },
+                { label: 'Overview', href: '/dashboard/messaging' },
+                { label: 'WhatsApp', href: '/dashboard/messaging/whatsapp' },
+                { label: 'SMS', href: '/dashboard/messaging/sms' },
+                { label: 'Email', href: '/dashboard/messaging/email' },
             ]
         },
         {

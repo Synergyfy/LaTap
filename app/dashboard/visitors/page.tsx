@@ -80,6 +80,7 @@ export default function VisitorsOverviewPage() {
             )
         },
         { header: 'Contact', accessor: 'phone' },
+        { header: 'Email', accessor: 'email', },
         { header: 'Last Visit', accessor: 'time' },
         {
             header: 'Status',

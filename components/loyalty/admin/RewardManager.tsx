@@ -115,7 +115,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                     {rewards.length === 0 ? (
                         <div className="py-20 bg-slate-50 border border-dashed border-slate-200 text-center">
                             <Gift className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                            <p className="text-slate-500 font-bold italic">No rewards created yet.</p>
+                            <p className="text-slate-500 font-bold ">No rewards created yet.</p>
                         </div>
                     ) : (
                         rewards.map((reward) => {
@@ -201,7 +201,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                     <div className="w-10 h-10 bg-primary flex items-center justify-center">
                                         <Gift className="w-5 h-5 text-white" />
                                     </div>
-                                    <h3 className="text-xl font-bold italic tracking-tight uppercase">
+                                    <h3 className="text-xl font-bold  tracking-tight uppercase">
                                         {editingId ? 'Edit Reward' : 'New Creation'}
                                     </h3>
                                 </div>
@@ -325,7 +325,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                 <div className="w-16 h-16 bg-white border border-slate-100 flex items-center justify-center mx-auto shadow-sm rounded-2xl">
                                     <Eye className="w-8 h-8 text-slate-300" />
                                 </div>
-                                <h4 className="text-sm font-bold text-slate-900 uppercase tracking-widest italic leading-relaxed">
+                                <h4 className="text-sm font-bold text-slate-900 uppercase tracking-widest  leading-relaxed">
                                     Select a reward to edit <br /> or create a new one to begin.
                                 </h4>
                             </div>

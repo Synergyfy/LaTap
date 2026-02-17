@@ -71,17 +71,39 @@ export default function Navbar() {
 
                     <div className="hidden md:flex items-center gap-3">
                         {isAuthenticated && user ? (
-                            <Link href="/dashboard" className="flex items-center gap-2 pl-2 pr-4 py-1.5 bg-gray-50 hover:bg-gray-100 rounded-full border border-gray-200 transition-all group">
-                                <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold ring-2 ring-white">
-                                    {getInitials(user.name)}
+                            <div className="relative group">
+                                <Link href="/dashboard" className="flex items-center gap-2 pl-2 pr-4 py-1.5 bg-gray-50 hover:bg-gray-100 rounded-full border border-gray-200 transition-all">
+                                    <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold ring-2 ring-white">
+                                        {getInitials(user.name)}
+                                    </div>
+                                    <div className="flex flex-col text-left">
+                                        <span className="text-xs font-bold text-text-main leading-tight group-hover:text-primary transition-colors">
+                                            {user.businessName || user.name.split(' ')[0]}
+                                        </span>
+                                        <span className="text-[10px] text-text-secondary font-medium leading-tight">Dashboard</span>
+                                    </div>
+                                </Link>
+
+                                {/* Dropdown */}
+                                <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                    <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 text-sm font-bold text-text-secondary hover:text-text-main hover:bg-gray-50 rounded-lg transition-colors">
+                                        <span className="material-icons-round text-lg">dashboard</span>
+                                        Go to Dashboard
+                                    </Link>
+                                    <div className="h-px bg-gray-100 my-1"></div>
+                                    <button
+                                        onClick={() => {
+                                            const { logout } = useAuthStore.getState();
+                                            logout();
+                                            window.location.href = '/login';
+                                        }}
+                                        className="w-full flex items-center gap-2 px-3 py-2 text-sm font-bold text-red-500 hover:bg-red-50 rounded-lg transition-colors text-left"
+                                    >
+                                        <span className="material-icons-round text-lg">logout</span>
+                                        Logout
+                                    </button>
                                 </div>
-                                <div className="flex flex-col text-left">
-                                    <span className="text-xs font-bold text-text-main leading-tight group-hover:text-primary transition-colors">
-                                        {user.businessName || user.name.split(' ')[0]}
-                                    </span>
-                                    <span className="text-[10px] text-text-secondary font-medium leading-tight">Dashboard</span>
-                                </div>
-                            </Link>
+                            </div>
                         ) : (
                             <>
                                 <Link href="/login" className="text-text-main font-bold text-sm px-5 py-2 hover:text-primary transition-colors cursor-pointer text-center">

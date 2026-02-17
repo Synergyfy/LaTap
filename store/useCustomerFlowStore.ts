@@ -141,6 +141,8 @@ interface CustomerFlowState {
         options?: string[];
     }>;
     
+    redirects: Record<string, string>;
+    
     // Actions
     setStep: (step: CustomerStep) => void;
     setUserData: (data: { name: string; email?: string; phone?: string; uniqueId?: string }) => void;
@@ -175,6 +177,7 @@ interface CustomerFlowState {
     requestRedemption: (rewardTitle: string) => void;
     setRedemptionStatus: (status: CustomerFlowState['redemptionStatus']) => void;
     resetVisitCountAfterRedemption: (threshold: number) => void;
+    setRedirect: (id: string, url: string) => void;
 }
 
 export const useCustomerFlowStore = create<CustomerFlowState>()(
@@ -221,10 +224,9 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
         linkedin: ''
     },
     surveyQuestions: [
-        { id: 'q1', text: 'How was your experience today?', type: 'rating' },
-        { id: 'q2', text: 'Would you recommend us?', type: 'choice', options: ['Yes', 'No', 'Maybe'] },
         { id: 'q3', text: 'Any other feedback?', type: 'text' }
     ],
+    redirects: {},
 
     setStep: (step) => set({ currentStep: step }),
     setUserData: (data) => {
@@ -332,5 +334,8 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
     setRedemptionStatus: (status) => set({ redemptionStatus: status }),
     resetVisitCountAfterRedemption: (threshold) => set((state) => ({
         visitCount: Math.max(0, state.visitCount - threshold)
+    })),
+    setRedirect: (id, url) => set((state) => ({
+        redirects: { ...state.redirects, [id]: url }
     })),
 }), { name: 'customer-flow-storage' }));
