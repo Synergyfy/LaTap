@@ -2,20 +2,27 @@
 
 import React, { useState, useEffect } from 'react';
 import PageHeader from '@/components/dashboard/PageHeader';
-import { useCustomerFlowStore } from '@/store/useCustomerFlowStore';
 import { toast } from 'react-hot-toast';
+import DynamicQRCode from '@/components/shared/DynamicQRCode';
+import { useCustomerFlowStore } from '@/store/useCustomerFlowStore';
 
 export default function BusinessProfilePage() {
-    const { storeName, logoUrl, updateCustomSettings, setBusinessType, businessType } = useCustomerFlowStore();
+    const { storeName, logoUrl, updateCustomSettings, setBusinessType, businessType, setRedirect, redirects } = useCustomerFlowStore();
     const [name, setName] = useState(storeName);
     const [logo, setLogo] = useState(logoUrl || '');
     const [profileSlug, setProfileSlug] = useState('');
+
+    // Config for Dynamic QR
+    const qrId = 'biz-profile-main';
 
     useEffect(() => {
         setName(storeName);
         setLogo(logoUrl || '');
         if (!profileSlug) {
-            setProfileSlug(storeName.toLowerCase().replace(/\s+/g, '-'));
+            const slug = storeName.toLowerCase().replace(/\s+/g, '-');
+            setProfileSlug(slug);
+            // Initialize redirect
+            setRedirect(qrId, `https://vemtap.com/${slug}`);
         }
     }, [storeName, logoUrl]);
 
@@ -24,15 +31,13 @@ export default function BusinessProfilePage() {
             logoUrl: logo
         });
         useCustomerFlowStore.setState({ storeName: name });
-        toast.success('Business profile updated successfully!');
+        // Update the dynamic redirect destination
+        const fullProfileUrl = `https://vemtap.com/${profileSlug}`;
+        setRedirect(qrId, fullProfileUrl);
+
+        toast.success('Business profile and QR Link updated!');
     };
 
-    const handleLogoClick = () => {
-        const newLogo = prompt('Enter Logo URL (simulated upload):', logo);
-        if (newLogo !== null) {
-            setLogo(newLogo);
-        }
-    };
 
     return (
         <div className="p-8 max-w-4xl mx-auto">
@@ -57,22 +62,30 @@ export default function BusinessProfilePage() {
                         <span className="px-3 py-1 bg-green-50 text-green-600 text-[10px] font-black uppercase tracking-wider rounded-full border border-green-100">Verified Business</span>
                     </div>
                     <div className="p-8 space-y-8">
-                        <div className="flex flex-col md:flex-row items-start gap-10">
-                            <div className="relative group cursor-pointer" onClick={handleLogoClick}>
-                                <div className="size-32 rounded-3xl bg-gray-50 flex items-center justify-center border-2 border-dashed border-gray-200 group-hover:border-primary/40 transition-all overflow-hidden relative shadow-inner">
+                        <div className="flex flex-col md:flex-row items-center md:items-start gap-10">
+                            {/* Logo Section */}
+                            <div className="flex flex-col items-center space-y-4">
+                                <div className="size-32 rounded-3xl bg-gray-50 flex items-center justify-center border-2 border-dashed border-gray-200 overflow-hidden relative shadow-inner">
                                     {logo ? (
-                                        <img src={logo} alt="Logo" className="w-full h-full object-contain p-4 transition-transform group-hover:scale-105" />
+                                        <img src={logo} alt="Logo" className="w-full h-full object-contain p-4" />
                                     ) : (
-                                        <div className="flex flex-col items-center gap-2 text-gray-400 group-hover:text-primary transition-colors">
+                                        <div className="flex flex-col items-center gap-2 text-gray-400">
                                             <span className="material-icons-round text-4xl">add_a_photo</span>
-                                            <span className="text-[10px] font-black uppercase tracking-widest">Upload Logo</span>
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-center px-2">No Logo</span>
                                         </div>
                                     )}
-                                    <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-all" />
                                 </div>
-                                <button className="absolute -bottom-3 -right-3 size-10 bg-white rounded-xl shadow-xl border border-gray-100 flex items-center justify-center text-primary hover:scale-110 transition-all">
-                                    <span className="material-icons-round text-xl">edit</span>
-                                </button>
+                                <div className="w-full max-w-[200px]">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1 mb-1 block">Logo Image URL</label>
+                                    <input
+                                        type="text"
+                                        value={logo}
+                                        onChange={(e) => setLogo(e.target.value)}
+                                        placeholder="https://..."
+                                        className="w-full h-10 bg-gray-50 border border-gray-200 rounded-lg px-3 text-xs font-medium focus:bg-white focus:ring-2 focus:ring-primary/10 transition-all outline-none"
+                                    />
+                                    <p className="text-[10px] text-gray-400 mt-1 ml-1 line-clamp-1">Paste a direct link to your logo image.</p>
+                                </div>
                             </div>
 
                             <div className="flex-1 space-y-6 w-full">
@@ -139,6 +152,39 @@ export default function BusinessProfilePage() {
                         <div className="col-span-1 md:col-span-2 space-y-2">
                             <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Detailed Address</label>
                             <textarea defaultValue="42 Admiralty Way, Lekki Phase 1, Lagos, Nigeria" rows={3} className="w-full bg-gray-50 border border-gray-200 rounded-xl p-5 text-sm font-bold focus:bg-white focus:ring-4 focus:ring-primary/10 transition-all outline-none resize-none" />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Dynamic QR Code Section */}
+                <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+                    <div className="px-8 py-6 border-b border-gray-100 bg-gray-50/50">
+                        <h3 className="font-display font-bold text-text-main text-lg tracking-tight">Dynamic Business QR</h3>
+                        <p className="text-xs text-text-secondary font-medium">This QR code always redirects to your profile link above. You can change the link anytime without reprinting.</p>
+                    </div>
+                    <div className="p-8 flex flex-col md:flex-row items-center md:items-start gap-8">
+                        <DynamicQRCode
+                            redirectId={qrId}
+                            label="Scan to Visit Profile"
+                            subLabel="vemtap.com"
+                            color="#000000"
+                        />
+                        <div className="space-y-4 flex-1">
+                            <div className="bg-blue-50 border border-blue-100 rounded-xl p-4">
+                                <h4 className="font-bold text-blue-900 text-sm mb-2 flex items-center gap-2">
+                                    <span className="material-icons-round text-base">info</span>
+                                    How it works
+                                </h4>
+                                <p className="text-xs text-blue-800 leading-relaxed">
+                                    This QR code points to a permanent redirection service. When scanned, it instantly redirects users to your <strong>Profile URL / Handle</strong> configured above.
+                                </p>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Current Destination</label>
+                                <div className="h-12 bg-gray-50 border border-gray-200 rounded-xl px-4 flex items-center text-sm font-bold text-gray-600">
+                                    {`https://vemtap.com/${profileSlug}`}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

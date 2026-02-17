@@ -64,7 +64,7 @@ export const PointsHistory: React.FC<PointsHistoryProps> = ({ transactions, clas
                                         {transaction.metadata?.verified && (
                                             <>
                                                 <span className="w-1 h-1 rounded-full bg-slate-200" />
-                                                <span className="text-[10px] text-primary font-black uppercase tracking-tighter italic">Verified</span>
+                                                <span className="text-[10px] text-primary font-black uppercase tracking-tighter ">Verified</span>
                                             </>
                                         )}
                                     </div>

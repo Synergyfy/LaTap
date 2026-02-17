@@ -1,9 +1,9 @@
-'use client';
 
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Reward } from '@/lib/store/mockDashboardStore';
-import { X, Plus } from 'lucide-react';
+import { X, Plus, Info } from 'lucide-react';
+import Tooltip from '@/components/ui/Tooltip';
 
 interface CreateRewardModalProps {
     isOpen: boolean;
@@ -53,8 +53,11 @@ export default function CreateRewardModal({ isOpen, onClose, onSubmit, isLoading
         >
             <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
                 <div className="space-y-2">
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">
+                    <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">
                         Reward title
+                        <Tooltip content="The name of the reward visible to customers." side="right">
+                            <Info size={12} className="text-slate-400 hover:text-primary transition-colors cursor-help" />
+                        </Tooltip>
                     </label>
                     <input
                         {...register('title', { required: 'Title is required' })}
@@ -65,8 +68,11 @@ export default function CreateRewardModal({ isOpen, onClose, onSubmit, isLoading
                 </div>
 
                 <div className="space-y-2">
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">
+                    <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">
                         Visits threshold
+                        <Tooltip content="Number of visits required to unlock this reward." side="right">
+                            <Info size={12} className="text-slate-400 hover:text-primary transition-colors cursor-help" />
+                        </Tooltip>
                     </label>
                     <input
                         type="number"
@@ -78,8 +84,11 @@ export default function CreateRewardModal({ isOpen, onClose, onSubmit, isLoading
                 </div>
 
                 <div className="space-y-2">
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">
+                    <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">
                         Description
+                        <Tooltip content="Brief explanation of the reward." side="right">
+                            <Info size={12} className="text-slate-400 hover:text-primary transition-colors cursor-help" />
+                        </Tooltip>
                     </label>
                     <textarea
                         {...register('description', { required: 'Description is required' })}

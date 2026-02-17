@@ -55,7 +55,7 @@ export default function PreviewRewardModal({
 
                         {/* Body */}
                         <div className="p-8 text-center bg-white relative z-10">
-                            <h2 className="text-3xl font-black text-slate-800 leading-tight mb-2 italic">
+                            <h2 className="text-3xl font-black text-slate-800 leading-tight mb-2 ">
                                 "{rewardTitle}"
                             </h2>
                             <p className="text-slate-400 text-sm font-medium mb-8">

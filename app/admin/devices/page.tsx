@@ -4,13 +4,16 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { dashboardApi } from '@/lib/api/dashboard';
 import { notify } from '@/lib/notify';
-import { Plus, Search, Filter, Download, MoreVertical, Trash2, Cpu, Battery, Activity, Link as LinkIcon } from 'lucide-react';
+import { Plus, Search, Filter, Download, MoreVertical, Trash2, Cpu, Battery, Activity, Link as LinkIcon, Edit3 } from 'lucide-react';
+import { Device } from '@/lib/store/mockDashboardStore';
+import EditDeviceModal from '@/components/dashboard/EditDeviceModal';
 
 export default function AdminDevicesPage() {
     const queryClient = useQueryClient();
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
     const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+    const [editingDevice, setEditingDevice] = useState<Device | null>(null);
 
     // Fetch Devices from store
     const { data: storeData, isLoading } = useQuery({
@@ -32,10 +35,21 @@ export default function AdminDevicesPage() {
         }
     });
 
+    const updateDeviceMutation = useMutation({
+        mutationFn: ({ id, updates }: { id: string; updates: Partial<Device> }) =>
+            dashboardApi.updateDevice({ id, updates }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+            setEditingDevice(null);
+            notify.success('Device configuration updated');
+        }
+    });
+
     const deleteDeviceMutation = useMutation({
         mutationFn: dashboardApi.deleteDevice,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+            setEditingDevice(null);
             notify.success('Device decommissioned successfully');
         }
     });
@@ -61,6 +75,10 @@ export default function AdminDevicesPage() {
         if (window.confirm(`Are you sure you want to decommission device ${id}? This action cannot be undone.`)) {
             deleteDeviceMutation.mutate(id);
         }
+    };
+
+    const handleUpdateDevice = (id: string, updates: Partial<Device>) => {
+        updateDeviceMutation.mutate({ id, updates });
     };
 
     const stats = [
@@ -195,7 +213,7 @@ export default function AdminDevicesPage() {
                                             </td>
                                             <td className="py-4 px-6">
                                                 {device.assignedTo === 'Unassigned' ? (
-                                                    <span className="text-xs text-gray-400 font-bold uppercase tracking-widest italic flex items-center gap-1">
+                                                    <span className="text-xs text-gray-400 font-bold uppercase tracking-widest flex items-center gap-1">
                                                         <span className="size-1.5 rounded-full bg-gray-300" />
                                                         Unlinked
                                                     </span>
@@ -224,10 +242,17 @@ export default function AdminDevicesPage() {
                                                 </div>
                                             </td>
                                             <td className="py-4 px-6 text-right">
-                                                <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <div className="flex items-center justify-end gap-1 opacity-100 transition-opacity">
+                                                    <button
+                                                        onClick={() => setEditingDevice(device)}
+                                                        className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all"
+                                                        title="Edit Configuration"
+                                                    >
+                                                        <Edit3 size={18} />
+                                                    </button>
                                                     <button
                                                         onClick={() => notify.info('Remote diagnostics initiated...')}
-                                                        className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all"
+                                                        className="p-2 text-gray-400 hover:text-orange-500 hover:bg-orange-50 rounded-lg transition-all"
                                                         title="Diagnostics"
                                                     >
                                                         <Activity size={18} />
@@ -303,7 +328,7 @@ export default function AdminDevicesPage() {
                                             className="w-full h-12 pl-12 pr-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/30 focus:bg-white transition-all font-bold text-sm"
                                         />
                                     </div>
-                                    <p className="text-[10px] text-text-secondary italic ml-1 font-medium">Leave blank to keep in global inventory</p>
+                                    <p className="text-[10px] text-text-secondary font-medium italic ml-1">Leave blank to keep in global inventory</p>
                                 </div>
 
                                 <button
@@ -325,6 +350,16 @@ export default function AdminDevicesPage() {
                     </div>
                 )
             }
+
+            {/* Edit Modal */}
+            <EditDeviceModal
+                isOpen={!!editingDevice}
+                onClose={() => setEditingDevice(null)}
+                onSubmit={handleUpdateDevice}
+                onDelete={handleDeleteDevice}
+                device={editingDevice}
+                isLoading={updateDeviceMutation.isPending || deleteDeviceMutation.isPending}
+            />
         </>
     );
 }

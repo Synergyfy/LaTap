@@ -9,11 +9,13 @@ import AddDeviceModal from '@/components/dashboard/AddDeviceModal';
 import EditDeviceModal from '@/components/dashboard/EditDeviceModal';
 import Link from 'next/link';
 import LogoIcon from '@/components/brand/LogoIcon';
+import DeviceQRModal from '@/components/dashboard/DeviceQRModal';
 
 export default function DevicesPage() {
     const queryClient = useQueryClient();
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isQRModalOpen, setIsQRModalOpen] = useState(false);
     const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
 
     const { data, isLoading } = useQuery({
@@ -163,6 +165,16 @@ export default function DevicesPage() {
                                 >
                                     View Stats
                                 </Link>
+                                <button
+                                    onClick={() => {
+                                        setSelectedDevice(device);
+                                        setIsQRModalOpen(true);
+                                    }}
+                                    className="w-10 h-10 bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100 hover:text-black transition-colors flex items-center justify-center"
+                                    title="View QR Code"
+                                >
+                                    <span className="material-icons-round text-xl">qr_code_2</span>
+                                </button>
                             </div>
                         </div>
                     ))}
@@ -202,6 +214,15 @@ export default function DevicesPage() {
                     isLoading={updateDeviceMutation.isPending || deleteDeviceMutation.isPending}
                 />
             )}
+
+            <DeviceQRModal
+                isOpen={isQRModalOpen}
+                onClose={() => {
+                    setIsQRModalOpen(false);
+                    setSelectedDevice(null);
+                }}
+                device={selectedDevice}
+            />
         </>
     );
 }
