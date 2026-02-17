@@ -121,7 +121,7 @@ export default function MessagingOverview() {
                     <div className="pt-6 border-t border-gray-100 mt-6">
                         <div className="flex justify-between items-center text-sm">
                             <span className="text-text-secondary font-medium">Recent Activity</span>
-                            <Link href="/dashboard/messaging/history" className="text-primary font-bold hover:underline">View All</Link>
+                            <Link href="/dashboard/messaging/history" className="text-primary font-bold hover:underline">View History</Link>
                         </div>
                     </div>
                 </div>

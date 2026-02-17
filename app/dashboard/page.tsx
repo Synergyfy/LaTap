@@ -135,34 +135,11 @@ export default function DashboardPage() {
                 <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                         <h1 className="text-3xl font-display font-bold text-text-main">Dashboard Overview</h1>
-                        <span className="px-2.5 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest rounded-lg border border-primary/10">
-                            {currentPlan?.name} Plan
-                        </span>
                     </div>
                     <p className="text-text-secondary font-medium">Welcome back! Here's what's happening with your business today.</p>
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-center gap-4">
-                    {/* Usage Indicator */}
-                    {data && currentPlan && currentPlan.visitorLimit !== Infinity && (
-                        <div className="w-full sm:w-64 bg-white border border-gray-100 rounded-xl p-3 shadow-sm">
-                            <div className="flex items-center justify-between mb-2">
-                                <span className="text-[10px] font-black uppercase tracking-widest text-text-secondary">Visitor Usage</span>
-                                <span className="text-[10px] font-bold text-text-main">
-                                    {data.stats.totalVisitors} / {currentPlan.visitorLimit}
-                                </span>
-                            </div>
-                            <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
-                                <div
-                                    className={`h-full transition-all duration-1000 ${(data.stats.totalVisitors / currentPlan.visitorLimit) > 0.9 ? 'bg-red-500' :
-                                        (data.stats.totalVisitors / currentPlan.visitorLimit) > 0.7 ? 'bg-orange-500' : 'bg-primary'
-                                        }`}
-                                    style={{ width: `${Math.min((data.stats.totalVisitors / currentPlan.visitorLimit) * 100, 100)}%` }}
-                                ></div>
-                            </div>
-                        </div>
-                    )}
-
                     <div className="flex items-center gap-3">
                         {currentPlan?.id === 'free' && (
                             <button
@@ -172,7 +149,11 @@ export default function DashboardPage() {
                                 <Zap size={14} />
                                 Upgrade
                             </button>
-                        )}
+                        ) || (
+                                <div className="px-4 py-2 bg-white border border-gray-100 rounded-lg shadow-sm">
+                                    <span className="text-xs font-bold text-text-main">Active Session</span>
+                                </div>
+                            )}
                         <button
                             onClick={handleClearDashboard}
                             disabled={clearDashboardMutation.isPending}

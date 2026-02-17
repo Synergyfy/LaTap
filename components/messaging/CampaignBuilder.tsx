@@ -73,7 +73,7 @@ export default function CampaignBuilder({ defaultChannel = 'SMS' }: CampaignBuil
                 </div>
 
                 <div>
-                    <label className="block text-xs font-bold uppercase text-text-secondary mb-2">Select Channel</label>
+                    <label className="block text-xs font-bold uppercase text-text-secondary mb-2">Select Broadcast Place</label>
                     <div className="grid grid-cols-3 gap-4">
                         {(['WhatsApp', 'SMS', 'Email'] as const).map((c) => (
                             <button
@@ -178,7 +178,7 @@ export default function CampaignBuilder({ defaultChannel = 'SMS' }: CampaignBuil
                 </div>
                 <div className="flex justify-between items-center pb-4 border-b border-gray-200">
                     <span className="text-sm font-bold text-text-secondary">Estimated Cost</span>
-                    <span className="font-mono font-bold text-text-main">{totalCost.toFixed(2)} {wallet.currency}</span>
+                    <span className="font-mono font-bold text-text-main">{totalCost.toLocaleString()} {wallet.currency}</span>
                 </div>
                 <div className="pt-2">
                     <span className="text-xs font-bold uppercase text-text-secondary block mb-2">Message Preview</span>

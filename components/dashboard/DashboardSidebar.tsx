@@ -68,13 +68,21 @@ export default function DashboardSidebar({ children }: SidebarProps) {
         router.push('/login');
     };
 
-    // Accordion Logic: Only allow one menu to be open at a time
-    const toggleMenu = (menu: string) => {
+    // Unified Expand Logic: Handle nested menus
+    const toggleMenu = (menuId: string, parentId?: string) => {
         setExpandedMenus(prev => {
-            if (prev.includes(menu)) {
-                return []; // Close if already open
+            const isExpanded = prev.includes(menuId);
+            if (isExpanded) {
+                // Remove this menu and its sub-menus (if any)
+                return prev.filter(id => id !== menuId);
+            } else {
+                // If it's a top-level menu, we might want to close others (Accordion style)
+                // If it's a nested menu, we just add it to the stack
+                if (!parentId) {
+                    return [menuId];
+                }
+                return [...prev, menuId];
             }
-            return [menu]; // Open the new one, closing others
         });
     };
 
@@ -111,13 +119,22 @@ export default function DashboardSidebar({ children }: SidebarProps) {
         {
             id: 'messaging-center',
             label: 'Messaging Center',
-            icon: MessageSquare, // Changed from Send to MessageSquare for broader context
+            icon: MessageSquare,
             roles: ['owner', 'manager'],
             submenu: [
                 { label: 'Overview', href: '/dashboard/messaging' },
-                { label: 'WhatsApp', href: '/dashboard/messaging/whatsapp' },
-                { label: 'SMS', href: '/dashboard/messaging/sms' },
-                { label: 'Email', href: '/dashboard/messaging/email' },
+                {
+                    id: 'channels',
+                    label: 'Channels',
+                    isNested: true,
+                    submenu: [
+                        { label: 'WhatsApp', href: '/dashboard/messaging/whatsapp' },
+                        { label: 'SMS', href: '/dashboard/messaging/sms' },
+                        { label: 'Email', href: '/dashboard/messaging/email' },
+                    ]
+                },
+                { label: 'Campaign History', href: '/dashboard/messaging/history' },
+                { label: 'Templates', href: '/dashboard/messaging/templates' },
             ]
         },
         {
@@ -190,7 +207,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
             id: 'settings',
             label: 'Settings',
             icon: Settings,
-            href: '/dashboard/settings', // Shared entry point
+            href: '/dashboard/settings',
             roles: ['owner', 'manager'],
             submenu: [
                 { label: 'Profile', href: '/dashboard/settings/profile' },
@@ -207,8 +224,8 @@ export default function DashboardSidebar({ children }: SidebarProps) {
     );
 
     const isActive = (href: string) => pathname === href;
-    const isParentActive = (submenu?: { href: string }[]) =>
-        submenu?.some(item => pathname === item.href);
+    const isParentActive = (submenu?: any[]): boolean =>
+        submenu?.some(item => (item.href && pathname === item.href) || (item.submenu && isParentActive(item.submenu))) || false;
 
     return (
         <div className="flex h-screen bg-gray-50 overflow-hidden relative">
@@ -233,7 +250,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                 </div>
 
                 {/* Navigation */}
-                <nav className="flex-1 overflow-y-auto py-6 px-3">
+                <nav className="flex-1 overflow-y-auto py-6 px-3 custom-scrollbar">
                     {filteredMenuItems.map((item) => {
                         const IconComponent = item.icon;
                         return (
@@ -248,7 +265,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                                                 }`}
                                         >
                                             <div className="flex items-center gap-3">
-                                                <IconComponent size={18} />
+                                                {IconComponent && <IconComponent size={18} />}
                                                 <span>{item.label}</span>
                                             </div>
                                             <ChevronDown
@@ -258,17 +275,51 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                                         </button>
                                         {expandedMenus.includes(item.id) && (
                                             <div className="mt-1 ml-9 space-y-1">
-                                                {item.submenu.map((subItem) => (
-                                                    <Link
-                                                        key={subItem.href}
-                                                        href={subItem.href}
-                                                        className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive(subItem.href)
-                                                            ? 'bg-primary text-white'
-                                                            : 'text-text-secondary hover:bg-gray-50 hover:text-text-main'
-                                                            }`}
-                                                    >
-                                                        {subItem.label}
-                                                    </Link>
+                                                {item.submenu.map((subItem: any, idx) => (
+                                                    subItem.submenu ? (
+                                                        <div key={subItem.id || idx} className="mb-1">
+                                                            <button
+                                                                onClick={() => toggleMenu(subItem.id, item.id)}
+                                                                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isParentActive(subItem.submenu)
+                                                                    ? 'text-primary'
+                                                                    : 'text-text-secondary hover:bg-gray-50'
+                                                                    }`}
+                                                            >
+                                                                <span>{subItem.label}</span>
+                                                                <ChevronDown
+                                                                    size={14}
+                                                                    className={`transition-transform ${expandedMenus.includes(subItem.id) ? 'rotate-180' : ''}`}
+                                                                />
+                                                            </button>
+                                                            {expandedMenus.includes(subItem.id) && (
+                                                                <div className="mt-1 ml-4 space-y-1 border-l border-gray-100">
+                                                                    {subItem.submenu.map((nestedItem: any) => (
+                                                                        <Link
+                                                                            key={nestedItem.href}
+                                                                            href={nestedItem.href}
+                                                                            className={`block px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${isActive(nestedItem.href)
+                                                                                ? 'text-primary border-l-2 border-primary -ml-px'
+                                                                                : 'text-text-secondary hover:text-text-main'
+                                                                                }`}
+                                                                        >
+                                                                            {nestedItem.label}
+                                                                        </Link>
+                                                                    ))}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    ) : (
+                                                        <Link
+                                                            key={subItem.href}
+                                                            href={subItem.href}
+                                                            className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive(subItem.href)
+                                                                ? 'bg-primary text-white'
+                                                                : 'text-text-secondary hover:bg-gray-50 hover:text-text-main'
+                                                                }`}
+                                                        >
+                                                            {subItem.label}
+                                                        </Link>
+                                                    )
                                                 ))}
                                             </div>
                                         )}
@@ -282,7 +333,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                                             }`}
                                     >
                                         <div className="flex items-center gap-3">
-                                            <IconComponent size={18} />
+                                            {IconComponent && <IconComponent size={18} />}
                                             <span>{item.label}</span>
                                         </div>
                                         {item.id === 'loyalty' && pendingRedemptions > 0 && (
@@ -313,7 +364,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                         </div>
                         <div className="flex-1 min-w-0">
                             <p className="text-sm font-bold text-text-main truncate">{user?.name || 'Business Owner'}</p>
-                            <p className="text-xs text-text-secondary truncate">{storeName || user?.businessName || 'Premium Plan'}</p>
+                            <p className="text-xs text-text-secondary truncate">{storeName || user?.businessName || 'Business Settings'}</p>
                         </div>
                     </div>
                     <button
@@ -327,9 +378,9 @@ export default function DashboardSidebar({ children }: SidebarProps) {
             </aside>
 
             {/* Main Content */}
-            <div className="flex-1 flex flex-col overflow-hidden w-full">
+            <div className="flex-1 flex flex-col h-screen overflow-hidden w-full">
                 {/* Top Bar */}
-                <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 lg:px-8">
+                <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 lg:px-8 shrink-0">
                     <div className="flex items-center gap-4 flex-1">
                         <button
                             onClick={() => setIsMobileOpen(true)}
@@ -347,13 +398,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                         </div>
                     </div>
                     <div className="flex items-center gap-4 relative">
-                        {/* Plan Badge */}
-                        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-primary/5 border border-primary/10 rounded-full">
-                            <div className="size-1.5 rounded-full bg-primary animate-pulse"></div>
-                            <span className="text-[10px] font-black text-primary uppercase tracking-widest">
-                                {user?.plan || 'Standard'} Plan
-                            </span>
-                        </div>
+                        {/* Removed Plan Badge */}
 
                         {/* Notification Button */}
                         <button

@@ -142,7 +142,7 @@ export const useMessagingStore = create<MessagingState>()(
         (set) => ({
             wallet: {
                 credits: 500.00,
-                currency: 'NGN',
+                currency: 'Points',
                 autoRecharge: false
             },
             threads: initialThreads,
