@@ -1,10 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useMessagingStore } from '@/lib/store/useMessagingStore';
-import { MessageSquare, Phone, Mail, LayoutDashboard, Wallet, CreditCard } from 'lucide-react';
+import { MessageSquare, Phone, Mail, LayoutDashboard, Wallet, CreditCard, Plus } from 'lucide-react';
+import TopUpModal from './TopUpModal';
 
 interface MessagingLayoutProps {
     children: React.ReactNode;
@@ -13,6 +14,7 @@ interface MessagingLayoutProps {
 export default function MessagingLayout({ children }: MessagingLayoutProps) {
     const pathname = usePathname();
     const { wallet } = useMessagingStore();
+    const [isTopUpOpen, setIsTopUpOpen] = useState(false);
 
     const tabs = [
         { name: 'Overview', href: '/dashboard/messaging', icon: LayoutDashboard, exact: true },
@@ -47,9 +49,12 @@ export default function MessagingLayout({ children }: MessagingLayoutProps) {
                             </p>
                         </div>
                     </div>
-                    <button className="px-4 py-2 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all flex items-center gap-2 shadow-lg shadow-primary/20 active:scale-95">
-                        <CreditCard size={18} />
-                        Top Up
+                    <button
+                        onClick={() => setIsTopUpOpen(true)}
+                        className="px-4 py-2 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all flex items-center gap-2 shadow-lg shadow-primary/20 active:scale-95"
+                    >
+                        <Plus size={18} />
+                        Top Up Points
                     </button>
                 </div>
             </div>
@@ -83,6 +88,11 @@ export default function MessagingLayout({ children }: MessagingLayoutProps) {
                     {children}
                 </div>
             </div>
+
+            <TopUpModal
+                isOpen={isTopUpOpen}
+                onClose={() => setIsTopUpOpen(false)}
+            />
         </div>
     );
 }

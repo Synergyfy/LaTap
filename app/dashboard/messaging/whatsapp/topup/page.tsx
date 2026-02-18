@@ -1,0 +1,60 @@
+'use client';
+
+import React, { useState } from 'react';
+import PageHeader from '@/components/dashboard/PageHeader';
+import { useMessagingStore } from '@/lib/store/useMessagingStore';
+import { Wallet, Plus, ArrowUpRight, Clock, Star } from 'lucide-react';
+import TopUpModal from '@/components/messaging/TopUpModal';
+
+export default function WhatsAppTopUpPage() {
+    const { wallet } = useMessagingStore();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    return (
+        <div className="p-4 md:p-8 space-y-8 max-w-4xl mx-auto">
+            <PageHeader
+                title="WhatsApp Credits"
+                description="Manage your WhatsApp messaging balance and transaction history."
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="md:col-span-2 bg-white rounded-[2.5rem] border border-gray-100 p-8 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="size-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center">
+                                <Wallet size={24} />
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-display font-black text-text-main uppercase tracking-tight">Available Balance</h3>
+                                <p className="text-xs text-text-secondary">Current points in your messaging wallet</p>
+                            </div>
+                        </div>
+                        <p className="text-5xl font-display font-black text-text-main mb-8">
+                            {wallet.credits.toLocaleString()} <span className="text-xl text-primary uppercase">Points</span>
+                        </p>
+                    </div>
+                    <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="h-14 bg-primary text-white font-black uppercase tracking-widest text-xs rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3"
+                    >
+                        <Plus size={18} />
+                        Add Credits Now
+                    </button>
+                </div>
+
+                <div className="bg-primary rounded-[2.5rem] p-8 text-white flex flex-col justify-between shadow-xl shadow-primary/20">
+                    <Star className="opacity-40" size={32} />
+                    <div>
+                        <h4 className="font-bold text-lg mb-2">Auto-Recharge</h4>
+                        <p className="text-xs text-white/80 leading-relaxed mb-6">Never run out of points during a campaign. Enable auto-refill when balance is low.</p>
+                        <button className="w-full py-3 bg-white/20 backdrop-blur-md rounded-xl font-bold text-xs uppercase hover:bg-white/30 transition-all border border-white/30">
+                            Configure
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <TopUpModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+        </div>
+    );
+}

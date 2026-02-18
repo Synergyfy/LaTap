@@ -189,7 +189,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                 initial={{ opacity: 0, x: 20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: 20 }}
-                                className="bg-white p-8 text-slate-900 relative shadow-2xl overflow-y-auto max-h-[85vh] scrollbar-hide rounded-2xl border border-slate-200"
+                                className="bg-white p-8 text-slate-900 relative shadow-2xl overflow-y-auto max-h-[90vh] scrollbar-hide rounded-2xl border border-slate-200"
                             >
                                 <button
                                     onClick={resetForm}

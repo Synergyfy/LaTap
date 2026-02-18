@@ -124,43 +124,38 @@ export default function DashboardSidebar({ children }: SidebarProps) {
             submenu: [
                 { label: 'Overview', href: '/dashboard/messaging' },
                 {
-                    id: 'channels',
-                    label: 'Channels',
-                    isNested: true,
+                    id: 'whatsapp',
+                    label: 'WhatsApp Channel',
                     submenu: [
-                        {
-                            id: 'whatsapp',
-                            label: 'WhatsApp',
-                            submenu: [
-                                { label: 'Overview', href: '/dashboard/messaging/whatsapp' },
-                                { label: 'Templates', href: '/dashboard/messaging/whatsapp/templates' },
-                                { label: 'Top up', href: '/dashboard/messaging/whatsapp/topup' },
-                                { label: 'Settings', href: '/dashboard/messaging/whatsapp/settings' },
-                            ]
-                        },
-                        {
-                            id: 'sms',
-                            label: 'SMS',
-                            submenu: [
-                                { label: 'Overview', href: '/dashboard/messaging/sms' },
-                                { label: 'Templates', href: '/dashboard/messaging/sms/templates' },
-                                { label: 'Top up', href: '/dashboard/messaging/sms/topup' },
-                                { label: 'Settings', href: '/dashboard/messaging/sms/settings' },
-                            ]
-                        },
-                        {
-                            id: 'email',
-                            label: 'Email',
-                            submenu: [
-                                { label: 'Overview', href: '/dashboard/messaging/email' },
-                                { label: 'Templates', href: '/dashboard/messaging/email/templates' },
-                                { label: 'Settings', href: '/dashboard/messaging/email/settings' },
-                            ]
-                        },
+                        { label: 'Overview', href: '/dashboard/messaging/whatsapp' },
+                        { label: 'Send Message', href: '/dashboard/messaging/whatsapp/send' },
+                        { label: 'Templates', href: '/dashboard/messaging/whatsapp/templates' },
+                        { label: 'Top up', href: '/dashboard/messaging/whatsapp/topup' },
+                        { label: 'Settings', href: '/dashboard/messaging/whatsapp/settings' },
+                    ]
+                },
+                {
+                    id: 'sms',
+                    label: 'SMS Channel',
+                    submenu: [
+                        { label: 'Overview', href: '/dashboard/messaging/sms' },
+                        { label: 'Send Message', href: '/dashboard/messaging/sms/send' },
+                        { label: 'Templates', href: '/dashboard/messaging/sms/templates' },
+                        { label: 'Top up', href: '/dashboard/messaging/sms/topup' },
+                        { label: 'Settings', href: '/dashboard/messaging/sms/settings' },
+                    ]
+                },
+                {
+                    id: 'email',
+                    label: 'Email Channel',
+                    submenu: [
+                        { label: 'Overview', href: '/dashboard/messaging/email' },
+                        { label: 'Send Message', href: '/dashboard/messaging/email/send' },
+                        { label: 'Templates', href: '/dashboard/messaging/email/templates' },
+                        { label: 'Settings', href: '/dashboard/messaging/email/settings' },
                     ]
                 },
                 { label: 'Message History', href: '/dashboard/messaging/history' },
-                { label: 'Templates', href: '/dashboard/messaging/templates' },
             ]
         },
         {
