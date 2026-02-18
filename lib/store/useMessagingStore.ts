@@ -7,7 +7,7 @@ export type MessageDirection = 'inbound' | 'outbound';
 
 export interface Wallet {
     credits: number;
-    currency: string;
+    currency: 'POINTS'; // Changed currency type to literal 'POINTS'
     autoRecharge: boolean;
 }
 
@@ -56,20 +56,20 @@ export interface BroadcastLog {
 }
 
 interface MessagingState {
-    wallet: Wallet;
+    wallets: Record<MessageChannel, Wallet>;
     threads: Thread[];
     messages: Message[];
     templates: Template[];
     broadcasts: BroadcastLog[]; // Internal logging for broadcasts
-    stats: {
+    stats: Record<MessageChannel | 'Global', {
         totalSent: number;
         deliveryRate: number;
-        responseRate: number;
-    };
+        growth: number;
+    }>;
 
     // Actions
-    deductCredits: (amount: number) => void;
-    addRecharge: (amount: number) => void;
+    deductCredits: (channel: MessageChannel, amount: number) => void;
+    addRecharge: (channel: MessageChannel, amount: number) => void;
     
     addMessage: (message: Message) => void;
     updateMessageStatus: (id: string, status: MessageStatus) => void;
@@ -140,27 +140,40 @@ const initialTemplates: Template[] = [
 export const useMessagingStore = create<MessagingState>()(
     persist(
         (set) => ({
-            wallet: {
-                credits: 500.00,
-                currency: 'Points',
-                autoRecharge: false
+            wallets: {
+                WhatsApp: { credits: 2500, currency: 'POINTS', autoRecharge: false },
+                SMS: { credits: 500, currency: 'POINTS', autoRecharge: false },
+                Email: { credits: 12000, currency: 'POINTS', autoRecharge: false },
             },
             threads: initialThreads,
             messages: initialMessages,
             templates: initialTemplates,
             broadcasts: [],
             stats: {
-                totalSent: 1250,
-                deliveryRate: 98.5,
-                responseRate: 12.4
+                Global: { totalSent: 15420, deliveryRate: 98.2, growth: 12.5 },
+                WhatsApp: { totalSent: 8500, deliveryRate: 99.1, growth: 18.2 },
+                SMS: { totalSent: 3420, deliveryRate: 94.5, growth: -2.1 },
+                Email: { totalSent: 3500, deliveryRate: 97.8, growth: 5.4 },
             },
 
-            deductCredits: (amount) => set((state) => ({
-                wallet: { ...state.wallet, credits: Math.max(0, state.wallet.credits - amount) }
+            deductCredits: (channel, amount) => set((state) => ({
+                wallets: {
+                    ...state.wallets,
+                    [channel]: {
+                        ...state.wallets[channel],
+                        credits: Math.max(0, state.wallets[channel].credits - amount)
+                    }
+                }
             })),
             
-            addRecharge: (amount) => set((state) => ({
-                wallet: { ...state.wallet, credits: state.wallet.credits + amount }
+            addRecharge: (channel, amount) => set((state) => ({
+                wallets: {
+                    ...state.wallets,
+                    [channel]: {
+                        ...state.wallets[channel],
+                        credits: state.wallets[channel].credits + amount
+                    }
+                }
             })),
 
             addMessage: (message) => set((state) => ({

@@ -2,12 +2,14 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { useMessagingStore } from '@/lib/store/useMessagingStore';
+import { MessageChannel, useMessagingStore } from '@/lib/store/useMessagingStore';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Send, Users, Activity, BarChart2, MessageSquare } from 'lucide-react';
+import { Send, Users, Activity, BarChart2, MessageSquare, Mail } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 export default function MessagingOverview() {
-    const { stats, broadcasts } = useMessagingStore();
+    const { stats, wallets, broadcasts } = useMessagingStore();
 
     // Mock data for the chart
     const data = [
@@ -20,48 +22,82 @@ export default function MessagingOverview() {
         { name: 'Sun', sent: 349, delivered: 430 },
     ];
 
+    const globalStats = stats.Global;
+
     return (
         <div className="space-y-6">
-            <h2 className="text-xl font-display font-bold text-text-main">Performance Summary</h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
-                    <div className="p-3 bg-blue-50 text-blue-600 rounded-lg">
-                        <Send size={20} />
-                    </div>
-                    <div>
-                        <p className="text-xs text-text-secondary font-bold uppercase tracking-wider">Total Sent</p>
-                        <h3 className="text-2xl font-bold text-text-main">{stats.totalSent.toLocaleString()}</h3>
-                    </div>
+            <div className="flex items-center justify-between">
+                <h2 className="text-xl font-display font-black text-slate-800 uppercase tracking-tight italic">Global Performance</h2>
+                <div className="flex items-center gap-2 px-3 py-1 bg-green-50 rounded-full">
+                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    <span className="text-[10px] font-black text-green-600 uppercase">Live Systems OK</span>
                 </div>
+            </div>
 
-                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
-                    <div className="p-3 bg-green-50 text-green-600 rounded-lg">
+            {/* Per-Channel Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {(['WhatsApp', 'SMS', 'Email'] as MessageChannel[]).map((channel) => {
+                    const chStats = stats[channel];
+                    const chWallet = wallets[channel];
+                    const Icon = channel === 'WhatsApp' ? MessageSquare : channel === 'SMS' ? Send : Mail;
+                    const colorClasses = channel === 'WhatsApp' ? 'bg-green-50 text-green-600' : channel === 'SMS' ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600';
+
+                    return (
+                        <div key={channel} className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/40 relative group overflow-hidden">
+                            <div className="relative z-10">
+                                <div className="flex justify-between items-start mb-6">
+                                    <div className={cn("p-4 rounded-3xl shadow-lg", colorClasses)}>
+                                        <Icon size={24} />
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{channel} Balance</p>
+                                        <p className="text-xl font-mono font-bold text-slate-900">{chWallet.credits.toLocaleString()} <span className="text-xs">PTS</span></p>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <div className="flex justify-between items-end">
+                                        <div>
+                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Sent</p>
+                                            <p className="text-2xl font-black text-slate-900 tracking-tighter">{chStats.totalSent.toLocaleString()}</p>
+                                        </div>
+                                        <div className={cn(
+                                            "px-2 py-0.5 rounded-lg text-[10px] font-black",
+                                            chStats.growth >= 0 ? "bg-green-50 text-green-600" : "bg-red-50 text-red-600"
+                                        )}>
+                                            {chStats.growth >= 0 ? '+' : ''}{chStats.growth}%
+                                        </div>
+                                    </div>
+
+                                    <div className="pt-4 border-t border-slate-50">
+                                        <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
+                                            <span className="text-slate-400">Delivery Rate</span>
+                                            <span className="text-slate-900">{chStats.deliveryRate}%</span>
+                                        </div>
+                                        <div className="h-1.5 w-full bg-slate-100 rounded-full mt-2 overflow-hidden">
+                                            <motion.div
+                                                initial={{ width: 0 }}
+                                                animate={{ width: `${chStats.deliveryRate}%` }}
+                                                className={cn("h-full", channel === 'WhatsApp' ? 'bg-green-500' : channel === 'SMS' ? 'bg-blue-500' : 'bg-purple-500')}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className={cn("absolute -right-8 -bottom-8 size-32 opacity-5 rounded-full", channel === 'WhatsApp' ? 'bg-green-500' : channel === 'SMS' ? 'bg-blue-500' : 'bg-purple-500')} />
+                        </div>
+                    );
+                })}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 opacity-50 shrink-0">
+                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex items-center gap-4">
+                    <div className="p-3 bg-white text-slate-400 rounded-lg">
                         <Activity size={20} />
                     </div>
                     <div>
-                        <p className="text-xs text-text-secondary font-bold uppercase tracking-wider">Delivery Rate</p>
-                        <h3 className="text-2xl font-bold text-text-main">{stats.deliveryRate}%</h3>
-                    </div>
-                </div>
-
-                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
-                    <div className="p-3 bg-purple-50 text-purple-600 rounded-lg">
-                        <Users size={20} />
-                    </div>
-                    <div>
-                        <p className="text-xs text-text-secondary font-bold uppercase tracking-wider">Acquisition</p>
-                        <h3 className="text-2xl font-bold text-text-main">1,204</h3>
-                    </div>
-                </div>
-
-                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
-                    <div className="p-3 bg-orange-50 text-orange-600 rounded-lg">
-                        <BarChart2 size={20} />
-                    </div>
-                    <div>
-                        <p className="text-xs text-text-secondary font-bold uppercase tracking-wider">Response Rate</p>
-                        <h3 className="text-2xl font-bold text-text-main">{stats.responseRate}%</h3>
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Acquisition</p>
+                        <h3 className="text-lg font-bold text-slate-600">1,240</h3>
                     </div>
                 </div>
             </div>

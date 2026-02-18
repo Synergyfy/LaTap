@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useMessagingStore } from '@/lib/store/useMessagingStore';
-import { MessageSquare, Phone, Mail, LayoutDashboard, Wallet, CreditCard, Plus } from 'lucide-react';
+import { MessageChannel, useMessagingStore } from '@/lib/store/useMessagingStore';
+import { MessageSquare, Phone, Mail, LayoutDashboard, Wallet, CreditCard, Plus, Smartphone } from 'lucide-react';
 import TopUpModal from './TopUpModal';
 
 interface MessagingLayoutProps {
@@ -13,14 +13,29 @@ interface MessagingLayoutProps {
 
 export default function MessagingLayout({ children }: MessagingLayoutProps) {
     const pathname = usePathname();
-    const { wallet } = useMessagingStore();
+    const { wallets } = useMessagingStore();
     const [isTopUpOpen, setIsTopUpOpen] = useState(false);
 
-    const tabs = [
-        { name: 'Overview', href: '/dashboard/messaging', icon: LayoutDashboard, exact: true },
-        { name: 'WhatsApp', href: '/dashboard/messaging/whatsapp', icon: MessageSquare, exact: false },
-        { name: 'SMS', href: '/dashboard/messaging/sms', icon: Phone, exact: false },
-        { name: 'Email', href: '/dashboard/messaging/email', icon: Mail, exact: false },
+    // Detect current channel from pathname
+    const getCurrentChannel = (): MessageChannel | 'Global' => {
+        if (pathname.includes('/whatsapp')) return 'WhatsApp';
+        if (pathname.includes('/sms')) return 'SMS';
+        if (pathname.includes('/email')) return 'Email';
+        return 'Global';
+    };
+
+    const currentChannel = getCurrentChannel();
+    // For Global or Journey, we show a default or total, but for specific channels we show their balance
+    const activeWallet = currentChannel !== 'Global'
+        ? wallets[currentChannel as MessageChannel]
+        : { credits: Object.values(wallets).reduce((acc, w) => acc + w.credits, 0), currency: 'POINTS' as const };
+
+    const tabs: { name: string; href: string; icon: any; exact: boolean; channel?: MessageChannel | 'Global' }[] = [
+        { name: 'Overview', href: '/dashboard/messaging', icon: LayoutDashboard, exact: true, channel: 'Global' },
+        { name: 'WhatsApp', href: '/dashboard/messaging/whatsapp', icon: MessageSquare, exact: false, channel: 'WhatsApp' },
+        { name: 'SMS', href: '/dashboard/messaging/sms', icon: Phone, exact: false, channel: 'SMS' },
+        { name: 'Email', href: '/dashboard/messaging/email', icon: Mail, exact: false, channel: 'Email' },
+        { name: 'Customer Journey', href: '/dashboard/messaging/journey', icon: Smartphone, exact: false, channel: 'Global' },
     ];
 
     const isActive = (tab: typeof tabs[0]) => {
@@ -38,14 +53,26 @@ export default function MessagingLayout({ children }: MessagingLayoutProps) {
                 </div>
 
                 <div className="flex items-center gap-4">
+                    <Link
+                        href="/dashboard/messaging/compose"
+                        className="px-6 py-2.5 bg-text-main text-white font-bold rounded-xl hover:bg-black transition-all flex items-center gap-2 shadow-lg shadow-black/10 active:scale-95 text-sm"
+                    >
+                        <Plus size={18} />
+                        Compose Message
+                    </Link>
+
+                    <div className="h-8 w-px bg-gray-200 mx-2" />
+
                     <div className="flex items-center gap-3 px-4 py-2 bg-gray-50 rounded-xl border border-gray-100">
                         <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
                             <Wallet size={18} />
                         </div>
                         <div>
-                            <p className="text-xs text-text-secondary font-bold uppercase tracking-wider">Wallet Balance</p>
-                            <p className="text-lg font-mono font-bold text-text-main">
-                                {wallet.credits.toFixed(2)} <span className="text-xs text-gray-400">{wallet.currency}</span>
+                            <p className="text-[10px] text-text-secondary font-bold uppercase tracking-wider">
+                                {currentChannel === 'Global' ? 'Total Balance' : `${currentChannel} Credits`}
+                            </p>
+                            <p className="text-lg font-mono font-bold text-text-main leading-none">
+                                {activeWallet.credits.toLocaleString()} <span className="text-[10px] text-gray-400 uppercase tracking-widest">{activeWallet.currency}</span>
                             </p>
                         </div>
                     </div>
@@ -54,7 +81,7 @@ export default function MessagingLayout({ children }: MessagingLayoutProps) {
                         className="px-4 py-2 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all flex items-center gap-2 shadow-lg shadow-primary/20 active:scale-95"
                     >
                         <Plus size={18} />
-                        Top Up Points
+                        Top Up
                     </button>
                 </div>
             </div>
@@ -92,6 +119,7 @@ export default function MessagingLayout({ children }: MessagingLayoutProps) {
             <TopUpModal
                 isOpen={isTopUpOpen}
                 onClose={() => setIsTopUpOpen(false)}
+                targetChannel={currentChannel === 'Global' ? 'WhatsApp' : currentChannel}
             />
         </div>
     );

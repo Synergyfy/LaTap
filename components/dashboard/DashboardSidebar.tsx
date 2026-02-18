@@ -217,13 +217,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
             href: '/dashboard/nfc-manager',
             roles: ['owner', 'manager']
         },
-        {
-            id: 'agent-hub',
-            label: 'Support Agent Hub',
-            icon: HelpCircle,
-            href: '/dashboard/agent',
-            roles: ['owner', 'manager', 'staff']
-        },
+
         {
             id: 'settings',
             label: 'Settings',

@@ -146,6 +146,12 @@ export default function AdminSidebar({ children, activePage }: AdminSidebarProps
             href: '/admin/agents',
         },
         {
+            id: 'agent-hub',
+            label: 'Support Agent Hub',
+            icon: HelpCircle,
+            href: '/admin/support',
+        },
+        {
             id: 'settings',
             label: 'System Settings',
             icon: Settings,

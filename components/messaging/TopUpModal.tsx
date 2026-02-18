@@ -3,36 +3,37 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Wallet, CreditCard, Star, ShieldCheck, Zap } from 'lucide-react';
-import { useMessagingStore } from '@/lib/store/useMessagingStore';
+import { MessageChannel, useMessagingStore } from '@/lib/store/useMessagingStore';
 import { notify } from '@/lib/notify';
 
 interface TopUpModalProps {
     isOpen: boolean;
     onClose: () => void;
+    targetChannel?: MessageChannel;
 }
 
 const POINT_PACKS = [
-    { points: 1000, price: 'NGN 5,000', popular: false, icon: Zap },
-    { points: 5000, price: 'NGN 20,000', popular: true, bonus: '500 Bonus Points', icon: Star },
-    { points: 10000, price: 'NGN 35,000', popular: false, bonus: '1,500 Bonus Points', icon: ShieldCheck },
+    { points: 1000, price: '5,000 Points', popular: false, icon: Zap },
+    { points: 5000, price: '20,000 Points', popular: true, bonus: '500 Bonus Points', icon: Star },
+    { points: 10000, price: '35,000 Points', popular: false, bonus: '1,500 Bonus Points', icon: ShieldCheck },
 ];
 
-export default function TopUpModal({ isOpen, onClose }: TopUpModalProps) {
+export default function TopUpModal({ isOpen, onClose, targetChannel = 'WhatsApp' }: TopUpModalProps) {
     const { addRecharge } = useMessagingStore();
     const [selectedPack, setSelectedPack] = useState(1);
 
     const handlePurchase = () => {
         const pack = POINT_PACKS[selectedPack];
-        const totalPoints = pack.points + (pack.bonus ? parseInt(pack.bonus.replace(',', '')) : 0);
-        addRecharge(totalPoints);
-        notify.success(`Successfully added ${totalPoints.toLocaleString()} points to your wallet!`);
+        const totalPoints = pack.points + (pack.bonus ? parseInt(pack.bonus.replace(/[^0-9]/g, '')) : 0);
+        addRecharge(targetChannel, totalPoints);
+        notify.success(`Successfully added ${totalPoints.toLocaleString()} points to your ${targetChannel} wallet!`);
         onClose();
     };
 
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -52,7 +53,7 @@ export default function TopUpModal({ isOpen, onClose }: TopUpModalProps) {
                                     <Wallet className="text-white" size={24} />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-display font-black text-text-main uppercase tracking-tight leading-none mb-1">Top-up Points</h3>
+                                    <h3 className="text-xl font-display font-black text-text-main uppercase tracking-tight leading-none mb-1">Top-up {targetChannel}</h3>
                                     <p className="text-[10px] text-text-secondary font-medium uppercase tracking-[0.2em]">Purchase messaging credits</p>
                                 </div>
                             </div>
@@ -75,8 +76,8 @@ export default function TopUpModal({ isOpen, onClose }: TopUpModalProps) {
                                         key={i}
                                         onClick={() => setSelectedPack(i)}
                                         className={`relative p-5 rounded-2xl border-2 transition-all flex items-center justify-between text-left ${selectedPack === i
-                                                ? 'border-primary bg-primary/5'
-                                                : 'border-slate-100 bg-white hover:border-slate-200'
+                                            ? 'border-primary bg-primary/5'
+                                            : 'border-slate-100 bg-white hover:border-slate-200'
                                             }`}
                                     >
                                         <div className="flex items-center gap-4">

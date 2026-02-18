@@ -248,7 +248,7 @@ export default function NFCManagerPage() {
             {/* Edit/Details Modal */}
             <AnimatePresence>
                 {isEditModalOpen && selectedLink && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -347,7 +347,7 @@ export default function NFCManagerPage() {
                                     </button>
                                     <button
                                         onClick={saveEdit}
-                                        className="flex-[2] h-14 bg-primary text-white font-black uppercase tracking-widest text-xs rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+                                        className="flex-2 h-14 bg-primary text-white font-black uppercase tracking-widest text-xs rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
                                     >
                                         <Save size={18} />
                                         Save Configuration

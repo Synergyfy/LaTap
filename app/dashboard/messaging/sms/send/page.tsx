@@ -82,10 +82,10 @@ export default function SMSSendPage() {
                         <div className="absolute inset-0 bg-primary/5 rounded-3xl border border-dashed border-primary/20 flex flex-col p-6">
                             <label className="text-[10px] font-black text-primary uppercase tracking-widest mb-4">Device Preview</label>
                             {selectedTemplate ? (
-                                <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex-1 relative overflow-hidden max-w-[240px] mx-auto border-t-[20px] border-slate-900 rounded-t-3xl">
+                                <div className="bg-white p-4 rounded-2xl shadow-sm border-x border-b border-gray-100 flex-1 relative overflow-hidden max-w-[240px] mx-auto border-t-20 border-t-slate-900 rounded-t-3xl">
                                     <div className="p-3 bg-slate-100 rounded-2xl text-[10px] text-text-main leading-relaxed relative">
                                         {templates.find(t => t.id === selectedTemplate)?.content}
-                                        <div className="absolute -left-2 top-2 w-0 h-0 border-t-8 border-t-transparent border-r-[10px] border-r-slate-100 border-b-8 border-b-transparent" />
+                                        <div className="absolute -left-2 top-2 w-0 h-0 border-t-8 border-t-transparent border-r-10 border-r-slate-100 border-b-8 border-b-transparent" />
                                     </div>
                                     <p className="text-[8px] text-slate-400 text-center mt-4 uppercase font-black">SMS Message</p>
                                 </div>
