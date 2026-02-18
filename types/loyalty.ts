@@ -84,12 +84,12 @@ export interface Redemption {
   updatedAt: string;
 }
 
-export interface LoyaltyCampaign {
+export interface LoyaltyPromotion {
   id: string;
   businessId?: string;
   name: string;
   description: string;
-  campaignType: 'bonus_points' | 'multiplier' | 'special_reward';
+  promotionType: 'bonus_points' | 'multiplier' | 'special_reward';
   bonusPoints?: number;
   pointsMultiplier?: number;
   startDate: string;

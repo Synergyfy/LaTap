@@ -128,12 +128,38 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                     label: 'Channels',
                     isNested: true,
                     submenu: [
-                        { label: 'WhatsApp', href: '/dashboard/messaging/whatsapp' },
-                        { label: 'SMS', href: '/dashboard/messaging/sms' },
-                        { label: 'Email', href: '/dashboard/messaging/email' },
+                        {
+                            id: 'whatsapp',
+                            label: 'WhatsApp',
+                            submenu: [
+                                { label: 'Overview', href: '/dashboard/messaging/whatsapp' },
+                                { label: 'Templates', href: '/dashboard/messaging/whatsapp/templates' },
+                                { label: 'Top up', href: '/dashboard/messaging/whatsapp/topup' },
+                                { label: 'Settings', href: '/dashboard/messaging/whatsapp/settings' },
+                            ]
+                        },
+                        {
+                            id: 'sms',
+                            label: 'SMS',
+                            submenu: [
+                                { label: 'Overview', href: '/dashboard/messaging/sms' },
+                                { label: 'Templates', href: '/dashboard/messaging/sms/templates' },
+                                { label: 'Top up', href: '/dashboard/messaging/sms/topup' },
+                                { label: 'Settings', href: '/dashboard/messaging/sms/settings' },
+                            ]
+                        },
+                        {
+                            id: 'email',
+                            label: 'Email',
+                            submenu: [
+                                { label: 'Overview', href: '/dashboard/messaging/email' },
+                                { label: 'Templates', href: '/dashboard/messaging/email/templates' },
+                                { label: 'Settings', href: '/dashboard/messaging/email/settings' },
+                            ]
+                        },
                     ]
                 },
-                { label: 'Campaign History', href: '/dashboard/messaging/history' },
+                { label: 'Message History', href: '/dashboard/messaging/history' },
                 { label: 'Templates', href: '/dashboard/messaging/templates' },
             ]
         },
@@ -293,17 +319,51 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                                                             </button>
                                                             {expandedMenus.includes(subItem.id) && (
                                                                 <div className="mt-1 ml-4 space-y-1 border-l border-gray-100">
-                                                                    {subItem.submenu.map((nestedItem: any) => (
-                                                                        <Link
-                                                                            key={nestedItem.href}
-                                                                            href={nestedItem.href}
-                                                                            className={`block px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${isActive(nestedItem.href)
-                                                                                ? 'text-primary border-l-2 border-primary -ml-px'
-                                                                                : 'text-text-secondary hover:text-text-main'
-                                                                                }`}
-                                                                        >
-                                                                            {nestedItem.label}
-                                                                        </Link>
+                                                                    {subItem.submenu.map((nestedItem: any, nIdx: number) => (
+                                                                        nestedItem.submenu ? (
+                                                                            <div key={nestedItem.id || nIdx} className="mb-1">
+                                                                                <button
+                                                                                    onClick={() => toggleMenu(nestedItem.id, subItem.id)}
+                                                                                    className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-[11px] font-bold transition-colors ${isParentActive(nestedItem.submenu)
+                                                                                        ? 'text-primary'
+                                                                                        : 'text-text-secondary hover:bg-gray-50'
+                                                                                        }`}
+                                                                                >
+                                                                                    <span>{nestedItem.label}</span>
+                                                                                    <ChevronDown
+                                                                                        size={12}
+                                                                                        className={`transition-transform ${expandedMenus.includes(nestedItem.id) ? 'rotate-180' : ''}`}
+                                                                                    />
+                                                                                </button>
+                                                                                {expandedMenus.includes(nestedItem.id) && (
+                                                                                    <div className="mt-1 ml-3 space-y-1 border-l border-gray-100">
+                                                                                        {nestedItem.submenu.map((deepItem: any) => (
+                                                                                            <Link
+                                                                                                key={deepItem.href}
+                                                                                                href={deepItem.href}
+                                                                                                className={`block px-3 py-1 rounded-lg text-[10px] font-medium transition-colors ${isActive(deepItem.href)
+                                                                                                    ? 'text-primary border-l-2 border-primary -ml-px'
+                                                                                                    : 'text-text-secondary hover:text-text-main'
+                                                                                                    }`}
+                                                                                            >
+                                                                                                {deepItem.label}
+                                                                                            </Link>
+                                                                                        ))}
+                                                                                    </div>
+                                                                                )}
+                                                                            </div>
+                                                                        ) : (
+                                                                            <Link
+                                                                                key={nestedItem.href}
+                                                                                href={nestedItem.href}
+                                                                                className={`block px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${isActive(nestedItem.href)
+                                                                                    ? 'text-primary border-l-2 border-primary -ml-px'
+                                                                                    : 'text-text-secondary hover:text-text-main'
+                                                                                    }`}
+                                                                            >
+                                                                                {nestedItem.label}
+                                                                            </Link>
+                                                                        )
                                                                     ))}
                                                                 </div>
                                                             )}

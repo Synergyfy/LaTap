@@ -13,7 +13,7 @@ export const dashboardApi = {
       activityData: state.activityData,
       rewards: state.rewards,
       notifications: state.notifications,
-      campaigns: state.campaigns,
+      messages: state.messages,
       staffMembers: state.staffMembers,
       devices: state.devices,
       redemptionRequests: state.redemptionRequests,
@@ -119,46 +119,46 @@ export const dashboardApi = {
     return true;
   },
 
-  // Campaign Actions
-  createCampaign: async (campaign: any) => {
+  // Message Actions
+  createMessage: async (message: any) => {
     await delay(1000);
     const id = Math.random().toString(36).substr(2, 9);
-    const newCampaign = {
-      ...campaign,
+    const newMessage = {
+      ...message,
       id,
       sent: 0,
       delivered: '0%',
       clicks: 0,
       timestamp: Date.now()
     };
-    useMockDashboardStore.getState().addCampaign(newCampaign);
+    useMockDashboardStore.getState().addMessage(newMessage);
     useMockDashboardStore.getState().addNotification({
       id: Math.random().toString(36).substr(2, 9),
       title: 'Message Created',
-      message: `Message "${campaign.name}" has been ${campaign.status === 'Active' ? 'launched' : 'scheduled'}.`,
+      message: `Message "${message.name}" has been ${message.status === 'Active' ? 'launched' : 'scheduled'}.`,
       timestamp: Date.now(),
       read: false,
       type: 'success',
       scope: 'DASHBOARD'    
     });
-    return newCampaign;
+    return newMessage;
   },
 
-  updateCampaign: async ({ id, updates }: { id: string, updates: any }) => {
+  updateMessage: async ({ id, updates }: { id: string, updates: any }) => {
     await delay(600);
-    useMockDashboardStore.getState().updateCampaign(id, updates);
+    useMockDashboardStore.getState().updateMessage(id, updates);
     return { id, updates };
   },
 
-  deleteCampaign: async (id: string) => {
+  deleteMessage: async (id: string) => {
     await delay(500);
-    useMockDashboardStore.getState().deleteCampaign(id);
+    useMockDashboardStore.getState().deleteMessage(id);
     return id;
   },
 
-  updateCampaignStatus: async (id: string, status: any) => {
+  updateMessageStatus: async (id: string, status: any) => {
     await delay(300);
-    useMockDashboardStore.getState().updateCampaignStatus(id, status);
+    useMockDashboardStore.getState().updateMessageStatus(id, status);
     return { id, status };
   },
 

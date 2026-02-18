@@ -60,7 +60,7 @@ export default function SupportChatbot({ onRequestConsultation }: SupportChatbot
         try {
             // Prepare context based on current page
             let context = "General Dashboard";
-            if (pathname?.includes('campaigns')) context = "Campaign Management";
+            if (pathname?.includes('messaging')) context = "Message Management";
             if (pathname?.includes('contacts')) context = "Contact Management";
             if (pathname?.includes('settings')) context = "Account Settings";
             if (pathname?.includes('devices')) context = "Device Management";
@@ -143,7 +143,7 @@ export default function SupportChatbot({ onRequestConsultation }: SupportChatbot
 
         try {
             let context = "General";
-            if (pathname?.includes('campaigns')) context = "Campaign Management";
+            if (pathname?.includes('messaging')) context = "Message Management";
 
             const response = await fetch('/api/chat', {
                 method: 'POST',

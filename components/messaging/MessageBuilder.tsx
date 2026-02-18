@@ -7,17 +7,17 @@ import { Users, FileText, Send, CheckCircle, Smartphone, MessageSquare, Mail } f
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 
-interface CampaignBuilderProps {
+interface MessageBuilderProps {
     defaultChannel?: MessageChannel;
 }
 
-export default function CampaignBuilder({ defaultChannel = 'SMS' }: CampaignBuilderProps) {
+export default function MessageBuilder({ defaultChannel = 'SMS' }: MessageBuilderProps) {
     const router = useRouter();
     const { templates, wallet } = useMessagingStore();
     const [step, setStep] = useState(1);
 
     // Form State
-    const [campaignName, setCampaignName] = useState('');
+    const [messageName, setMessageName] = useState('');
     const [channel, setChannel] = useState<MessageChannel>(defaultChannel);
     const [audience, setAudience] = useState('all');
     const [selectedTemplate, setSelectedTemplate] = useState<string>('');
@@ -40,15 +40,15 @@ export default function CampaignBuilder({ defaultChannel = 'SMS' }: CampaignBuil
         setIsSending(true);
         try {
             await messagingApi.sendBroadcast(
-                campaignName || 'Untitled Campaign',
+                messageName || 'Untitled Message',
                 channel,
                 count,
                 selectedTemplate ? (templates.find(t => t.id === selectedTemplate)?.content || '') : customContent
             );
-            toast.success('Campaign launched successfully!');
+            toast.success('Message launched successfully!');
             router.push('/dashboard/messaging');
         } catch (error: any) {
-            toast.error(error.message || 'Failed to send campaign');
+            toast.error(error.message || 'Failed to send message');
         } finally {
             setIsSending(false);
         }
@@ -58,17 +58,17 @@ export default function CampaignBuilder({ defaultChannel = 'SMS' }: CampaignBuil
         <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
             <h3 className="text-lg font-bold text-text-main flex items-center gap-2">
                 <span className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm border border-primary/20">1</span>
-                Campaign Check
+                Message Check
             </h3>
 
             <div className="space-y-4">
                 <div>
-                    <label className="block text-xs font-bold uppercase text-text-secondary mb-2">Campaign Name</label>
+                    <label className="block text-xs font-bold uppercase text-text-secondary mb-2">Message Name</label>
                     <input
                         className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl"
                         placeholder="e.g. Weekend Promo"
-                        value={campaignName}
-                        onChange={(e) => setCampaignName(e.target.value)}
+                        value={messageName}
+                        onChange={(e) => setMessageName(e.target.value)}
                     />
                 </div>
 
@@ -161,13 +161,13 @@ export default function CampaignBuilder({ defaultChannel = 'SMS' }: CampaignBuil
                     <CheckCircle size={32} />
                 </div>
                 <h3 className="text-2xl font-display font-bold text-text-main">Ready to Send?</h3>
-                <p className="text-text-secondary">Review your campaign details before launching.</p>
+                <p className="text-text-secondary">Review your message details before launching.</p>
             </div>
 
             <div className="bg-gray-50 p-6 rounded-2xl border border-gray-200 space-y-4">
                 <div className="flex justify-between items-center pb-4 border-b border-gray-200">
-                    <span className="text-sm font-bold text-text-secondary">Campaign Name</span>
-                    <span className="font-bold text-text-main">{campaignName || 'Untitled'}</span>
+                    <span className="text-sm font-bold text-text-secondary">Message Name</span>
+                    <span className="font-bold text-text-main">{messageName || 'Untitled'}</span>
                 </div>
                 <div className="flex justify-between items-center pb-4 border-b border-gray-200">
                     <span className="text-sm font-bold text-text-secondary">Audience Size</span>
@@ -200,7 +200,7 @@ export default function CampaignBuilder({ defaultChannel = 'SMS' }: CampaignBuil
                     ) : (
                         <Send size={18} />
                     )}
-                    {wallet.credits < totalCost ? 'Insufficient Funds' : 'Launch Campaign'}
+                    {wallet.credits < totalCost ? 'Insufficient Funds' : 'Launch Message'}
                 </button>
             </div>
         </div>

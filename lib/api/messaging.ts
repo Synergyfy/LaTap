@@ -91,23 +91,23 @@ export const messagingApi = {
         return newTemplate;
     },
 
-    // Broadcasts / "Campaigns" (Internal logic)
+    // Broadcasts (Internal logic)
     sendBroadcast: async (name: string, channel: MessageChannel, audienceSize: number, content: string) => {
         await delay(1500);
          const store = useMessagingStore.getState();
          const costPerMsg = channel === 'SMS' ? 2.5 : channel === 'WhatsApp' ? 4.0 : 0.5;
          const totalCost = costPerMsg * audienceSize;
-
+ 
          if (store.wallet.credits < totalCost) {
              throw new Error(`Insufficient credits. Need ${totalCost}, have ${store.wallet.credits}`);
          }
-
+ 
          store.deductCredits(totalCost);
          
-         // Log the "Campaign" internally
-         const campaignId = `cmp_${Date.now()}`;
-         store.addCampaign({
-             id: campaignId,
+         // Log the Broadcast internally
+         const broadcastId = `brd_${Date.now()}`;
+         store.addBroadcast({
+             id: broadcastId,
              name,
              channel,
              audienceSize,
@@ -116,7 +116,7 @@ export const messagingApi = {
              status: 'Completed',
              timestamp: Date.now()
          });
-
-         return campaignId;
+ 
+         return broadcastId;
     }
 };

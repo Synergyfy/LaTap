@@ -36,7 +36,7 @@ export interface Notification {
   scope: 'ADMIN' | 'DASHBOARD';
 }
 
-export interface Campaign {
+export interface Message {
   id: string;
   name: string;
   type: 'WhatsApp' | 'SMS' | 'Email';
@@ -99,7 +99,7 @@ export interface DashboardState {
   activityData: ActivityPoint[];
   rewards: Reward[];
   notifications: Notification[];
-  campaigns: Campaign[];
+  messages: Message[];
   staffMembers: Staff[];
   devices: Device[];
   redemptionRequests: RedemptionRequest[];
@@ -120,10 +120,10 @@ export interface DashboardState {
   markNotificationRead: (id: string) => void;
   markAllNotificationsRead: () => void;
   clearNotifications: () => void;
-  addCampaign: (campaign: Campaign) => void;
-  updateCampaign: (id: string, campaign: Partial<Campaign>) => void;
-  deleteCampaign: (id: string) => void;
-  updateCampaignStatus: (id: string, status: Campaign['status']) => void;
+  addMessage: (message: Message) => void;
+  updateMessage: (id: string, message: Partial<Message>) => void;
+  deleteMessage: (id: string) => void;
+  updateMessageStatus: (id: string, status: Message['status']) => void;
   addStaff: (staff: Staff) => void;
   updateStaffMember: (id: string, updates: Partial<Staff>) => void;
   deleteStaff: (id: string) => void;
@@ -219,7 +219,7 @@ const initialNotifications: Notification[] = [
     { id: '4', title: 'Device Offline', message: '12 devices in Lagos sector are offline.', timestamp: Date.now() - 7200000, read: false, type: 'error', scope: 'ADMIN' },
 ];
 
-const initialCampaigns: Campaign[] = [
+const initialMessages: Message[] = [
   { 
     id: '1', 
     name: 'Weekend Coffee Special', 
@@ -308,7 +308,7 @@ export const useMockDashboardStore = create<DashboardState>()(
       activityData: initialActivityData,
       rewards: initialRewards,
       notifications: initialNotifications,
-      campaigns: initialCampaigns,
+      messages: initialMessages,
       staffMembers: initialStaff,
       devices: initialDevices,
       redemptionRequests: [],
@@ -360,13 +360,13 @@ export const useMockDashboardStore = create<DashboardState>()(
 
       clearNotifications: () => set({ notifications: [] }),
 
-      addCampaign: (campaign) => set((state) => ({ campaigns: [campaign, ...state.campaigns] })),
-      updateCampaign: (id, updates) => set((state) => ({
-        campaigns: state.campaigns.map(c => c.id === id ? { ...c, ...updates } : c)
+      addMessage: (message) => set((state) => ({ messages: [message, ...state.messages] })),
+      updateMessage: (id, updates) => set((state) => ({
+        messages: state.messages.map(c => c.id === id ? { ...c, ...updates } : c)
       })),
-      deleteCampaign: (id) => set((state) => ({ campaigns: state.campaigns.filter(c => c.id !== id) })),
-      updateCampaignStatus: (id, status) => set((state) => ({
-        campaigns: state.campaigns.map(c => c.id === id ? { ...c, status } : c)
+      deleteMessage: (id) => set((state) => ({ messages: state.messages.filter(c => c.id !== id) })),
+      updateMessageStatus: (id, status) => set((state) => ({
+        messages: state.messages.map(c => c.id === id ? { ...c, status } : c)
       })),
 
       addStaff: (staff: Staff) => set((state) => ({ staffMembers: [...state.staffMembers, staff] })),
@@ -519,7 +519,7 @@ export const useMockDashboardStore = create<DashboardState>()(
           activityData: initialActivityData,
           rewards: initialRewards,
           notifications: initialNotifications,
-          campaigns: initialCampaigns,
+          messages: initialMessages,
           staffMembers: initialStaff,
           devices: initialDevices,
           redemptionRequests: [],

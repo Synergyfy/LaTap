@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: 'Login to Dashboard',
-    description: 'Access your merchant dashboard to manage visitors, loyalty programs, and automated marketing campaigns.',
+    description: 'Access your merchant dashboard to manage visitors, loyalty programs, and automated marketing broadcasts.',
 };
 
 export default function LoginLayout({

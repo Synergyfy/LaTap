@@ -151,7 +151,7 @@ export default function ReturningVisitorsPage() {
                     <EmptyState
                         icon="loop"
                         title="No returning visitors yet"
-                        description="Focus on your welcome campaigns to encourage customers to return to your business."
+                        description="Focus on your welcome messages to encourage customers to return to your business."
                     />
                 }
             />

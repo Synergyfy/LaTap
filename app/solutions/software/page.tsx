@@ -63,7 +63,7 @@ export default function SoftwareSolutionPage() {
                                     </div>
                                     <h3 className="text-3xl font-display font-bold">The Unified Dashboard</h3>
                                     <p className="text-text-secondary font-medium leading-relaxed">
-                                        A centralized command center where you can monitor visitor flow, manage loyalty tiers, and launch precision marketing campaigns across your entire hardware network.
+                                        A centralized command center where you can monitor visitor flow, manage loyalty tiers, and launch precision marketing broadcasts across your entire hardware network.
                                     </p>
                                     <div className="flex flex-wrap gap-3">
                                         <div className="px-4 py-2 bg-gray-50 rounded-xl border border-gray-100 flex items-center gap-2">

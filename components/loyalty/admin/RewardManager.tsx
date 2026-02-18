@@ -2,10 +2,11 @@
 
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Trash2, Edit2, Gift, Ticket, Tag, Clock, Save, X, Eye, ImageIcon, Upload, Image as ImageIcon2 } from 'lucide-react';
+import { Plus, Trash2, Edit2, Gift, Ticket, Tag, Clock, Save, X, Eye, ImageIcon, Upload, Image as ImageIcon2, HelpCircle } from 'lucide-react';
 import { Reward, RewardType } from '@/types/loyalty';
 import { cn } from '@/lib/utils';
 import { notify } from '@/lib/notify';
+import Tooltip from '@/components/ui/Tooltip';
 
 interface RewardManagerProps {
     rewards: Reward[];
@@ -201,7 +202,7 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                     <div className="w-10 h-10 bg-primary flex items-center justify-center">
                                         <Gift className="w-5 h-5 text-white" />
                                     </div>
-                                    <h3 className="text-xl font-bold  tracking-tight uppercase">
+                                    <h3 className="text-xl font-bold tracking-tight uppercase text-slate-900">
                                         {editingId ? 'Edit Reward' : 'New Creation'}
                                     </h3>
                                 </div>
@@ -209,22 +210,32 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                 <div className="space-y-6">
                                     {/* Image Upload Section */}
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Reward Cover Image</label>
+                                        <div className="flex items-center gap-2">
+                                            <label className="text-[10px] font-black text-slate-700 uppercase tracking-[0.2em]">Reward Cover Image</label>
+                                            <Tooltip content="Upload an attractive image (e.g. 500x500px) to showcase this reward to customers. High quality images increase redemption rates.">
+                                                <HelpCircle size={12} className="text-primary cursor-help" />
+                                            </Tooltip>
+                                        </div>
                                         <div
                                             onClick={() => fileInputRef.current?.click()}
-                                            className="group relative w-full h-40 bg-white/5 border-2 border-dashed border-white/10 hover:border-primary/50 transition-all cursor-pointer flex flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl"
+                                            className="group relative w-full h-40 bg-white border-2 border-dashed border-slate-300 hover:border-primary transition-all cursor-pointer flex flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl shadow-sm"
                                         >
                                             {formData.imageUrl ? (
                                                 <>
-                                                    <img src={formData.imageUrl} alt="Preview" className="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity" />
-                                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                                        <Upload className="w-6 h-6 text-white" />
+                                                    <img src={formData.imageUrl} alt="Preview" className="w-full h-full object-cover opacity-80 group-hover:opacity-60 transition-opacity" />
+                                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20">
+                                                        <Upload className="w-8 h-8 text-white drop-shadow-md" />
                                                     </div>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <ImageIcon2 className="w-8 h-8 text-white/20 group-hover:text-primary/50" />
-                                                    <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Click to upload</span>
+                                                    <div className="size-12 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                                                        <ImageIcon2 className="w-6 h-6 text-slate-400 group-hover:text-primary" />
+                                                    </div>
+                                                    <div className="text-center">
+                                                        <span className="text-[11px] font-black text-slate-800 uppercase tracking-widest block mb-1">Click to upload</span>
+                                                        <span className="text-[10px] font-medium text-slate-400">PNG or JPG (Max. 2MB)</span>
+                                                    </div>
                                                 </>
                                             )}
                                         </div>
@@ -238,23 +249,28 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                     </div>
 
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Reward Name</label>
+                                        <div className="flex items-center gap-2">
+                                            <label className="text-[10px] font-black text-slate-700 uppercase tracking-[0.2em]">Reward Name</label>
+                                            <Tooltip content="Give your reward a catchy name that customers will love.">
+                                                <HelpCircle size={12} className="text-primary cursor-help" />
+                                            </Tooltip>
+                                        </div>
                                         <input
                                             type="text"
                                             value={formData.name}
                                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                            className="w-full bg-white/5 border border-white/10 h-12 px-4 font-bold outline-none focus:border-primary transition-all text-sm rounded-xl"
+                                            className="w-full bg-white border border-slate-300 h-12 px-4 font-bold outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all text-sm rounded-xl text-slate-900 shadow-sm"
                                             placeholder="e.g. Free Nigerian Coffee"
                                         />
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Category</label>
+                                            <label className="text-[10px] font-black text-slate-700 uppercase tracking-[0.2em]">Category</label>
                                             <select
                                                 value={formData.rewardType}
                                                 onChange={(e) => setFormData({ ...formData, rewardType: e.target.value as RewardType })}
-                                                className="w-full bg-white/5 border border-white/10 h-12 px-4 font-bold outline-none focus:border-primary transition-all capitalize text-xs rounded-xl"
+                                                className="w-full bg-white border border-slate-300 h-12 px-4 font-bold outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all capitalize text-xs rounded-xl text-slate-900 shadow-sm"
                                             >
                                                 {['discount', 'free_item', 'service', 'cashback', 'gift'].map(t => (
                                                     <option key={t} value={t} className="bg-white text-slate-900">{t.replace('_', ' ')}</option>
@@ -262,50 +278,65 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
                                             </select>
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Point Cost</label>
+                                            <div className="flex items-center gap-2">
+                                                <label className="text-[10px] font-black text-slate-700 uppercase tracking-[0.2em]">Point Cost</label>
+                                                <Tooltip content="The number of points a customer must spend to redeem this reward.">
+                                                    <HelpCircle size={12} className="text-primary cursor-help" />
+                                                </Tooltip>
+                                            </div>
                                             <input
                                                 type="number"
                                                 value={formData.pointCost}
                                                 onChange={(e) => setFormData({ ...formData, pointCost: Number(e.target.value) })}
-                                                className="w-full bg-white/5 border border-white/10 h-12 px-4 font-bold outline-none focus:border-primary transition-all text-sm rounded-xl"
+                                                className="w-full bg-white border border-slate-300 h-12 px-4 font-bold outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all text-sm rounded-xl text-slate-900 shadow-sm"
                                             />
                                         </div>
                                     </div>
 
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Full Description</label>
+                                        <div className="flex items-center gap-2">
+                                            <label className="text-[10px] font-black text-slate-700 uppercase tracking-[0.2em]">Full Description</label>
+                                            <Tooltip content="Provide more details about the reward, terms, and conditions.">
+                                                <HelpCircle size={12} className="text-primary cursor-help" />
+                                            </Tooltip>
+                                        </div>
                                         <textarea
                                             value={formData.description}
                                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                            className="w-full bg-white/5 border border-white/10 p-4 font-medium text-sm outline-none focus:border-primary transition-all min-h-[80px] rounded-xl"
+                                            className="w-full bg-white border border-slate-300 p-4 font-medium text-sm outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all min-h-[100px] rounded-xl text-slate-900 shadow-sm"
                                             placeholder="Explain what the customer gets..."
                                         />
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Validity (Days)</label>
+                                            <div className="flex items-center gap-2">
+                                                <label className="text-[10px] font-black text-slate-700 uppercase tracking-[0.2em]">Validity (Days)</label>
+                                                <Tooltip content="How many days the reward coupon remains valid after a customer redeems it.">
+                                                    <HelpCircle size={12} className="text-primary cursor-help" />
+                                                </Tooltip>
+                                            </div>
                                             <div className="relative">
-                                                <Clock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 w-4 h-4" />
+                                                <Clock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
                                                 <input
                                                     type="number"
                                                     value={formData.validityDays}
                                                     onChange={(e) => setFormData({ ...formData, validityDays: Number(e.target.value) })}
-                                                    className="w-full bg-white/5 border border-white/10 h-12 pl-12 pr-4 font-bold outline-none focus:border-primary transition-all text-sm rounded-xl"
+                                                    className="w-full bg-white border border-slate-300 h-12 pl-12 pr-4 font-bold outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all text-sm rounded-xl text-slate-900 shadow-sm"
                                                 />
                                             </div>
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Status</label>
+                                            <label className="text-[10px] font-black text-slate-700 uppercase tracking-[0.2em]">Status</label>
                                             <div className="flex items-center gap-4 h-12">
-                                                <label className="flex items-center gap-2 cursor-pointer transition-all hover:text-primary">
+                                                <label className="flex items-center gap-2 cursor-pointer transition-all hover:text-primary text-slate-800">
                                                     <input
                                                         type="checkbox"
                                                         checked={formData.isActive}
                                                         onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                                                        className="w-4 h-4 accent-primary"
+                                                        className="w-4 h-4 accent-primary rounded-lg"
                                                     />
-                                                    <span className="text-xs font-bold uppercase tracking-widest">Live</span>
+                                                    <span className="text-xs font-bold uppercase tracking-widest">Mark as Live</span>
                                                 </label>
                                             </div>
                                         </div>
@@ -313,10 +344,10 @@ export const RewardManager: React.FC<RewardManagerProps> = ({ rewards, onCreate,
 
                                     <button
                                         onClick={handleSubmit}
-                                        className="w-full bg-primary text-white h-14 font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/40 hover:bg-primary/90 transition-all flex items-center justify-center gap-2 mt-4 rounded-2xl"
+                                        className="w-full bg-primary text-white h-14 font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 mt-4 rounded-2xl"
                                     >
                                         <Save className="w-5 h-5" />
-                                        {editingId ? 'Update Reward' : 'Generate Reward'}
+                                        {editingId ? 'Save Changes' : 'Publish Reward'}
                                     </button>
                                 </div>
                             </motion.div>

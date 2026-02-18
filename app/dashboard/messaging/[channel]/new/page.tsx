@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { notFound } from 'next/navigation';
-import CampaignBuilder from '@/components/messaging/CampaignBuilder';
+import MessageBuilder from '@/components/messaging/MessageBuilder';
 import { MessageChannel } from '@/lib/store/useMessagingStore';
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
     }>;
 }
 
-export default async function NewCampaignPage(props: Props) {
+export default async function NewMessagePage(props: Props) {
     const params = await props.params;
     const { channel } = params;
 
@@ -24,5 +24,5 @@ export default async function NewCampaignPage(props: Props) {
     const type = channelMap[channel.toLowerCase()];
     if (!type) return notFound();
 
-    return <CampaignBuilder defaultChannel={type} />;
+    return <MessageBuilder defaultChannel={type} />;
 }

@@ -3,7 +3,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { X, Plus, Send, Calendar, Clock, Edit } from 'lucide-react';
-import { Campaign } from '@/lib/store/mockDashboardStore';
+import { Message } from '@/lib/store/mockDashboardStore';
 import Modal from '@/components/ui/Modal';
 
 interface CreateMessageModalProps {
@@ -11,7 +11,7 @@ interface CreateMessageModalProps {
     onClose: () => void;
     onSubmit: (data: any) => void;
     isLoading: boolean;
-    initialData?: Partial<Campaign> | null;
+    initialData?: Partial<Message> | null;
     isEditing?: boolean;
 }
 

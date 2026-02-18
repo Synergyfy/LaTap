@@ -51,7 +51,7 @@ export default function VisitorDetailsModal({ isOpen, onClose, visitor }: Visito
                                 <Tag size={18} />
                             </div>
                             <div>
-                                <p className="text-[10px] uppercase font-black text-text-secondary tracking-widest">Last Campaign</p>
+                                <p className="text-[10px] uppercase font-black text-text-secondary tracking-widest">Last Message</p>
                                 <p className="font-bold text-text-main">Summer Sale</p>
                             </div>
                         </div>

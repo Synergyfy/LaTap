@@ -149,11 +149,7 @@ export default function DashboardPage() {
                                 <Zap size={14} />
                                 Upgrade
                             </button>
-                        ) || (
-                                <div className="px-4 py-2 bg-white border border-gray-100 rounded-lg shadow-sm">
-                                    <span className="text-xs font-bold text-text-main">Active Session</span>
-                                </div>
-                            )}
+                        )}
                         <button
                             onClick={handleClearDashboard}
                             disabled={clearDashboardMutation.isPending}
@@ -252,7 +248,7 @@ export default function DashboardPage() {
 
                         {[
                             { label: 'Manual Entry', desc: 'Add visitor manually', icon: UserPlus, route: '/dashboard/visitors/all', color: 'bg-orange-50 text-orange-600', hover: 'hover:border-orange-200' },
-                            { label: 'New Message', desc: 'Reach your customers', icon: MessageSquare, route: '/dashboard/campaigns', color: 'bg-indigo-50 text-indigo-600', hover: 'hover:border-indigo-200' },
+                            { label: 'New Message', desc: 'Reach your customers', icon: MessageSquare, route: '/dashboard/messaging', color: 'bg-indigo-50 text-indigo-600', hover: 'hover:border-indigo-200' },
                             { label: 'Add Device', desc: 'Setup NFC terminal', icon: LogoIcon, route: '/dashboard/settings/devices', color: 'bg-blue-50 text-blue-600', hover: 'hover:border-blue-200' },
                             { label: 'Export Data', desc: 'Download CSV reports', icon: Download, route: '/dashboard/visitors/all', color: 'bg-green-50 text-green-600', hover: 'hover:border-green-200' }
                         ].map((action, i) => (

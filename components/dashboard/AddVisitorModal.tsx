@@ -121,7 +121,7 @@ export default function AddVisitorModal({ isOpen, onClose, onSubmit, isLoading }
 
                 <div className="p-4 bg-primary/5 border border-primary/10 rounded-2xl">
                     <p className="text-[11px] text-primary font-bold leading-relaxed">
-                        Note: Adding a visitor manually will include them in your next automated campaign targeting their specific segment.
+                        Note: Adding a visitor manually will include them in your next automated message targeting their specific segment.
                     </p>
                 </div>
 

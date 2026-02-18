@@ -78,7 +78,7 @@ export const icons = {
   // Communication
   notifications: Bell,
   email: Mail,
-  campaign: Send,
+  broadcast: Send,
   message: MessageSquare,
   phone: Phone,
   

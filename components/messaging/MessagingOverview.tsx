@@ -7,7 +7,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Send, Users, Activity, BarChart2, MessageSquare } from 'lucide-react';
 
 export default function MessagingOverview() {
-    const { stats, campaigns } = useMessagingStore();
+    const { stats, broadcasts } = useMessagingStore();
 
     // Mock data for the chart
     const data = [
@@ -89,7 +89,7 @@ export default function MessagingOverview() {
                 <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
                     <div>
                         <h3 className="text-lg font-bold text-text-main mb-2">Quick Broadcast</h3>
-                        <p className="text-sm text-text-secondary mb-6">Start a new campaign across any channel.</p>
+                        <p className="text-sm text-text-secondary mb-6">Start a new message across any channel.</p>
 
                         <div className="space-y-4">
                             <Link href="/dashboard/messaging/whatsapp/new" className="block p-4 border border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition-all group">

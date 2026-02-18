@@ -4,7 +4,7 @@ export const KNOWLEDGE_BASE = [
     topics: [
       {
         question: "What is VemTap?",
-        answer: "VemTap is a visitor engagement platform that uses NFC technology to bridge the offline-to-online gap. It allows businesses to capture visitor data, manage contacts, and run automated marketing campaigns."
+        answer: "VemTap is a visitor engagement platform that uses NFC technology to bridge the offline-to-online gap. It allows businesses to capture visitor data, manage contacts, and run automated communication broadcasts."
       },
       {
         question: "How does NFC capture work?",
@@ -12,7 +12,7 @@ export const KNOWLEDGE_BASE = [
       },
       {
         question: "How do I navigate the dashboard?",
-        answer: "The dashboard is divided into key sections: 'Home' for an overview, 'Contacts' for your visitor database, 'Campaigns' for messaging, 'Devices' for managing hardware, and 'Settings' for account configuration. You can access these from the sidebar menu."
+        answer: "The dashboard is divided into key sections: 'Home' for an overview, 'Contacts' for your visitor database, 'Messaging' for communication, 'Devices' for managing hardware, and 'Settings' for account configuration. You can access these from the sidebar menu."
       }
     ]
   },
@@ -20,8 +20,8 @@ export const KNOWLEDGE_BASE = [
     category: "Messaging Tools",
     topics: [
       {
-        question: "How do I send a campaign?",
-        answer: "To send a campaign: 1. Navigate to the 'Campaigns' tab. 2. Click 'New Campaign'. 3. Select your audience (e.g., 'All Visitors' or a specific segment). 4. Draft your SMS or Email message. 5. Schedule it for later or send immediately."
+        question: "How do I send a broadcast?",
+        answer: "To send a broadcast: 1. Navigate to the 'Messaging Center' tab. 2. Click 'New Message'. 3. Select your audience (e.g., 'All Visitors' or a specific segment). 4. Draft your SMS or Email message. 5. Schedule it for later or send immediately."
       },
       {
         question: "How do I manage contacts?",

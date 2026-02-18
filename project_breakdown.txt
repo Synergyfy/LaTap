@@ -32,7 +32,7 @@ Multi-Channel Messaging:
 
 Integration with SMS, WhatsApp, and Email gateways.
 
-Campaign builder to send promotions to specific groups (e.g., "Only new visitors").
+Message builder to send promotions to specific groups (e.g., "Only new visitors").
 
 Loyalty Engine:
 
@@ -116,7 +116,7 @@ okay addinbg pictures in the hero section
 
 --now add a page to be able to edit the final Message and also for returning coustomers message for a bussiness and add weither there is rewards or not and also there should be a modal explaining the reward rules for a bussiness they can be able to update it in the settings
 
---before sending campaign please make sure that there is a modal to see the msg either to edit or confirm the msg
+--before sending message please make sure that there is a modal to see the msg either to edit or confirm the msg
 --change all campaign words in the bussiness dashboard to message eg. send campaign to send message
 --now in the page to set final message and returning msg we should have a preview so that they can see how it looks like
 --now the auth make theb image part 50/50 with the form.

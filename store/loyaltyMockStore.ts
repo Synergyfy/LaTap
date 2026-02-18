@@ -6,7 +6,7 @@ import {
   LoyaltyRule,
   Reward,
   Redemption,
-  LoyaltyCampaign,
+  LoyaltyPromotion,
   TierLevel,
   RedemptionStatus
 } from '@/types/loyalty';
@@ -17,7 +17,7 @@ interface LoyaltyMockState {
   rules: LoyaltyRule[];
   rewards: Reward[];
   redemptions: Redemption[];
-  campaigns: LoyaltyCampaign[];
+  promotions: LoyaltyPromotion[];
   fraudLogs: any[];
 
   // Actions
@@ -29,7 +29,7 @@ interface LoyaltyMockState {
   updateReward: (id: string, updates: Partial<Reward>) => void;
   addRedemption: (redemption: Redemption) => void;
   updateRedemption: (id: string, status: RedemptionStatus, verifiedBy?: string) => void;
-  addCampaign: (campaign: LoyaltyCampaign) => void;
+  addPromotion: (promotion: LoyaltyPromotion) => void;
   reset: () => void;
 }
 
@@ -97,7 +97,7 @@ export const useLoyaltyMockStore = create<LoyaltyMockState>()(
       rules: INITIAL_RULES,
       rewards: INITIAL_REWARDS,
       redemptions: [],
-      campaigns: [],
+      promotions: [],
       fraudLogs: [],
 
       addProfile: (profile) => set((state) => ({ 
@@ -140,8 +140,8 @@ export const useLoyaltyMockStore = create<LoyaltyMockState>()(
         )
       })),
 
-      addCampaign: (campaign) => set((state) => ({
-        campaigns: [campaign, ...state.campaigns]
+      addPromotion: (promotion) => set((state) => ({
+        promotions: [promotion, ...state.promotions]
       })),
 
       reset: () => set({
@@ -150,7 +150,7 @@ export const useLoyaltyMockStore = create<LoyaltyMockState>()(
         rules: INITIAL_RULES,
         rewards: INITIAL_REWARDS,
         redemptions: [],
-        campaigns: [],
+        promotions: [],
         fraudLogs: []
       })
     }),

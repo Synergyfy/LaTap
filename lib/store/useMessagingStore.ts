@@ -44,7 +44,7 @@ export interface Template {
     status: 'approved' | 'pending' | 'rejected';
 }
 
-export interface CampaignLog {
+export interface BroadcastLog {
     id: string;
     name: string;
     channel: MessageChannel;
@@ -60,7 +60,7 @@ interface MessagingState {
     threads: Thread[];
     messages: Message[];
     templates: Template[];
-    campaigns: CampaignLog[]; // Internal logging for broadcasts
+    broadcasts: BroadcastLog[]; // Internal logging for broadcasts
     stats: {
         totalSent: number;
         deliveryRate: number;
@@ -80,7 +80,7 @@ interface MessagingState {
     addTemplate: (template: Template) => void;
     deleteTemplate: (id: string) => void;
     
-    addCampaign: (campaign: CampaignLog) => void;
+    addBroadcast: (broadcast: BroadcastLog) => void;
     
     reset: () => void;
 }
@@ -148,7 +148,7 @@ export const useMessagingStore = create<MessagingState>()(
             threads: initialThreads,
             messages: initialMessages,
             templates: initialTemplates,
-            campaigns: [],
+            broadcasts: [],
             stats: {
                 totalSent: 1250,
                 deliveryRate: 98.5,
@@ -187,15 +187,15 @@ export const useMessagingStore = create<MessagingState>()(
                 templates: state.templates.filter(t => t.id !== id)
             })),
 
-            addCampaign: (campaign) => set((state) => ({
-                campaigns: [campaign, ...state.campaigns]
+            addBroadcast: (broadcast) => set((state) => ({
+                broadcasts: [broadcast, ...state.broadcasts]
             })),
 
             reset: () => set({
                 threads: initialThreads,
                 messages: initialMessages,
                 templates: initialTemplates,
-                campaigns: []
+                broadcasts: []
             })
         }),
         {
