@@ -78,7 +78,7 @@ export default function MessagingLayout({ children }: MessagingLayoutProps) {
             </div>
 
             {/* Content Area */}
-            <div className="flex-1 overflow-hidden p-6 relative">
+            <div className="flex-1 overflow-y-auto p-6 relative">
                 <div className="h-full w-full max-w-7xl mx-auto">
                     {children}
                 </div>
