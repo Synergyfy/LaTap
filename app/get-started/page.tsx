@@ -13,6 +13,7 @@ export default function GetStarted() {
     const router = useRouter();
     const { signup } = useAuthStore();
     const [step, setStep] = useState(1);
+    const [subStep, setSubStep] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
@@ -26,6 +27,9 @@ export default function GetStarted() {
         category: '',
         role: 'Owner' as 'Owner' | 'Manager',
         visitors: '',
+        whatsappNumber: '',
+        officialEmail: '',
+        businessNumber: '',
         goals: [] as string[],
         serialNumber: '',
         otp: '',
@@ -35,8 +39,22 @@ export default function GetStarted() {
     const categories = ['Retail', 'Hospitality', 'Events & Booths', 'Service Centers', 'Professional Office'];
     const goals = ['Capture Leads', 'Automated Rewards', 'Customer Feedback', 'Digital Loyalty'];
 
-    const nextStep = () => setStep(prev => prev + 1);
-    const prevStep = () => setStep(prev => prev - 1);
+    const nextStep = () => {
+        if (step === 3 && subStep < 8) {
+            setSubStep(prev => prev + 1);
+        } else {
+            setStep(prev => prev + 1);
+            setSubStep(1);
+        }
+    };
+    const prevStep = () => {
+        if (step === 3 && subStep > 1) {
+            setSubStep(prev => prev - 1);
+        } else {
+            setStep(prev => prev - 1);
+            if (step === 4) setSubStep(8);
+        }
+    };
 
     const handleFinalize = async () => {
         setIsLoading(true);
@@ -75,9 +93,22 @@ export default function GetStarted() {
                     <div className="max-w-md w-full mx-auto lg:mx-0">
                         {/* Progress Bar */}
                         <div className="flex gap-1.5 mb-12">
-                            {[1, 2, 3, 4, 5, 6].map(s => (
-                                <div key={s} className={`h-1 flex-1 rounded-full transition-all duration-500 ${step >= s ? 'bg-primary' : 'bg-gray-100'}`}></div>
-                            ))}
+                            {[1, 2, 3, 4, 5, 6].map(s => {
+                                let progress = 0;
+                                if (step > s) progress = 100;
+                                else if (step === s) {
+                                    if (step === 3) progress = (subStep / 8) * 100;
+                                    else progress = 100;
+                                }
+                                return (
+                                    <div key={s} className="h-1 flex-1 bg-gray-100 rounded-full overflow-hidden">
+                                        <div
+                                            className="h-full bg-primary transition-all duration-500 ease-out"
+                                            style={{ width: `${progress}%` }}
+                                        ></div>
+                                    </div>
+                                );
+                            })}
                         </div>
 
                         <AnimatePresence mode="wait">
@@ -244,114 +275,224 @@ export default function GetStarted() {
                                     className="space-y-8"
                                 >
                                     <div>
-                                        <h1 className="text-2xl font-display font-bold text-text-main mb-2 leading-tight tracking-tight">Setup your space</h1>
-                                        <p className="text-[13px] text-text-secondary font-medium leading-relaxed">Tell us about your physical location so we can customize your dashboard.</p>
+                                        <h1 className="text-2xl font-display font-bold text-text-main mb-2 leading-tight tracking-tight">
+                                            {subStep === 1 && "What's the name of your space?"}
+                                            {subStep === 2 && "Add your brand's face"}
+                                            {subStep === 3 && "What describes you best?"}
+                                            {subStep === 4 && "What kind of space is it?"}
+                                            {subStep === 5 && "WhatsApp & Official Email"}
+                                            {subStep === 6 && "Reach you at Business Number"}
+                                            {subStep === 7 && "How many visitors do you see?"}
+                                            {subStep === 8 && "What are your goals?"}
+                                        </h1>
+                                        <p className="text-[13px] text-text-secondary font-medium leading-relaxed">
+                                            {subStep === 1 && "Start with the name customers know you by."}
+                                            {subStep === 2 && "Upload your logo to personalize your dashboard and customer tags."}
+                                            {subStep === 3 && "This helps us tailor the dashboard features for you."}
+                                            {subStep === 4 && "Select the category that best fits your business."}
+                                            {subStep === 5 && "Important for campaign communications and support."}
+                                            {subStep === 6 && "The primary number for your business operations."}
+                                            {subStep === 7 && "This helps us optimize your experience for your footfall volume."}
+                                            {subStep === 8 && "Tell us what you want to achieve with VemTap."}
+                                        </p>
                                     </div>
 
                                     <div className="space-y-6">
-                                        <div className="space-y-1.5">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Business Name</label>
-                                            <div className="relative">
-                                                <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">storefront</span>
-                                                <input
-                                                    type="text"
-                                                    placeholder="Green Terrace Cafe"
-                                                    className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
-                                                    value={formData.businessName}
-                                                    onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="space-y-3">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Business Logo</label>
-                                            <div className="flex items-center gap-4">
-                                                <div className="size-20 rounded-2xl bg-gray-50 border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden shrink-0">
-                                                    {formData.businessLogo ? (
-                                                        <img src={formData.businessLogo} alt="Logo Preview" className="w-full h-full object-contain p-2" />
-                                                    ) : (
-                                                        <span className="material-icons-round text-gray-300 text-3xl">image</span>
-                                                    )}
-                                                </div>
-                                                <div className="flex-1">
+                                        {subStep === 1 && (
+                                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-1.5">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Business Name</label>
+                                                <div className="relative">
+                                                    <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">storefront</span>
                                                     <input
-                                                        type="file"
-                                                        accept="image/*"
-                                                        id="logo-upload"
-                                                        className="hidden"
-                                                        onChange={(e) => {
-                                                            const file = e.target.files?.[0];
-                                                            if (file) {
-                                                                const reader = new FileReader();
-                                                                reader.onloadend = () => {
-                                                                    setFormData({ ...formData, businessLogo: reader.result as string });
-                                                                };
-                                                                reader.readAsDataURL(file);
-                                                            }
-                                                        }}
+                                                        type="text"
+                                                        placeholder="Green Terrace Cafe"
+                                                        className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
+                                                        value={formData.businessName}
+                                                        onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
                                                     />
-                                                    <label htmlFor="logo-upload" className="inline-flex px-4 py-2 border border-gray-100 bg-gray-50 hover:bg-white rounded-lg text-xs font-bold text-text-main cursor-pointer transition-colors shadow-sm active:scale-95">
-                                                        Upload Brand Logo
-                                                    </label>
-                                                    <p className="text-[10px] text-text-secondary mt-2 font-medium">PNG or SVG, max. 2MB. This will appear on your dashboard and customer tags.</p>
                                                 </div>
-                                            </div>
-                                        </div>
+                                            </motion.div>
+                                        )}
 
-                                        <div className="space-y-3">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Your Role at the Business</label>
-                                            <div className="grid grid-cols-2 gap-3">
-                                                {['Owner', 'Manager'].map((r) => (
-                                                    <button
-                                                        key={r}
-                                                        onClick={() => setFormData({ ...formData, role: r as any })}
-                                                        className={`h-12 rounded-xl text-[11px] font-bold transition-all border flex items-center justify-center gap-2 ${formData.role === r ? 'bg-primary/5 border-primary/20 text-primary' : 'bg-gray-50 border-gray-100 text-text-secondary hover:bg-gray-100'}`}
-                                                    >
-                                                        <span className="material-icons-round text-lg">{r === 'Owner' ? 'grade' : 'badge'}</span>
-                                                        Business {r}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
+                                        {subStep === 2 && (
+                                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Business Logo</label>
+                                                <div className="flex flex-col items-center gap-6 p-8 border-2 border-dashed border-gray-100 rounded-[2rem] bg-gray-50/50">
+                                                    <div className="size-24 rounded-3xl bg-white border border-gray-100 flex items-center justify-center overflow-hidden shadow-sm">
+                                                        {formData.businessLogo ? (
+                                                            <img src={formData.businessLogo} alt="Logo Preview" className="w-full h-full object-contain p-2" />
+                                                        ) : (
+                                                            <span className="material-icons-round text-gray-300 text-4xl">image</span>
+                                                        )}
+                                                    </div>
+                                                    <div className="text-center">
+                                                        <input
+                                                            type="file"
+                                                            accept="image/*"
+                                                            id="logo-upload"
+                                                            className="hidden"
+                                                            onChange={(e) => {
+                                                                const file = e.target.files?.[0];
+                                                                if (file) {
+                                                                    const reader = new FileReader();
+                                                                    reader.onloadend = () => {
+                                                                        setFormData({ ...formData, businessLogo: reader.result as string });
+                                                                    };
+                                                                    reader.readAsDataURL(file);
+                                                                }
+                                                            }}
+                                                        />
+                                                        <label htmlFor="logo-upload" className="inline-flex px-6 py-3 bg-primary text-white rounded-xl text-xs font-bold cursor-pointer transition-all shadow-lg shadow-primary/20 active:scale-95">
+                                                            Upload Brand Logo
+                                                        </label>
+                                                        <p className="text-[10px] text-text-secondary mt-3 font-medium">PNG or SVG, max. 2MB</p>
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        )}
 
-                                        <div className="space-y-3">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Business Type</label>
-                                            <div className="flex flex-wrap gap-2">
-                                                {categories.map(c => (
-                                                    <button
-                                                        key={c}
-                                                        onClick={() => setFormData({ ...formData, category: c })}
-                                                        className={`px-4 py-2 rounded-lg text-[11px] font-bold transition-all border ${formData.category === c ? 'bg-primary/5 border-primary/20 text-primary' : 'bg-gray-50 border-gray-100 text-text-secondary hover:bg-gray-100'}`}
-                                                    >
-                                                        {c}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
+                                        {subStep === 3 && (
+                                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Your Role</label>
+                                                <div className="grid grid-cols-1 gap-3">
+                                                    {['Owner', 'Manager'].map((r) => (
+                                                        <button
+                                                            key={r}
+                                                            onClick={() => setFormData({ ...formData, role: r as any })}
+                                                            className={`h-16 rounded-2xl text-xs font-bold transition-all border flex items-center justify-between px-6 ${formData.role === r ? 'bg-primary/5 border-primary/20 text-primary' : 'bg-gray-50 border-gray-100 text-text-secondary hover:bg-gray-100'}`}
+                                                        >
+                                                            <div className="flex items-center gap-3">
+                                                                <span className="material-icons-round text-xl">{r === 'Owner' ? 'grade' : 'badge'}</span>
+                                                                Business {r}
+                                                            </div>
+                                                            {formData.role === r && <span className="material-icons-round text-primary text-sm">check_circle</span>}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </motion.div>
+                                        )}
 
-                                        <div className="space-y-1.5">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Average Monthly Visitors</label>
-                                            <select
-                                                className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl px-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 appearance-none text-sm"
-                                                value={formData.visitors}
-                                                onChange={(e) => setFormData({ ...formData, visitors: e.target.value })}
-                                            >
-                                                <option value="">Select range</option>
-                                                <option value="0-500">0 - 500 visitors</option>
-                                                <option value="501-2000">501 - 2,000 visitors</option>
-                                                <option value="2001-5000">2,001 - 5,000 visitors</option>
-                                                <option value="5000+">5,000+ visitors</option>
-                                            </select>
-                                        </div>
+                                        {subStep === 4 && (
+                                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Business Type</label>
+                                                <div className="grid grid-cols-2 gap-2">
+                                                    {categories.map(c => (
+                                                        <button
+                                                            key={c}
+                                                            onClick={() => setFormData({ ...formData, category: c })}
+                                                            className={`px-4 py-3 rounded-xl text-[11px] font-bold transition-all border text-center ${formData.category === c ? 'bg-primary/5 border-primary/20 text-primary' : 'bg-gray-50 border-gray-100 text-text-secondary hover:bg-gray-100'}`}
+                                                        >
+                                                            {c}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </motion.div>
+                                        )}
+
+                                        {subStep === 5 && (
+                                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+                                                <div className="space-y-1.5">
+                                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">WhatsApp Number</label>
+                                                    <div className="relative">
+                                                        <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">message</span>
+                                                        <input
+                                                            type="tel"
+                                                            placeholder="+234 801 234 5678"
+                                                            className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
+                                                            value={formData.whatsappNumber}
+                                                            onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-1.5">
+                                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Official Email</label>
+                                                    <div className="relative">
+                                                        <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">alternate_email</span>
+                                                        <input
+                                                            type="email"
+                                                            placeholder="hello@business.com"
+                                                            className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
+                                                            value={formData.officialEmail}
+                                                            onChange={(e) => setFormData({ ...formData, officialEmail: e.target.value })}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        )}
+
+                                        {subStep === 6 && (
+                                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-1.5">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Business Phone Number</label>
+                                                <div className="relative">
+                                                    <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">phone</span>
+                                                    <input
+                                                        type="tel"
+                                                        placeholder="+234 801 234 5678"
+                                                        className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
+                                                        value={formData.businessNumber}
+                                                        onChange={(e) => setFormData({ ...formData, businessNumber: e.target.value })}
+                                                    />
+                                                </div>
+                                            </motion.div>
+                                        )}
+
+                                        {subStep === 7 && (
+                                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Monthly Visitors</label>
+                                                <div className="grid grid-cols-1 gap-2">
+                                                    {['0-500', '501-2000', '2001-5000', '5000+'].map(range => (
+                                                        <button
+                                                            key={range}
+                                                            onClick={() => setFormData({ ...formData, visitors: range })}
+                                                            className={`w-full h-14 rounded-xl px-6 text-sm font-bold transition-all border flex items-center justify-between ${formData.visitors === range ? 'bg-primary/5 border-primary/20 text-primary' : 'bg-gray-50 border-gray-100 text-text-secondary hover:bg-gray-100'}`}
+                                                        >
+                                                            <span>{range.includes('+') ? range : `${range} visitors`}</span>
+                                                            {formData.visitors === range && <span className="material-icons-round text-primary text-sm">check_circle</span>}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </motion.div>
+                                        )}
+
+                                        {subStep === 8 && (
+                                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Select Goals</label>
+                                                <div className="grid grid-cols-1 gap-2">
+                                                    {goals.map(goal => (
+                                                        <button
+                                                            key={goal}
+                                                            onClick={() => {
+                                                                const newGoals = formData.goals.includes(goal)
+                                                                    ? formData.goals.filter(g => g !== goal)
+                                                                    : [...formData.goals, goal];
+                                                                setFormData({ ...formData, goals: newGoals });
+                                                            }}
+                                                            className={`w-full h-14 rounded-xl px-6 text-sm font-bold transition-all border flex items-center justify-between ${formData.goals.includes(goal) ? 'bg-primary/5 border-primary/20 text-primary' : 'bg-gray-50 border-gray-100 text-text-secondary hover:bg-gray-100'}`}
+                                                        >
+                                                            <span>{goal}</span>
+                                                            {formData.goals.includes(goal) && <span className="material-icons-round text-primary text-sm">check_circle</span>}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </motion.div>
+                                        )}
 
                                         <div className="flex gap-4 pt-4">
                                             <button onClick={prevStep} className="h-12 px-8 border border-gray-100 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm">Back</button>
                                             <button
                                                 onClick={nextStep}
-                                                disabled={!formData.businessName || !formData.category || !formData.visitors}
+                                                disabled={
+                                                    (subStep === 1 && !formData.businessName) ||
+                                                    (subStep === 3 && !formData.role) ||
+                                                    (subStep === 4 && !formData.category) ||
+                                                    (subStep === 5 && (!formData.whatsappNumber || !formData.officialEmail)) ||
+                                                    (subStep === 6 && !formData.businessNumber) ||
+                                                    (subStep === 7 && !formData.visitors) ||
+                                                    (subStep === 8 && formData.goals.length === 0)
+                                                }
                                                 className="flex-1 h-12 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all text-sm disabled:opacity-50"
                                             >
-                                                Save & Continue
+                                                {subStep === 8 ? "Save & Continue" : "Next Question"}
                                             </button>
                                         </div>
                                     </div>
@@ -462,6 +603,18 @@ export default function GetStarted() {
                                                 <div>
                                                     <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mb-1">Role</p>
                                                     <p className="text-xs font-bold text-text-main">{formData.role}</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mb-1">WhatsApp</p>
+                                                    <p className="text-xs font-bold text-text-main">{formData.whatsappNumber || 'Not set'}</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mb-1">Official Email</p>
+                                                    <p className="text-xs font-bold text-text-main break-all">{formData.officialEmail || 'Not set'}</p>
+                                                </div>
+                                                <div className="col-span-2">
+                                                    <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mb-1">Business Phone</p>
+                                                    <p className="text-xs font-bold text-text-main">{formData.businessNumber || 'Not set'}</p>
                                                 </div>
                                             </div>
                                         </div>

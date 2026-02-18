@@ -20,13 +20,14 @@ const POINT_PACKS = [
 
 export default function TopUpModal({ isOpen, onClose, targetChannel = 'WhatsApp' }: TopUpModalProps) {
     const { addRecharge } = useMessagingStore();
+    const [selectedChannel, setSelectedChannel] = useState<MessageChannel>(targetChannel);
     const [selectedPack, setSelectedPack] = useState(1);
 
     const handlePurchase = () => {
         const pack = POINT_PACKS[selectedPack];
         const totalPoints = pack.points + (pack.bonus ? parseInt(pack.bonus.replace(/[^0-9]/g, '')) : 0);
-        addRecharge(targetChannel, totalPoints);
-        notify.success(`Successfully added ${totalPoints.toLocaleString()} points to your ${targetChannel} wallet!`);
+        addRecharge(selectedChannel, totalPoints);
+        notify.success(`Successfully added ${totalPoints.toLocaleString()} points to your ${selectedChannel} wallet!`);
         onClose();
     };
 
@@ -53,7 +54,7 @@ export default function TopUpModal({ isOpen, onClose, targetChannel = 'WhatsApp'
                                     <Wallet className="text-white" size={24} />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-display font-black text-text-main uppercase tracking-tight leading-none mb-1">Top-up {targetChannel}</h3>
+                                    <h3 className="text-xl font-display font-black text-text-main uppercase tracking-tight leading-none mb-1">Top-up Wallet</h3>
                                     <p className="text-[10px] text-text-secondary font-medium uppercase tracking-[0.2em]">Purchase messaging credits</p>
                                 </div>
                             </div>
@@ -66,6 +67,21 @@ export default function TopUpModal({ isOpen, onClose, targetChannel = 'WhatsApp'
                         </div>
 
                         <div className="p-8 space-y-6">
+                            <div className="grid grid-cols-3 gap-2 p-1 bg-gray-50 rounded-2xl border border-gray-100">
+                                {(['SMS', 'WhatsApp', 'Email'] as MessageChannel[]).map((c) => (
+                                    <button
+                                        key={c}
+                                        onClick={() => setSelectedChannel(c)}
+                                        className={`py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${selectedChannel === c
+                                            ? 'bg-white text-primary shadow-sm border border-gray-100'
+                                            : 'text-text-secondary hover:text-text-main'
+                                            }`}
+                                    >
+                                        {c}
+                                    </button>
+                                ))}
+                            </div>
+
                             <p className="text-sm text-text-secondary text-center max-w-sm mx-auto">
                                 Points can be used across WhatsApp, SMS, and Email channels. Higher packs include bonus points.
                             </p>

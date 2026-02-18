@@ -112,8 +112,11 @@ export default function DashboardSidebar({ children }: SidebarProps) {
             icon: Nfc,
             roles: ['owner', 'manager', 'staff'],
             submenu: [
-                { label: 'Overview', href: '/dashboard/devices' },
-                { label: 'Device Settings', href: '/dashboard/settings/devices' },
+                { label: 'Device Overview', href: '/dashboard/devices' },
+                { label: 'NFC Scan', href: '/dashboard/devices/nfc/scan' },
+                { label: 'NFC History', href: '/dashboard/devices/nfc/history' },
+                { label: 'Manage NFC', href: '/dashboard/devices/nfc/manage' },
+                { label: 'Settings', href: '/dashboard/settings/devices' },
             ]
         },
         {
@@ -157,7 +160,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                 },
                 { label: 'Message History', href: '/dashboard/messaging/history' },
                 { label: 'Guest Preview', href: '/dashboard/messaging/preview/returning' },
-            ]
+            ].map(item => ({ ...item, onClick: () => setIsMobileOpen(false) }))
         },
         {
             id: 'surveys',
@@ -362,6 +365,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                                                         <Link
                                                             key={subItem.href}
                                                             href={subItem.href}
+                                                            onClick={() => setIsMobileOpen(false)}
                                                             className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive(subItem.href)
                                                                 ? 'bg-primary text-white'
                                                                 : 'text-text-secondary hover:bg-gray-50 hover:text-text-main'

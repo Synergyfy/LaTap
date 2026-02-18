@@ -11,6 +11,59 @@ interface MessageBuilderProps {
     defaultChannel?: MessageChannel;
 }
 
+// Device-style Preview Component
+function PhonePreview({ channel, content }: { channel: MessageChannel, content: string }) {
+    return (
+        <div className="relative w-[280px] h-[480px] bg-slate-900 rounded-[3rem] border-8 border-slate-800 shadow-2xl overflow-hidden">
+            {/* Notch */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-800 rounded-b-2xl z-10" />
+
+            {/* Screen Content */}
+            <div className={`w-full h-full pt-10 px-4 flex flex-col ${channel === 'WhatsApp' ? 'bg-[#E5DDD5]' : channel === 'Email' ? 'bg-white' : 'bg-white'}`}>
+                {/* App Header */}
+                <div className={`flex items-center gap-3 p-3 rounded-2xl mb-4 ${channel === 'WhatsApp' ? 'bg-[#075E54] text-white' : 'bg-gray-50 border border-gray-100 text-text-main'}`}>
+                    <div className="size-8 rounded-full bg-gray-300 shrink-0" />
+                    <div className="flex-1">
+                        <p className="text-[10px] font-bold leading-none">{channel === 'Email' ? 'VemTap Support' : 'VemTap'}</p>
+                        <p className="text-[8px] opacity-70 leading-none mt-1">{channel === 'WhatsApp' ? 'online' : channel === 'SMS' ? 'Now' : 'support@vemtap.com'}</p>
+                    </div>
+                </div>
+
+                {/* Message Bubble */}
+                {channel === 'Email' ? (
+                    <div className="flex-1 overflow-auto">
+                        <p className="text-[10px] font-black text-text-main mb-2">Special Offer Just for You!</p>
+                        <div className="p-4 bg-white border border-gray-100 rounded-xl text-[10px] text-text-secondary leading-relaxed">
+                            {content || 'Your email content will appear here...'}
+                        </div>
+                    </div>
+                ) : (
+                    <div className={`max-w-[85%] p-3 rounded-2xl text-[10px] relative shadow-sm ${channel === 'WhatsApp'
+                        ? 'bg-white self-start rounded-tl-none'
+                        : 'bg-primary text-white self-start rounded-bl-none'
+                        }`}>
+                        <p className="leading-relaxed">{content || 'Your message will appear here...'}</p>
+                        <p className={`text-[8px] mt-1 text-right ${channel === 'WhatsApp' ? 'text-gray-400' : 'text-primary-foreground/70'}`}>
+                            12:45 PM
+                        </p>
+
+                        {/* Tail for WhatsApp */}
+                        {channel === 'WhatsApp' && (
+                            <div className="absolute top-0 -left-1.5 w-3 h-3 bg-white clip-path-whatsapp-tail" />
+                        )}
+                    </div>
+                )}
+            </div>
+
+            <style jsx>{`
+                .clip-path-whatsapp-tail {
+                    clip-path: polygon(100% 0, 0 0, 100% 100%);
+                }
+            `}</style>
+        </div>
+    );
+}
+
 export default function MessageBuilder({ defaultChannel = 'SMS' }: MessageBuilderProps) {
     const router = useRouter();
     const { templates, wallets } = useMessagingStore();
@@ -22,6 +75,7 @@ export default function MessageBuilder({ defaultChannel = 'SMS' }: MessageBuilde
     const [messageName, setMessageName] = useState('');
     const [audience, setAudience] = useState('all');
     const [selectedTemplate, setSelectedTemplate] = useState<string>('');
+    const [templateCategory, setTemplateCategory] = useState('All');
     const [customContent, setCustomContent] = useState('');
     const [isSending, setIsSending] = useState(false);
 
@@ -90,16 +144,31 @@ export default function MessageBuilder({ defaultChannel = 'SMS' }: MessageBuilde
                 </div>
 
                 <div>
-                    <label className="block text-xs font-bold uppercase text-text-secondary mb-2">Target Audience</label>
-                    <select
-                        className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl"
-                        value={audience}
-                        onChange={(e) => setAudience(e.target.value)}
-                    >
-                        <option value="all">All Contacts ({1240})</option>
-                        <option value="vip">VIP Members ({150})</option>
-                        <option value="new">New Visitors (Last 30 days) ({340})</option>
-                    </select>
+                    <label className="block text-xs font-bold uppercase text-text-secondary mb-3">Target Audience</label>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        {[
+                            { id: 'all', label: 'All Contacts', sub: '(1,240)', icon: Users },
+                            { id: 'new', label: 'New Visitors', sub: '(340)', icon: Smartphone },
+                            { id: 'vip', label: 'VIP Members', sub: '(150)', icon: CheckCircle }
+                        ].map(opt => (
+                            <button
+                                key={opt.id}
+                                onClick={() => setAudience(opt.id)}
+                                className={`p-4 rounded-2xl border-2 transition-all text-left ${audience === opt.id
+                                    ? 'border-primary bg-primary/5'
+                                    : 'border-gray-100 bg-white hover:border-gray-200'
+                                    }`}
+                            >
+                                <div className="flex items-center justify-between mb-1">
+                                    <span className="font-bold text-sm text-text-main">{opt.label}</span>
+                                    {audience === opt.id && <div className="size-4 bg-primary rounded-full flex items-center justify-center">
+                                        <div className="size-1.5 bg-white rounded-full" />
+                                    </div>}
+                                </div>
+                                <p className="text-[10px] text-text-secondary font-medium uppercase tracking-tighter">{opt.sub}</p>
+                            </button>
+                        ))}
+                    </div>
                 </div>
             </div>
 
@@ -119,30 +188,71 @@ export default function MessageBuilder({ defaultChannel = 'SMS' }: MessageBuilde
             </h3>
 
             <div className="space-y-4">
-                <div>
-                    <label className="block text-xs font-bold uppercase text-text-secondary mb-2">Template</label>
-                    <select
-                        className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl mb-2"
-                        value={selectedTemplate}
-                        onChange={(e) => setSelectedTemplate(e.target.value)}
-                    >
-                        <option value="">Write Custom Message...</option>
-                        {templates.filter(t => t.channel === channel || t.channel === 'Any').map(t => (
-                            <option key={t.id} value={t.id}>{t.name}</option>
-                        ))}
-                    </select>
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-[10px] font-black uppercase text-text-secondary mb-2 tracking-widest ml-1">Category</label>
+                        <select
+                            className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl font-bold text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                            value={templateCategory}
+                            onChange={(e) => {
+                                setTemplateCategory(e.target.value);
+                                setSelectedTemplate('');
+                            }}
+                        >
+                            <option value="All">All Categories</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Utility">Utility</option>
+                            <option value="Auth">Auth</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label className="block text-[10px] font-black uppercase text-text-secondary mb-2 tracking-widest ml-1">Template</label>
+                        <select
+                            className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl font-bold text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                            value={selectedTemplate}
+                            onChange={(e) => {
+                                const tplId = e.target.value;
+                                setSelectedTemplate(tplId);
+                                if (tplId) {
+                                    const tpl = templates.find(t => t.id === tplId);
+                                    if (tpl) setCustomContent(tpl.content);
+                                }
+                            }}
+                        >
+                            <option value="">Write Custom Message...</option>
+                            {templates
+                                .filter(t => (t.channel === channel || t.channel === 'Any') && (templateCategory === 'All' || t.category === templateCategory))
+                                .map(t => (
+                                    <option key={t.id} value={t.id}>{t.name}</option>
+                                ))}
+                        </select>
+                    </div>
                 </div>
 
                 <div>
-                    <label className="block text-xs font-bold uppercase text-text-secondary mb-2">Message Content</label>
-                    <textarea
-                        className="w-full h-40 p-4 bg-gray-50 border border-gray-200 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-primary/10"
-                        placeholder="Type your message here..."
-                        value={selectedTemplate ? templates.find(t => t.id === selectedTemplate)?.content : customContent}
-                        onChange={(e) => !selectedTemplate && setCustomContent(e.target.value)}
-                        disabled={!!selectedTemplate}
-                    />
-                    <p className="text-xs text-text-secondary mt-2 text-right">Preview: {(selectedTemplate ? templates.find(t => t.id === selectedTemplate)?.content : customContent)?.length || 0} characters</p>
+                    <label className="block text-[10px] font-black uppercase text-text-secondary mb-2 tracking-widest ml-1">Message Content</label>
+                    <div className="relative">
+                        <textarea
+                            className="w-full h-40 p-4 bg-gray-50 border border-gray-200 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-primary/10 font-medium text-sm transition-all"
+                            placeholder="Type your message here..."
+                            value={customContent}
+                            onChange={(e) => setCustomContent(e.target.value)}
+                        />
+                        <div className="absolute bottom-4 left-4 flex gap-2">
+                            {['{Name}', '{BusinessName}', '{Points}'].map(variable => (
+                                <button
+                                    key={variable}
+                                    onClick={() => setCustomContent(prev => prev + variable)}
+                                    className="px-2 py-1 bg-white border border-gray-200 rounded-lg text-[10px] font-bold text-primary hover:bg-gray-50 transition-colors shadow-sm"
+                                >
+                                    + {variable}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    <p className="text-[10px] text-text-secondary mt-2 text-right font-medium uppercase tracking-tighter">
+                        Characters: <span className="text-primary font-black">{customContent.length}</span>
+                    </p>
                 </div>
             </div>
 
@@ -182,9 +292,9 @@ export default function MessageBuilder({ defaultChannel = 'SMS' }: MessageBuilde
                     <span className="font-mono font-bold text-text-main">{totalCost.toLocaleString()} {wallet.currency}</span>
                 </div>
                 <div className="pt-2">
-                    <span className="text-xs font-bold uppercase text-text-secondary block mb-2">Message Preview</span>
-                    <div className="bg-white p-4 rounded-xl border border-gray-200 text-sm italic text-gray-600">
-                        "{selectedTemplate ? templates.find(t => t.id === selectedTemplate)?.content : customContent}"
+                    <label className="text-[10px] font-black uppercase text-text-secondary block mb-3 ml-1 tracking-widest">Message Preview</label>
+                    <div className="flex justify-center">
+                        <PhonePreview channel={channel} content={customContent} />
                     </div>
                 </div>
             </div>

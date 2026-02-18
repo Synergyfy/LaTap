@@ -360,4 +360,23 @@ when a dropdown c is open others are supposed to close when on load no dropdown 
 the copy button should be in front of the url and the button should be in front of the download code for nf-manager tab
 --once you change the url update the qr code
 --emails are optional,optional for visitors but mostly use email
+
+-
 --add the emeail list 
+=====================================================
+
+--the top up modal should select Channel
+--layout still misbehaving 
+--when sending message you dont need to select again 
+-- add a button instead of currly braces 
+--add dropdown before dropdown
+--we should be able to edit a message template before sending 
+--add a preview before sending message for each channel
+--create template is not working 
+--bussiness number | whatsaap link, their offcial email and then
+
+--onboarding reviews,onbaoridng process,
+--nfc manager should be inside devices 
+--allow creating message from scratch or choose template and edit and coutomize for that message and then see the preview 
+--let the preview show like the phone for all channels 
+--target audience, template for email

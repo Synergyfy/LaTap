@@ -135,7 +135,9 @@ const initialMessages: Message[] = [
 const initialTemplates: Template[] = [
     { id: 'tpl1', name: 'Welcome Message', content: 'Hi {Name}, welcome to VemTap! expecting you soon.', channel: 'SMS', category: 'Marketing', status: 'approved' },
     { id: 'tpl2', name: 'Reservation Conf', content: 'Hello {Name}, your table is confirmed.', channel: 'WhatsApp', category: 'Utility', status: 'approved' },
-    { id: 'tpl3', name: 'Weekly Newsletter', content: 'Check out our weekly updates...', channel: 'Email', category: 'Marketing', status: 'approved' }
+    { id: 'tpl3', name: 'Weekly Newsletter', content: 'Check out our weekly updates...', channel: 'Email', category: 'Marketing', status: 'approved' },
+    { id: 'tpl4', name: 'Feedback Request', content: 'Hi {Name}, how was your experience with us today? We value your feedback.', channel: 'Email', category: 'Utility', status: 'approved' },
+    { id: 'tpl5', name: 'Re-engagement', content: 'We haven\'t seen you in a while, {Name}! Here is a special 20% discount for your next visit.', channel: 'Email', category: 'Marketing', status: 'approved' }
 ];
 
 export const useMessagingStore = create<MessagingState>()(

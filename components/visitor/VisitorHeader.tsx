@@ -1,5 +1,5 @@
 import React from 'react';
-import defaultLogo from '@/assets/logos/logo.png';
+import defaultLogo from '@/public/assets/vemtap_v.png';
 
 interface VisitorHeaderProps {
     logoUrl?: string | null;
