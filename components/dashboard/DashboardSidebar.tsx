@@ -214,13 +214,6 @@ export default function DashboardSidebar({ children }: SidebarProps) {
             href: '/dashboard/staff',
             roles: ['owner']
         },
-        {
-            id: 'nfc-manager',
-            label: 'NFC Manager',
-            icon: Smartphone,
-            href: '/dashboard/nfc-manager',
-            roles: ['owner', 'manager']
-        },
 
         {
             id: 'settings',
@@ -423,7 +416,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                     </div>
                     <button
                         onClick={handleLogout}
-                        className="w-full py-2 px-3 bg-gray-50 text-text-secondary rounded-lg text-sm font-bold hover:bg-gray-100 hover:text-text-main transition-colors flex items-center justify-center gap-2"
+                        className="w-full py-2 px-3 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primary-hover transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20"
                     >
                         <LogOut size={16} />
                         Logout

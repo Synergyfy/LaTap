@@ -54,7 +54,7 @@ export default function MessagingLayout({ children }: MessagingLayoutProps) {
                 <div className="flex items-center gap-4">
                     <Link
                         href="/dashboard/messaging/compose"
-                        className="px-6 py-2.5 bg-text-main text-white font-bold rounded-xl hover:bg-black transition-all flex items-center gap-2 shadow-lg shadow-black/10 active:scale-95 text-sm"
+                        className="px-6 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all flex items-center gap-2 shadow-lg shadow-primary/20 active:scale-95 text-sm"
                     >
                         <Plus size={18} />
                         Compose Message

@@ -16,7 +16,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
     title: {
-        default: "V - Visitor Engagement Management",
+        default: "Visitor Engagement Management",
         template: "%s | VemTap"
     },
     description: "Visitor Engagement Management - Tap. Seamless offline-to-online visitor data capture with our NFC-powered platform.",

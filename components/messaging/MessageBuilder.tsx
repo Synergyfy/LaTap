@@ -12,48 +12,117 @@ interface MessageBuilderProps {
 }
 
 // Device-style Preview Component
-function PhonePreview({ channel, content }: { channel: MessageChannel, content: string }) {
+function PhonePreview({ channel, content, onContentChange, isEditable = false }: { channel: MessageChannel, content: string, onContentChange?: (val: string) => void, isEditable?: boolean }) {
     return (
-        <div className="relative w-[280px] h-[480px] bg-slate-900 rounded-[3rem] border-8 border-slate-800 shadow-2xl overflow-hidden">
+        <div className="relative w-[300px] h-[580px] bg-slate-900 rounded-[3.5rem] border-[12px] border-slate-800 shadow-2xl overflow-hidden ring-1 ring-slate-700">
             {/* Notch */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-800 rounded-b-2xl z-10" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-slate-800 rounded-b-3xl z-30" />
 
             {/* Screen Content */}
-            <div className={`w-full h-full pt-10 px-4 flex flex-col ${channel === 'WhatsApp' ? 'bg-[#E5DDD5]' : channel === 'Email' ? 'bg-white' : 'bg-white'}`}>
+            <div className={`w-full h-full pt-12 flex flex-col relative ${channel === 'WhatsApp' ? 'bg-[#efe7de] bg-[url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png")] bg-repeat' :
+                    channel === 'Email' ? 'bg-gray-100' : 'bg-white'
+                }`}>
                 {/* App Header */}
-                <div className={`flex items-center gap-3 p-3 rounded-2xl mb-4 ${channel === 'WhatsApp' ? 'bg-[#075E54] text-white' : 'bg-gray-50 border border-gray-100 text-text-main'}`}>
-                    <div className="size-8 rounded-full bg-gray-300 shrink-0" />
-                    <div className="flex-1">
-                        <p className="text-[10px] font-bold leading-none">{channel === 'Email' ? 'VemTap Support' : 'VemTap'}</p>
-                        <p className="text-[8px] opacity-70 leading-none mt-1">{channel === 'WhatsApp' ? 'online' : channel === 'SMS' ? 'Now' : 'support@vemtap.com'}</p>
-                    </div>
-                </div>
-
-                {/* Message Bubble */}
-                {channel === 'Email' ? (
-                    <div className="flex-1 overflow-auto">
-                        <p className="text-[10px] font-black text-text-main mb-2">Special Offer Just for You!</p>
-                        <div className="p-4 bg-white border border-gray-100 rounded-xl text-[10px] text-text-secondary leading-relaxed">
-                            {content || 'Your email content will appear here...'}
+                {channel === 'WhatsApp' ? (
+                    <div className="bg-[#075E54] p-4 text-white flex items-center gap-3 z-20">
+                        <div className="size-8 rounded-full bg-white/20 flex items-center justify-center">
+                            <Users size={16} />
+                        </div>
+                        <div>
+                            <p className="text-xs font-bold leading-none">VemTap Outreach</p>
+                            <p className="text-[10px] opacity-70 mt-1">online</p>
                         </div>
                     </div>
+                ) : channel === 'SMS' ? (
+                    <div className="p-4 border-b border-gray-100 flex flex-col items-center gap-1 z-20 bg-white/80 backdrop-blur-md">
+                        <div className="size-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                            <Smartphone size={20} />
+                        </div>
+                        <p className="text-[10px] font-bold text-gray-900">VemTap</p>
+                    </div>
                 ) : (
-                    <div className={`max-w-[85%] p-3 rounded-2xl text-[10px] relative shadow-sm ${channel === 'WhatsApp'
-                        ? 'bg-white self-start rounded-tl-none'
-                        : 'bg-primary text-white self-start rounded-bl-none'
-                        }`}>
-                        <p className="leading-relaxed">{content || 'Your message will appear here...'}</p>
-                        <p className={`text-[8px] mt-1 text-right ${channel === 'WhatsApp' ? 'text-gray-400' : 'text-primary-foreground/70'}`}>
-                            12:45 PM
-                        </p>
+                    <div className="p-4 bg-white border-b border-gray-200 flex items-center gap-3 z-20">
+                        <div className="size-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                            <Mail size={16} />
+                        </div>
+                        <div className="flex-1">
+                            <p className="text-[10px] font-black leading-none">Support @ VemTap</p>
+                            <p className="text-[8px] text-gray-400 mt-1">To: Customer</p>
+                        </div>
+                    </div>
+                )}
 
-                        {/* Tail for WhatsApp */}
-                        {channel === 'WhatsApp' && (
-                            <div className="absolute top-0 -left-1.5 w-3 h-3 bg-white clip-path-whatsapp-tail" />
-                        )}
+                {/* Message Area */}
+                <div className="flex-1 p-4 overflow-auto custom-scrollbar">
+                    {channel === 'Email' ? (
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                            <div className="p-3 border-b border-gray-50">
+                                <p className="text-[10px] font-black text-gray-900">Exclusive Update from VemTap</p>
+                            </div>
+                            <div className="p-4 min-h-[100px]">
+                                {isEditable ? (
+                                    <textarea
+                                        value={content}
+                                        onChange={(e) => onContentChange?.(e.target.value)}
+                                        className="w-full min-h-[200px] text-xs leading-relaxed outline-none border-none bg-transparent resize-none focus:ring-0 p-0 text-gray-700"
+                                        placeholder="Type your email content..."
+                                    />
+                                ) : (
+                                    <p className="text-xs text-gray-700 leading-relaxed whitespace-pre-wrap">{content || 'Your email content will appear here...'}</p>
+                                )}
+                            </div>
+                            <div className="p-4 bg-gray-50 mt-4 text-center">
+                                <button className="px-6 py-2 bg-primary text-white text-[10px] font-bold rounded-lg pointer-events-none">
+                                    Action Button
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className={`relative flex flex-col ${channel === 'WhatsApp' ? 'items-start' : 'items-start'}`}>
+                            <div className={`
+                                max-w-[90%] p-3 rounded-2xl text-[11px] shadow-sm relative group
+                                ${channel === 'WhatsApp' ? 'bg-white rounded-tl-none' : 'bg-gray-100 rounded-tl-none text-gray-800'}
+                            `}>
+                                {isEditable ? (
+                                    <textarea
+                                        value={content}
+                                        onChange={(e) => onContentChange?.(e.target.value)}
+                                        className="w-full bg-transparent border-none outline-none resize-none focus:ring-0 p-0 text-[11px] min-h-[60px]"
+                                        placeholder="Type message..."
+                                    />
+                                ) : (
+                                    <p className="whitespace-pre-wrap">{content || 'Your message will appear here...'}</p>
+                                )}
+                                <p className="text-[8px] text-right mt-1 opacity-50 uppercase tracking-tighter">12:45</p>
+
+                                {/* WhatsApp Tail */}
+                                {channel === 'WhatsApp' && (
+                                    <div className="absolute top-0 -left-1.5 w-3 h-3 bg-white clip-path-whatsapp-tail" />
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Input Bar Simulation */}
+                {(channel === 'WhatsApp' || channel === 'SMS') && (
+                    <div className="p-3 bg-gray-50 border-t border-gray-100 flex items-center gap-2">
+                        <div className="flex-1 h-8 bg-white border border-gray-200 rounded-full px-4 text-[10px] flex items-center text-gray-400">
+                            iMessage
+                        </div>
+                        <div className={`size-8 rounded-full flex items-center justify-center ${channel === 'WhatsApp' ? 'bg-[#128C7E]' : 'bg-primary'} text-white`}>
+                            <Send size={14} />
+                        </div>
                     </div>
                 )}
             </div>
+
+            {/* Editing Indicator Badge */}
+            {isEditable && (
+                <div className="absolute top-20 right-4 bg-primary text-white text-[8px] font-black px-2 py-1 rounded-full shadow-lg animate-pulse z-40">
+                    LIVE EDITING ON
+                </div>
+            )}
 
             <style jsx>{`
                 .clip-path-whatsapp-tail {
@@ -69,7 +138,7 @@ export default function MessageBuilder({ defaultChannel = 'SMS' }: MessageBuilde
     const { templates, wallets } = useMessagingStore();
     const [channel, setChannel] = useState<MessageChannel>(defaultChannel);
     const wallet = wallets[channel];
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(defaultChannel ? 2 : 1);
 
     // Form State
     const [messageName, setMessageName] = useState('');
@@ -78,6 +147,7 @@ export default function MessageBuilder({ defaultChannel = 'SMS' }: MessageBuilde
     const [templateCategory, setTemplateCategory] = useState('All');
     const [customContent, setCustomContent] = useState('');
     const [isSending, setIsSending] = useState(false);
+    const [isLiveEdit, setIsLiveEdit] = useState(false);
 
     // Mock Audience count
     const getAudienceCount = () => {
@@ -239,15 +309,18 @@ export default function MessageBuilder({ defaultChannel = 'SMS' }: MessageBuilde
                             onChange={(e) => setCustomContent(e.target.value)}
                         />
                         <div className="absolute bottom-4 left-4 flex gap-2">
-                            {['{Name}', '{BusinessName}', '{Points}'].map(variable => (
-                                <button
-                                    key={variable}
-                                    onClick={() => setCustomContent(prev => prev + variable)}
-                                    className="px-2 py-1 bg-white border border-gray-200 rounded-lg text-[10px] font-bold text-primary hover:bg-gray-50 transition-colors shadow-sm"
-                                >
-                                    + {variable}
-                                </button>
-                            ))}
+                            <div className="absolute bottom-4 left-4 flex gap-2">
+                                {['{Name}', '{BusinessName}', '{Points}'].map(variable => (
+                                    <button
+                                        key={variable}
+                                        type="button"
+                                        onClick={() => setCustomContent(prev => prev + variable)}
+                                        className="px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-black hover:bg-primary-hover transition-all shadow-md active:scale-95"
+                                    >
+                                        + {variable.replace(/{|}/g, '')}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     </div>
                     <p className="text-[10px] text-text-secondary mt-2 text-right font-medium uppercase tracking-tighter">
@@ -292,9 +365,23 @@ export default function MessageBuilder({ defaultChannel = 'SMS' }: MessageBuilde
                     <span className="font-mono font-bold text-text-main">{totalCost.toLocaleString()} {wallet.currency}</span>
                 </div>
                 <div className="pt-2">
-                    <label className="text-[10px] font-black uppercase text-text-secondary block mb-3 ml-1 tracking-widest">Message Preview</label>
-                    <div className="flex justify-center">
-                        <PhonePreview channel={channel} content={customContent} />
+                    <div className="flex items-center justify-between mb-3 px-1">
+                        <label className="text-[10px] font-black uppercase text-text-secondary tracking-widest">Message Preview</label>
+                        <button
+                            onClick={() => setIsLiveEdit(!isLiveEdit)}
+                            className={`text-[10px] font-black uppercase px-3 py-1 rounded-full border-2 transition-all ${isLiveEdit ? 'bg-primary text-white border-primary shadow-lg shadow-primary/20' : 'bg-white text-text-secondary border-gray-100'
+                                }`}
+                        >
+                            {isLiveEdit ? 'Finish Editing' : 'Live Edit Preview'}
+                        </button>
+                    </div>
+                    <div className="flex justify-center py-4 bg-white rounded-3xl border border-gray-100 shadow-inner">
+                        <PhonePreview
+                            channel={channel}
+                            content={customContent}
+                            isEditable={isLiveEdit}
+                            onContentChange={setCustomContent}
+                        />
                     </div>
                 </div>
             </div>

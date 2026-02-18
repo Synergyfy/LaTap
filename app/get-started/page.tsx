@@ -30,6 +30,8 @@ export default function GetStarted() {
         whatsappNumber: '',
         officialEmail: '',
         businessNumber: '',
+        businessAddress: '',
+        businessWebsite: '',
         goals: [] as string[],
         serialNumber: '',
         otp: '',
@@ -40,19 +42,25 @@ export default function GetStarted() {
     const goals = ['Capture Leads', 'Automated Rewards', 'Customer Feedback', 'Digital Loyalty'];
 
     const nextStep = () => {
-        if (step === 3 && subStep < 8) {
+        if (step === 3 && subStep < 9) {
             setSubStep(prev => prev + 1);
+        } else if (step === 3 && subStep === 9) {
+            setStep(5); // Skip Step 4 (Objectives)
+            setSubStep(1);
         } else {
             setStep(prev => prev + 1);
             setSubStep(1);
         }
     };
     const prevStep = () => {
-        if (step === 3 && subStep > 1) {
+        if (step === 5) {
+            setStep(3);
+            setSubStep(9);
+        } else if (step === 3 && subStep > 1) {
             setSubStep(prev => prev - 1);
         } else {
             setStep(prev => prev - 1);
-            if (step === 4) setSubStep(8);
+            if (step === 4) setSubStep(9);
         }
     };
 
@@ -93,11 +101,11 @@ export default function GetStarted() {
                     <div className="max-w-md w-full mx-auto lg:mx-0">
                         {/* Progress Bar */}
                         <div className="flex gap-1.5 mb-12">
-                            {[1, 2, 3, 4, 5, 6].map(s => {
+                            {[1, 2, 3, 5, 6].map(s => {
                                 let progress = 0;
                                 if (step > s) progress = 100;
                                 else if (step === s) {
-                                    if (step === 3) progress = (subStep / 8) * 100;
+                                    if (step === 3) progress = (subStep / 9) * 100;
                                     else progress = 100;
                                 }
                                 return (
@@ -276,14 +284,8 @@ export default function GetStarted() {
                                 >
                                     <div>
                                         <h1 className="text-2xl font-display font-bold text-text-main mb-2 leading-tight tracking-tight">
-                                            {subStep === 1 && "What's the name of your space?"}
-                                            {subStep === 2 && "Add your brand's face"}
-                                            {subStep === 3 && "What describes you best?"}
-                                            {subStep === 4 && "What kind of space is it?"}
-                                            {subStep === 5 && "WhatsApp & Official Email"}
-                                            {subStep === 6 && "Reach you at Business Number"}
-                                            {subStep === 7 && "How many visitors do you see?"}
                                             {subStep === 8 && "What are your goals?"}
+                                            {subStep === 9 && "Vital Business Info"}
                                         </h1>
                                         <p className="text-[13px] text-text-secondary font-medium leading-relaxed">
                                             {subStep === 1 && "Start with the name customers know you by."}
@@ -294,6 +296,7 @@ export default function GetStarted() {
                                             {subStep === 6 && "The primary number for your business operations."}
                                             {subStep === 7 && "This helps us optimize your experience for your footfall volume."}
                                             {subStep === 8 && "Tell us what you want to achieve with VemTap."}
+                                            {subStep === 9 && "Adding your address and website helps us localize your profile."}
                                         </p>
                                     </div>
 
@@ -461,6 +464,7 @@ export default function GetStarted() {
                                                     {goals.map(goal => (
                                                         <button
                                                             key={goal}
+                                                            type="button"
                                                             onClick={() => {
                                                                 const newGoals = formData.goals.includes(goal)
                                                                     ? formData.goals.filter(g => g !== goal)
@@ -477,6 +481,37 @@ export default function GetStarted() {
                                             </motion.div>
                                         )}
 
+                                        {subStep === 9 && (
+                                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+                                                <div className="space-y-1.5">
+                                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Business Address</label>
+                                                    <div className="relative">
+                                                        <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">location_on</span>
+                                                        <input
+                                                            type="text"
+                                                            placeholder="123 Business Ave, Lagos, Nigeria"
+                                                            className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
+                                                            value={formData.businessAddress}
+                                                            onChange={(e) => setFormData({ ...formData, businessAddress: e.target.value })}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-1.5">
+                                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Business Website</label>
+                                                    <div className="relative">
+                                                        <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">language</span>
+                                                        <input
+                                                            type="url"
+                                                            placeholder="https://www.yourbusiness.com"
+                                                            className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
+                                                            value={formData.businessWebsite}
+                                                            onChange={(e) => setFormData({ ...formData, businessWebsite: e.target.value })}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        )}
+
                                         <div className="flex gap-4 pt-4">
                                             <button onClick={prevStep} className="h-12 px-8 border border-gray-100 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm">Back</button>
                                             <button
@@ -488,61 +523,18 @@ export default function GetStarted() {
                                                     (subStep === 5 && (!formData.whatsappNumber || !formData.officialEmail)) ||
                                                     (subStep === 6 && !formData.businessNumber) ||
                                                     (subStep === 7 && !formData.visitors) ||
-                                                    (subStep === 8 && formData.goals.length === 0)
+                                                    (subStep === 8 && formData.goals.length === 0) ||
+                                                    (subStep === 9 && (!formData.businessAddress || !formData.businessWebsite))
                                                 }
                                                 className="flex-1 h-12 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all text-sm disabled:opacity-50"
                                             >
-                                                {subStep === 8 ? "Save & Continue" : "Next Question"}
+                                                {subStep === 9 ? "Review Your Application" : "Next Question"}
                                             </button>
                                         </div>
                                     </div>
                                 </motion.div>
                             )}
 
-                            {step === 4 && (
-                                <motion.div
-                                    key="step4"
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: 20 }}
-                                    className="space-y-8"
-                                >
-                                    <div>
-                                        <h1 className="text-2xl font-display font-bold text-text-main mb-2 leading-tight tracking-tight">Select your objectives</h1>
-                                        <p className="text-[13px] text-text-secondary font-medium leading-relaxed">Choose one or more things you'd like to achieve with VemTap.</p>
-                                    </div>
-
-                                    <div className="grid grid-cols-1 gap-3">
-                                        {goals.map(g => (
-                                            <button
-                                                key={g}
-                                                onClick={() => {
-                                                    const newGoals = formData.goals.includes(g)
-                                                        ? formData.goals.filter(item => item !== g)
-                                                        : [...formData.goals, g];
-                                                    setFormData({ ...formData, goals: newGoals });
-                                                }}
-                                                className={`w-full p-5 rounded-2xl border flex items-center justify-between transition-all ${formData.goals.includes(g) ? 'bg-primary/5 border-primary/20' : 'bg-gray-50 border-gray-100 hover:border-gray-200'}`}
-                                            >
-                                                <span className={`text-sm font-bold ${formData.goals.includes(g) ? 'text-primary' : 'text-text-main'}`}>{g}</span>
-                                                {formData.goals.includes(g) && <span className="material-icons-round text-primary">check_circle</span>}
-                                            </button>
-                                        ))}
-                                    </div>
-
-                                    <div className="flex gap-4 pt-4">
-                                        <button onClick={prevStep} className="h-12 px-8 border border-gray-100 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm">Back</button>
-                                        <button
-                                            onClick={nextStep}
-                                            disabled={formData.goals.length === 0}
-                                            className="flex-1 h-12 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all text-sm flex items-center justify-center gap-2 disabled:opacity-50"
-                                        >
-                                            Continue to Review
-                                            <span className="material-icons-round text-lg">arrow_forward</span>
-                                        </button>
-                                    </div>
-                                </motion.div>
-                            )}
 
                             {step === 5 && (
                                 <motion.div

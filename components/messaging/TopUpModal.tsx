@@ -20,7 +20,7 @@ const POINT_PACKS = [
 
 export default function TopUpModal({ isOpen, onClose, targetChannel = 'WhatsApp' }: TopUpModalProps) {
     const { addRecharge } = useMessagingStore();
-    const [selectedChannel, setSelectedChannel] = useState<MessageChannel>(targetChannel);
+    const selectedChannel = targetChannel;
     const [selectedPack, setSelectedPack] = useState(1);
 
     const handlePurchase = () => {
@@ -46,7 +46,7 @@ export default function TopUpModal({ isOpen, onClose, targetChannel = 'WhatsApp'
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        className="relative w-full max-w-xl bg-white rounded-[2.5rem] shadow-2xl overflow-hidden"
+                        className="relative w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl overflow-hidden"
                     >
                         <div className="p-8 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
                             <div className="flex items-center gap-4">
@@ -67,23 +67,9 @@ export default function TopUpModal({ isOpen, onClose, targetChannel = 'WhatsApp'
                         </div>
 
                         <div className="p-8 space-y-6">
-                            <div className="grid grid-cols-3 gap-2 p-1 bg-gray-50 rounded-2xl border border-gray-100">
-                                {(['SMS', 'WhatsApp', 'Email'] as MessageChannel[]).map((c) => (
-                                    <button
-                                        key={c}
-                                        onClick={() => setSelectedChannel(c)}
-                                        className={`py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${selectedChannel === c
-                                            ? 'bg-white text-primary shadow-sm border border-gray-100'
-                                            : 'text-text-secondary hover:text-text-main'
-                                            }`}
-                                    >
-                                        {c}
-                                    </button>
-                                ))}
-                            </div>
 
-                            <p className="text-sm text-text-secondary text-center max-w-sm mx-auto">
-                                Points can be used across WhatsApp, SMS, and Email channels. Higher packs include bonus points.
+                             <p className="text-sm text-text-secondary text-center max-w-sm mx-auto">
+                                Points are dedicated to your <span className="text-primary font-black uppercase">{selectedChannel}</span> channel and cannot be transferred.
                             </p>
 
                             <div className="grid grid-cols-1 gap-4">
