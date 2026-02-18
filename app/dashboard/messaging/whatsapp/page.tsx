@@ -8,7 +8,8 @@ import { MessageSquare, Phone, Mail, LayoutDashboard, Wallet, CreditCard, Send, 
 import { motion } from 'framer-motion';
 
 export default function WhatsAppOverviewPage() {
-    const { wallet, stats } = useMessagingStore();
+    const { wallets, stats } = useMessagingStore();
+    const wallet = wallets.WhatsApp;
 
     const channelStats = [
         { label: 'Messages Sent', value: '842', icon: Send, color: 'text-blue-600', bg: 'bg-blue-50' },

@@ -7,7 +7,8 @@ import { Wallet, Plus, ArrowUpRight, Clock, Star } from 'lucide-react';
 import TopUpModal from '@/components/messaging/TopUpModal';
 
 export default function WhatsAppTopUpPage() {
-    const { wallet } = useMessagingStore();
+    const { wallets } = useMessagingStore();
+    const wallet = wallets.WhatsApp;
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (

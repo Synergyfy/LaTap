@@ -29,12 +29,12 @@ export const messagingApi = {
         const store = useMessagingStore.getState();
         const cost = channel === 'SMS' ? 2.5 : channel === 'WhatsApp' ? 4.0 : 0.5;
         
-        if (store.wallet.credits < cost) {
+        if (store.wallets[channel].credits < cost) {
             throw new Error('Insufficient credits');
         }
 
         // 2. Deduct Credits
-        store.deductCredits(cost);
+        store.deductCredits(channel, cost);
 
         // 3. Create Message
         const newMessage: Message = {
@@ -98,11 +98,11 @@ export const messagingApi = {
          const costPerMsg = channel === 'SMS' ? 2.5 : channel === 'WhatsApp' ? 4.0 : 0.5;
          const totalCost = costPerMsg * audienceSize;
  
-         if (store.wallet.credits < totalCost) {
-             throw new Error(`Insufficient credits. Need ${totalCost}, have ${store.wallet.credits}`);
+         if (store.wallets[channel].credits < totalCost) {
+             throw new Error(`Insufficient credits. Need ${totalCost}, have ${store.wallets[channel].credits}`);
          }
  
-         store.deductCredits(totalCost);
+         store.deductCredits(channel, totalCost);
          
          // Log the Broadcast internally
          const broadcastId = `brd_${Date.now()}`;
