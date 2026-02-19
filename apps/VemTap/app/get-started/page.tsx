@@ -8,6 +8,8 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import Logo from '@/components/brand/Logo';
+import { SanitizedInput } from '@/components/ui/SanitizedInput';
+import { sanitizeFormData } from '@/lib/utils/sanitize';
 
 export default function GetStarted() {
     const router = useRouter();
@@ -67,13 +69,15 @@ export default function GetStarted() {
     const handleFinalize = async () => {
         setIsLoading(true);
         try {
+            // Sanitize all form data before submission
+            const cleanData = sanitizeFormData(formData);
             const userData = {
-                email: formData.email,
-                name: `${formData.firstName} ${formData.lastName}`,
-                role: formData.role.toLowerCase() as any,
-                businessName: formData.businessName,
-                businessLogo: formData.businessLogo,
-                businessGoals: formData.goals,
+                email: cleanData.email,
+                name: `${cleanData.firstName} ${cleanData.lastName}`,
+                role: cleanData.role.toLowerCase() as any,
+                businessName: cleanData.businessName,
+                businessLogo: cleanData.businessLogo,
+                businessGoals: cleanData.goals,
                 businessId: 'new_' + Math.random().toString(36).substr(2, 6)
             };
 
@@ -135,79 +139,56 @@ export default function GetStarted() {
 
                                     <div className="space-y-5">
                                         <div className="grid grid-cols-2 gap-4">
-                                            <div className="space-y-1.5">
-                                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">First Name</label>
-                                                <div className="relative">
-                                                    <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">person</span>
-                                                    <input
-                                                        type="text"
-                                                        placeholder="Daniel"
-                                                        className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
-                                                        value={formData.firstName}
-                                                        onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="space-y-1.5">
-                                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Last Name</label>
-                                                <div className="relative">
-                                                    <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">person</span>
-                                                    <input
-                                                        type="text"
-                                                        placeholder="Smith"
-                                                        className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
-                                                        value={formData.lastName}
-                                                        onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                                                    />
-                                                </div>
-                                            </div>
+                                            <SanitizedInput
+                                                label="First Name"
+                                                value={formData.firstName}
+                                                onChange={(v) => setFormData({ ...formData, firstName: v })}
+                                                icon="person"
+                                                placeholder="Daniel"
+                                                required
+                                                tooltip="Your legal first name as it will appear on your account"
+                                            />
+                                            <SanitizedInput
+                                                label="Last Name"
+                                                value={formData.lastName}
+                                                onChange={(v) => setFormData({ ...formData, lastName: v })}
+                                                icon="person"
+                                                placeholder="Smith"
+                                                required
+                                                tooltip="Your legal last name"
+                                            />
                                         </div>
-                                        <div className="space-y-1.5">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Business Email</label>
-                                            <div className="relative">
-                                                <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">mail</span>
-                                                <input
-                                                    type="email"
-                                                    placeholder="daniel@company.com"
-                                                    className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
-                                                    value={formData.email}
-                                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                                />
-                                            </div>
-                                        </div>
+                                        <SanitizedInput
+                                            label="Business Email"
+                                            type="email"
+                                            value={formData.email}
+                                            onChange={(v) => setFormData({ ...formData, email: v })}
+                                            icon="mail"
+                                            placeholder="daniel@company.com"
+                                            required
+                                            tooltip="We'll send verification codes and account updates to this email"
+                                        />
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div className="space-y-1.5">
-                                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Password</label>
-                                                <div className="relative">
-                                                    <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">lock</span>
-                                                    <input
-                                                        type={showPassword ? "text" : "password"}
-                                                        placeholder="••••••••"
-                                                        className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-12 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
-                                                        value={formData.password}
-                                                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                                    />
-                                                    <button
-                                                        onClick={() => setShowPassword(!showPassword)}
-                                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary transition-colors"
-                                                    >
-                                                        <span className="material-icons-round text-lg">{showPassword ? 'visibility_off' : 'visibility'}</span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div className="space-y-1.5">
-                                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Confirm</label>
-                                                <div className="relative">
-                                                    <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">lock_reset</span>
-                                                    <input
-                                                        type={showPassword ? "text" : "password"}
-                                                        placeholder="••••••••"
-                                                        className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
-                                                        value={formData.confirmPassword}
-                                                        onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                                                    />
-                                                </div>
-                                            </div>
+                                            <SanitizedInput
+                                                label="Password"
+                                                type="password"
+                                                value={formData.password}
+                                                onChange={(v) => setFormData({ ...formData, password: v })}
+                                                icon="lock"
+                                                placeholder="••••••••"
+                                                required
+                                                tooltip="Min 8 characters with at least one number and symbol"
+                                            />
+                                            <SanitizedInput
+                                                label="Confirm Password"
+                                                type="password"
+                                                value={formData.confirmPassword}
+                                                onChange={(v) => setFormData({ ...formData, confirmPassword: v })}
+                                                icon="lock_reset"
+                                                placeholder="••••••••"
+                                                required
+                                                tooltip="Re-enter your password to confirm"
+                                            />
                                         </div>
 
                                         <div className="flex items-start gap-3 mt-4">
@@ -302,18 +283,16 @@ export default function GetStarted() {
 
                                     <div className="space-y-6">
                                         {subStep === 1 && (
-                                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-1.5">
-                                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Business Name</label>
-                                                <div className="relative">
-                                                    <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">storefront</span>
-                                                    <input
-                                                        type="text"
-                                                        placeholder="Green Terrace Cafe"
-                                                        className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
-                                                        value={formData.businessName}
-                                                        onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
-                                                    />
-                                                </div>
+                                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+                                                <SanitizedInput
+                                                    label="Business Name"
+                                                    value={formData.businessName}
+                                                    onChange={(v) => setFormData({ ...formData, businessName: v })}
+                                                    icon="storefront"
+                                                    placeholder="Green Terrace Cafe"
+                                                    required
+                                                    tooltip="The name customers know your business by — shown on your NFC tags and dashboard"
+                                                />
                                             </motion.div>
                                         )}
 
@@ -394,48 +373,41 @@ export default function GetStarted() {
 
                                         {subStep === 5 && (
                                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
-                                                <div className="space-y-1.5">
-                                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">WhatsApp Number</label>
-                                                    <div className="relative">
-                                                        <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">message</span>
-                                                        <input
-                                                            type="tel"
-                                                            placeholder="+234 801 234 5678"
-                                                            className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
-                                                            value={formData.whatsappNumber}
-                                                            onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <div className="space-y-1.5">
-                                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Official Email</label>
-                                                    <div className="relative">
-                                                        <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">alternate_email</span>
-                                                        <input
-                                                            type="email"
-                                                            placeholder="hello@business.com"
-                                                            className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
-                                                            value={formData.officialEmail}
-                                                            onChange={(e) => setFormData({ ...formData, officialEmail: e.target.value })}
-                                                        />
-                                                    </div>
-                                                </div>
+                                                <SanitizedInput
+                                                    label="WhatsApp Number"
+                                                    type="tel"
+                                                    value={formData.whatsappNumber}
+                                                    onChange={(v) => setFormData({ ...formData, whatsappNumber: v })}
+                                                    icon="message"
+                                                    placeholder="+234 801 234 5678"
+                                                    required
+                                                    tooltip="Used for WhatsApp campaign delivery and customer support"
+                                                />
+                                                <SanitizedInput
+                                                    label="Official Email"
+                                                    type="email"
+                                                    value={formData.officialEmail}
+                                                    onChange={(v) => setFormData({ ...formData, officialEmail: v })}
+                                                    icon="alternate_email"
+                                                    placeholder="hello@business.com"
+                                                    required
+                                                    tooltip="Public-facing email for customer communications and campaigns"
+                                                />
                                             </motion.div>
                                         )}
 
                                         {subStep === 6 && (
-                                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-1.5">
-                                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Business Phone Number</label>
-                                                <div className="relative">
-                                                    <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">phone</span>
-                                                    <input
-                                                        type="tel"
-                                                        placeholder="+234 801 234 5678"
-                                                        className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
-                                                        value={formData.businessNumber}
-                                                        onChange={(e) => setFormData({ ...formData, businessNumber: e.target.value })}
-                                                    />
-                                                </div>
+                                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+                                                <SanitizedInput
+                                                    label="Business Phone Number"
+                                                    type="tel"
+                                                    value={formData.businessNumber}
+                                                    onChange={(v) => setFormData({ ...formData, businessNumber: v })}
+                                                    icon="phone"
+                                                    placeholder="+234 801 234 5678"
+                                                    required
+                                                    tooltip="Primary phone number for your business operations"
+                                                />
                                             </motion.div>
                                         )}
 
@@ -483,32 +455,25 @@ export default function GetStarted() {
 
                                         {subStep === 9 && (
                                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
-                                                <div className="space-y-1.5">
-                                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Business Address</label>
-                                                    <div className="relative">
-                                                        <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">location_on</span>
-                                                        <input
-                                                            type="text"
-                                                            placeholder="123 Business Ave, Lagos, Nigeria"
-                                                            className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
-                                                            value={formData.businessAddress}
-                                                            onChange={(e) => setFormData({ ...formData, businessAddress: e.target.value })}
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <div className="space-y-1.5">
-                                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Business Website</label>
-                                                    <div className="relative">
-                                                        <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">language</span>
-                                                        <input
-                                                            type="url"
-                                                            placeholder="https://www.yourbusiness.com"
-                                                            className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
-                                                            value={formData.businessWebsite}
-                                                            onChange={(e) => setFormData({ ...formData, businessWebsite: e.target.value })}
-                                                        />
-                                                    </div>
-                                                </div>
+                                                <SanitizedInput
+                                                    label="Business Address"
+                                                    value={formData.businessAddress}
+                                                    onChange={(v) => setFormData({ ...formData, businessAddress: v })}
+                                                    icon="location_on"
+                                                    placeholder="123 Business Ave, Lagos, Nigeria"
+                                                    required
+                                                    tooltip="Physical location of your business — helps localize your customer profile"
+                                                />
+                                                <SanitizedInput
+                                                    label="Business Website"
+                                                    type="url"
+                                                    value={formData.businessWebsite}
+                                                    onChange={(v) => setFormData({ ...formData, businessWebsite: v })}
+                                                    icon="language"
+                                                    placeholder="https://www.yourbusiness.com"
+                                                    required
+                                                    tooltip="Your website URL — included in customer-facing messages and NFC tags"
+                                                />
                                             </motion.div>
                                         )}
 

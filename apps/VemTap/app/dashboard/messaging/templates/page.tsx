@@ -32,7 +32,6 @@ export default function TemplatesPage() {
                 name: '',
                 content: '',
                 channel: 'SMS',
-                category: 'Marketing',
                 status: 'pending'
             });
         }
@@ -45,12 +44,18 @@ export default function TemplatesPage() {
             return;
         }
 
-        const template = templates.find(t => t.id === editingTemplate.id);
-        if (template) {
+        const existing = templates.find(t => t.id === editingTemplate.id);
+        if (existing) {
             updateTemplate(editingTemplate.id!, editingTemplate);
             toast.success('Template updated');
         } else {
-            addTemplate(editingTemplate as Template);
+            addTemplate({
+                id: editingTemplate.id || Math.random().toString(36).substr(2, 9),
+                name: editingTemplate.name!,
+                content: editingTemplate.content!,
+                channel: (editingTemplate.channel as MessageChannel) || 'SMS',
+                status: 'approved'
+            });
             toast.success('Template created');
         }
         setIsModalOpen(false);
@@ -167,7 +172,7 @@ export default function TemplatesPage() {
                                         />
                                     </div>
 
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 gap-4">
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Channel</label>
                                             <select
@@ -178,18 +183,6 @@ export default function TemplatesPage() {
                                                 <option value="WhatsApp">WhatsApp</option>
                                                 <option value="SMS">SMS</option>
                                                 <option value="Email">Email</option>
-                                            </select>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Category</label>
-                                            <select
-                                                value={editingTemplate?.category || 'Marketing'}
-                                                onChange={(e) => setEditingTemplate(prev => ({ ...prev, category: e.target.value as any }))}
-                                                className="w-full h-12 px-4 bg-slate-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-xl transition-all font-bold outline-none"
-                                            >
-                                                <option value="Marketing">Marketing</option>
-                                                <option value="Utility">Utility</option>
-                                                <option value="Auth">Auth</option>
                                             </select>
                                         </div>
                                     </div>

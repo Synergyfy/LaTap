@@ -14,6 +14,7 @@ export default function Pricing() {
     const router = useRouter();
     const { user, subscribe, isAuthenticated } = useAuthStore();
     const [checkoutPlan, setCheckoutPlan] = useState<any>(null);
+    const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly' | 'quarterly'>('monthly');
 
     const { data: plans = [], isLoading } = useQuery({
         queryKey: ['subscription-plans'],
@@ -44,54 +45,100 @@ export default function Pricing() {
     const mainPlans = plans.filter(plan => plan.id !== 'white-label');
     const enterprisePlan = plans.find(plan => plan.id === 'white-label');
 
+    const formatPrice = (priceStr: string, cycle: string) => {
+        if (priceStr === 'Custom') return priceStr;
+        const basePrice = parseInt(priceStr.replace(/[^0-9]/g, ''));
+        if (isNaN(basePrice)) return priceStr;
+
+        let finalPrice = basePrice;
+        let period = '/mo';
+
+        if (cycle === 'yearly') {
+            finalPrice = Math.floor((basePrice * 12) * 0.8); // 20% discount
+            period = '/yr';
+        } else if (cycle === 'quarterly') {
+            finalPrice = Math.floor((basePrice * 3) * 0.9); // 10% discount
+            period = '/qt';
+        }
+
+        return `₦${finalPrice.toLocaleString()}`;
+    };
+
     return (
         <section id="pricing" className="py-20 bg-white overflow-hidden relative border-t border-gray-100">
             <div className="max-w-7xl mx-auto px-6 sm:px-10 py-16">
-                <div className="text-center max-w-2xl mx-auto mb-12">
+                <div className="text-center max-w-2xl mx-auto mb-10">
                     <h2 className="text-3xl md:text-5xl font-display font-bold text-text-main mb-3">Enterprise-Grade <span className="text-primary italic">Licensing</span></h2>
                     <p className="text-base text-text-secondary font-medium">Clear pricing with no hidden fees.</p>
                 </div>
 
+                {/* Billing Toggle */}
+                <div className="flex justify-center mb-12">
+                    <div className="bg-gray-100 p-1 rounded-2xl flex items-center gap-1">
+                        {(['monthly', 'quarterly', 'yearly'] as const).map((cycle) => (
+                            <button
+                                key={cycle}
+                                onClick={() => setBillingCycle(cycle)}
+                                className={`
+                                    px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all
+                                    ${billingCycle === cycle
+                                        ? 'bg-white text-primary shadow-sm scale-105'
+                                        : 'text-text-secondary hover:text-text-main'
+                                    }
+                                `}
+                            >
+                                {cycle}
+                                {cycle === 'yearly' && <span className="ml-2 bg-green-500 text-white text-[8px] px-1.5 py-0.5 rounded-full">-20%</span>}
+                                {cycle === 'quarterly' && <span className="ml-2 bg-blue-500 text-white text-[8px] px-1.5 py-0.5 rounded-full">-10%</span>}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
                 {/* Pricing Cards Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                     {mainPlans.map((plan, index) => {
                         const highlight = plan.isPopular;
                         const isCurrentPlan = user?.planId === plan.id;
+                        const displayPrice = formatPrice(plan.price, billingCycle);
+                        const displayPeriod = billingCycle === 'monthly' ? '/mo' : billingCycle === 'yearly' ? '/yr' : '/qt';
 
                         return (
                             <div
                                 key={index}
                                 className={`
-                                    relative flex flex-col p-5 rounded-2xl transition-all duration-300
+                                    relative flex flex-col p-6 rounded-[2.5rem] transition-all duration-300
                                     ${highlight
-                                        ? 'bg-primary shadow-xl shadow-primary/20 text-white z-10 border-2 border-white/10'
-                                        : 'bg-white border border-gray-100 shadow-lg hover:shadow-xl'
+                                        ? 'bg-primary shadow-2xl shadow-primary/20 text-white z-10 border-2 border-white/10 scale-105'
+                                        : 'bg-white border border-gray-100 shadow-xl hover:shadow-2xl'
                                     }
                                 `}
                             >
                                 {highlight && (
-                                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white text-primary text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-sm">
+                                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-white text-primary text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
                                         Most Popular
                                     </div>
                                 )}
-                                <div className="mb-4">
-                                    <h3 className={`text-lg font-display font-bold mb-1 ${highlight ? 'text-white' : 'text-text-main'}`}>
+                                <div className="mb-6">
+                                    <h3 className={`text-xl font-display font-bold mb-2 ${highlight ? 'text-white' : 'text-text-main'}`}>
                                         {plan.name}
                                     </h3>
-                                    <p className={`text-xs font-medium ${highlight ? 'text-white/80' : 'text-text-secondary'}`}>
+                                    <p className={`text-sm font-medium ${highlight ? 'text-white/80' : 'text-text-secondary'}`}>
                                         {plan.description}
                                     </p>
                                 </div>
-                                <div className="mb-4">
-                                    <span className="text-3xl font-display font-bold">{plan.price}</span>
-                                    <span className={`text-xs font-medium ml-1 ${highlight ? 'text-white/70' : 'text-text-secondary'}`}>
-                                        {plan.period}
-                                    </span>
+                                <div className="mb-8">
+                                    <span className="text-4xl font-display font-bold">{displayPrice}</span>
+                                    {plan.id !== 'free' && (
+                                        <span className={`text-sm font-bold ml-2 ${highlight ? 'text-white/70' : 'text-text-secondary dark:opacity-60'}`}>
+                                            {displayPeriod}
+                                        </span>
+                                    )}
                                 </div>
-                                <ul className="space-y-2 mb-6 flex-1">
-                                    {plan.features.slice(0, 4).map((feature, fIndex) => (
-                                        <li key={fIndex} className="flex items-start gap-2 text-[10px] font-medium leading-tight">
-                                            <CheckCircle2 className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${highlight ? 'text-white' : 'text-primary'}`} />
+                                <ul className="space-y-4 mb-8 flex-1">
+                                    {plan.features.map((feature, fIndex) => (
+                                        <li key={fIndex} className="flex items-start gap-3 text-xs font-semibold leading-relaxed">
+                                            <CheckCircle2 className={`w-4 h-4 mt-0.5 shrink-0 ${highlight ? 'text-white' : 'text-primary'}`} />
                                             <span className={highlight ? 'text-white/90' : 'text-text-secondary'}>
                                                 {feature}
                                             </span>
@@ -101,16 +148,15 @@ export default function Pricing() {
 
                                 <button
                                     onClick={() => handleSubscription(plan)}
-                                    // Subscription logic kept, but display logic updated
                                     className={`
-                                        w-full py-2.5 rounded-lg text-xs font-bold text-center transition-all cursor-pointer
+                                        w-full py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center transition-all cursor-pointer shadow-lg active:scale-[0.98]
                                         ${highlight
-                                            ? 'bg-white text-primary hover:bg-gray-50 shadow-lg shadow-white/10'
-                                            : 'bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/10'
+                                            ? 'bg-white text-primary hover:bg-gray-50 shadow-white/10'
+                                            : 'bg-primary text-white hover:bg-primary-hover shadow-primary/20'
                                         }
                                     `}
                                 >
-                                    {plan.id === 'free' ? 'Get Started' : 'Subscribe'}
+                                    {plan.id === 'free' ? 'Get Started' : isCurrentPlan ? 'Manage Sub' : 'Select Plan'}
                                 </button>
                             </div>
                         );

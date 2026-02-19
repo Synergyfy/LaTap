@@ -112,11 +112,9 @@ export default function DashboardSidebar({ children }: SidebarProps) {
             icon: Nfc,
             roles: ['owner', 'manager', 'staff'],
             submenu: [
-                { label: 'Device Overview', href: '/dashboard/devices' },
-                { label: 'NFC Scan', href: '/dashboard/devices/nfc/scan' },
-                { label: 'NFC History', href: '/dashboard/devices/nfc/history' },
-                { label: 'Manage NFC', href: '/dashboard/devices/nfc/manage' },
-                { label: 'Settings', href: '/dashboard/settings/devices' },
+                { label: 'Asset List', href: '/dashboard/devices' },
+                { label: 'Manage NFC', href: '/dashboard/nfc-manager' },
+                { label: 'Real-time Stats', href: '/dashboard/devices/stats' },
             ]
         },
         {
@@ -159,7 +157,6 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                     ]
                 },
                 { label: 'Message History', href: '/dashboard/messaging/history' },
-                { label: 'Guest Preview', href: '/dashboard/messaging/preview/returning' },
             ].map(item => ({ ...item, onClick: () => setIsMobileOpen(false) }))
         },
         {
@@ -187,6 +184,8 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                 { label: 'Settings', href: '/dashboard/loyalty/settings' },
                 { label: 'Customers', href: '/dashboard/loyalty/customers' },
                 { label: 'Verify', href: '/dashboard/loyalty/verify' },
+                { label: 'New User Preview', href: '/dashboard/messaging/preview/new' },
+                { label: 'Returning Preview', href: '/dashboard/messaging/preview/returning' },
             ]
         },
         {
@@ -397,8 +396,8 @@ export default function DashboardSidebar({ children }: SidebarProps) {
 
                 {/* User Profile */}
                 <div className="border-t border-gray-200 p-4">
-                    <div className="flex items-center gap-3 mb-3">
-                        <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden border border-gray-100">
+                    <Link href="/dashboard/settings/profile" className="flex items-center gap-3 mb-3 hover:bg-gray-50 p-2 rounded-xl transition-colors group">
+                        <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden border border-gray-100 group-hover:scale-105 transition-transform">
                             {businessLogo || defaultLogo ? (
                                 <img
                                     src={businessLogo || defaultLogo.src}
@@ -411,9 +410,9 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                         </div>
                         <div className="flex-1 min-w-0">
                             <p className="text-sm font-bold text-text-main truncate">{user?.name || 'Business Owner'}</p>
-                            <p className="text-xs text-text-secondary truncate">{storeName || user?.businessName || 'Business Settings'}</p>
+                            <p className="text-xs text-text-secondary truncate">{storeName || user?.businessName || 'Business Profile'}</p>
                         </div>
-                    </div>
+                    </Link>
                     <button
                         onClick={handleLogout}
                         className="w-full py-2 px-3 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primary-hover transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20"

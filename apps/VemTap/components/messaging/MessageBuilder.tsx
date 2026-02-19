@@ -6,73 +6,114 @@ import { messagingApi } from '@/lib/api/messaging';
 import { Users, FileText, Send, CheckCircle, Smartphone, MessageSquare, Mail } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/store/useAuthStore';
+import Image from 'next/image';
 
 interface MessageBuilderProps {
+    /** When set, skip channel selection and go straight to compose */
     defaultChannel?: MessageChannel;
 }
 
 // Device-style Preview Component
-function PhonePreview({ channel, content, onContentChange, isEditable = false }: { channel: MessageChannel, content: string, onContentChange?: (val: string) => void, isEditable?: boolean }) {
+function PhonePreview({
+    channel,
+    content,
+    businessName,
+    businessLogo,
+    onContentChange,
+    isEditable = false
+}: {
+    channel: MessageChannel,
+    content: string,
+    businessName: string,
+    businessLogo?: string,
+    onContentChange?: (val: string) => void,
+    isEditable?: boolean
+}) {
     return (
-        <div className="relative w-[300px] h-[580px] bg-slate-900 rounded-[3.5rem] border-[12px] border-slate-800 shadow-2xl overflow-hidden ring-1 ring-slate-700">
+        <div className="relative w-[280px] h-[560px] bg-slate-900 rounded-[3rem] border-[10px] border-slate-800 shadow-2xl overflow-hidden ring-1 ring-slate-700 shrink-0">
             {/* Notch */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-slate-800 rounded-b-3xl z-30" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-slate-800 rounded-b-2xl z-30" />
 
             {/* Screen Content */}
-            <div className={`w-full h-full pt-12 flex flex-col relative ${channel === 'WhatsApp' ? 'bg-[#efe7de] bg-[url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png")] bg-repeat' :
-                    channel === 'Email' ? 'bg-gray-100' : 'bg-white'
+            <div className={`w-full h-full pt-10 flex flex-col relative ${channel === 'WhatsApp' ? 'bg-[#efe7de] bg-[url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png")] bg-repeat' :
+                channel === 'Email' ? 'bg-gray-100' : 'bg-white'
                 }`}>
                 {/* App Header */}
                 {channel === 'WhatsApp' ? (
-                    <div className="bg-[#075E54] p-4 text-white flex items-center gap-3 z-20">
-                        <div className="size-8 rounded-full bg-white/20 flex items-center justify-center">
-                            <Users size={16} />
+                    <div className="bg-[#075E54] p-3 text-white flex items-center gap-2 z-20">
+                        <div className="size-7 rounded-full bg-white flex items-center justify-center overflow-hidden border border-white/10 relative shadow-sm">
+                            <Image
+                                src={businessLogo || "/assets/VEMTAP_PNG.png"}
+                                alt="Logo"
+                                fill
+                                className="object-contain p-0.5 bg-white"
+                            />
                         </div>
-                        <div>
-                            <p className="text-xs font-bold leading-none">VemTap Outreach</p>
-                            <p className="text-[10px] opacity-70 mt-1">online</p>
+                        <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-1">
+                                <p className="text-[10px] font-bold leading-none truncate">{businessName}</p>
+                                <span className="material-icons text-[8px] text-[#25D366]">verified</span>
+                            </div>
+                            <p className="text-[8px] opacity-70 mt-0.5">online</p>
                         </div>
                     </div>
                 ) : channel === 'SMS' ? (
-                    <div className="p-4 border-b border-gray-100 flex flex-col items-center gap-1 z-20 bg-white/80 backdrop-blur-md">
-                        <div className="size-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-                            <Smartphone size={20} />
+                    <div className="p-3 border-b border-gray-100 flex flex-col items-center gap-1 z-20 bg-white/80 backdrop-blur-md">
+                        <div className="size-8 rounded-full bg-white flex items-center justify-center overflow-hidden border border-slate-200 relative shadow-sm">
+                            <Image
+                                src={businessLogo || "/assets/VEMTAP_PNG.png"}
+                                alt="Logo"
+                                fill
+                                className="object-contain p-1 bg-white"
+                            />
                         </div>
-                        <p className="text-[10px] font-bold text-gray-900">VemTap</p>
+                        <div className="flex items-center gap-0.5">
+                            <p className="text-[8px] font-black text-slate-900 truncate max-w-[150px] uppercase tracking-wider">{businessName}</p>
+                            <span className="material-icons text-[7px] text-primary">verified</span>
+                        </div>
                     </div>
                 ) : (
-                    <div className="p-4 bg-white border-b border-gray-200 flex items-center gap-3 z-20">
-                        <div className="size-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                            <Mail size={16} />
+                    <div className="p-3 bg-white border-b border-gray-200 flex items-center gap-2 z-20">
+                        <div className="size-7 rounded-full bg-white flex items-center justify-center overflow-hidden border border-primary/5 relative shadow-sm">
+                            <Image
+                                src={businessLogo || "/assets/VEMTAP_PNG.png"}
+                                alt="Logo"
+                                fill
+                                className="object-contain p-0.5 bg-white"
+                            />
                         </div>
-                        <div className="flex-1">
-                            <p className="text-[10px] font-black leading-none">Support @ VemTap</p>
-                            <p className="text-[8px] text-gray-400 mt-1">To: Customer</p>
+                        <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-1">
+                                <p className="text-[8px] font-black leading-none truncate">{businessName} Support</p>
+                                <span className="material-icons text-[7px] text-primary">verified</span>
+                            </div>
+                            <p className="text-[7px] text-gray-400 mt-0.5">To: Customer</p>
                         </div>
                     </div>
                 )}
 
                 {/* Message Area */}
-                <div className="flex-1 p-4 overflow-auto custom-scrollbar">
+                <div className="flex-1 p-3 overflow-auto custom-scrollbar">
                     {channel === 'Email' ? (
-                        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                            <div className="p-3 border-b border-gray-50">
-                                <p className="text-[10px] font-black text-gray-900">Exclusive Update from VemTap</p>
+                        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden transform scale-95 origin-top">
+                            <div className="p-2 border-b border-gray-50">
+                                <p className="text-[8px] font-black text-gray-900">Exclusive Update from VemTap</p>
                             </div>
-                            <div className="p-4 min-h-[100px]">
+                            <div className="p-3 min-h-[100px]">
                                 {isEditable ? (
                                     <textarea
                                         value={content}
                                         onChange={(e) => onContentChange?.(e.target.value)}
-                                        className="w-full min-h-[200px] text-xs leading-relaxed outline-none border-none bg-transparent resize-none focus:ring-0 p-0 text-gray-700"
+                                        className="w-full min-h-[150px] text-[10px] leading-relaxed outline-none border-none bg-transparent resize-none focus:ring-0 p-0 text-gray-700"
                                         placeholder="Type your email content..."
                                     />
                                 ) : (
-                                    <p className="text-xs text-gray-700 leading-relaxed whitespace-pre-wrap">{content || 'Your email content will appear here...'}</p>
+                                    <p className="text-[10px] text-gray-700 leading-relaxed whitespace-pre-wrap">{content || 'Your email content will appear here...'}</p>
                                 )}
                             </div>
-                            <div className="p-4 bg-gray-50 mt-4 text-center">
-                                <button className="px-6 py-2 bg-primary text-white text-[10px] font-bold rounded-lg pointer-events-none">
+                            <div className="p-3 bg-gray-50 mt-2 text-center">
+                                <button className="px-4 py-1.5 bg-primary text-white text-[8px] font-bold rounded-md pointer-events-none">
                                     Action Button
                                 </button>
                             </div>
@@ -80,24 +121,23 @@ function PhonePreview({ channel, content, onContentChange, isEditable = false }:
                     ) : (
                         <div className={`relative flex flex-col ${channel === 'WhatsApp' ? 'items-start' : 'items-start'}`}>
                             <div className={`
-                                max-w-[90%] p-3 rounded-2xl text-[11px] shadow-sm relative group
-                                ${channel === 'WhatsApp' ? 'bg-white rounded-tl-none' : 'bg-gray-100 rounded-tl-none text-gray-800'}
+                                max-w-[85%] p-2.5 rounded-xl text-[10px] shadow-sm relative group
+                                ${channel === 'WhatsApp' ? 'bg-[#dcf8c6] rounded-tl-none border border-[#c5e1a5]' : 'bg-gray-100 rounded-tl-none text-gray-800'}
                             `}>
                                 {isEditable ? (
                                     <textarea
                                         value={content}
                                         onChange={(e) => onContentChange?.(e.target.value)}
-                                        className="w-full bg-transparent border-none outline-none resize-none focus:ring-0 p-0 text-[11px] min-h-[60px]"
+                                        className="w-full bg-transparent border-none outline-none resize-none focus:ring-0 p-0 text-[10px] min-h-[50px]"
                                         placeholder="Type message..."
                                     />
                                 ) : (
                                     <p className="whitespace-pre-wrap">{content || 'Your message will appear here...'}</p>
                                 )}
-                                <p className="text-[8px] text-right mt-1 opacity-50 uppercase tracking-tighter">12:45</p>
+                                <p className="text-[7px] text-right mt-1 opacity-50 uppercase tracking-tighter">12:45</p>
 
-                                {/* WhatsApp Tail */}
                                 {channel === 'WhatsApp' && (
-                                    <div className="absolute top-0 -left-1.5 w-3 h-3 bg-white clip-path-whatsapp-tail" />
+                                    <div className="absolute top-0 -left-1.5 w-2 h-2 bg-[#dcf8c6] clip-path-whatsapp-tail" />
                                 )}
                             </div>
                         </div>
@@ -106,12 +146,12 @@ function PhonePreview({ channel, content, onContentChange, isEditable = false }:
 
                 {/* Input Bar Simulation */}
                 {(channel === 'WhatsApp' || channel === 'SMS') && (
-                    <div className="p-3 bg-gray-50 border-t border-gray-100 flex items-center gap-2">
-                        <div className="flex-1 h-8 bg-white border border-gray-200 rounded-full px-4 text-[10px] flex items-center text-gray-400">
-                            iMessage
+                    <div className="p-2 bg-gray-50 border-t border-gray-100 flex items-center gap-2">
+                        <div className="flex-1 h-7 bg-white border border-gray-200 rounded-full px-3 text-[8px] flex items-center text-gray-400">
+                            {channel === 'WhatsApp' ? 'Message' : 'iMessage'}
                         </div>
-                        <div className={`size-8 rounded-full flex items-center justify-center ${channel === 'WhatsApp' ? 'bg-[#128C7E]' : 'bg-primary'} text-white`}>
-                            <Send size={14} />
+                        <div className={`size-7 rounded-full flex items-center justify-center ${channel === 'WhatsApp' ? 'bg-[#128C7E]' : 'bg-primary'} text-white`}>
+                            <Send size={12} />
                         </div>
                     </div>
                 )}
@@ -119,8 +159,8 @@ function PhonePreview({ channel, content, onContentChange, isEditable = false }:
 
             {/* Editing Indicator Badge */}
             {isEditable && (
-                <div className="absolute top-20 right-4 bg-primary text-white text-[8px] font-black px-2 py-1 rounded-full shadow-lg animate-pulse z-40">
-                    LIVE EDITING ON
+                <div className="absolute top-16 right-3 bg-primary text-white text-[7px] font-black px-1.5 py-0.5 rounded-full shadow-lg animate-pulse z-40 uppercase">
+                    Preview
                 </div>
             )}
 
@@ -133,11 +173,17 @@ function PhonePreview({ channel, content, onContentChange, isEditable = false }:
     );
 }
 
-export default function MessageBuilder({ defaultChannel = 'SMS' }: MessageBuilderProps) {
+export default function MessageBuilder({ defaultChannel }: MessageBuilderProps) {
     const router = useRouter();
+    const { user } = useAuthStore();
     const { templates, wallets } = useMessagingStore();
-    const [channel, setChannel] = useState<MessageChannel>(defaultChannel);
+    const [channel, setChannel] = useState<MessageChannel>(defaultChannel || 'SMS');
     const wallet = wallets[channel];
+
+    // Business Branding Helper
+    const businessName = user?.businessName || 'Your Business';
+    const businessLogo = user?.businessLogo;
+    // If a channel was explicitly passed, skip channel selection (step 1) and go to compose (step 2)
     const [step, setStep] = useState(defaultChannel ? 2 : 1);
 
     // Form State
@@ -151,10 +197,10 @@ export default function MessageBuilder({ defaultChannel = 'SMS' }: MessageBuilde
 
     // Mock Audience count
     const getAudienceCount = () => {
-        if (audience === 'all') return 1240;
-        if (audience === 'vip') return 150;
+        if (audience === 'returning') return 850;
         if (audience === 'new') return 340;
-        return 0;
+        if (audience === 'premium') return 150;
+        return 1240; // fallback
     };
 
     const count = getAudienceCount();
@@ -217,9 +263,9 @@ export default function MessageBuilder({ defaultChannel = 'SMS' }: MessageBuilde
                     <label className="block text-xs font-bold uppercase text-text-secondary mb-3">Target Audience</label>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                         {[
-                            { id: 'all', label: 'All Contacts', sub: '(1,240)', icon: Users },
-                            { id: 'new', label: 'New Visitors', sub: '(340)', icon: Smartphone },
-                            { id: 'vip', label: 'VIP Members', sub: '(150)', icon: CheckCircle }
+                            { id: 'returning', label: 'Returning Users', sub: '(850)', icon: Users },
+                            { id: 'new', label: 'New Users', sub: '(340)', icon: Smartphone },
+                            { id: 'premium', label: 'Premium Users', sub: '(150)', icon: CheckCircle }
                         ].map(opt => (
                             <button
                                 key={opt.id}
@@ -257,59 +303,69 @@ export default function MessageBuilder({ defaultChannel = 'SMS' }: MessageBuilde
                 Compose Message
             </h3>
 
-            <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <label className="block text-[10px] font-black uppercase text-text-secondary mb-2 tracking-widest ml-1">Category</label>
-                        <select
-                            className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl font-bold text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-                            value={templateCategory}
-                            onChange={(e) => {
-                                setTemplateCategory(e.target.value);
-                                setSelectedTemplate('');
-                            }}
-                        >
-                            <option value="All">All Categories</option>
-                            <option value="Marketing">Marketing</option>
-                            <option value="Utility">Utility</option>
-                            <option value="Auth">Auth</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block text-[10px] font-black uppercase text-text-secondary mb-2 tracking-widest ml-1">Template</label>
-                        <select
-                            className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl font-bold text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-                            value={selectedTemplate}
-                            onChange={(e) => {
-                                const tplId = e.target.value;
-                                setSelectedTemplate(tplId);
-                                if (tplId) {
-                                    const tpl = templates.find(t => t.id === tplId);
-                                    if (tpl) setCustomContent(tpl.content);
-                                }
-                            }}
-                        >
-                            <option value="">Write Custom Message...</option>
-                            {templates
-                                .filter(t => (t.channel === channel || t.channel === 'Any') && (templateCategory === 'All' || t.category === templateCategory))
-                                .map(t => (
-                                    <option key={t.id} value={t.id}>{t.name}</option>
-                                ))}
-                        </select>
-                    </div>
-                </div>
+            <div className="flex flex-col lg:flex-row gap-8 items-start">
+                <div className="flex-1 space-y-6 w-full">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label className="block text-[10px] font-black uppercase text-text-secondary mb-2 tracking-widest ml-1">Template</label>
+                            <select
+                                className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl font-bold text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                                value={selectedTemplate}
+                                onChange={(e) => {
+                                    const tplId = e.target.value;
+                                    setSelectedTemplate(tplId);
+                                    if (tplId) {
+                                        const tpl = templates.find(t => t.id === tplId);
+                                        if (tpl) setCustomContent(tpl.content);
+                                    }
+                                }}
+                            >
+                                <option value="">Write Custom Message...</option>
+                                {templates
+                                    .filter(t => (t.channel === channel || t.channel === 'Any'))
+                                    .map(t => (
+                                        <option key={t.id} value={t.id}>{t.name}</option>
+                                    ))}
+                            </select>
+                        </div>
 
-                <div>
-                    <label className="block text-[10px] font-black uppercase text-text-secondary mb-2 tracking-widest ml-1">Message Content</label>
-                    <div className="relative">
-                        <textarea
-                            className="w-full h-40 p-4 bg-gray-50 border border-gray-200 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-primary/10 font-medium text-sm transition-all"
-                            placeholder="Type your message here..."
-                            value={customContent}
-                            onChange={(e) => setCustomContent(e.target.value)}
-                        />
-                        <div className="absolute bottom-4 left-4 flex gap-2">
-                            <div className="absolute bottom-4 left-4 flex gap-2">
+                        <div>
+                            <label className="block text-[10px] font-black uppercase text-text-secondary mb-2 tracking-widest ml-1">Target Audience</label>
+                            <div className="grid grid-cols-3 gap-2">
+                                {[
+                                    { id: 'returning', label: 'Returning', sub: '850', icon: Users },
+                                    { id: 'new', label: 'New', sub: '340', icon: Smartphone },
+                                    { id: 'premium', label: 'Premium', sub: '150', icon: CheckCircle }
+                                ].map(opt => (
+                                    <button
+                                        key={opt.id}
+                                        onClick={() => setAudience(opt.id)}
+                                        className={`py-2 px-1 rounded-xl border-2 transition-all text-center ${audience === opt.id
+                                            ? 'border-primary bg-primary/5'
+                                            : 'border-gray-100 bg-white hover:border-gray-200'
+                                            }`}
+                                    >
+                                        <div className="flex flex-col items-center gap-0.5">
+                                            <span className="font-bold text-[9px] text-text-main truncate w-full px-1">{opt.label}</span>
+                                            <span className="text-[8px] text-text-secondary font-black opacity-60">({opt.sub})</span>
+                                            {audience === opt.id && <div className="w-1.5 h-1.5 mt-0.5 bg-primary rounded-full" />}
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label className="block text-[10px] font-black uppercase text-text-secondary mb-2 tracking-widest ml-1">Message Content</label>
+                        <div className="relative">
+                            <textarea
+                                className="w-full h-40 p-4 bg-gray-50 border border-gray-200 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-primary/10 font-medium text-sm transition-all"
+                                placeholder={`Type your ${channel} message here...`}
+                                value={customContent}
+                                onChange={(e) => setCustomContent(e.target.value)}
+                            />
+                            <div className="absolute bottom-4 left-4 flex gap-2 flex-wrap">
                                 {['{Name}', '{BusinessName}', '{Points}'].map(variable => (
                                     <button
                                         key={variable}
@@ -322,18 +378,34 @@ export default function MessageBuilder({ defaultChannel = 'SMS' }: MessageBuilde
                                 ))}
                             </div>
                         </div>
+                        <div className="flex justify-between items-center mt-2">
+                            <p className="text-[9px] text-text-secondary font-black uppercase tracking-widest italic flex items-center gap-1">
+                                <span className="text-primary tracking-normal not-italic underline decoration-2 underline-offset-4">{businessName}</span> branding will be attached
+                            </p>
+                            <p className="text-[10px] text-text-secondary font-medium uppercase tracking-tighter">
+                                Characters: <span className="text-primary font-black">{customContent.length}</span>
+                            </p>
+                        </div>
                     </div>
-                    <p className="text-[10px] text-text-secondary mt-2 text-right font-medium uppercase tracking-tighter">
-                        Characters: <span className="text-primary font-black">{customContent.length}</span>
-                    </p>
-                </div>
-            </div>
 
-            <div className="flex justify-between pt-4">
-                <button onClick={() => setStep(1)} className="px-6 py-3 text-text-secondary hover:text-text-main font-bold">Back</button>
-                <button onClick={() => setStep(3)} className="px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover shadow-lg shadow-primary/20">
-                    Next: Review
-                </button>
+                    <div className="flex justify-between pt-4">
+                        <button onClick={() => setStep(1)} className="px-6 py-3 text-text-secondary hover:text-text-main font-bold">Back</button>
+                        <button onClick={() => setStep(3)} className="px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover shadow-lg shadow-primary/20">
+                            Next: Review
+                        </button>
+                    </div>
+                </div>
+
+                <div className="hidden lg:block sticky top-8">
+                    <label className="block text-[10px] font-black uppercase text-text-secondary mb-4 tracking-widest text-center">Live Preview</label>
+                    <PhonePreview
+                        channel={channel}
+                        content={customContent}
+                        businessName={businessName}
+                        businessLogo={businessLogo}
+                        isEditable={false}
+                    />
+                </div>
             </div>
         </div>
     );
@@ -379,6 +451,8 @@ export default function MessageBuilder({ defaultChannel = 'SMS' }: MessageBuilde
                         <PhonePreview
                             channel={channel}
                             content={customContent}
+                            businessName={businessName}
+                            businessLogo={businessLogo}
                             isEditable={isLiveEdit}
                             onContentChange={setCustomContent}
                         />
@@ -405,7 +479,7 @@ export default function MessageBuilder({ defaultChannel = 'SMS' }: MessageBuilde
     );
 
     return (
-        <div className="max-w-2xl mx-auto py-8">
+        <div className={`max-w-${step === 2 ? '5xl' : '2xl'} mx-auto py-8 px-4`}>
             {step === 1 && renderStep1()}
             {step === 2 && renderStep2()}
             {step === 3 && renderStep3()}

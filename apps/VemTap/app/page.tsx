@@ -31,6 +31,7 @@ export default function LandingPage() {
       <SolutionsPreview />
       <Team />
       <MarketplaceCTA />
+      <Pricing />
       <MobileExperience />
       <Testimonials />
       <AutomationCTA />

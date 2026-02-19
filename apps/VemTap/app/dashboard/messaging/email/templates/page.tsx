@@ -1,60 +1,218 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import PageHeader from '@/components/dashboard/PageHeader';
-import { Plus, Search, Mail, FileText, Image as ImageIcon } from 'lucide-react';
-import { motion } from 'framer-motion';
-
-const EMAIL_TEMPLATES = [
-    { id: 'em1', name: 'Monthly Newsletter', type: 'Rich HTML', lastUsed: '2 days ago', thumbnail: '📧' },
-    { id: 'em2', name: 'Customer Appreciation', type: 'Standard', lastUsed: '5 days ago', thumbnail: '🎁' },
-    { id: 'em3', name: 'Abandoned Cart', type: 'Automation', lastUsed: 'Never', thumbnail: '🛒' },
-];
+import { useMessagingStore, Template, MessageChannel } from '@/lib/store/useMessagingStore';
+import { Plus, Copy, Trash2, Edit, X, Save, Mail, Search } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function EmailTemplatesPage() {
+    const { templates, addTemplate, updateTemplate, deleteTemplate } = useMessagingStore();
+    const [searchQuery, setSearchQuery] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingTemplate, setEditingTemplate] = useState<Partial<Template> | null>(null);
+
+    const emailTemplates = templates
+        .filter(t => t.channel === 'Email' || t.channel === 'Any')
+        .filter(t =>
+            t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            t.content.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+
+    const handleCopy = (content: string) => {
+        navigator.clipboard.writeText(content);
+        toast.success('Template copied to clipboard');
+    };
+
+    const handleOpenModal = (template?: Template) => {
+        if (template) {
+            setEditingTemplate(template);
+        } else {
+            setEditingTemplate({
+                id: Math.random().toString(36).substr(2, 9),
+                name: '',
+                content: '',
+                channel: 'Email',
+                status: 'pending'
+            });
+        }
+        setIsModalOpen(true);
+    };
+
+    const handleSave = () => {
+        if (!editingTemplate?.name || !editingTemplate?.content) {
+            toast.error('Please fill in all fields');
+            return;
+        }
+
+        const existing = templates.find(t => t.id === editingTemplate.id);
+        if (existing) {
+            updateTemplate(editingTemplate.id!, editingTemplate);
+            toast.success('Template updated');
+        } else {
+            addTemplate({
+                id: editingTemplate.id || Math.random().toString(36).substr(2, 9),
+                name: editingTemplate.name!,
+                content: editingTemplate.content!,
+                channel: 'Email',
+                status: 'approved'
+            });
+            toast.success('Template created');
+        }
+        setIsModalOpen(false);
+        setEditingTemplate(null);
+    };
+
     return (
-        <div className="p-4 md:p-8 space-y-8">
+        <div className="p-4 md:p-8 space-y-6">
             <div className="flex items-center justify-between">
                 <PageHeader
-                    title="Email Designer"
+                    title="Email Templates"
                     description="Create and manage your email marketing templates."
                 />
-                <button className="h-12 px-6 bg-primary text-white font-bold rounded-xl flex items-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
+                <button
+                    onClick={() => handleOpenModal()}
+                    className="h-12 px-6 bg-primary text-white font-bold rounded-xl flex items-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all"
+                >
                     <Plus size={18} />
-                    Design New Email
+                    New Template
                 </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {EMAIL_TEMPLATES.map((tpl, i) => (
-                    <motion.div
-                        key={tpl.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.1 }}
-                        className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-all group"
-                    >
-                        <div className="h-40 bg-slate-50 flex items-center justify-center text-4xl border-b border-gray-100">
-                            {tpl.thumbnail}
-                        </div>
-                        <div className="p-6">
-                            <div className="flex items-center justify-between mb-2">
-                                <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">{tpl.type}</span>
-                                <span className="text-[10px] text-text-secondary font-medium italic">Used {tpl.lastUsed}</span>
-                            </div>
-                            <h4 className="font-bold text-text-main mb-4">{tpl.name}</h4>
-                            <div className="flex gap-2">
-                                <button className="flex-1 py-2 bg-gray-50 text-text-main text-xs font-bold rounded-lg hover:bg-gray-100 transition-all border border-gray-200">
-                                    Preview
-                                </button>
-                                <button className="flex-1 py-2 bg-primary/5 text-primary text-xs font-bold rounded-lg hover:bg-primary/10 transition-all border border-primary/20">
-                                    Edit Layout
-                                </button>
-                            </div>
-                        </div>
-                    </motion.div>
-                ))}
+            <div className="flex items-center gap-4 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
+                <div className="flex-1 relative">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                    <input
+                        type="text"
+                        placeholder="Search email templates..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full h-12 pl-12 pr-4 bg-gray-50 border border-transparent rounded-xl focus:bg-white focus:border-primary/20 outline-none transition-all text-sm font-medium"
+                    />
+                </div>
             </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {emailTemplates.map((template) => (
+                    <div key={template.id} className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between group">
+                        <div>
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-purple-100 text-purple-700">
+                                    {template.channel}
+                                </div>
+                                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button
+                                        onClick={() => handleCopy(template.content)}
+                                        className="p-1.5 text-gray-400 hover:text-primary transition-colors"
+                                        title="Copy"
+                                    >
+                                        <Copy size={16} />
+                                    </button>
+                                    <button
+                                        onClick={() => deleteTemplate(template.id)}
+                                        className="p-1.5 text-gray-400 hover:text-red-500 transition-colors"
+                                        title="Delete"
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
+                                </div>
+                            </div>
+                            <h3 className="font-bold text-text-main mb-2">{template.name}</h3>
+                            <div className="p-4 bg-purple-50 rounded-xl border border-purple-100 text-xs text-text-secondary leading-relaxed font-medium">
+                                {template.content}
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => handleOpenModal(template)}
+                            className="w-full mt-4 py-2.5 bg-gray-50 text-text-main font-bold rounded-xl hover:bg-gray-100 transition-colors text-xs flex items-center justify-center gap-2"
+                        >
+                            <Edit size={14} />
+                            Edit Template
+                        </button>
+                    </div>
+                ))}
+                {emailTemplates.length === 0 && (
+                    <div className="col-span-full py-16 text-center">
+                        <Mail size={40} className="mx-auto mb-3 text-gray-300" />
+                        <p className="text-sm font-bold text-text-secondary">No email templates yet</p>
+                        <p className="text-xs text-text-secondary mt-1">Click "New Template" to add one.</p>
+                    </div>
+                )}
+            </div>
+
+            {/* Template Modal */}
+            <AnimatePresence>
+                {isModalOpen && (
+                    <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setIsModalOpen(false)}
+                            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            className="relative w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl overflow-hidden"
+                        >
+                            <div className="p-8 border-b border-gray-100 bg-purple-50/50 flex items-center justify-between">
+                                <h3 className="text-xl font-display font-black text-slate-900 uppercase">
+                                    {templates.some(t => t.id === editingTemplate?.id) ? 'Edit Template' : 'New Email Template'}
+                                </h3>
+                                <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-white rounded-xl transition-colors">
+                                    <X size={20} />
+                                </button>
+                            </div>
+
+                            <div className="p-8 space-y-6">
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Template Name</label>
+                                    <input
+                                        type="text"
+                                        value={editingTemplate?.name || ''}
+                                        onChange={(e) => setEditingTemplate(prev => ({ ...prev, name: e.target.value }))}
+                                        placeholder="e.g. Monthly Newsletter"
+                                        className="w-full h-12 px-4 bg-slate-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-xl transition-all font-bold outline-none"
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Content</label>
+                                    <textarea
+                                        value={editingTemplate?.content || ''}
+                                        onChange={(e) => setEditingTemplate(prev => ({ ...prev, content: e.target.value }))}
+                                        placeholder="Write your email content... use {Name} for variables"
+                                        className="w-full h-32 p-4 bg-slate-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-2xl transition-all font-medium outline-none resize-none"
+                                    />
+                                    <div className="flex gap-2 mt-2">
+                                        {['{Name}', '{BusinessName}', '{Points}'].map(variable => (
+                                            <button
+                                                key={variable}
+                                                type="button"
+                                                onClick={() => setEditingTemplate(prev => ({ ...prev, content: (prev?.content || '') + variable }))}
+                                                className="px-3 py-1.5 bg-purple-50 text-purple-700 rounded-lg text-[10px] font-black hover:bg-purple-100 transition-all border border-purple-200"
+                                            >
+                                                + {variable.replace(/{|}/g, '')}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <button
+                                    onClick={handleSave}
+                                    className="w-full h-14 bg-primary text-white font-black uppercase tracking-widest text-xs rounded-2xl shadow-xl shadow-primary/20 hover:bg-primary-hover transition-all flex items-center justify-center gap-3"
+                                >
+                                    <Save size={18} />
+                                    Save Template
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

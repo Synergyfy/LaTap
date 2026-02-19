@@ -84,9 +84,13 @@ export const messagingApi = {
         return useMessagingStore.getState().templates;
     },
 
-    createTemplate: async (template: Omit<Template, 'id'>) => {
+    createTemplate: async (template: Omit<Template, 'id' | 'status'>) => {
         await delay(500);
-        const newTemplate = { ...template, id: `tpl_${Date.now()}` };
+        const newTemplate: Template = { 
+            ...template, 
+            id: `tpl_${Date.now()}`,
+            status: 'approved' 
+        };
         useMessagingStore.getState().addTemplate(newTemplate);
         return newTemplate;
     },

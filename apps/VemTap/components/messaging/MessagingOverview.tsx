@@ -50,8 +50,8 @@ export default function MessagingOverview() {
                                         <Icon size={24} />
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{channel} Balance</p>
-                                        <p className="text-xl font-mono font-bold text-slate-900">{chWallet.credits.toLocaleString()} <span className="text-xs">PTS</span></p>
+                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{channel} Status</p>
+                                        <p className="text-xl font-mono font-bold text-green-500">ACTIVE</p>
                                     </div>
                                 </div>
 
@@ -128,7 +128,7 @@ export default function MessagingOverview() {
                         <p className="text-sm text-text-secondary mb-6">Start a new message across any channel.</p>
 
                         <div className="space-y-4">
-                            <Link href="/dashboard/messaging/whatsapp/new" className="block p-4 border border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition-all group">
+                            <Link href="/dashboard/messaging/whatsapp/send" className="block p-4 border border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition-all group">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 group-hover:bg-green-500 group-hover:text-white transition-colors">
                                         <MessageSquare size={18} />
@@ -140,7 +140,7 @@ export default function MessagingOverview() {
                                 </div>
                             </Link>
 
-                            <Link href="/dashboard/messaging/sms/new" className="block p-4 border border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all group">
+                            <Link href="/dashboard/messaging/sms/send" className="block p-4 border border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all group">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 group-hover:bg-blue-500 group-hover:text-white transition-colors">
                                         <Send size={18} />
@@ -148,6 +148,18 @@ export default function MessagingOverview() {
                                     <div>
                                         <h4 className="font-bold text-text-main text-sm">SMS Alert</h4>
                                         <p className="text-xs text-text-secondary">Instant delivery & reach</p>
+                                    </div>
+                                </div>
+                            </Link>
+
+                            <Link href="/dashboard/messaging/email/send" className="block p-4 border border-gray-200 rounded-xl hover:border-purple-500 hover:bg-purple-50 transition-all group">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                                        <Mail size={18} />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold text-text-main text-sm">Email Campaign</h4>
+                                        <p className="text-xs text-text-secondary">Rich content & newsletters</p>
                                     </div>
                                 </div>
                             </Link>

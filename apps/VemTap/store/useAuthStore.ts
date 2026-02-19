@@ -13,6 +13,7 @@ interface User {
   role: UserRole;
   businessName?: string;
   businessId?: string;
+  businessLogo?: string;
   // Subscription fields
   planId?: SubscriptionPlan;
   subscriptionStatus?: SubscriptionStatus;
@@ -41,6 +42,7 @@ const MOCK_USERS: Record<string, any> = {
     role: 'owner' as UserRole,
     businessName: 'The Azure Bistro',
     businessId: 'bistro_001',
+    businessLogo: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=100&h=100&fit=crop',
     planId: 'premium',
     subscriptionStatus: 'active'
   },

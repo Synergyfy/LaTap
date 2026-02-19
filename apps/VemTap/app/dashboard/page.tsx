@@ -117,6 +117,13 @@ export default function DashboardPage() {
 
     const maxVisits = data ? Math.max(...data.activityData.map((d: any) => d.visits)) : 100;
 
+    // Computed audience breakdown
+    const totalVisitors = data?.stats?.totalVisitors || 0;
+    const repeatVisitors = data?.stats?.repeatVisitors || 0;
+    const newVisitors = data?.stats?.newVisitors || 0;
+    const returningPct = totalVisitors > 0 ? Math.round((repeatVisitors / totalVisitors) * 100) : 0;
+    const newPct = totalVisitors > 0 ? 100 - returningPct : 0;
+
     if (isLoading) {
         return (
             <div className="flex items-center justify-center p-8 h-screen">
@@ -129,165 +136,226 @@ export default function DashboardPage() {
     }
 
     return (
-        <div className="p-4 md:p-8">
+        <div className="p-4 md:p-8 space-y-6">
             {/* Page Header */}
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                        <h1 className="text-3xl font-display font-bold text-text-main">Dashboard Overview</h1>
-                    </div>
-                    <p className="text-text-secondary font-medium">Welcome back! Here's what's happening with your business today.</p>
+                    <h1 className="text-2xl font-display font-bold text-text-main mb-1">Dashboard</h1>
+                    <p className="text-sm text-text-secondary font-medium">Welcome back! Here's what's happening today.</p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-center gap-4">
-                    <div className="flex items-center gap-3">
-                        {currentPlan?.id === 'free' && (
-                            <button
-                                onClick={() => router.push('/#pricing')}
-                                className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-white bg-primary hover:bg-primary-hover rounded-lg transition-all shadow-lg shadow-primary/20"
-                            >
-                                <Zap size={14} />
-                                Upgrade
-                            </button>
-                        )}
+                <div className="flex items-center gap-3">
+                    {currentPlan?.id === 'free' && (
                         <button
-                            onClick={handleClearDashboard}
-                            disabled={clearDashboardMutation.isPending}
-                            className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors border border-red-100"
+                            onClick={() => router.push('/#pricing')}
+                            className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-white bg-primary hover:bg-primary-hover rounded-lg transition-all shadow-lg shadow-primary/20"
                         >
-                            <Trash size={16} />
-                            Reset Data
+                            <Zap size={14} />
+                            Upgrade
                         </button>
-                    </div>
+                    )}
+                    <button
+                        onClick={handleClearDashboard}
+                        disabled={clearDashboardMutation.isPending}
+                        className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors border border-red-100"
+                    >
+                        <Trash size={16} />
+                        Reset
+                    </button>
                 </div>
             </div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {/* Stats Grid — compact 4 columns */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 {stats.map((stat, index) => {
                     const IconComponent = stat.icon;
                     const TrendIcon = stat.trend === 'up' ? TrendingUp : TrendingDown;
 
                     return (
-                        <div key={index} className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow">
-                            <div className="flex items-start justify-between mb-4">
-                                <div className={`w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center`}>
-                                    <IconComponent className="text-primary" size={20} />
+                        <div key={index} className="bg-white rounded-2xl p-5 border border-gray-100 hover:shadow-md transition-shadow">
+                            <div className="flex items-center justify-between mb-3">
+                                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                    <IconComponent className="text-primary" size={18} />
                                 </div>
-                                <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${stat.trend === 'up' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
-                                    <TrendIcon size={12} />
+                                <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${stat.trend === 'up' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
+                                    <TrendIcon size={10} />
                                     {stat.change}
                                 </div>
                             </div>
-                            <p className="text-xs font-bold uppercase tracking-wider text-text-secondary mb-1">{stat.label}</p>
-                            <p className="text-3xl font-display font-bold text-text-main">{stat.value}</p>
-                            <p className="text-xs text-text-secondary mt-2">vs last month</p>
+                            <p className="text-[10px] font-bold uppercase tracking-wider text-text-secondary mb-0.5">{stat.label}</p>
+                            <p className="text-2xl font-display font-bold text-text-main">{stat.value}</p>
                         </div>
                     );
                 })}
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Visitor Activity Chart */}
-                <div className="lg:col-span-2 bg-white rounded-xl p-6 border border-gray-200">
-                    <div className="flex items-center justify-between mb-6">
-                        <div>
-                            <h2 className="text-xl font-display font-bold text-text-main mb-1">Visitor Activity</h2>
-                            <p className="text-sm text-text-secondary">Today's hourly breakdown</p>
-                        </div>
-                        <button className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-text-secondary hover:text-text-main hover:bg-gray-50 rounded-lg transition-colors">
-                            <span>This Week</span>
-                            <ChevronDown size={16} />
-                        </button>
-                    </div>
+            {/* Main Content Grid: Chart + Audience + Quick Actions */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
 
-                    {/* Simple Bar Chart */}
-                    <div className="flex items-end justify-between gap-3 h-64">
-                        {data?.activityData.map((d: any, index: number) => (
-                            <div key={index} className="flex-1 flex flex-col items-center gap-2">
-                                <div className="w-full bg-gray-100 rounded-t-lg relative" style={{ height: '100%' }}>
-                                    <div
-                                        className="absolute bottom-0 w-full bg-primary rounded-t-lg transition-all hover:bg-primary-hover cursor-pointer"
-                                        style={{ height: `${(d.visits / maxVisits) * 100}%` }}
-                                        title={`${d.visits} visits`}
-                                    ></div>
+                {/* Visitor Activity Chart — spans 7 cols */}
+                <div className="lg:col-span-7 bg-white rounded-2xl p-5 border border-gray-100">
+                    <div className="flex items-center justify-between mb-4">
+                        <div>
+                            <h2 className="text-base font-display font-bold text-text-main">Visitor Activity</h2>
+                            <p className="text-[10px] text-text-secondary">Today's hourly breakdown</p>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-3">
+                                <div className="flex items-center gap-1.5">
+                                    <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>
+                                    <span className="text-[9px] font-bold text-text-secondary uppercase">All</span>
                                 </div>
-                                <div className="text-center">
-                                    <p className="text-xs font-bold text-text-main">{d.visits}</p>
-                                    <p className="text-[10px] text-text-secondary">{d.hour}</p>
+                                <div className="flex items-center gap-1.5">
+                                    <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full"></div>
+                                    <span className="text-[9px] font-bold text-text-secondary uppercase">New</span>
                                 </div>
                             </div>
-                        ))}
+                            <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-text-secondary hover:text-text-main hover:bg-gray-50 rounded-lg transition-colors border border-gray-100">
+                                <span>This Week</span>
+                                <ChevronDown size={14} />
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Bar Chart */}
+                    <div className="flex items-end justify-between gap-2 h-48">
+                        {data?.activityData.map((d: any, index: number) => {
+                            const newVisits = Math.floor(d.visits * 0.4);
+                            const totalPct = maxVisits > 0 ? (d.visits / maxVisits) * 100 : 0;
+                            const newPctBar = d.visits > 0 ? (newVisits / d.visits) * 100 : 0;
+                            return (
+                                <div key={index} className="flex-1 flex flex-col items-center gap-1.5 group relative">
+                                    <div className="w-full rounded-t-md relative flex flex-col justify-end" style={{ height: '100%' }}>
+                                        {/* Tooltip */}
+                                        <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[9px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none whitespace-nowrap">
+                                            {d.visits} ({newVisits} new)
+                                        </div>
+
+                                        {/* Total Bar */}
+                                        <div
+                                            className="w-full bg-primary/15 rounded-t-md transition-all relative overflow-hidden"
+                                            style={{ height: `${totalPct}%`, minHeight: d.visits > 0 ? '4px' : '0' }}
+                                        >
+                                            {/* New Visitor portion */}
+                                            <div
+                                                className="w-full bg-emerald-500/80 rounded-t-md absolute bottom-0 left-0"
+                                                style={{ height: `${newPctBar}%` }}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="text-center">
+                                        <p className="text-[9px] font-bold text-text-main">{d.visits}</p>
+                                        <p className="text-[8px] text-text-secondary font-medium uppercase tracking-tighter">{d.hour}</p>
+                                    </div>
+                                </div>
+                            )
+                        })}
                     </div>
                 </div>
 
-                {/* Quick Actions */}
-                <div className="bg-white rounded-xl p-6 border border-gray-200">
-                    <h2 className="text-xl font-display font-bold text-text-main mb-4">Quick Actions</h2>
-                    <div className="space-y-3">
-                        <button
-                            onClick={handleSimulateVisitor}
-                            disabled={addVisitorMutation.isPending}
-                            className="w-full h-[68px] flex items-center justify-between p-4 bg-primary text-white rounded-xl hover:bg-primary-hover transition-all shadow-lg shadow-primary/20 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed group"
-                        >
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
-                                    {addVisitorMutation.isPending ? (
-                                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                    ) : (
-                                        <UserPlus size={20} />
-                                    )}
-                                </div>
-                                <div className="text-left">
-                                    <p className="font-bold text-sm leading-none mb-1">Simulate Check-in</p>
-                                    <p className="text-[10px] text-white/70 font-medium tracking-tight">Generate a test visit</p>
+                {/* Audience Breakdown — spans 5 cols, split into 2 rows */}
+                <div className="lg:col-span-5 flex flex-col gap-4">
+                    {/* Audience Growth Donut */}
+                    <div className="bg-white rounded-2xl p-5 border border-gray-100 flex-1">
+                        <h2 className="text-base font-display font-bold text-text-main mb-4">Audience Growth</h2>
+                        <div className="flex items-center gap-6">
+                            <div className="relative size-28 shrink-0">
+                                <svg className="size-full" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="40" fill="transparent" stroke="#f3f4f6" strokeWidth="10" />
+                                    {/* Returning = primary, New = emerald */}
+                                    <circle cx="50" cy="50" r="40" fill="transparent" stroke="var(--color-primary)" strokeWidth="10" strokeDasharray={`${(returningPct / 100) * 251.2} 251.2`} strokeDashoffset="0" strokeLinecap="round" transform="rotate(-90 50 50)" />
+                                    <circle cx="50" cy="50" r="40" fill="transparent" stroke="#10b981" strokeWidth="10" strokeDasharray={`${(newPct / 100) * 251.2} 251.2`} strokeDashoffset={`${-(returningPct / 100) * 251.2}`} strokeLinecap="round" transform="rotate(-90 50 50)" />
+                                </svg>
+                                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                    <p className="text-lg font-black text-slate-900">{totalVisitors}</p>
+                                    <p className="text-[7px] font-black text-slate-400 uppercase tracking-widest">Total</p>
                                 </div>
                             </div>
-                            <ArrowRight size={18} className="opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                        </button>
 
-                        {[
-                            { label: 'Manual Entry', desc: 'Add visitor manually', icon: UserPlus, route: '/dashboard/visitors/all', color: 'bg-orange-50 text-orange-600', hover: 'hover:border-orange-200' },
-                            { label: 'New Message', desc: 'Reach your customers', icon: MessageSquare, route: '/dashboard/messaging', color: 'bg-indigo-50 text-indigo-600', hover: 'hover:border-indigo-200' },
-                            { label: 'Add Device', desc: 'Setup NFC terminal', icon: LogoIcon, route: '/dashboard/settings/devices', color: 'bg-blue-50 text-blue-600', hover: 'hover:border-blue-200' },
-                            { label: 'Export Data', desc: 'Download CSV reports', icon: Download, route: '/dashboard/visitors/all', color: 'bg-green-50 text-green-600', hover: 'hover:border-green-200' }
-                        ].map((action, i) => (
-                            <button
-                                key={i}
-                                onClick={() => {
-                                    if (action.label === 'Manual Entry') {
-                                        // Just navigate, logic handled on page
-                                    }
-                                    router.push(action.route);
-                                }}
-                                className={`w-full flex items-center justify-between p-4 bg-white border border-gray-100 rounded-xl transition-all group ${action.hover}`}
-                            >
-                                <div className="flex items-center gap-3">
-                                    <div className={`w-10 h-10 rounded-lg ${action.color} flex items-center justify-center transition-colors`}>
-                                        <action.icon size={20} />
+                            <div className="flex-1 space-y-3">
+                                <div className="flex items-center justify-between p-2.5 bg-primary/5 rounded-xl border border-primary/10">
+                                    <div className="flex items-center gap-2">
+                                        <div className="size-2 bg-primary rounded-full" />
+                                        <span className="text-[10px] font-black uppercase text-slate-500">Returning</span>
                                     </div>
-                                    <div className="text-left">
-                                        <p className="font-bold text-sm text-text-main leading-none mb-1">{action.label}</p>
-                                        <p className="text-[10px] text-text-secondary font-medium tracking-tight">{action.desc}</p>
+                                    <div className="text-right">
+                                        <span className="text-sm font-black text-slate-900">{repeatVisitors}</span>
+                                        <span className="text-[9px] font-bold text-slate-400 ml-1">({returningPct}%)</span>
                                     </div>
                                 </div>
-                                <ArrowRight size={18} className="text-gray-300 group-hover:text-primary transition-colors group-hover:translate-x-1" />
+                                <div className="flex items-center justify-between p-2.5 bg-emerald-50/50 rounded-xl border border-emerald-100">
+                                    <div className="flex items-center gap-2">
+                                        <div className="size-2 bg-emerald-500 rounded-full" />
+                                        <span className="text-[10px] font-black uppercase text-slate-500">New</span>
+                                    </div>
+                                    <div className="text-right">
+                                        <span className="text-sm font-black text-slate-900">{newVisitors}</span>
+                                        <span className="text-[9px] font-bold text-slate-400 ml-1">({newPct}%)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Quick Actions — compact */}
+                    <div className="bg-white rounded-2xl p-5 border border-gray-100">
+                        <h2 className="text-base font-display font-bold text-text-main mb-3">Quick Actions</h2>
+                        <div className="space-y-2">
+                            <button
+                                onClick={handleSimulateVisitor}
+                                disabled={addVisitorMutation.isPending}
+                                className="w-full flex items-center justify-between p-3 bg-primary text-white rounded-xl hover:bg-primary-hover transition-all shadow-lg shadow-primary/20 active:scale-[0.98] disabled:opacity-50 group"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center">
+                                        {addVisitorMutation.isPending ? (
+                                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                        ) : (
+                                            <UserPlus size={16} />
+                                        )}
+                                    </div>
+                                    <div className="text-left">
+                                        <p className="font-bold text-xs leading-none mb-0.5">Simulate Check-in</p>
+                                        <p className="text-[9px] text-white/70 font-medium">Generate a test visit</p>
+                                    </div>
+                                </div>
+                                <ArrowRight size={16} className="opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                             </button>
-                        ))}
+
+                            {[
+                                { label: 'New Message', icon: MessageSquare, route: '/dashboard/messaging', color: 'bg-indigo-50 text-indigo-600' },
+                                { label: 'Add Device', icon: LogoIcon, route: '/dashboard/settings/devices', color: 'bg-blue-50 text-blue-600' },
+                                { label: 'Export Data', icon: Download, route: '/dashboard/visitors/all', color: 'bg-green-50 text-green-600' }
+                            ].map((action, i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => router.push(action.route)}
+                                    className="w-full flex items-center justify-between p-3 bg-white border border-gray-100 rounded-xl transition-all group hover:border-gray-200"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className={`w-9 h-9 rounded-lg ${action.color} flex items-center justify-center`}>
+                                            <action.icon size={16} />
+                                        </div>
+                                        <p className="font-bold text-xs text-text-main">{action.label}</p>
+                                    </div>
+                                    <ArrowRight size={14} className="text-gray-300 group-hover:text-primary transition-colors group-hover:translate-x-1" />
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
 
             {/* Recent Visitors */}
-            <div className="mt-6 bg-white rounded-xl p-6 border border-gray-200">
-                <div className="flex items-center justify-between mb-6">
+            <div className="bg-white rounded-2xl p-5 border border-gray-100">
+                <div className="flex items-center justify-between mb-4">
                     <div>
-                        <h2 className="text-xl font-display font-bold text-text-main mb-1">Recent Visitors</h2>
-                        <p className="text-sm text-text-secondary">Latest customer check-ins</p>
+                        <h2 className="text-base font-display font-bold text-text-main mb-0.5">Recent Visitors</h2>
+                        <p className="text-[10px] text-text-secondary">Latest customer check-ins</p>
                     </div>
                     <button
                         onClick={() => router.push('/dashboard/visitors/all')}
-                        className="px-4 py-2 text-sm font-bold text-primary hover:bg-primary/5 rounded-lg transition-colors"
+                        className="px-4 py-2 text-xs font-bold text-primary hover:bg-primary/5 rounded-lg transition-colors"
                     >
                         View All
                     </button>
@@ -295,40 +363,40 @@ export default function DashboardPage() {
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead>
-                            <tr className="border-b border-gray-200">
-                                <th className="text-left py-3 px-4 text-xs font-black uppercase tracking-wider text-text-secondary">Name</th>
-                                <th className="text-left py-3 px-4 text-xs font-black uppercase tracking-wider text-text-secondary">Phone</th>
-                                <th className="text-left py-3 px-4 text-xs font-black uppercase tracking-wider text-text-secondary">Time</th>
-                                <th className="text-left py-3 px-4 text-xs font-black uppercase tracking-wider text-text-secondary">Status</th>
-                                <th className="text-left py-3 px-4 text-xs font-black uppercase tracking-wider text-text-secondary">Actions</th>
+                            <tr className="border-b border-gray-100">
+                                <th className="text-left py-2.5 px-4 text-[10px] font-black uppercase tracking-wider text-text-secondary">Name</th>
+                                <th className="text-left py-2.5 px-4 text-[10px] font-black uppercase tracking-wider text-text-secondary">Phone</th>
+                                <th className="text-left py-2.5 px-4 text-[10px] font-black uppercase tracking-wider text-text-secondary">Time</th>
+                                <th className="text-left py-2.5 px-4 text-[10px] font-black uppercase tracking-wider text-text-secondary">Status</th>
+                                <th className="text-left py-2.5 px-4 text-[10px] font-black uppercase tracking-wider text-text-secondary">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {data?.recentVisitors.slice(0, 5).map((visitor: Visitor, index: number) => (
                                 <tr
                                     key={visitor.id || index}
-                                    className="border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
+                                    className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors cursor-pointer"
                                     onClick={() => setSelectedVisitorForDetails(visitor)}
                                 >
-                                    <td className="py-4 px-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                                                <Users className="text-primary" size={16} />
+                                    <td className="py-3 px-4">
+                                        <div className="flex items-center gap-2.5">
+                                            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                                <Users className="text-primary" size={14} />
                                             </div>
                                             <span className="font-bold text-sm text-text-main">{visitor.name}</span>
                                         </div>
                                     </td>
-                                    <td className="py-4 px-4 text-sm text-text-secondary font-medium">{visitor.phone}</td>
-                                    <td className="py-4 px-4 text-sm text-text-secondary font-medium">{visitor.time}</td>
-                                    <td className="py-4 px-4">
-                                        <span className={`inline-flex px-3 py-1 rounded-full text-xs font-bold ${visitor.status === 'new'
-                                            ? 'bg-green-50 text-green-600'
-                                            : 'bg-blue-50 text-blue-600'
+                                    <td className="py-3 px-4 text-sm text-text-secondary font-medium">{visitor.phone}</td>
+                                    <td className="py-3 px-4 text-sm text-text-secondary font-medium">{visitor.time}</td>
+                                    <td className="py-3 px-4">
+                                        <span className={`inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold ${visitor.status === 'new'
+                                            ? 'bg-emerald-50 text-emerald-600'
+                                            : 'bg-primary/10 text-primary'
                                             }`}>
                                             {visitor.status === 'new' ? 'New' : 'Returning'}
                                         </span>
                                     </td>
-                                    <td className="py-4 px-4">
+                                    <td className="py-3 px-4">
                                         <div className="flex items-center gap-2">
                                             <button
                                                 onClick={(e) => {
@@ -340,7 +408,7 @@ export default function DashboardPage() {
                                                 }}
                                                 className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-wider rounded-lg hover:bg-primary/20 transition-colors"
                                             >
-                                                <Send size={12} />
+                                                <Send size={10} />
                                                 {visitor.status === 'new' ? 'Welcome' : 'Message'}
                                             </button>
                                             {visitor.status === 'returning' && (
@@ -351,7 +419,7 @@ export default function DashboardPage() {
                                                     }}
                                                     className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-500 text-white text-[10px] font-black uppercase tracking-wider rounded-lg hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20"
                                                 >
-                                                    <Gift size={12} />
+                                                    <Gift size={10} />
                                                     Reward
                                                 </button>
                                             )}
@@ -407,6 +475,6 @@ export default function DashboardPage() {
                 rewardTitle="Free Coffee or Pastry"
                 businessName={data?.businessName || 'Your Business'}
             />
-        </div>
+        </div >
     );
 }

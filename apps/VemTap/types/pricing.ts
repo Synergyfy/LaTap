@@ -4,6 +4,7 @@ export interface PricingPlan {
     name: string;
     price: string;
     period: string;
+    billingPeriod: 'monthly' | 'yearly' | 'quarterly';
     description: string;
     features: string[];
     isPopular?: boolean;
