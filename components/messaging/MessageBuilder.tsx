@@ -42,40 +42,52 @@ function PhonePreview({
                 {/* App Header */}
                 {channel === 'WhatsApp' ? (
                     <div className="bg-[#075E54] p-3 text-white flex items-center gap-2 z-20">
-                        <div className="size-7 rounded-full bg-white/20 flex items-center justify-center overflow-hidden border border-white/10 relative">
-                            {businessLogo ? (
-                                <Image src={businessLogo} alt="Logo" fill className="object-cover" />
-                            ) : (
-                                <Users size={14} />
-                            )}
+                        <div className="size-7 rounded-full bg-white flex items-center justify-center overflow-hidden border border-white/10 relative shadow-sm">
+                            <Image
+                                src={businessLogo || "/assets/VEMTAP_PNG.png"}
+                                alt="Logo"
+                                fill
+                                className="object-contain p-0.5 bg-white"
+                            />
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-[10px] font-bold leading-none truncate">{businessName}</p>
+                            <div className="flex items-center gap-1">
+                                <p className="text-[10px] font-bold leading-none truncate">{businessName}</p>
+                                <span className="material-icons text-[8px] text-[#25D366]">verified</span>
+                            </div>
                             <p className="text-[8px] opacity-70 mt-0.5">online</p>
                         </div>
                     </div>
                 ) : channel === 'SMS' ? (
                     <div className="p-3 border-b border-gray-100 flex flex-col items-center gap-1 z-20 bg-white/80 backdrop-blur-md">
-                        <div className="size-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 overflow-hidden border border-slate-200 relative">
-                            {businessLogo ? (
-                                <Image src={businessLogo} alt="Logo" fill className="object-cover" />
-                            ) : (
-                                <Smartphone size={16} />
-                            )}
+                        <div className="size-8 rounded-full bg-white flex items-center justify-center overflow-hidden border border-slate-200 relative shadow-sm">
+                            <Image
+                                src={businessLogo || "/assets/VEMTAP_PNG.png"}
+                                alt="Logo"
+                                fill
+                                className="object-contain p-1 bg-white"
+                            />
                         </div>
-                        <p className="text-[8px] font-black text-slate-900 truncate max-w-[150px] uppercase tracking-wider">{businessName}</p>
+                        <div className="flex items-center gap-0.5">
+                            <p className="text-[8px] font-black text-slate-900 truncate max-w-[150px] uppercase tracking-wider">{businessName}</p>
+                            <span className="material-icons text-[7px] text-primary">verified</span>
+                        </div>
                     </div>
                 ) : (
                     <div className="p-3 bg-white border-b border-gray-200 flex items-center gap-2 z-20">
-                        <div className="size-7 rounded-full bg-primary/10 text-primary flex items-center justify-center overflow-hidden border border-primary/5 relative">
-                            {businessLogo ? (
-                                <Image src={businessLogo} alt="Logo" fill className="object-cover" />
-                            ) : (
-                                <Mail size={14} />
-                            )}
+                        <div className="size-7 rounded-full bg-white flex items-center justify-center overflow-hidden border border-primary/5 relative shadow-sm">
+                            <Image
+                                src={businessLogo || "/assets/VEMTAP_PNG.png"}
+                                alt="Logo"
+                                fill
+                                className="object-contain p-0.5 bg-white"
+                            />
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-[8px] font-black leading-none truncate">{businessName} Support</p>
+                            <div className="flex items-center gap-1">
+                                <p className="text-[8px] font-black leading-none truncate">{businessName} Support</p>
+                                <span className="material-icons text-[7px] text-primary">verified</span>
+                            </div>
                             <p className="text-[7px] text-gray-400 mt-0.5">To: Customer</p>
                         </div>
                     </div>
@@ -185,10 +197,10 @@ export default function MessageBuilder({ defaultChannel }: MessageBuilderProps) 
 
     // Mock Audience count
     const getAudienceCount = () => {
-        if (audience === 'all') return 1240;
-        if (audience === 'vip') return 150;
+        if (audience === 'returning') return 850;
         if (audience === 'new') return 340;
-        return 0;
+        if (audience === 'premium') return 150;
+        return 1240; // fallback
     };
 
     const count = getAudienceCount();
@@ -321,9 +333,9 @@ export default function MessageBuilder({ defaultChannel }: MessageBuilderProps) 
                             <label className="block text-[10px] font-black uppercase text-text-secondary mb-2 tracking-widest ml-1">Target Audience</label>
                             <div className="grid grid-cols-3 gap-2">
                                 {[
-                                    { id: 'returning', label: 'Returning', icon: Users },
-                                    { id: 'new', label: 'New', icon: Smartphone },
-                                    { id: 'premium', label: 'Premium', icon: CheckCircle }
+                                    { id: 'returning', label: 'Returning', sub: '850', icon: Users },
+                                    { id: 'new', label: 'New', sub: '340', icon: Smartphone },
+                                    { id: 'premium', label: 'Premium', sub: '150', icon: CheckCircle }
                                 ].map(opt => (
                                     <button
                                         key={opt.id}
@@ -333,9 +345,10 @@ export default function MessageBuilder({ defaultChannel }: MessageBuilderProps) 
                                             : 'border-gray-100 bg-white hover:border-gray-200'
                                             }`}
                                     >
-                                        <div className="flex flex-col items-center gap-1">
+                                        <div className="flex flex-col items-center gap-0.5">
                                             <span className="font-bold text-[9px] text-text-main truncate w-full px-1">{opt.label}</span>
-                                            {audience === opt.id && <div className="w-1.5 h-1.5 bg-primary rounded-full" />}
+                                            <span className="text-[8px] text-text-secondary font-black opacity-60">({opt.sub})</span>
+                                            {audience === opt.id && <div className="w-1.5 h-1.5 mt-0.5 bg-primary rounded-full" />}
                                         </div>
                                     </button>
                                 ))}
