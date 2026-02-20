@@ -15,14 +15,14 @@ export class UsersController {
 
   @Get('staff')
   @Roles(UserRole.OWNER, UserRole.MANAGER)
-  @ApiOperation({ summary: 'Get all staff members for the business' })
+  @ApiOperation({ summary: 'Get all staff members for the business (including managers)' })
   async getStaff(@Request() req) {
     return this.usersService.findByBusiness(req.user.businessId);
   }
 
   @Post('staff/invite')
   @Roles(UserRole.OWNER)
-  @ApiOperation({ summary: 'Invite a new staff member' })
+  @ApiOperation({ summary: 'Invite a new staff member or manager', description: 'Use the `role` field in the body to specify "Staff" or "Manager".' })
   @ApiBody({ type: InviteStaffDto })
   async inviteStaff(@Request() req, @Body() inviteDto: InviteStaffDto) {
     const existing = await this.usersService.findByEmail(inviteDto.email);
@@ -41,7 +41,7 @@ export class UsersController {
 
   @Patch('staff/:id')
   @Roles(UserRole.OWNER)
-  @ApiOperation({ summary: 'Update a staff member (role, permissions, etc.)' })
+  @ApiOperation({ summary: 'Update a staff member (role, permissions, etc.)', description: 'Can be used to promote a staff member to manager.' })
   @ApiBody({ type: UpdateStaffDto })
   async updateStaff(@Request() req, @Param('id') id: string, @Body() updates: UpdateStaffDto) {
     return this.usersService.updateStaff(id, req.user.businessId, updates);
