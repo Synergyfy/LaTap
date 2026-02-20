@@ -60,7 +60,8 @@ export default function AllVisitorsPage() {
                 time: 'Just now',
                 timestamp: Date.now(),
                 status: data.status as any,
-                optIn: true
+                optIn: true,
+                branchId: 'head-office'
             };
             return dashboardApi.addVisitor(newVisitor);
         },
