@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Device, DeviceStatus } from './entities/device.entity';
@@ -12,8 +16,13 @@ export class DevicesService {
     private devicesRepository: Repository<Device>,
   ) {}
 
-  async create(businessId: string, createDeviceDto: CreateDeviceDto): Promise<Device> {
-    const existing = await this.devicesRepository.findOneBy({ code: createDeviceDto.code });
+  async create(
+    businessId: string,
+    createDeviceDto: CreateDeviceDto,
+  ): Promise<Device> {
+    const existing = await this.devicesRepository.findOneBy({
+      code: createDeviceDto.code,
+    });
     if (existing) {
       throw new ConflictException('Device code already registered');
     }
@@ -40,7 +49,11 @@ export class DevicesService {
     return device;
   }
 
-  async update(id: string, businessId: string, updateDeviceDto: UpdateDeviceDto): Promise<Device> {
+  async update(
+    id: string,
+    businessId: string,
+    updateDeviceDto: UpdateDeviceDto,
+  ): Promise<Device> {
     const device = await this.findOne(id, businessId);
     Object.assign(device, updateDeviceDto);
     return this.devicesRepository.save(device);
@@ -55,9 +68,9 @@ export class DevicesService {
     const devices = await this.findAllByBusiness(businessId);
     return {
       totalDevices: devices.length,
-      activeNow: devices.filter(d => d.status === DeviceStatus.ACTIVE).length,
+      activeNow: devices.filter((d) => d.status === DeviceStatus.ACTIVE).length,
       totalScans: devices.reduce((acc, d) => acc + d.totalScans, 0),
-      offline: devices.filter(d => d.status === DeviceStatus.INACTIVE).length,
+      offline: devices.filter((d) => d.status === DeviceStatus.INACTIVE).length,
     };
   }
 }

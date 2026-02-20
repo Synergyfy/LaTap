@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  Req,
+} from '@nestjs/common';
 import { CampaignsService } from './campaigns.service';
 import { CreateCampaignDto, CampaignStatus } from './dto/create-campaign.dto';
 import { UpdateCampaignDto } from './dto/update-campaign.dto';
@@ -18,15 +28,26 @@ export class CampaignsController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new campaign' })
-  @ApiResponse({ status: 201, description: 'The campaign has been successfully created.', type: Campaign })
+  @ApiResponse({
+    status: 201,
+    description: 'The campaign has been successfully created.',
+    type: Campaign,
+  })
   create(@Body() createCampaignDto: CreateCampaignDto, @Req() req: any) {
-    return this.campaignsService.create(createCampaignDto, this.getBusinessId(req));
+    return this.campaignsService.create(
+      createCampaignDto,
+      this.getBusinessId(req),
+    );
   }
 
   @Get()
   @ApiOperation({ summary: 'Get all campaigns' })
   @ApiQuery({ name: 'status', enum: CampaignStatus, required: false })
-  @ApiResponse({ status: 200, description: 'List of campaigns', type: [Campaign] })
+  @ApiResponse({
+    status: 200,
+    description: 'List of campaigns',
+    type: [Campaign],
+  })
   findAll(@Req() req: any, @Query('status') status?: CampaignStatus) {
     return this.campaignsService.findAll(this.getBusinessId(req), status);
   }
@@ -40,36 +61,68 @@ export class CampaignsController {
 
   @Get('scheduled')
   @ApiOperation({ summary: 'Get scheduled campaigns' })
-  @ApiResponse({ status: 200, description: 'List of scheduled campaigns', type: [Campaign] })
+  @ApiResponse({
+    status: 200,
+    description: 'List of scheduled campaigns',
+    type: [Campaign],
+  })
   getScheduled(@Req() req: any) {
-    return this.campaignsService.findAll(this.getBusinessId(req), CampaignStatus.SCHEDULED);
+    return this.campaignsService.findAll(
+      this.getBusinessId(req),
+      CampaignStatus.SCHEDULED,
+    );
   }
 
   @Get('templates')
   @ApiOperation({ summary: 'Get campaign templates' })
-  @ApiResponse({ status: 200, description: 'List of campaign templates', type: [CampaignTemplate] })
+  @ApiResponse({
+    status: 200,
+    description: 'List of campaign templates',
+    type: [CampaignTemplate],
+  })
   getTemplates(@Req() req: any) {
     return this.campaignsService.getTemplates(this.getBusinessId(req));
   }
 
   @Post('templates')
   @ApiOperation({ summary: 'Create a campaign template' })
-  @ApiResponse({ status: 201, description: 'The template has been created.', type: CampaignTemplate })
-  createTemplate(@Body() createTemplateDto: CreateCampaignTemplateDto, @Req() req: any) {
-    return this.campaignsService.createTemplate(createTemplateDto, this.getBusinessId(req));
+  @ApiResponse({
+    status: 201,
+    description: 'The template has been created.',
+    type: CampaignTemplate,
+  })
+  createTemplate(
+    @Body() createTemplateDto: CreateCampaignTemplateDto,
+    @Req() req: any,
+  ) {
+    return this.campaignsService.createTemplate(
+      createTemplateDto,
+      this.getBusinessId(req),
+    );
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a campaign by ID' })
-  @ApiResponse({ status: 200, description: 'The campaign details', type: Campaign })
+  @ApiResponse({
+    status: 200,
+    description: 'The campaign details',
+    type: Campaign,
+  })
   findOne(@Param('id') id: string) {
     return this.campaignsService.findOne(id);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update a campaign' })
-  @ApiResponse({ status: 200, description: 'The updated campaign', type: Campaign })
-  update(@Param('id') id: string, @Body() updateCampaignDto: UpdateCampaignDto) {
+  @ApiResponse({
+    status: 200,
+    description: 'The updated campaign',
+    type: Campaign,
+  })
+  update(
+    @Param('id') id: string,
+    @Body() updateCampaignDto: UpdateCampaignDto,
+  ) {
     return this.campaignsService.update(id, updateCampaignDto);
   }
 

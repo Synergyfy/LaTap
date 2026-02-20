@@ -1,7 +1,20 @@
-import { Controller, Get, Patch, Body, Request, UseGuards, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Patch,
+  Body,
+  Request,
+  UseGuards,
+  Param,
+} from '@nestjs/common';
 import { BusinessesService } from './businesses.service';
 import { UpdateBusinessDto } from './dto/update-business.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { UserRole } from '../users/entities/user.entity';
 
@@ -20,9 +33,14 @@ export class BusinessesController {
 
   @Patch(':id')
   @Roles(UserRole.OWNER)
-  @ApiOperation({ summary: 'Update business settings (Welcome messages, Rewards, etc.)' })
+  @ApiOperation({
+    summary: 'Update business settings (Welcome messages, Rewards, etc.)',
+  })
   @ApiResponse({ status: 200, description: 'Business updated successfully' })
-  async update(@Param('id') id: string, @Body() updateBusinessDto: UpdateBusinessDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateBusinessDto: UpdateBusinessDto,
+  ) {
     return this.businessesService.update(id, updateBusinessDto);
   }
 }

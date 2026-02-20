@@ -1,8 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Request,
+  BadRequestException,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { UserRole } from './entities/user.entity';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiBody,
+} from '@nestjs/swagger';
 import { InviteStaffDto } from './dto/invite-staff.dto';
 import { UpdateStaffDto } from './dto/update-staff.dto';
 import * as bcrypt from 'bcrypt';
@@ -15,14 +32,20 @@ export class UsersController {
 
   @Get('staff')
   @Roles(UserRole.OWNER, UserRole.MANAGER)
-  @ApiOperation({ summary: 'Get all staff members for the business (including managers)' })
+  @ApiOperation({
+    summary: 'Get all staff members for the business (including managers)',
+  })
   async getStaff(@Request() req) {
     return this.usersService.findByBusiness(req.user.businessId);
   }
 
   @Post('staff/invite')
   @Roles(UserRole.OWNER)
-  @ApiOperation({ summary: 'Invite a new staff member or manager', description: 'Use the `role` field in the body to specify "Staff" or "Manager".' })
+  @ApiOperation({
+    summary: 'Invite a new staff member or manager',
+    description:
+      'Use the `role` field in the body to specify "Staff" or "Manager".',
+  })
   @ApiBody({ type: InviteStaffDto })
   async inviteStaff(@Request() req, @Body() inviteDto: InviteStaffDto) {
     const existing = await this.usersService.findByEmail(inviteDto.email);
@@ -41,9 +64,16 @@ export class UsersController {
 
   @Patch('staff/:id')
   @Roles(UserRole.OWNER)
-  @ApiOperation({ summary: 'Update a staff member (role, permissions, etc.)', description: 'Can be used to promote a staff member to manager.' })
+  @ApiOperation({
+    summary: 'Update a staff member (role, permissions, etc.)',
+    description: 'Can be used to promote a staff member to manager.',
+  })
   @ApiBody({ type: UpdateStaffDto })
-  async updateStaff(@Request() req, @Param('id') id: string, @Body() updates: UpdateStaffDto) {
+  async updateStaff(
+    @Request() req,
+    @Param('id') id: string,
+    @Body() updates: UpdateStaffDto,
+  ) {
     return this.usersService.updateStaff(id, req.user.businessId, updates);
   }
 

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Business } from './entities/business.entity';
@@ -28,7 +32,10 @@ export class BusinessesService {
     return business;
   }
 
-  async update(id: string, updateBusinessDto: UpdateBusinessDto): Promise<Business> {
+  async update(
+    id: string,
+    updateBusinessDto: UpdateBusinessDto,
+  ): Promise<Business> {
     const business = await this.findById(id);
     Object.assign(business, updateBusinessDto);
     return this.businessesRepository.save(business);

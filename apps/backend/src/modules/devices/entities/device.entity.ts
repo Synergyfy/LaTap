@@ -19,7 +19,11 @@ export class Device extends AbstractBaseEntity {
   @Column({ unique: true })
   code: string; // Serial number
 
-  @ApiProperty({ enum: DeviceStatus, example: DeviceStatus.ACTIVE, description: 'Current status' })
+  @ApiProperty({
+    enum: DeviceStatus,
+    example: DeviceStatus.ACTIVE,
+    description: 'Current status',
+  })
   @Column({
     type: 'simple-enum',
     enum: DeviceStatus,
@@ -35,15 +39,23 @@ export class Device extends AbstractBaseEntity {
   @Column({ default: 0 })
   totalScans: number;
 
-  @ApiProperty({ example: '2023-10-27T10:00:00Z', description: 'Last active timestamp' })
+  @ApiProperty({
+    example: '2023-10-27T10:00:00Z',
+    description: 'Last active timestamp',
+  })
   @Column({ nullable: true })
   lastActive: Date;
 
-  @ManyToOne(() => Business, (business) => business.devices, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Business, (business) => business.devices, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'businessId' })
   business: Business;
 
-  @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000', description: 'Business ID' })
+  @ApiProperty({
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    description: 'Business ID',
+  })
   @Column()
   businessId: string;
 

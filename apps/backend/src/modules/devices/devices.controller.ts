@@ -1,11 +1,26 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { DevicesService } from './devices.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
 import { Device } from './entities/device.entity';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { UserRole } from '../users/entities/user.entity';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 
 @ApiTags('devices')
 @ApiBearerAuth()
@@ -16,7 +31,11 @@ export class DevicesController {
 
   @Post()
   @ApiOperation({ summary: 'Register a new NFC device' })
-  @ApiResponse({ status: 201, description: 'Device registered successfully', type: Device })
+  @ApiResponse({
+    status: 201,
+    description: 'Device registered successfully',
+    type: Device,
+  })
   create(@Request() req, @Body() createDeviceDto: CreateDeviceDto) {
     return this.devicesService.create(req.user.businessId, createDeviceDto);
   }
@@ -45,7 +64,11 @@ export class DevicesController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update device configuration' })
   @ApiResponse({ status: 200, description: 'Device updated', type: Device })
-  update(@Request() req, @Param('id') id: string, @Body() updateDeviceDto: UpdateDeviceDto) {
+  update(
+    @Request() req,
+    @Param('id') id: string,
+    @Body() updateDeviceDto: UpdateDeviceDto,
+  ) {
     return this.devicesService.update(id, req.user.businessId, updateDeviceDto);
   }
 

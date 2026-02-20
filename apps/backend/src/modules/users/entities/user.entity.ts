@@ -61,7 +61,10 @@ export class User extends AbstractBaseEntity {
   lastActive: Date;
 
   // Relation to the business they belong to (Staff/Manager/Owner)
-  @ManyToOne(() => Business, (business) => business.staff, { nullable: true, onDelete: 'SET NULL' })
+  @ManyToOne(() => Business, (business) => business.staff, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
   @JoinColumn({ name: 'businessId' })
   business: Business;
 

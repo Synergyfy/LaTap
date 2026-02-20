@@ -39,19 +39,29 @@ describe('DevicesService', () => {
 
   it('should create a device', async () => {
     mockRepository.findOneBy.mockResolvedValue(null);
-    const result = await service.create('biz-1', { name: 'Tag 1', code: 'LT-123' });
+    const result = await service.create('biz-1', {
+      name: 'Tag 1',
+      code: 'LT-123',
+    });
     expect(result).toEqual(mockDevice);
   });
 
   it('should throw ConflictException if code exists', async () => {
     mockRepository.findOneBy.mockResolvedValue(mockDevice);
-    await expect(service.create('biz-1', { name: 'Tag 1', code: 'LT-123' })).rejects.toThrow(ConflictException);
+    await expect(
+      service.create('biz-1', { name: 'Tag 1', code: 'LT-123' }),
+    ).rejects.toThrow(ConflictException);
   });
 
   it('should return stats', async () => {
     mockRepository.find.mockResolvedValue([
       { ...mockDevice, status: DeviceStatus.ACTIVE, totalScans: 10 },
-      { ...mockDevice, id: 'device-2', status: DeviceStatus.INACTIVE, totalScans: 5 },
+      {
+        ...mockDevice,
+        id: 'device-2',
+        status: DeviceStatus.INACTIVE,
+        totalScans: 5,
+      },
     ]);
     const stats = await service.getStats('biz-1');
     expect(stats.totalDevices).toBe(2);
