@@ -40,6 +40,32 @@ describe('UsersService', () => {
     repository = module.get(getRepositoryToken(User));
   });
 
+  describe('create', () => {
+    it('should allow creating a STAFF user', async () => {
+      const dto = { ...mockUser, role: UserRole.STAFF };
+      const result = await service.create(dto);
+      expect(result).toBeDefined();
+      expect(repository.save).toHaveBeenCalled();
+    });
+
+    it('should allow creating a MANAGER user', async () => {
+      const dto = { ...mockUser, role: UserRole.MANAGER };
+      const result = await service.create(dto);
+      expect(result).toBeDefined();
+      expect(repository.save).toHaveBeenCalled();
+    });
+
+    it('should throw BadRequestException when trying to create OWNER', async () => {
+      const dto = { ...mockUser, role: UserRole.OWNER };
+      await expect(service.create(dto)).rejects.toThrow(BadRequestException);
+    });
+
+    it('should throw BadRequestException when trying to create ADMIN', async () => {
+        const dto = { ...mockUser, role: UserRole.ADMIN };
+        await expect(service.create(dto)).rejects.toThrow(BadRequestException);
+    });
+  });
+
   describe('findByBusiness', () => {
     it('should return users for a business', async () => {
       repository.find.mockResolvedValue([mockUser]);
