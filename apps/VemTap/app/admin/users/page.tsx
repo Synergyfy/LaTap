@@ -80,7 +80,7 @@ export default function AdminUsersPage() {
     const filteredUsers = users.filter(u => {
         const matchesSearch = u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             u.email.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesRole = filterRole === 'all' || u.role.toLowerCase().replace(' ', '_') === filterRole;
+        const matchesRole = filterRole === 'all' || (u.role?.toLowerCase().replace(' ', '_') ?? '') === filterRole;
         const matchesStatus = filterStatus === 'all' || u.status === filterStatus;
         return matchesSearch && matchesRole && matchesStatus;
     });

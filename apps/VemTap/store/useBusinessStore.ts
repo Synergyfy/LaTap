@@ -20,6 +20,7 @@ interface BusinessState {
   setActiveBranch: (id: string) => void;
   getBranch: (id: string) => Branch | undefined;
   getActiveBranch: () => Branch | undefined;
+  addBranch: (branch: Omit<Branch, 'id'>) => void;
 }
 
 const DEFAULT_BRANCHES: Branch[] = [
@@ -69,6 +70,14 @@ export const useBusinessStore = create<BusinessState>()(
       getActiveBranch: () => {
         const { branches, activeBranchId } = get();
         return branches.find(b => b.id === activeBranchId);
+      },
+
+      addBranch: (branchData: Omit<Branch, 'id'>) => {
+        const newBranch: Branch = {
+          ...branchData,
+          id: `branch-${Date.now().toString(36)}`,
+        };
+        set((state) => ({ branches: [...state.branches, newBranch] }));
       }
     }),
     {

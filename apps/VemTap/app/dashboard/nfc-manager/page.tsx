@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import PageHeader from '@/components/dashboard/PageHeader';
 import { useAuthStore } from '@/store/useAuthStore';
-import { Smartphone, Plus, QrCode, Copy, Download, Trash2, Calendar, Link as LinkIcon, ExternalLink, X, Save } from 'lucide-react';
+import { useQuoteStore } from '@/store/quoteStore';
+import { Smartphone, Plus, QrCode, Copy, Download, Trash2, Link as LinkIcon, X, Save, ShieldAlert, CheckCircle2, Clock } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { toast } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -14,22 +15,40 @@ interface NFCLink {
     uniqueId: string;
     createdAt: string;
     url: string;
+    quoteId: string;
     note?: string;
 }
 
 export default function NFCManagerPage() {
     const { user } = useAuthStore();
     const { businessId: customerFlowStoreId } = useCustomerFlowStore();
+    const { quotes, consumeNfcQuota, getRemainingNfcQuota } = useQuoteStore();
     const businessId = user?.businessId || customerFlowStoreId;
+
     const [quantity, setQuantity] = useState<number>(1);
+    const [selectedQuoteId, setSelectedQuoteId] = useState<string>('');
     const [generatedLinks, setGeneratedLinks] = useState<NFCLink[]>([]);
     const [selectedLink, setSelectedLink] = useState<NFCLink | null>(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [editUrl, setEditUrl] = useState('');
 
+    // Only show approved quotes to the business
+    const approvedNfcQuotes = quotes.filter(q => q.status === 'Approved');
+    const selectedQuote = approvedNfcQuotes.find(q => q.id === selectedQuoteId);
+    const remainingQuota = selectedQuoteId ? getRemainingNfcQuota(selectedQuoteId) : 0;
+    const totalApprovedQuota = approvedNfcQuotes.reduce((sum, q) => sum + Math.max(0, q.quantity - (q.nfcLinksGenerated || 0)), 0);
+
     const generateLinks = () => {
         if (!businessId) {
-            toast.error("Business ID not found. Please complete setup first.");
+            toast.error('Business ID not found. Please complete setup first.');
+            return;
+        }
+        if (!selectedQuoteId) {
+            toast.error('Please select an approved quote to generate against.');
+            return;
+        }
+        if (quantity > remainingQuota) {
+            toast.error(`You only have ${remainingQuota} NFC units remaining in this quote.`);
             return;
         }
 
@@ -40,29 +59,30 @@ export default function NFCManagerPage() {
         for (let i = 0; i < quantity; i++) {
             const uniqueId = Math.random().toString(36).substring(2, 10).toUpperCase();
             const url = `${baseUrl}/${businessId}/${uniqueId}`;
-
             newLinks.push({
                 id: `NFC-${Date.now()}-${i}`,
                 uniqueId,
                 createdAt: timestamp,
-                url
+                url,
+                quoteId: selectedQuoteId,
             });
         }
 
+        consumeNfcQuota(selectedQuoteId, quantity);
         setGeneratedLinks(prev => [...newLinks, ...prev]);
-        toast.success(`Generated ${quantity} unique NFC assets`);
+        toast.success(`Generated ${quantity} unique NFC asset${quantity > 1 ? 's' : ''}`);
     };
 
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text);
-        toast.success("Link copied to clipboard");
+        toast.success('Link copied to clipboard');
     };
 
     const downloadQRCode = (id: string, uniqueId: string) => {
         const canvas = document.getElementById(`qr-${id}`) as HTMLCanvasElement;
         if (canvas) {
-            const url = canvas.toDataURL("image/png");
-            const link = document.createElement("a");
+            const url = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
             link.download = `QR-${uniqueId}.png`;
             link.href = url;
             link.click();
@@ -70,9 +90,9 @@ export default function NFCManagerPage() {
     };
 
     const removeLink = (id: string) => {
-        if (confirm("Are you sure you want to delete this asset? This action cannot be undone.")) {
+        if (confirm('Are you sure you want to delete this asset? This action cannot be undone.')) {
             setGeneratedLinks(prev => prev.filter(link => link.id !== id));
-            toast.success("Asset removed");
+            toast.success('Asset removed');
         }
     };
 
@@ -84,51 +104,122 @@ export default function NFCManagerPage() {
 
     const saveEdit = () => {
         if (!selectedLink) return;
-
-        setGeneratedLinks(prev => prev.map(l =>
-            l.id === selectedLink.id ? { ...l, url: editUrl } : l
-        ));
-
+        setGeneratedLinks(prev => prev.map(l => l.id === selectedLink.id ? { ...l, url: editUrl } : l));
         setIsEditModalOpen(false);
         setSelectedLink(null);
-        toast.success("Link updated and assets synchronized");
+        toast.success('Link updated and assets synchronized');
     };
 
     return (
         <div className="p-8 max-w-7xl mx-auto space-y-8">
             <PageHeader
                 title="NFC Asset Hub"
-                description="Manage your physical hardware links and generate high-resolution QR codes for print."
+                description="Generate NFC links against your admin-approved hardware quotes."
             />
 
-            {/* Generator Card */}
-            <div className="bg-white rounded-[2.5rem] border border-gray-100 p-8 shadow-sm">
-                <div className="flex flex-col md:flex-row items-end gap-6">
-                    <div className="flex-1 space-y-3">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-700 ml-1">
-                            Asset Batch Quantity
-                        </label>
-                        <div className="relative">
-                            <Plus size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                            <input
-                                type="number"
-                                min="1"
-                                max="100"
-                                value={quantity}
-                                onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-                                className="w-full h-14 bg-gray-50 border border-gray-100 rounded-2xl pl-12 pr-4 text-sm font-bold focus:bg-white focus:ring-4 focus:ring-primary/10 transition-all outline-none"
-                            />
-                        </div>
+            {/* Approved Quota Panel */}
+            {approvedNfcQuotes.length === 0 ? (
+                <div className="bg-amber-50 border border-amber-200 rounded-[2rem] p-8 flex items-start gap-5">
+                    <div className="size-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center shrink-0">
+                        <ShieldAlert size={24} />
                     </div>
-                    <button
-                        onClick={generateLinks}
-                        className="h-14 px-8 bg-primary text-white font-black uppercase tracking-widest text-xs rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-3 whitespace-nowrap"
-                    >
-                        <QrCode size={18} />
-                        Generate Assets
-                    </button>
+                    <div>
+                        <h3 className="font-display font-bold text-amber-900 mb-1">No Approved Quotes</h3>
+                        <p className="text-sm text-amber-700 font-medium max-w-xl">
+                            You don't have any admin-approved NFC hardware quotes yet. Visit the <strong>Marketplace</strong> to request a quote. Once approved by an admin, you'll be able to generate NFC links here.
+                        </p>
+                    </div>
                 </div>
-            </div>
+            ) : (
+                <div className="bg-white rounded-[2.5rem] border border-gray-100 p-8 shadow-sm">
+                    <div className="mb-6">
+                        <h3 className="font-display font-bold text-text-main mb-1">Approved NFC Allocations</h3>
+                        <p className="text-[10px] text-text-secondary font-medium uppercase tracking-widest">
+                            {totalApprovedQuota} units remaining across {approvedNfcQuotes.length} approved quote{approvedNfcQuotes.length > 1 ? 's' : ''}
+                        </p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                        {approvedNfcQuotes.map(q => {
+                            const remaining = Math.max(0, q.quantity - (q.nfcLinksGenerated || 0));
+                            const used = q.nfcLinksGenerated || 0;
+                            const pct = Math.round((used / q.quantity) * 100);
+                            const isSelected = selectedQuoteId === q.id;
+                            return (
+                                <button
+                                    key={q.id}
+                                    onClick={() => setSelectedQuoteId(isSelected ? '' : q.id)}
+                                    className={`text-left p-4 rounded-2xl border-2 transition-all ${isSelected
+                                        ? 'border-primary bg-primary/5 shadow-lg shadow-primary/10'
+                                        : 'border-gray-100 bg-gray-50/50 hover:border-primary/30'
+                                        }`}
+                                >
+                                    <div className="flex items-start justify-between mb-3">
+                                        <div>
+                                            <p className="text-xs font-black text-text-main">{q.productName}</p>
+                                            <p className="text-[10px] text-text-secondary font-medium">{q.id}</p>
+                                        </div>
+                                        <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-[9px] font-black uppercase ${remaining > 0 ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                                            <CheckCircle2 size={10} />
+                                            Approved
+                                        </div>
+                                    </div>
+                                    <div className="space-y-1.5">
+                                        <div className="flex justify-between text-[10px] font-bold text-text-secondary">
+                                            <span>{used} used</span>
+                                            <span>{remaining} remaining / {q.quantity} total</span>
+                                        </div>
+                                        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                            <div
+                                                className={`h-full rounded-full transition-all ${pct >= 100 ? 'bg-red-400' : pct > 60 ? 'bg-amber-400' : 'bg-primary'}`}
+                                                style={{ width: `${Math.min(pct, 100)}%` }}
+                                            />
+                                        </div>
+                                    </div>
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    {/* Generator */}
+                    <div className={`flex flex-col md:flex-row items-end gap-6 ${!selectedQuoteId ? 'opacity-50 pointer-events-none' : ''}`}>
+                        <div className="flex-1 space-y-3">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-700 ml-1">
+                                Quantity to Generate
+                                {selectedQuoteId && (
+                                    <span className="ml-2 text-primary">
+                                        (max: {remainingQuota})
+                                    </span>
+                                )}
+                            </label>
+                            <div className="relative">
+                                <Plus size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                                <input
+                                    type="number"
+                                    min="1"
+                                    max={remainingQuota}
+                                    value={quantity}
+                                    onChange={(e) => setQuantity(Math.min(parseInt(e.target.value) || 1, remainingQuota))}
+                                    className="w-full h-14 bg-gray-50 border border-gray-100 rounded-2xl pl-12 pr-4 text-sm font-bold focus:bg-white focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+                                />
+                            </div>
+                        </div>
+                        <button
+                            onClick={generateLinks}
+                            disabled={!selectedQuoteId || remainingQuota === 0 || quantity > remainingQuota}
+                            className="h-14 px-8 bg-primary text-white font-black uppercase tracking-widest text-xs rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-3 whitespace-nowrap disabled:opacity-50 disabled:pointer-events-none"
+                        >
+                            <QrCode size={18} />
+                            Generate Assets
+                        </button>
+                    </div>
+                    {!selectedQuoteId && (
+                        <p className="text-[10px] text-text-secondary font-medium mt-3 flex items-center gap-1.5">
+                            <Clock size={12} />
+                            Select an approved quote above to enable generation
+                        </p>
+                    )}
+                </div>
+            )}
 
             {/* Links Table */}
             <div className="bg-white rounded-[2.5rem] border border-gray-200 shadow-sm overflow-hidden">
@@ -147,7 +238,7 @@ export default function NFCManagerPage() {
                         <div className="size-16 bg-gray-50 text-gray-300 rounded-2xl flex items-center justify-center mx-auto">
                             <Smartphone size={32} />
                         </div>
-                        <p className="text-sm font-bold text-text-secondary">No assets found. Start by generating new links above.</p>
+                        <p className="text-sm font-bold text-text-secondary">No assets generated yet. Select an approved quote and generate links above.</p>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
@@ -200,7 +291,7 @@ export default function NFCManagerPage() {
                                             </td>
                                             <td className="px-8 py-6">
                                                 <div className="flex items-center gap-4 p-2 bg-slate-50 border border-slate-100 rounded-xl w-fit pr-4">
-                                                    <div className="p-2 bg-white border border-slate-200 rounded-lg shadow-sm origin-left">
+                                                    <div className="p-2 bg-white border border-slate-200 rounded-lg shadow-sm">
                                                         <QRCodeCanvas
                                                             id={`qr-${link.id}`}
                                                             value={link.url}
@@ -281,7 +372,6 @@ export default function NFCManagerPage() {
                             </div>
 
                             <div className="p-8 space-y-8">
-                                {/* Large QR Preview */}
                                 <div className="flex flex-col items-center gap-4">
                                     <div className="p-4 bg-white border-2 border-primary/10 rounded-3xl shadow-inner group relative">
                                         <QRCodeCanvas
@@ -300,7 +390,6 @@ export default function NFCManagerPage() {
                                     </p>
                                 </div>
 
-                                {/* URL Input */}
                                 <div className="space-y-3">
                                     <div className="flex items-center justify-between ml-1">
                                         <label className="text-[10px] font-black uppercase tracking-widest text-slate-700">Destination URL</label>
@@ -323,7 +412,6 @@ export default function NFCManagerPage() {
                                     </div>
                                 </div>
 
-                                {/* Details Grid */}
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="p-4 bg-slate-50 border border-slate-100 rounded-2xl">
                                         <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1">Setup Date</span>
@@ -347,7 +435,7 @@ export default function NFCManagerPage() {
                                     </button>
                                     <button
                                         onClick={saveEdit}
-                                        className="flex-2 h-14 bg-primary text-white font-black uppercase tracking-widest text-xs rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+                                        className="flex-2 h-14 bg-primary text-white font-black uppercase tracking-widest text-xs rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 px-8"
                                     >
                                         <Save size={18} />
                                         Save Configuration

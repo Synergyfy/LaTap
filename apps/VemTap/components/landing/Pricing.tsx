@@ -32,7 +32,7 @@ export default function Pricing() {
             if (res.success) toast.success('Switched to Free plan!');
             else toast.error(res.error || 'Failed to update plan');
         } else {
-            setCheckoutPlan(plan);
+            setCheckoutPlan({ ...plan, billingCycle });
         }
     };
 
@@ -45,23 +45,29 @@ export default function Pricing() {
     const mainPlans = plans.filter(plan => plan.id !== 'white-label');
     const enterprisePlan = plans.find(plan => plan.id === 'white-label');
 
-    const formatPrice = (priceStr: string, cycle: string) => {
-        if (priceStr === 'Custom') return priceStr;
-        const basePrice = parseInt(priceStr.replace(/[^0-9]/g, ''));
-        if (isNaN(basePrice)) return priceStr;
+    const getBasePrice = (priceStr: string) => {
+        if (priceStr === 'Custom') return null;
+        return parseInt(priceStr.replace(/[^0-9]/g, ''));
+    };
 
-        let finalPrice = basePrice;
-        let period = '/mo';
+    // Returns the per-month equivalent price to show on the card
+    const getPerMonthPrice = (basePrice: number, cycle: string) => {
+        if (cycle === 'yearly') return Math.floor(basePrice * 0.8); // 20% off per month
+        if (cycle === 'quarterly') return Math.floor(basePrice * 0.9); // 10% off per month
+        return basePrice;
+    };
 
-        if (cycle === 'yearly') {
-            finalPrice = Math.floor((basePrice * 12) * 0.8); // 20% discount
-            period = '/yr';
-        } else if (cycle === 'quarterly') {
-            finalPrice = Math.floor((basePrice * 3) * 0.9); // 10% discount
-            period = '/qt';
-        }
+    // Returns the actual total charged at billing
+    const getBillingTotal = (basePrice: number, cycle: string) => {
+        if (cycle === 'yearly') return Math.floor(basePrice * 12 * 0.8);
+        if (cycle === 'quarterly') return Math.floor(basePrice * 3 * 0.9);
+        return basePrice;
+    };
 
-        return `₦${finalPrice.toLocaleString()}`;
+    const getBillingLabel = (cycle: string) => {
+        if (cycle === 'yearly') return 'billed annually';
+        if (cycle === 'quarterly') return 'billed quarterly';
+        return 'billed monthly';
     };
 
     return (
@@ -100,8 +106,9 @@ export default function Pricing() {
                     {mainPlans.map((plan, index) => {
                         const highlight = plan.isPopular;
                         const isCurrentPlan = user?.planId === plan.id;
-                        const displayPrice = formatPrice(plan.price, billingCycle);
-                        const displayPeriod = billingCycle === 'monthly' ? '/mo' : billingCycle === 'yearly' ? '/yr' : '/qt';
+                        const basePrice = getBasePrice(plan.price);
+                        const perMonthPrice = basePrice ? getPerMonthPrice(basePrice, billingCycle) : null;
+                        const billingTotal = basePrice ? getBillingTotal(basePrice, billingCycle) : null;
 
                         return (
                             <div
@@ -127,15 +134,30 @@ export default function Pricing() {
                                         {plan.description}
                                     </p>
                                 </div>
-                                <div className="mb-8">
-                                    <span className="text-4xl font-display font-bold">{displayPrice}</span>
-                                    {plan.id !== 'free' && (
-                                        <span className={`text-sm font-bold ml-2 ${highlight ? 'text-white/70' : 'text-text-secondary dark:opacity-60'}`}>
-                                            {displayPeriod}
-                                        </span>
+                                <div className="mb-2">
+                                    {plan.id === 'free' ? (
+                                        <span className="text-4xl font-display font-bold">₦0</span>
+                                    ) : perMonthPrice ? (
+                                        <>
+                                            <div className="flex items-end gap-1">
+                                                <span className="text-4xl font-display font-bold">
+                                                    ₦{perMonthPrice.toLocaleString()}
+                                                </span>
+                                                <span className={`text-sm font-bold mb-1 ${highlight ? 'text-white/70' : 'text-text-secondary'}`}>
+                                                    /mo
+                                                </span>
+                                            </div>
+                                            {billingCycle !== 'monthly' && billingTotal && (
+                                                <p className={`text-[10px] font-medium mt-1 ${highlight ? 'text-white/60' : 'text-text-secondary'}`}>
+                                                    ₦{billingTotal.toLocaleString()} {getBillingLabel(billingCycle)}
+                                                </p>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <span className="text-4xl font-display font-bold">{plan.price}</span>
                                     )}
                                 </div>
-                                <ul className="space-y-4 mb-8 flex-1">
+                                <ul className="space-y-4 mb-8 flex-1 mt-4">
                                     {plan.features.map((feature, fIndex) => (
                                         <li key={fIndex} className="flex items-start gap-3 text-xs font-semibold leading-relaxed">
                                             <CheckCircle2 className={`w-4 h-4 mt-0.5 shrink-0 ${highlight ? 'text-white' : 'text-primary'}`} />
@@ -217,6 +239,7 @@ export default function Pricing() {
                         isOpen={!!checkoutPlan}
                         onClose={() => setCheckoutPlan(null)}
                         plan={checkoutPlan}
+                        billingCycle={checkoutPlan.billingCycle}
                     />
                 )}
             </div>
