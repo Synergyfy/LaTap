@@ -21,6 +21,9 @@ interface User {
   billingCycleAt?: string;
   phone?: string;
   plan?: string;
+  status?: string;
+  lastLogin?: string;
+  joined?: string;
 }
 
 interface AuthState {

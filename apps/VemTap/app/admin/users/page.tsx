@@ -9,7 +9,7 @@ export default function AdminUsersPage() {
     const [filterRole, setFilterRole] = useState('all');
     const [filterStatus, setFilterStatus] = useState('all');
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-    const [selectedUser, setSelectedUser] = useState<any>(null);
+    const [selectedUser, setSelectedUser] = useState<any | null>(null);
     const { registeredUsers, adminCreateUser, adminUpdateUser, adminDeleteUser } = useAuthStore();
 
     // Combine mock users with registered users from store
@@ -28,9 +28,9 @@ export default function AdminUsersPage() {
 
     const stats = [
         { label: 'Total Users', value: users.length.toString(), icon: 'people', color: 'blue' },
-        { label: 'Business Owners', value: users.filter(u => u.role === 'Business Owner').length.toString(), icon: 'store', color: 'purple' },
-        { label: 'Customers', value: users.filter(u => u.role === 'Customer').length.toString(), icon: 'person', color: 'green' },
-        { label: 'Staff Members', value: users.filter(u => u.role === 'Staff').length.toString(), icon: 'badge', color: 'orange' },
+        { label: 'Business Owners', value: users.filter((u: any) => u.role === 'Business Owner' || u.role === 'owner').length.toString(), icon: 'store', color: 'purple' },
+        { label: 'Customers', value: users.filter((u: any) => u.role === 'Customer' || u.role === 'customer').length.toString(), icon: 'person', color: 'green' },
+        { label: 'Staff Members', value: users.filter((u: any) => u.role === 'Staff' || u.role === 'staff' || u.role === 'manager').length.toString(), icon: 'badge', color: 'orange' },
     ];
 
     const handleDelete = (id: string) => {
@@ -52,10 +52,19 @@ export default function AdminUsersPage() {
     const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
+
+        // Map UI roles to store roles
+        const uiRole = formData.get('role') as string;
+        let mappedRole: UserRole = 'staff';
+        if (uiRole === 'Admin') mappedRole = 'admin';
+        else if (uiRole === 'Business Owner') mappedRole = 'owner';
+        else if (uiRole === 'Customer') mappedRole = 'customer';
+        else if (uiRole === 'Staff') mappedRole = 'staff';
+
         const userData = {
             name: formData.get('name') as string,
             email: formData.get('email') as string,
-            role: (formData.get('role') as string).toLowerCase().replace(' ', '_') as UserRole,
+            role: mappedRole,
             status: formData.get('status') as string,
             password: formData.get('password') as string || 'default123',
             lastLogin: selectedUser?.lastLogin || 'Never',
@@ -65,7 +74,7 @@ export default function AdminUsersPage() {
         if (selectedUser) {
             if (MOCK_DATA.find(u => u.id === selectedUser.id)) {
                 notify.error("Cannot modify mock admin users in demo mode.");
-            } else {
+            } else if (selectedUser.id) {
                 adminUpdateUser(selectedUser.id, userData);
                 notify.success('User updated successfully');
             }
@@ -251,7 +260,7 @@ export default function AdminUsersPage() {
                                                     <span className="material-icons-round text-lg">lock_reset</span>
                                                 </button>
                                                 <button
-                                                    onClick={() => handleDelete(user.id)}
+                                                    onClick={() => user.id && handleDelete(user.id)}
                                                     className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
                                                     title="Disable Account"
                                                 >
