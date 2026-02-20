@@ -12,6 +12,7 @@ import {
 import { DevicesService } from './devices.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
+import { UpdateAssetNamesDto } from './dto/update-asset-names.dto';
 import { Device } from './entities/device.entity';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { UserRole } from '../users/entities/user.entity';
@@ -27,7 +28,7 @@ import {
 @Controller('devices')
 @Roles(UserRole.OWNER, UserRole.MANAGER) // Only Owners and Managers can manage devices
 export class DevicesController {
-  constructor(private readonly devicesService: DevicesService) {}
+  constructor(private readonly devicesService: DevicesService) { }
 
   @Post()
   @ApiOperation({ summary: 'Register a new NFC device' })
@@ -59,6 +60,56 @@ export class DevicesController {
   @ApiResponse({ status: 200, description: 'Device details', type: Device })
   findOne(@Request() req, @Param('id') id: string) {
     return this.devicesService.findOne(id, req.user.businessId);
+  }
+
+  @Post('generate')
+  @ApiOperation({ summary: 'Generate devices for all ready orders' })
+  @ApiResponse({
+    status: 201,
+    description: 'Devices successfully generated from ready orders',
+    type: [Device],
+    schema: {
+      example: [
+        {
+          id: 'dev-1uuid',
+          name: '',
+          code: 'A1B2C3D4E',
+          status: 'active',
+          businessId: 'biz-1uuid',
+          orderId: 'order-1uuid',
+          totalScans: 0,
+          createdAt: '2023-11-01T10:00:00Z'
+        }
+      ]
+    }
+  })
+  generateAssets(@Request() req) {
+    return this.devicesService.generateDevicesForReadyOrders(req.user.id, req.user.businessId);
+  }
+
+  @Patch('names')
+  @ApiOperation({ summary: 'Update names for generated assets' })
+  @ApiResponse({
+    status: 200,
+    description: 'Assets names were correctly updated',
+    type: [Device],
+    schema: {
+      example: [
+        {
+          id: 'dev-1uuid',
+          name: 'Front Door Scanner',
+          code: 'A1B2C3D4E',
+          status: 'active',
+          businessId: 'biz-1uuid',
+          orderId: 'order-1uuid',
+          totalScans: 0,
+          createdAt: '2023-11-01T10:00:00Z'
+        }
+      ]
+    }
+  })
+  updateNames(@Request() req, @Body() dto: UpdateAssetNamesDto) {
+    return this.devicesService.updateAssetNames(req.user.businessId, dto);
   }
 
   @Patch(':id')

@@ -2,11 +2,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ProductsService } from './products.service';
 import { Product, ProductStatus } from './entities/product.entity';
-import { Quote } from './entities/quote.entity';
+import { Quote, QuoteStatus } from './entities/quote.entity';
+import { QuoteNegotiation, OfferedByRole } from './entities/quote-negotiation.entity';
+import { Order, OrderStatus } from './entities/order.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { RequestQuoteDto } from './dto/request-quote.dto';
-import { User } from '../users/entities/user.entity';
-import { NotFoundException } from '@nestjs/common';
+import { NegotiateQuoteDto } from './dto/negotiate-quote.dto';
+import { User, UserRole } from '../users/entities/user.entity';
+import { NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
 
 const mockProductRepository = {
   create: jest.fn(),
@@ -19,6 +22,20 @@ const mockProductRepository = {
 const mockQuoteRepository = {
   create: jest.fn(),
   save: jest.fn(),
+  find: jest.fn(),
+  findOne: jest.fn(),
+};
+
+const mockNegotiationRepository = {
+  create: jest.fn(),
+  save: jest.fn(),
+};
+
+const mockOrderRepository = {
+  create: jest.fn(),
+  save: jest.fn(),
+  find: jest.fn(),
+  findOne: jest.fn(),
 };
 
 describe('ProductsService', () => {
@@ -36,10 +53,22 @@ describe('ProductsService', () => {
           provide: getRepositoryToken(Quote),
           useValue: mockQuoteRepository,
         },
+        {
+          provide: getRepositoryToken(QuoteNegotiation),
+          useValue: mockNegotiationRepository,
+        },
+        {
+          provide: getRepositoryToken(Order),
+          useValue: mockOrderRepository,
+        },
       ],
     }).compile();
 
     service = module.get<ProductsService>(ProductsService);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -186,6 +215,73 @@ describe('ProductsService', () => {
       });
       expect(mockQuoteRepository.save).toHaveBeenCalledWith(quote);
       expect(result).toEqual(quote);
+    });
+  });
+
+  describe('negotiateQuote', () => {
+    it('should throw if quote not found', async () => {
+      mockQuoteRepository.findOne.mockResolvedValue(null);
+      await expect(service.negotiateQuote('id', new User(), { priceOffered: 100 })).rejects.toThrow(NotFoundException);
+    });
+
+    it('should successfully negotiate', async () => {
+      const user = new User();
+      user.id = 'owner-id';
+      user.role = UserRole.OWNER;
+
+      const quote = new Quote();
+      quote.id = 'quote-1';
+      quote.userId = 'owner-id';
+      quote.status = QuoteStatus.PENDING;
+      quote.isNegotiable = true;
+
+      mockQuoteRepository.findOne.mockResolvedValue(quote);
+      mockNegotiationRepository.create.mockReturnValue({ priceOffered: 100 });
+      mockQuoteRepository.save.mockResolvedValue({ ...quote, currentPrice: 100 });
+
+      const result = await service.negotiateQuote('quote-1', user, { priceOffered: 100, message: 'Offer' });
+
+      expect(mockNegotiationRepository.create).toHaveBeenCalled();
+      expect(mockQuoteRepository.save).toHaveBeenCalled();
+    });
+  });
+
+  describe('acceptQuote', () => {
+    it('should accept quote and create order', async () => {
+      const user = new User();
+      user.id = 'owner-id';
+
+      const quote = new Quote();
+      quote.id = 'quote-1';
+      quote.userId = 'owner-id';
+      quote.status = QuoteStatus.ADMIN_OFFERED;
+      quote.currentPrice = 500;
+
+      const order = new Order();
+
+      mockQuoteRepository.findOne.mockResolvedValue(quote);
+      mockOrderRepository.create.mockReturnValue(order);
+      mockOrderRepository.save.mockResolvedValue(order);
+
+      await service.acceptQuote('quote-1', user);
+
+      expect(quote.status).toBe(QuoteStatus.ACCEPTED);
+      expect(mockOrderRepository.create).toHaveBeenCalled();
+      expect(mockOrderRepository.save).toHaveBeenCalled();
+    });
+  });
+
+  describe('markOrderReady', () => {
+    it('should mark order as ready', async () => {
+      const order = new Order();
+      order.id = 'order-1';
+      order.status = OrderStatus.PENDING;
+
+      mockOrderRepository.findOne.mockResolvedValue(order);
+      mockOrderRepository.save.mockResolvedValue({ ...order, status: OrderStatus.READY });
+
+      const result = await service.markOrderReady('order-1');
+      expect(result.status).toBe(OrderStatus.READY);
     });
   });
 });

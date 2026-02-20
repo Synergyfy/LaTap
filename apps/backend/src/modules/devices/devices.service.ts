@@ -8,13 +8,17 @@ import { Repository } from 'typeorm';
 import { Device, DeviceStatus } from './entities/device.entity';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
+import { UpdateAssetNamesDto } from './dto/update-asset-names.dto';
+import { Order, OrderStatus } from '../products/entities/order.entity';
 
 @Injectable()
 export class DevicesService {
   constructor(
     @InjectRepository(Device)
     private devicesRepository: Repository<Device>,
-  ) {}
+    @InjectRepository(Order)
+    private orderRepository: Repository<Order>,
+  ) { }
 
   async create(
     businessId: string,
@@ -72,5 +76,79 @@ export class DevicesService {
       totalScans: devices.reduce((acc, d) => acc + d.totalScans, 0),
       offline: devices.filter((d) => d.status === DeviceStatus.INACTIVE).length,
     };
+  }
+
+  generateRandomCode(): string {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+    for (let i = 0; i < 9; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  }
+
+  async generateDevicesForReadyOrders(userId: string, businessId: string): Promise<Device[]> {
+    const readyOrders = await this.orderRepository.find({
+      where: { userId, status: OrderStatus.READY },
+      relations: ['quote', 'devices'],
+    });
+
+    const newDevices: Device[] = [];
+
+    for (const order of readyOrders) {
+      if (!order.quote) continue;
+
+      const totalAllowed = order.quote.quantity;
+      const currentGenerated = order.devices?.length || 0;
+      let remaining = totalAllowed - currentGenerated;
+
+      while (remaining > 0) {
+        let code = '';
+        let isUnique = false;
+
+        while (!isUnique) {
+          code = this.generateRandomCode();
+          const existing = await this.devicesRepository.findOneBy({ code });
+          if (!existing) isUnique = true;
+        }
+
+        const device = this.devicesRepository.create({
+          name: '',
+          code,
+          status: DeviceStatus.ACTIVE,
+          businessId,
+          orderId: order.id,
+          order,
+        });
+
+        newDevices.push(device);
+        remaining--;
+      }
+    }
+
+    if (newDevices.length > 0) {
+      await this.devicesRepository.save(newDevices);
+    }
+
+    return newDevices;
+  }
+
+  async updateAssetNames(businessId: string, dto: UpdateAssetNamesDto): Promise<Device[]> {
+    const updatedDevices: Device[] = [];
+
+    for (const asset of dto.assets) {
+      const device = await this.devicesRepository.findOneBy({
+        id: asset.id,
+        businessId,
+      });
+
+      if (device) {
+        device.name = asset.name;
+        await this.devicesRepository.save(device);
+        updatedDevices.push(device);
+      }
+    }
+
+    return updatedDevices;
   }
 }

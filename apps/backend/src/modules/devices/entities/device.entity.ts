@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { AbstractBaseEntity } from '../../../common/entities/base.entity';
 import { Business } from '../../businesses/entities/business.entity';
 import { Visit } from '../../visitors/entities/visit.entity';
+import { Order } from '../../products/entities/order.entity';
 
 export enum DeviceStatus {
   ACTIVE = 'active',
@@ -61,4 +62,19 @@ export class Device extends AbstractBaseEntity {
 
   @OneToMany(() => Visit, (visit) => visit.device)
   visits: Visit[];
+
+  @ManyToOne(() => Order, (order) => order.devices, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
+  @JoinColumn({ name: 'orderId' })
+  order: Order;
+
+  @ApiProperty({
+    example: 'order-uuid',
+    description: 'Order ID the device was generated from',
+    required: false,
+  })
+  @Column({ nullable: true })
+  orderId: string;
 }

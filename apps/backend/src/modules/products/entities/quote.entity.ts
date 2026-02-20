@@ -3,9 +3,16 @@ import { ApiProperty } from '@nestjs/swagger';
 import { AbstractBaseEntity } from '../../../common/entities/base.entity';
 import { User } from '../../users/entities/user.entity';
 import { Product } from './product.entity';
+import { QuoteNegotiation } from './quote-negotiation.entity';
+import { Order } from './order.entity';
+import { OneToMany, OneToOne } from 'typeorm';
 
 export enum QuoteStatus {
   PENDING = 'Pending',
+  ADMIN_OFFERED = 'Admin_Offered',
+  OWNER_OFFERED = 'Owner_Offered',
+  ACCEPTED = 'Accepted',
+  REJECTED = 'Rejected',
   PROCESSED = 'Processed',
 }
 
@@ -50,4 +57,18 @@ export class Quote extends AbstractBaseEntity {
   @ApiProperty({ example: 'product-uuid' })
   @Column()
   productId: string;
+
+  @ApiProperty({ example: 900 })
+  @Column('decimal', { precision: 10, scale: 2, nullable: true })
+  currentPrice: number;
+
+  @ApiProperty({ example: true })
+  @Column({ default: true })
+  isNegotiable: boolean;
+
+  @OneToMany(() => QuoteNegotiation, (negotiation) => negotiation.quote)
+  negotiations: QuoteNegotiation[];
+
+  @OneToOne(() => Order, (order) => order.quote)
+  order: Order;
 }
