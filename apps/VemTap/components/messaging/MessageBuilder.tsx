@@ -179,7 +179,7 @@ export default function MessageBuilder({ defaultChannel }: MessageBuilderProps) 
     const router = useRouter();
     const { user } = useAuthStore();
     const { templates, wallets } = useMessagingStore();
-    const { branchId: currentBranchId } = useCustomerFlowStore();
+    const currentBranchId = user?.businessId || 'bistro_001';
     const [channel, setChannel] = useState<MessageChannel>(defaultChannel || 'SMS');
     const wallet = wallets[channel];
 
@@ -203,10 +203,10 @@ export default function MessageBuilder({ defaultChannel }: MessageBuilderProps) 
 
     // Dynamic Audience counts based on branch
     const getAudienceCount = () => {
-        const branchVisitors = getFilteredVisitors(currentBranchId || 'bistro_001');
-        if (audience === 'returning') return branchVisitors.filter(v => v.visits > 1).length;
-        if (audience === 'new') return branchVisitors.filter(v => v.visits === 1).length;
-        if (audience === 'premium') return branchVisitors.filter(v => (v.visits > 5 || v.totalSpent > 10000)).length;
+        const branchVisitors = getFilteredVisitors(currentBranchId);
+        if (audience === 'returning') return branchVisitors.filter((v: any) => v.status === 'returning').length;
+        if (audience === 'new') return branchVisitors.filter((v: any) => v.status === 'new').length;
+        if (audience === 'premium') return branchVisitors.filter((v: any) => v.status === 'returning' && (v.timestamp < Date.now() - 86400000)).length; // Mock logic
         return branchVisitors.length;
     };
 
@@ -270,9 +270,9 @@ export default function MessageBuilder({ defaultChannel }: MessageBuilderProps) 
                     <label className="block text-xs font-bold uppercase text-text-secondary mb-3">Target Audience</label>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                         {[
-                            { id: 'returning', label: 'Returning Users', sub: `(${getFilteredVisitors(currentBranchId || 'all').filter(v => v.visits > 1).length})`, icon: Users },
-                            { id: 'new', label: 'New Users', sub: `(${getFilteredVisitors(currentBranchId || 'all').filter(v => v.visits === 1).length})`, icon: Smartphone },
-                            { id: 'premium', label: 'Premium Users', sub: `(${getFilteredVisitors(currentBranchId || 'all').filter(v => (v.visits > 5 || v.totalSpent > 10000)).length})`, icon: CheckCircle }
+                            { id: 'returning', label: 'Returning Users', sub: `(${getFilteredVisitors(currentBranchId).filter((v: any) => v.status === 'returning').length})`, icon: Users },
+                            { id: 'new', label: 'New Users', sub: `(${getFilteredVisitors(currentBranchId).filter((v: any) => v.status === 'new').length})`, icon: Smartphone },
+                            { id: 'premium', label: 'Premium Users', sub: `(${getFilteredVisitors(currentBranchId).filter((v: any) => v.status === 'returning').length})`, icon: CheckCircle }
                         ].map(opt => (
                             <button
                                 key={opt.id}
@@ -340,9 +340,9 @@ export default function MessageBuilder({ defaultChannel }: MessageBuilderProps) 
                             <label className="block text-[10px] font-black uppercase text-text-secondary mb-2 tracking-widest ml-1">Target Audience</label>
                             <div className="grid grid-cols-3 gap-2">
                                 {[
-                                    { id: 'returning', label: 'Returning', sub: getFilteredVisitors(currentBranchId || 'all').filter(v => v.visits > 1).length, icon: Users },
-                                    { id: 'new', label: 'New', sub: getFilteredVisitors(currentBranchId || 'all').filter(v => v.visits === 1).length, icon: Smartphone },
-                                    { id: 'premium', label: 'Premium', sub: getFilteredVisitors(currentBranchId || 'all').filter(v => (v.visits > 5 || v.totalSpent > 10000)).length, icon: CheckCircle }
+                                    { id: 'returning', label: 'Returning', sub: getFilteredVisitors(currentBranchId).filter((v: any) => v.status === 'returning').length, icon: Users },
+                                    { id: 'new', label: 'New', sub: getFilteredVisitors(currentBranchId).filter((v: any) => v.status === 'new').length, icon: Smartphone },
+                                    { id: 'premium', label: 'Premium', sub: getFilteredVisitors(currentBranchId).filter((v: any) => v.status === 'returning').length, icon: CheckCircle }
                                 ].map(opt => (
                                     <button
                                         key={opt.id}
