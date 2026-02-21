@@ -13,17 +13,27 @@ export class AnalyticsService {
         private readonly userRepository: Repository<User>,
     ) { }
 
-    async getDashboardAnalytics(branchId: string) {
-        const where = { branchId };
+    async getDashboardAnalytics(branchId?: string, businessId?: string) {
+        const where: any = {};
+        if (branchId) {
+            where.branchId = branchId;
+        } else if (businessId) {
+            where.businessId = businessId;
+        }
 
         const totalVisitsCount = await this.visitRepository.count({ where });
 
-        const totalCustomersCount = await this.userRepository
-            .createQueryBuilder('user')
-            .innerJoin('user.visits', 'visit', 'visit.branchId = :branchId', { branchId })
+        const queryBuilder = this.userRepository.createQueryBuilder('user')
             .where('user.role = :role', { role: UserRole.CUSTOMER })
-            .groupBy('user.id')
-            .getCount();
+            .groupBy('user.id');
+
+        if (branchId) {
+            queryBuilder.innerJoin('user.visits', 'visit', 'visit.branchId = :branchId', { branchId });
+        } else if (businessId) {
+            queryBuilder.innerJoin('user.visits', 'visit', 'visit.businessId = :businessId', { businessId });
+        }
+
+        const totalCustomersCount = await queryBuilder.getCount();
 
         return {
             stats: [
@@ -62,8 +72,13 @@ export class AnalyticsService {
         };
     }
 
-    async getFootfallAnalytics(branchId: string) {
-        const where = { branchId };
+    async getFootfallAnalytics(branchId?: string, businessId?: string) {
+        const where: any = {};
+        if (branchId) {
+            where.branchId = branchId;
+        } else if (businessId) {
+            where.businessId = businessId;
+        }
 
         const totalFootfall = await this.visitRepository.count({ where });
 
@@ -98,7 +113,7 @@ export class AnalyticsService {
         };
     }
 
-    async getPeakTimesAnalytics(branchId: string) {
+    async getPeakTimesAnalytics(branchId?: string, businessId?: string) {
         return {
             weeklyData: [
                 { day: 'Monday', hours: [10, 15, 20, 25, 40, 50, 45, 30, 25, 20] },

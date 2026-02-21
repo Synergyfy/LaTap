@@ -21,9 +21,10 @@ export class AnalyticsController {
     @ApiOperation({ summary: 'Get primary analytics dashboard stats' })
     @ApiResponse({ status: 200, description: 'Analytics summary' })
     getDashboardAnalytics(@Request() req, @Query('branchId') branchId?: string) {
-        const resolved = branchId || req.user?.branchId;
-        if (!resolved) throw new BadRequestException('branchId is required');
-        return this.analyticsService.getDashboardAnalytics(resolved);
+        const resolvedBranchId = branchId || req.user?.branchId;
+        const businessId = req.user?.businessId;
+        if (!resolvedBranchId && !businessId) throw new BadRequestException('branchId or business context is required');
+        return this.analyticsService.getDashboardAnalytics(resolvedBranchId, businessId);
     }
 
     @Get('footfall')
@@ -32,9 +33,10 @@ export class AnalyticsController {
     @ApiOperation({ summary: 'Get footfall analytics' })
     @ApiResponse({ status: 200, description: 'Footfall stats' })
     getFootfallAnalytics(@Request() req, @Query('branchId') branchId?: string) {
-        const resolved = branchId || req.user?.branchId;
-        if (!resolved) throw new BadRequestException('branchId is required');
-        return this.analyticsService.getFootfallAnalytics(resolved);
+        const resolvedBranchId = branchId || req.user?.branchId;
+        const businessId = req.user?.businessId;
+        if (!resolvedBranchId && !businessId) throw new BadRequestException('branchId or business context is required');
+        return this.analyticsService.getFootfallAnalytics(resolvedBranchId, businessId);
     }
 
     @Get('peak-times')
@@ -43,9 +45,10 @@ export class AnalyticsController {
     @ApiOperation({ summary: 'Get peak times analytics' })
     @ApiResponse({ status: 200, description: 'Peak times stats' })
     getPeakTimesAnalytics(@Request() req, @Query('branchId') branchId?: string) {
-        const resolved = branchId || req.user?.branchId;
-        if (!resolved) throw new BadRequestException('branchId is required');
-        return this.analyticsService.getPeakTimesAnalytics(resolved);
+        const resolvedBranchId = branchId || req.user?.branchId;
+        const businessId = req.user?.businessId;
+        if (!resolvedBranchId && !businessId) throw new BadRequestException('branchId or business context is required');
+        return this.analyticsService.getPeakTimesAnalytics(resolvedBranchId, businessId);
     }
 
     // --- Admin Endpoints ---
