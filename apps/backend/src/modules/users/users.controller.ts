@@ -4,10 +4,11 @@ import {
   Post,
   Body,
   Patch,
-  Param,
   Delete,
   UseGuards,
   Request,
+  Param,
+  Query,
   BadRequestException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -28,7 +29,7 @@ import * as bcrypt from 'bcrypt';
 @ApiBearerAuth()
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Get('staff')
   @Roles(UserRole.OWNER, UserRole.MANAGER)
@@ -82,5 +83,51 @@ export class UsersController {
   @ApiOperation({ summary: 'Remove a staff member' })
   async removeStaff(@Request() req, @Param('id') id: string) {
     return this.usersService.remove(id, req.user.businessId);
+  }
+
+  // --- Admin Endpoints ---
+
+  @Get('admin')
+  @Roles(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Admin: Get all users with filters and stats' })
+  async findAllAdmin(
+    @Query('search') search?: string,
+    @Query('role') role?: string,
+    @Query('status') status?: string,
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+  ) {
+    return this.usersService.findAllAdmin({ search, role, status, page, limit });
+  }
+
+  @Post('admin')
+  @Roles(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Admin: Create a new user manually' })
+  async adminCreateUser(@Body() createUserDto: any) {
+    return this.usersService.adminCreateUser(createUserDto);
+  }
+
+  @Patch('admin/:id')
+  @Roles(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Admin: Update user details' })
+  async adminUpdateUser(
+    @Param('id') id: string,
+    @Body() updateUserDto: any,
+  ) {
+    return this.usersService.adminUpdateUser(id, updateUserDto);
+  }
+
+  @Delete('admin/:id')
+  @Roles(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Admin: Disable user account (Sets status to Suspended)' })
+  async adminDeleteUser(@Param('id') id: string) {
+    return this.usersService.adminDeleteUser(id);
+  }
+
+  @Post('admin/reset-password-link/:email')
+  @Roles(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Admin: Send password reset link to user email' })
+  async adminResetPasswordLink(@Param('email') email: string) {
+    return this.usersService.adminResetPasswordLink(email);
   }
 }

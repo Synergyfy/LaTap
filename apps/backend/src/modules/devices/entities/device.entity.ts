@@ -40,6 +40,14 @@ export class Device extends AbstractBaseEntity {
   @Column({ default: 0 })
   totalScans: number;
 
+  @ApiProperty({ example: 'Card', description: 'Form factor of the device' })
+  @Column({ default: 'Card' })
+  type: string;
+
+  @ApiProperty({ example: 100, description: 'Battery percentage level' })
+  @Column({ default: 100 })
+  batteryLevel: number;
+
   @ApiProperty({
     example: '2023-10-27T10:00:00Z',
     description: 'Last active timestamp',
@@ -57,7 +65,7 @@ export class Device extends AbstractBaseEntity {
     example: '123e4567-e89b-12d3-a456-426614174000',
     description: 'Business ID',
   })
-  @Column()
+  @Column({ nullable: true })
   businessId: string;
 
   @OneToMany(() => Visit, (visit) => visit.device)

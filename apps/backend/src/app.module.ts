@@ -12,9 +12,12 @@ import { VisitorsModule } from './modules/visitors/visitors.module';
 import { CampaignsModule } from './modules/campaigns/campaigns.module';
 import { SurveysModule } from './modules/surveys/surveys.module';
 import { ProductsModule } from './modules/products/products.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
+import { SettingsModule } from './modules/settings/settings.module';
 
 @Module({
   imports: [
@@ -60,6 +63,9 @@ import { RolesGuard } from './common/guards/roles.guard';
     CampaignsModule,
     SurveysModule,
     ProductsModule,
+    AnalyticsModule,
+    SubscriptionsModule,
+    SettingsModule,
   ],
   controllers: [AppController],
   providers: [

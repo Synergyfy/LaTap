@@ -6,8 +6,8 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
   Request,
+  Query,
 } from '@nestjs/common';
 import { DevicesService } from './devices.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
@@ -128,5 +128,50 @@ export class DevicesController {
   @ApiResponse({ status: 200, description: 'Device removed' })
   remove(@Request() req, @Param('id') id: string) {
     return this.devicesService.remove(id, req.user.businessId);
+  }
+
+  // --- Admin Endpoints ---
+
+  @Get('admin')
+  @Roles(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Admin: Get all devices with filters' })
+  async findAllAdmin(
+    @Query('search') search?: string,
+    @Query('status') status?: string,
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+  ) {
+    return this.devicesService.findAllAdmin({ search, status, page, limit });
+  }
+
+  @Get('admin/stats')
+  @Roles(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Admin: Get device statistics' })
+  async getAdminStats() {
+    return this.devicesService.getAdminStats();
+  }
+
+  @Post('admin')
+  @Roles(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Admin: Manually provision a new device' })
+  async adminCreate(@Body() createDeviceDto: any) {
+    return this.devicesService.adminCreate(createDeviceDto);
+  }
+
+  @Patch('admin/:id')
+  @Roles(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Admin: Update device configuration' })
+  async adminUpdate(
+    @Param('id') id: string,
+    @Body() updateDeviceDto: any,
+  ) {
+    return this.devicesService.adminUpdate(id, updateDeviceDto);
+  }
+
+  @Delete('admin/:id')
+  @Roles(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Admin: Decommission a device globally' })
+  async adminDelete(@Param('id') id: string) {
+    return this.devicesService.adminDelete(id);
   }
 }

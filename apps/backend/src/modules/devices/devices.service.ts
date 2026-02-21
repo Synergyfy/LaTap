@@ -151,4 +151,82 @@ export class DevicesService {
 
     return updatedDevices;
   }
+
+  // --- Admin Methods ---
+
+  async findAllAdmin(query: { search?: string, status?: string, page?: number, limit?: number }) {
+    const qb = this.devicesRepository.createQueryBuilder('device')
+      .leftJoinAndSelect('device.business', 'business');
+
+    if (query.status) {
+      if (query.status === 'active') {
+        qb.andWhere('device.businessId IS NOT NULL');
+      } else if (query.status === 'inactive') {
+        qb.andWhere('device.businessId IS NULL');
+      }
+    }
+
+    if (query.search) {
+      qb.andWhere('(device.code ILIKE :search OR device.id ILIKE :search OR business.name ILIKE :search)', { search: `%${query.search}%` });
+    }
+
+    const page = query.page || 1;
+    const limit = query.limit || 10;
+    qb.skip((page - 1) * limit).take(limit);
+    qb.orderBy('device.createdAt', 'DESC');
+
+    const [devices, total] = await qb.getManyAndCount();
+
+    return {
+      data: devices,
+      meta: {
+        total,
+        page,
+        lastPage: Math.ceil(total / limit),
+      }
+    };
+  }
+
+  async getAdminStats() {
+    const total = await this.devicesRepository.count();
+    const active = await this.devicesRepository.createQueryBuilder('d').where('d.businessId IS NOT NULL').getCount();
+    const inventory = await this.devicesRepository.createQueryBuilder('d').where('d.businessId IS NULL').getCount();
+
+    return {
+      total,
+      active,
+      inventory,
+      alerts: 0 // Mocking alerts for now
+    };
+  }
+
+  async adminCreate(deviceData: any): Promise<Device> {
+    const existing = await this.devicesRepository.findOneBy({ code: deviceData.id });
+    if (existing) {
+      throw new ConflictException('Device Serial already registered');
+    }
+
+    const device = this.devicesRepository.create({
+      code: deviceData.id,
+      name: deviceData.name || '',
+      type: deviceData.type,
+      // In a real app, assignedTo would map to a business ID. 
+      // If it's literally the string 'Unassigned' or blank, we leave businessId null
+      status: DeviceStatus.ACTIVE,
+    });
+    return this.devicesRepository.save(device);
+  }
+
+  async adminUpdate(id: string, updates: Partial<Device>): Promise<Device> {
+    const device = await this.devicesRepository.findOneBy({ id });
+    if (!device) throw new NotFoundException('Device not found');
+    Object.assign(device, updates);
+    return this.devicesRepository.save(device);
+  }
+
+  async adminDelete(id: string): Promise<void> {
+    const device = await this.devicesRepository.findOneBy({ id });
+    if (!device) throw new NotFoundException('Device not found');
+    await this.devicesRepository.remove(device);
+  }
 }
