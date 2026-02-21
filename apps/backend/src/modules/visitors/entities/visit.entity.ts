@@ -3,6 +3,7 @@ import { AbstractBaseEntity } from '../../../common/entities/base.entity';
 import { User } from '../../users/entities/user.entity';
 import { Business } from '../../businesses/entities/business.entity';
 import { Device } from '../../devices/entities/device.entity';
+import { Branch } from '../../branches/entities/branch.entity';
 
 @Entity('visits')
 export class Visit extends AbstractBaseEntity {
@@ -37,4 +38,11 @@ export class Visit extends AbstractBaseEntity {
     default: 'new',
   })
   status: 'new' | 'returning';
+
+  @ManyToOne(() => Branch, { onDelete: 'SET NULL', nullable: true })
+  @JoinColumn({ name: 'branchId' })
+  branch: Branch;
+
+  @Column({ nullable: true })
+  branchId: string;
 }

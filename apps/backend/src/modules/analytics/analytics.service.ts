@@ -1,14 +1,38 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Visit } from '../visitors/entities/visit.entity';
+import { User, UserRole } from '../users/entities/user.entity';
 
 @Injectable()
 export class AnalyticsService {
-    getDashboardAnalytics() {
+    constructor(
+        @InjectRepository(Visit)
+        private readonly visitRepository: Repository<Visit>,
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
+    ) { }
+
+    async getDashboardAnalytics(businessId: string, branchId?: string) {
+        const where: any = { businessId };
+        if (branchId) where.branchId = branchId;
+
+        const totalVisitsCount = await this.visitRepository.count({ where });
+
+        const totalCustomersCount = await this.userRepository
+            .createQueryBuilder('user')
+            .innerJoin('user.visits', 'visit', 'visit.businessId = :businessId', { businessId })
+            .where('user.role = :role', { role: UserRole.CUSTOMER })
+            .andWhere(branchId ? 'visit.branchId = :branchId' : '1=1', { branchId })
+            .groupBy('user.id')
+            .getCount();
+
         return {
             stats: [
-                { label: 'Total Visits', value: '12,842', trend: '+14%', isUp: true },
-                { label: 'New Customers', value: '4,120', trend: '+22%', isUp: true },
-                { label: 'Avg. Stay Time', value: '42m', trend: '-2%', isUp: false },
-                { label: 'Repeat Rate', value: '68%', trend: '+5%', isUp: true },
+                { label: 'Total Visits', value: totalVisitsCount.toLocaleString(), trend: '+0%', isUp: true },
+                { label: 'Total Customers', value: totalCustomersCount.toLocaleString(), trend: '+0%', isUp: true },
+                { label: 'Avg. Stay Time', value: '42m', trend: '0%', isUp: true },
+                { label: 'Repeat Rate', value: '0%', trend: '0%', isUp: true },
             ],
             peakTimes: [
                 { hour: '9am', value: 30 },
@@ -40,13 +64,18 @@ export class AnalyticsService {
         };
     }
 
-    getFootfallAnalytics() {
+    async getFootfallAnalytics(businessId: string, branchId?: string) {
+        const where: any = { businessId };
+        if (branchId) where.branchId = branchId;
+
+        const totalFootfall = await this.visitRepository.count({ where });
+
         return {
             stats: [
-                { label: 'Total Footfall', value: '45.2k' },
+                { label: 'Total Footfall', value: totalFootfall.toLocaleString() },
                 { label: 'Busiest Day', value: 'Saturday' },
                 { label: 'Peak Hour', value: '7:00 PM' },
-                { label: 'Devices Active', value: '18/20' },
+                { label: 'Devices Active', value: '1/1' },
             ],
             hourlyData: [
                 { hour: '8am', count: 12 }, { hour: '9am', count: 25 }, { hour: '10am', count: 45 }, { hour: '11am', count: 38 },
@@ -72,7 +101,7 @@ export class AnalyticsService {
         };
     }
 
-    getPeakTimesAnalytics() {
+    async getPeakTimesAnalytics(businessId: string, branchId?: string) {
         return {
             weeklyData: [
                 { day: 'Monday', hours: [10, 15, 20, 25, 40, 50, 45, 30, 25, 20] },

@@ -13,9 +13,13 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { Permissions } from '../../common/decorators/permissions.decorator';
 import { UserRole } from './entities/user.entity';
 import { BusinessesService } from '../businesses/businesses.service';
 import { BranchesService } from '../branches/branches.service';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { PermissionsGuard } from '../../common/guards/permissions.guard';
 import {
   ApiTags,
   ApiOperation,
@@ -29,6 +33,7 @@ import * as bcrypt from 'bcrypt';
 
 @ApiTags('users')
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, RolesGuard, PermissionsGuard)
 @Controller('users')
 export class UsersController {
   constructor(
@@ -39,6 +44,7 @@ export class UsersController {
 
   @Get('staff')
   @Roles(UserRole.OWNER, UserRole.MANAGER)
+  @Permissions('staff')
   @ApiOperation({
     summary: 'Get all staff members for the business (including managers)',
   })
