@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PageHeader from '@/components/dashboard/PageHeader';
 import { useCustomerFlowStore } from '@/store/useCustomerFlowStore';
 import { QrCode, Link as LinkIcon, Download, Copy, ExternalLink, Plus, Trash2, Cpu } from 'lucide-react';
@@ -17,10 +17,22 @@ interface NFCLink {
 
 export default function HardwarePage() {
     const { storeName } = useCustomerFlowStore();
-    const [links, setLinks] = useState<NFCLink[]>([
-        { id: '1', name: 'Main Entrance Tag', url: `https://vemtap.com/${storeName.toLowerCase().replace(/\s+/g, '-')}/entrance`, scans: 142, createdAt: '2023-12-01' },
-        { id: '2', name: 'Table 4 Tag', url: `https://vemtap.com/${storeName.toLowerCase().replace(/\s+/g, '-')}/table-4`, scans: 89, createdAt: '2023-12-05' },
-    ]);
+    const [origin, setOrigin] = useState('https://vemtap.com');
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setOrigin(window.location.origin);
+        }
+    }, []);
+
+    const [links, setLinks] = useState<NFCLink[]>([]);
+
+    useEffect(() => {
+        setLinks([
+            { id: '1', name: 'Main Entrance Tag', url: `${origin}/${storeName.toLowerCase().replace(/\s+/g, '-')}/entrance`, scans: 142, createdAt: '2023-12-01' },
+            { id: '2', name: 'Table 4 Tag', url: `${origin}/${storeName.toLowerCase().replace(/\s+/g, '-')}/table-4`, scans: 89, createdAt: '2023-12-05' },
+        ]);
+    }, [storeName, origin]);
 
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [newLinkName, setNewLinkName] = useState('');
@@ -34,7 +46,7 @@ export default function HardwarePage() {
         const newLink: NFCLink = {
             id: Date.now().toString(),
             name: newLinkName,
-            url: `https://vemtap.com/${storeName.toLowerCase().replace(/\s+/g, '-')}/${newLinkName.toLowerCase().replace(/\s+/g, '-')}`,
+            url: `${origin}/${storeName.toLowerCase().replace(/\s+/g, '-')}/${newLinkName.toLowerCase().replace(/\s+/g, '-')}`,
             scans: 0,
             createdAt: new Date().toISOString().split('T')[0]
         };
@@ -207,7 +219,7 @@ export default function HardwarePage() {
                             <div className="p-4 bg-primary/5 rounded-2xl border border-primary/10">
                                 <p className="text-xs font-bold text-primary mb-1">Generated URL preview:</p>
                                 <p className="text-[10px] font-mono text-text-secondary break-all">
-                                    https://vemtap.com/{storeName.toLowerCase().replace(/\s+/g, '-')}/{newLinkName.toLowerCase().replace(/\s+/g, '-') || '...'}
+                                    {origin}/{storeName.toLowerCase().replace(/\s+/g, '-')}/{newLinkName.toLowerCase().replace(/\s+/g, '-') || '...'}
                                 </p>
                             </div>
 

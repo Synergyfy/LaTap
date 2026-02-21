@@ -119,7 +119,7 @@ export default function NFCManagerPage() {
 
             {/* Approved Quota Panel */}
             {approvedNfcQuotes.length === 0 ? (
-                <div className="bg-amber-50 border border-amber-200 rounded-[2rem] p-8 flex items-start gap-5">
+                <div className="bg-amber-50 border border-amber-200 rounded-4xl p-8 flex items-start gap-5">
                     <div className="size-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center shrink-0">
                         <ShieldAlert size={24} />
                     </div>

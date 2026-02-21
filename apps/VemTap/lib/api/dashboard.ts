@@ -219,7 +219,7 @@ export const dashboardApi = {
   // Device Actions
   addDevice: async (device: any) => {
     await delay(800);
-    const id = Math.random().toString(36).substr(2, 9);
+    const id = device.id || Math.random().toString(36).substr(2, 9);
     const newDevice = { 
       ...device, 
       id,
