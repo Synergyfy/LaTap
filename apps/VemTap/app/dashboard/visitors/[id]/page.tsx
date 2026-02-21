@@ -159,7 +159,7 @@ export default function VisitorProfilePage({ params }: { params: { id: string } 
                             </button>
                         }>
                             <div className="bg-blue-50/50 border border-blue-100 rounded-xl p-4">
-                                <p className="text-sm text-text-main leading-relaxed italic">
+                                <p className="text-sm text-text-main leading-relaxed">
                                     "Prefers seating near the window. Usually visits on Tuesday mornings for a double espresso."
                                 </p>
                                 <div className="mt-3 flex items-center justify-between text-[10px] font-bold text-text-secondary uppercase tracking-wider">

@@ -74,7 +74,7 @@ export default function LoyaltyPage() {
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                     <div>
                         <h1 className="text-4xl font-display font-black text-slate-900 mb-2 tracking-tight">
-                            My <span className="text-primary italic">VemTap</span> Rewards
+                            My <span className="text-primary font-black">VemTap</span> Rewards
                         </h1>
                         <p className="text-slate-500 font-medium max-w-lg">
                             Earn points with every visit and purchase. Unlock exclusive perks at your favorite venues.

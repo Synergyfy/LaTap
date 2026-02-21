@@ -385,7 +385,7 @@ export default function NFCManagerPage() {
                                             <span className="bg-primary text-white text-[8px] font-black uppercase px-3 py-1 rounded-full shadow-lg">Live Preview</span>
                                         </div>
                                     </div>
-                                    <p className="text-[10px] text-text-secondary font-medium italic text-center max-w-[250px]">
+                                    <p className="text-[10px] text-text-secondary font-medium text-center max-w-[250px]">
                                         QR Code updates in real-time as you modify the destination URL.
                                     </p>
                                 </div>

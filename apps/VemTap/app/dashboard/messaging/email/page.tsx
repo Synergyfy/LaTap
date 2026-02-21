@@ -54,7 +54,7 @@ export default function EmailOverviewPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-4">
-                        <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 italic text-sm text-text-secondary">
+                        <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 text-sm text-text-secondary">
                             "Tell your brand's story with rich content and personalized messaging delivered to the inbox."
                         </div>
                         <div className="flex gap-4">

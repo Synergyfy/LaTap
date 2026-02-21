@@ -42,7 +42,7 @@ export default function Pricing() {
         </div>
     );
 
-    const mainPlans = plans.filter(plan => plan.id !== 'white-label');
+    const mainPlans = plans.filter(plan => plan.id !== 'white-label' && plan.id !== 'enterprise').slice(0, 4);
     const enterprisePlan = plans.find(plan => plan.id === 'white-label');
 
     const getBasePrice = (priceStr: string) => {
@@ -74,7 +74,7 @@ export default function Pricing() {
         <section id="pricing" className="py-20 bg-white overflow-hidden relative border-t border-gray-100">
             <div className="max-w-7xl mx-auto px-6 sm:px-10 py-16">
                 <div className="text-center max-w-2xl mx-auto mb-10">
-                    <h2 className="text-3xl md:text-5xl font-display font-bold text-text-main mb-3">Enterprise-Grade <span className="text-primary italic">Licensing</span></h2>
+                    <h2 className="text-3xl md:text-5xl font-display font-bold text-text-main mb-3">Enterprise-Grade <span className="text-primary">Licensing</span></h2>
                     <p className="text-base text-text-secondary font-medium">Clear pricing with no hidden fees.</p>
                 </div>
 

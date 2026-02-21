@@ -165,7 +165,7 @@ export default function TestimonialsPage() {
                                 <div className="flex items-center gap-3 mb-4">
                                     <span className="text-[8px] font-black uppercase tracking-widest bg-gray-100 text-gray-500 px-2 py-0.5 rounded-md">{t.category}</span>
                                 </div>
-                                <p className="text-xs text-text-secondary font-medium leading-relaxed mb-6 italic-none line-clamp-3">
+                                <p className="text-xs text-text-secondary font-medium leading-relaxed mb-6 line-clamp-3">
                                     "{t.quote}"
                                 </p>
                                 <div className="flex items-center gap-3">

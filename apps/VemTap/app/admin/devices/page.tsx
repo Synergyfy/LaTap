@@ -352,7 +352,7 @@ export default function AdminDevicesPage() {
                                             className="w-full h-12 pl-12 pr-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/30 focus:bg-white transition-all font-bold text-sm"
                                         />
                                     </div>
-                                    <p className="text-[10px] text-text-secondary font-medium italic ml-1">Leave blank to keep in global inventory</p>
+                                    <p className="text-[10px] text-text-secondary font-medium ml-1">Leave blank to keep in global inventory</p>
                                 </div>
 
                                 <button

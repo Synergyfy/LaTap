@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 import { ChevronDown, MapPin, Building2, Check, Plus, Layers, X, Save } from 'lucide-react';
 import { useBusinessStore } from '@/store/useBusinessStore';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -43,28 +44,37 @@ export default function BranchSwitcher() {
 
     return (
         <div className="relative" ref={dropdownRef}>
-            <button
-                onClick={() => { setIsOpen(!isOpen); setIsCreating(false); }}
-                className="flex items-center gap-3 px-3 py-2 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-white hover:border-primary/20 transition-all duration-200 group"
-            >
-                <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                    <Building2 size={18} />
-                </div>
-                <div className="text-left hidden sm:block">
-                    <p className="text-[10px] font-black text-primary uppercase tracking-widest leading-none mb-1">
-                        Active Branch
-                    </p>
-                    <div className="flex items-center gap-2">
-                        <span className="text-sm font-bold text-text-main truncate max-w-[120px]">
-                            {activeBranchId === 'all' ? 'All Branches' : (activeBranch?.name || 'Head Office')}
-                        </span>
-                        <ChevronDown
-                            size={14}
-                            className={`text-text-secondary transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-                        />
+            <div className="flex items-center gap-2">
+                <button
+                    onClick={() => { setIsOpen(!isOpen); setIsCreating(false); }}
+                    className="flex items-center gap-3 px-3 py-2 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-white hover:border-primary/20 transition-all duration-200 group"
+                >
+                    <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                        <Building2 size={18} />
                     </div>
-                </div>
-            </button>
+                    <div className="text-left hidden sm:block">
+                        <p className="text-[10px] font-black text-primary uppercase tracking-widest leading-none mb-1">
+                            Active Branch
+                        </p>
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm font-bold text-text-main truncate max-w-[120px]">
+                                {activeBranchId === 'all' ? 'All Branches' : (activeBranch?.name || 'Head Office')}
+                            </span>
+                            <ChevronDown
+                                size={14}
+                                className={`text-text-secondary transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+                            />
+                        </div>
+                    </div>
+                </button>
+                <Link
+                    href="/dashboard/settings/branches"
+                    className="p-2 text-text-secondary hover:text-primary transition-colors flex items-center gap-2 group"
+                    title="Manage Branches"
+                >
+                    <span className="material-icons-round text-lg">settings</span>
+                </Link>
+            </div>
 
             <AnimatePresence>
                 {isOpen && (

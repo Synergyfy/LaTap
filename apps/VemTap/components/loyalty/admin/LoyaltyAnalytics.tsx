@@ -85,7 +85,7 @@ export const LoyaltyAnalytics: React.FC<{ className?: string }> = ({ className }
                 <div className="lg:col-span-4 bg-white p-8 text-slate-900 border border-slate-200 rounded-2xl shadow-sm">
                     <div className="flex items-center gap-3 mb-8">
                         <PieChart className="w-5 h-5 text-primary" />
-                        <h3 className="text-lg font-bold italic tracking-tight uppercase">Tier Distribution</h3>
+                        <h3 className="text-lg font-bold tracking-tight uppercase">Tier Distribution</h3>
                     </div>
 
                     <div className="space-y-6">

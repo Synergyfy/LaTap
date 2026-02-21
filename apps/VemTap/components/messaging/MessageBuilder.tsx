@@ -386,7 +386,7 @@ export default function MessageBuilder({ defaultChannel }: MessageBuilderProps) 
                             </div>
                         </div>
                         <div className="flex justify-between items-center mt-2">
-                            <p className="text-[9px] text-text-secondary font-black uppercase tracking-widest italic flex items-center gap-1">
+                            <p className="text-[9px] text-text-secondary font-black uppercase tracking-widest flex items-center gap-1">
                                 <span className="text-primary tracking-normal not-italic underline decoration-2 underline-offset-4">{businessName}</span> branding will be attached
                             </p>
                             <p className="text-[10px] text-text-secondary font-medium uppercase tracking-tighter">
