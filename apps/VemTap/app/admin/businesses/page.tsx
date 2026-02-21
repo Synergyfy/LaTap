@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Modal from '@/components/ui/Modal';
 import { notify } from '@/lib/notify';
+import Link from 'next/link';
 
 export default function AdminBusinessesPage() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -386,9 +387,12 @@ export default function AdminBusinessesPage() {
                                                                             </p>
                                                                         </div>
                                                                         <div className="pt-2">
-                                                                            <button className="w-full py-2 px-4 bg-primary text-white text-xs font-bold rounded-lg hover:bg-primary-hover transition-all">
+                                                                            <Link
+                                                                                href={`/admin/analytics?businessId=${business.id}`}
+                                                                                className="block w-full py-2 px-4 bg-primary text-white text-xs font-bold rounded-lg hover:bg-primary-hover transition-all text-center"
+                                                                            >
                                                                                 View Full Analytics
-                                                                            </button>
+                                                                            </Link>
                                                                         </div>
                                                                     </div>
                                                                 </div>

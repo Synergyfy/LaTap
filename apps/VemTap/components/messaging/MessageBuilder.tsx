@@ -33,7 +33,7 @@ function PhonePreview({
     isEditable?: boolean
 }) {
     return (
-        <div className="relative w-[280px] h-[560px] bg-slate-900 rounded-[3rem] border-[10px] border-slate-800 shadow-2xl overflow-hidden ring-1 ring-slate-700 shrink-0">
+        <div className="relative w-[280px] h-[560px] bg-slate-900 rounded-[3rem] border-10 border-slate-800 shadow-2xl overflow-hidden ring-1 ring-slate-700 shrink-0">
             {/* Notch */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-slate-800 rounded-b-2xl z-30" />
 
