@@ -10,8 +10,11 @@ import toast from 'react-hot-toast';
 import Logo from '@/components/brand/Logo';
 import { SanitizedInput } from '@/components/ui/SanitizedInput';
 import { sanitizeFormData } from '@/lib/utils/sanitize';
+import { useRegisterOwner, useOtp } from '@/services/auth/hooks';
 
 export default function GetStarted() {
+    const { registerOwner, isLoading: isRegistering } = useRegisterOwner();
+    const { sendOtp, verifyOtp, isLoading: isOtpLoading } = useOtp();
     const router = useRouter();
     const { signup } = useAuthStore();
     const [step, setStep] = useState(1);
@@ -67,11 +70,77 @@ export default function GetStarted() {
         }
     };
 
+    const handleCreateAccount = async () => {
+        if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
+            toast.error('Please fill in all fields.');
+            return;
+        }
+        if (formData.password !== formData.confirmPassword) {
+            toast.error('Passwords do not match.');
+            return;
+        }
+        if (formData.password.length < 6) {
+            toast.error('Password must be at least 6 characters.');
+            return;
+        }
+        try {
+            await sendOtp({ email: formData.email });
+            toast.success('Verification code sent to your email.');
+            nextStep();
+        } catch (error: any) {
+            toast.error(error.message || 'Failed to send verification code.');
+        }
+    };
+
+    const handleVerifyOtp = async () => {
+        if (formData.otp.length !== 4) {
+            toast.error('Please enter the 4-digit code.');
+            return;
+        }
+        try {
+            await verifyOtp({ email: formData.email, code: formData.otp });
+            toast.success('Email verified successfully!');
+            nextStep();
+        } catch (error: any) {
+            toast.error(error.message || 'Invalid code. Please try again.');
+        }
+    };
+
+    const handleResendOtp = async () => {
+        try {
+            await sendOtp({ email: formData.email });
+            toast.success('New verification code sent!');
+        } catch (error: any) {
+            toast.error(error.message || 'Failed to resend code.');
+        }
+    };
+
     const handleFinalize = async () => {
         setIsLoading(true);
         try {
             // Sanitize all form data before submission
             const cleanData = sanitizeFormData(formData);
+
+            const payload = {
+                firstName: cleanData.firstName,
+                lastName: cleanData.lastName,
+                email: cleanData.email,
+                password: formData.password, // Prevent sanitize from touching the password if it does
+                businessName: cleanData.businessName,
+                businessLogo: cleanData.businessLogo || undefined,
+                category: cleanData.category || undefined,
+                visitors: cleanData.visitors || undefined,
+                goals: cleanData.goals && cleanData.goals.length > 0 ? cleanData.goals : undefined,
+                whatsappNumber: cleanData.whatsappNumber || undefined,
+                officialEmail: cleanData.officialEmail || undefined,
+                businessNumber: cleanData.businessNumber || undefined,
+                businessAddress: cleanData.businessAddress || undefined,
+                businessWebsite: cleanData.businessWebsite || undefined,
+            };
+
+            // Register Owner on Backend
+            const response = await registerOwner(payload);
+
             const userData = {
                 email: cleanData.email,
                 name: `${cleanData.firstName} ${cleanData.lastName}`,
@@ -80,7 +149,7 @@ export default function GetStarted() {
                 businessLogo: cleanData.businessLogo || undefined,
                 businessGoals: cleanData.goals,
                 branchCount: cleanData.branchCount,
-                businessId: 'new_' + Math.random().toString(36).substr(2, 6)
+                businessId: response?.user?.businessId || 'new_' + Math.random().toString(36).substr(2, 6)
             };
 
             await signup(userData);
@@ -90,8 +159,8 @@ export default function GetStarted() {
             setTimeout(() => {
                 router.push('/pricing');
             }, 3000);
-        } catch (error) {
-            toast.error('Failed to create account. Please try again.');
+        } catch (error: any) {
+            toast.error(error.message || 'Failed to create account. Please try again.');
         } finally {
             setIsLoading(false);
         }
@@ -207,12 +276,18 @@ export default function GetStarted() {
                                         </div>
 
                                         <button
-                                            onClick={nextStep}
-                                            disabled={!formData.agreeToTerms}
+                                            onClick={handleCreateAccount}
+                                            disabled={!formData.agreeToTerms || isOtpLoading || !formData.email || !formData.password || !formData.firstName || !formData.lastName}
                                             className="w-full h-14 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all flex items-center justify-center gap-2 text-sm mt-4 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
                                         >
-                                            Create Account
-                                            <span className="material-icons-round text-lg">arrow_forward</span>
+                                            {isOtpLoading ? (
+                                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                            ) : (
+                                                <>
+                                                    Create Account
+                                                    <span className="material-icons-round text-lg">arrow_forward</span>
+                                                </>
+                                            )}
                                         </button>
                                     </div>
                                 </motion.div>
@@ -233,11 +308,39 @@ export default function GetStarted() {
 
                                     <div className="space-y-8">
                                         <div className="flex gap-3 justify-between">
-                                            {[1, 2, 3, 4].map(i => (
+                                            {[0, 1, 2, 3].map(index => (
                                                 <input
-                                                    key={i}
+                                                    key={index}
+                                                    id={`otp-${index}`}
                                                     type="text"
+                                                    inputMode="numeric"
                                                     maxLength={1}
+                                                    value={formData.otp[index] || ''}
+                                                    onChange={(e) => {
+                                                        const val = e.target.value;
+                                                        if (val && !/^\d$/.test(val)) return;
+                                                        const otpArr = formData.otp.split('');
+                                                        while (otpArr.length < 4) otpArr.push('');
+                                                        otpArr[index] = val;
+                                                        setFormData({ ...formData, otp: otpArr.join('').replace(/\s/g, '') });
+                                                        if (val && index < 3) {
+                                                            document.getElementById(`otp-${index + 1}`)?.focus();
+                                                        }
+                                                    }}
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === 'Backspace' && !formData.otp[index] && index > 0) {
+                                                            document.getElementById(`otp-${index - 1}`)?.focus();
+                                                        }
+                                                    }}
+                                                    onPaste={(e) => {
+                                                        e.preventDefault();
+                                                        const paste = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 4);
+                                                        if (paste) {
+                                                            setFormData({ ...formData, otp: paste });
+                                                            const focusIdx = Math.min(paste.length, 3);
+                                                            document.getElementById(`otp-${focusIdx}`)?.focus();
+                                                        }
+                                                    }}
                                                     className="w-16 h-16 bg-gray-50 border border-gray-100 rounded-xl text-center font-display font-black text-2xl focus:ring-2 focus:ring-primary/20 focus:bg-white outline-none transition-all"
                                                 />
                                             ))}
@@ -245,13 +348,23 @@ export default function GetStarted() {
 
                                         <div className="text-center">
                                             <p className="text-xs font-bold text-text-secondary uppercase tracking-widest">
-                                                Didn't receive it? <button className="text-primary hover:underline">Resend code</button>
+                                                Didn't receive it? <button onClick={handleResendOtp} disabled={isOtpLoading} className="text-primary hover:underline disabled:opacity-50">Resend code</button>
                                             </p>
                                         </div>
 
                                         <div className="flex gap-4 pt-4">
                                             <button onClick={prevStep} className="h-12 px-8 border border-gray-100 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm">Back</button>
-                                            <button onClick={nextStep} className="flex-1 h-12 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all text-sm">Verify & Continue</button>
+                                            <button
+                                                onClick={handleVerifyOtp}
+                                                disabled={isOtpLoading || formData.otp.length < 4}
+                                                className="flex-1 h-12 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all text-sm flex items-center justify-center disabled:opacity-50"
+                                            >
+                                                {isOtpLoading ? (
+                                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                                ) : (
+                                                    'Verify & Continue'
+                                                )}
+                                            </button>
                                         </div>
                                     </div>
                                 </motion.div>
