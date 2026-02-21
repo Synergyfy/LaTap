@@ -42,6 +42,5 @@ export class CreateVisitorDto {
     required: false,
   })
   @IsString()
-  @IsOptional()
   branchId?: string;
 }
