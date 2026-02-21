@@ -168,7 +168,7 @@ export default function HardwareWhitepaperPage() {
                                 </tbody>
                             </table>
                         </div>
-                        <p className="mt-8 text-xs text-slate-400 italic">
+                        <p className="mt-8 text-xs text-slate-400">
                             * Pricing excludes shipping. Multi-year bulk contracts are eligible for up to 30% discount.
                         </p>
                     </div>

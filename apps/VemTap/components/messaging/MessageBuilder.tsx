@@ -8,6 +8,8 @@ import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
 import Image from 'next/image';
+import { useMockDashboardStore } from '@/lib/store/mockDashboardStore';
+import { useCustomerFlowStore } from '@/store/useCustomerFlowStore';
 
 interface MessageBuilderProps {
     /** When set, skip channel selection and go straight to compose */
@@ -31,7 +33,7 @@ function PhonePreview({
     isEditable?: boolean
 }) {
     return (
-        <div className="relative w-[280px] h-[560px] bg-slate-900 rounded-[3rem] border-[10px] border-slate-800 shadow-2xl overflow-hidden ring-1 ring-slate-700 shrink-0">
+        <div className="relative w-[280px] h-[560px] bg-slate-900 rounded-[3rem] border-10 border-slate-800 shadow-2xl overflow-hidden ring-1 ring-slate-700 shrink-0">
             {/* Notch */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-slate-800 rounded-b-2xl z-30" />
 
@@ -177,8 +179,12 @@ export default function MessageBuilder({ defaultChannel }: MessageBuilderProps) 
     const router = useRouter();
     const { user } = useAuthStore();
     const { templates, wallets } = useMessagingStore();
+    const currentBranchId = user?.businessId || 'bistro_001';
     const [channel, setChannel] = useState<MessageChannel>(defaultChannel || 'SMS');
     const wallet = wallets[channel];
+
+    // Get audience data from mock store
+    const { getFilteredVisitors } = useMockDashboardStore();
 
     // Business Branding Helper
     const businessName = user?.businessName || 'Your Business';
@@ -195,12 +201,13 @@ export default function MessageBuilder({ defaultChannel }: MessageBuilderProps) 
     const [isSending, setIsSending] = useState(false);
     const [isLiveEdit, setIsLiveEdit] = useState(false);
 
-    // Mock Audience count
+    // Dynamic Audience counts based on branch
     const getAudienceCount = () => {
-        if (audience === 'returning') return 850;
-        if (audience === 'new') return 340;
-        if (audience === 'premium') return 150;
-        return 1240; // fallback
+        const branchVisitors = getFilteredVisitors(currentBranchId);
+        if (audience === 'returning') return branchVisitors.filter((v: any) => v.status === 'returning').length;
+        if (audience === 'new') return branchVisitors.filter((v: any) => v.status === 'new').length;
+        if (audience === 'premium') return branchVisitors.filter((v: any) => v.status === 'returning' && (v.timestamp < Date.now() - 86400000)).length; // Mock logic
+        return branchVisitors.length;
     };
 
     const count = getAudienceCount();
@@ -263,9 +270,9 @@ export default function MessageBuilder({ defaultChannel }: MessageBuilderProps) 
                     <label className="block text-xs font-bold uppercase text-text-secondary mb-3">Target Audience</label>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                         {[
-                            { id: 'returning', label: 'Returning Users', sub: '(850)', icon: Users },
-                            { id: 'new', label: 'New Users', sub: '(340)', icon: Smartphone },
-                            { id: 'premium', label: 'Premium Users', sub: '(150)', icon: CheckCircle }
+                            { id: 'returning', label: 'Returning Users', sub: `(${getFilteredVisitors(currentBranchId).filter((v: any) => v.status === 'returning').length})`, icon: Users },
+                            { id: 'new', label: 'New Users', sub: `(${getFilteredVisitors(currentBranchId).filter((v: any) => v.status === 'new').length})`, icon: Smartphone },
+                            { id: 'premium', label: 'Premium Users', sub: `(${getFilteredVisitors(currentBranchId).filter((v: any) => v.status === 'returning').length})`, icon: CheckCircle }
                         ].map(opt => (
                             <button
                                 key={opt.id}
@@ -322,7 +329,7 @@ export default function MessageBuilder({ defaultChannel }: MessageBuilderProps) 
                             >
                                 <option value="">Write Custom Message...</option>
                                 {templates
-                                    .filter(t => (t.channel === channel || t.channel === 'Any'))
+                                    .filter(t => (t.channel === channel || t.channel === 'Any') && (!t.branchId || t.branchId === currentBranchId))
                                     .map(t => (
                                         <option key={t.id} value={t.id}>{t.name}</option>
                                     ))}
@@ -333,9 +340,9 @@ export default function MessageBuilder({ defaultChannel }: MessageBuilderProps) 
                             <label className="block text-[10px] font-black uppercase text-text-secondary mb-2 tracking-widest ml-1">Target Audience</label>
                             <div className="grid grid-cols-3 gap-2">
                                 {[
-                                    { id: 'returning', label: 'Returning', sub: '850', icon: Users },
-                                    { id: 'new', label: 'New', sub: '340', icon: Smartphone },
-                                    { id: 'premium', label: 'Premium', sub: '150', icon: CheckCircle }
+                                    { id: 'returning', label: 'Returning', sub: getFilteredVisitors(currentBranchId).filter((v: any) => v.status === 'returning').length, icon: Users },
+                                    { id: 'new', label: 'New', sub: getFilteredVisitors(currentBranchId).filter((v: any) => v.status === 'new').length, icon: Smartphone },
+                                    { id: 'premium', label: 'Premium', sub: getFilteredVisitors(currentBranchId).filter((v: any) => v.status === 'returning').length, icon: CheckCircle }
                                 ].map(opt => (
                                     <button
                                         key={opt.id}
@@ -379,7 +386,7 @@ export default function MessageBuilder({ defaultChannel }: MessageBuilderProps) 
                             </div>
                         </div>
                         <div className="flex justify-between items-center mt-2">
-                            <p className="text-[9px] text-text-secondary font-black uppercase tracking-widest italic flex items-center gap-1">
+                            <p className="text-[9px] text-text-secondary font-black uppercase tracking-widest flex items-center gap-1">
                                 <span className="text-primary tracking-normal not-italic underline decoration-2 underline-offset-4">{businessName}</span> branding will be attached
                             </p>
                             <p className="text-[10px] text-text-secondary font-medium uppercase tracking-tighter">

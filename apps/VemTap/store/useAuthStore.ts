@@ -21,6 +21,9 @@ interface User {
   billingCycleAt?: string;
   phone?: string;
   plan?: string;
+  status?: string;
+  lastLogin?: string;
+  joined?: string;
 }
 
 interface AuthState {
@@ -30,6 +33,11 @@ interface AuthState {
   signup: (userData: User) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   subscribe: (planId: SubscriptionPlan) => Promise<{ success: boolean; error?: string }>;
+  // Admin User Management
+  registeredUsers: (User & { password?: string })[];
+  adminCreateUser: (userData: User & { password?: string }) => void;
+  adminUpdateUser: (id: string, userData: Partial<User & { password?: string }>) => void;
+  adminDeleteUser: (id: string) => void;
 }
 
 // Mock users for demonstration
@@ -91,6 +99,7 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       user: null,
       isAuthenticated: false,
+      registeredUsers: [],
       
       login: async (email: string, pass: string) => {
         // Simulate API delay
@@ -114,6 +123,18 @@ export const useAuthStore = create<AuthState>()(
           };
            set({ user: finalUser, isAuthenticated: true });
            return { success: true };
+        }
+
+        // 2. Check Registered Users (created by Admin)
+        const registeredUser = get().registeredUsers.find(u => 
+          u.email.toLowerCase() === normalizedEmail && 
+          u.password === normalizedPass
+        );
+
+        if (registeredUser) {
+          const { password: _, ...user } = registeredUser;
+          set({ user, isAuthenticated: true });
+          return { success: true };
         }
 
         return { success: false, error: 'Invalid email or password. Try the demo accounts!' };
@@ -168,6 +189,31 @@ export const useAuthStore = create<AuthState>()(
 
         set({ user: updatedUser });
         return { success: true };
+      },
+
+      adminCreateUser: (userData) => {
+        const newUser = {
+          ...userData,
+          id: userData.id || `USER-${Math.random().toString(36).substr(2, 9)}`,
+          role: userData.role || 'staff',
+        };
+        set(state => ({
+          registeredUsers: [...state.registeredUsers, newUser]
+        }));
+      },
+
+      adminUpdateUser: (id, userData) => {
+        set(state => ({
+          registeredUsers: state.registeredUsers.map(u => 
+            u.id === id ? { ...u, ...userData } : u
+          )
+        }));
+      },
+
+      adminDeleteUser: (id) => {
+        set(state => ({
+          registeredUsers: state.registeredUsers.filter(u => u.id !== id)
+        }));
       }
     }),
     {

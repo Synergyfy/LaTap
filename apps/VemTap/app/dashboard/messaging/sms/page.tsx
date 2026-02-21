@@ -54,7 +54,7 @@ export default function SMSOverviewPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-4">
-                        <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 italic text-sm text-text-secondary">
+                        <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 text-sm text-text-secondary">
                             "Direct, fast, and effective. Use SMS for time-sensitive offers and verification codes."
                         </div>
                         <div className="flex gap-4">

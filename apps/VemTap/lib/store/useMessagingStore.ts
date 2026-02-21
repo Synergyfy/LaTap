@@ -43,6 +43,7 @@ export interface Template {
     content: string; // Supports {Name} variables
     channel: MessageChannel | 'Any';
     status: 'approved' | 'pending' | 'rejected';
+    branchId?: string; // Optional for global/system templates
 }
 
 export interface BroadcastLog {
@@ -137,11 +138,11 @@ const initialMessages: Message[] = [
 ];
 
 const initialTemplates: Template[] = [
-    { id: 'tpl1', name: 'Welcome Message', content: 'Hi {Name}, welcome to VemTap! expecting you soon.', channel: 'SMS', status: 'approved' },
-    { id: 'tpl2', name: 'Reservation Conf', content: 'Hello {Name}, your table is confirmed.', channel: 'WhatsApp', status: 'approved' },
-    { id: 'tpl3', name: 'Weekly Newsletter', content: 'Check out our weekly updates...', channel: 'Email', status: 'approved' },
-    { id: 'tpl4', name: 'Feedback Request', content: 'Hi {Name}, how was your experience with us today? We value your feedback.', channel: 'Email', status: 'approved' },
-    { id: 'tpl5', name: 'Re-engagement', content: 'We haven\'t seen you in a while, {Name}! Here is a special 20% discount for your next visit.', channel: 'Email', status: 'approved' }
+    { id: 'tpl1', name: 'Welcome Message', content: 'Hi {Name}, welcome to VemTap! expecting you soon.', channel: 'SMS', status: 'approved', branchId: 'bistro_001' },
+    { id: 'tpl2', name: 'Reservation Conf', content: 'Hello {Name}, your table is confirmed.', channel: 'WhatsApp', status: 'approved', branchId: 'bistro_001' },
+    { id: 'tpl3', name: 'Weekly Newsletter', content: 'Check out our weekly updates...', channel: 'Email', status: 'approved', branchId: 'head-office' },
+    { id: 'tpl4', name: 'Feedback Request', content: 'Hi {Name}, how was your experience with us today? We value your feedback.', channel: 'Email', status: 'approved', branchId: 'ikeja-branch' },
+    { id: 'tpl5', name: 'Re-engagement', content: 'We haven\'t seen you in a while, {Name}! Here is a special 20% discount for your next visit.', channel: 'Email', status: 'approved', branchId: 'abuja-branch' }
 ];
 
 export const useMessagingStore = create<MessagingState>()(

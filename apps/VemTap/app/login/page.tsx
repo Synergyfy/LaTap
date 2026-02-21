@@ -115,7 +115,7 @@ export default function LoginPage() {
                                             </button>
                                         ))}
                                     </div>
-                                    <p className="text-xs text-text-secondary text-center mt-6 font-medium italic opacity-70">
+                                    <p className="text-xs text-text-secondary text-center mt-6 font-medium opacity-70">
                                         Click any account card above to start a live demo session
                                     </p>
                                 </div>

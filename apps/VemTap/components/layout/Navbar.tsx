@@ -1,21 +1,29 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Logo from '@/components/brand/Logo';
 import { useAuthStore } from '@/store/useAuthStore';
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isSolutionsOpen, setIsSolutionsOpen] = useState(false);
     const { user, isAuthenticated } = useAuthStore();
+    const solutionsRef = useRef<HTMLDivElement>(null);
 
     const getInitials = (name: string) => {
-        return name
-            .split(' ')
-            .map((n) => n[0])
-            .join('')
-            .toUpperCase()
-            .slice(0, 2);
+        return name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2);
     };
+
+    // Close the Solutions dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (solutionsRef.current && !solutionsRef.current.contains(e.target as Node)) {
+                setIsSolutionsOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     return (
         <>
@@ -28,40 +36,62 @@ export default function Navbar() {
                     </div>
 
                     <div className="hidden md:flex items-center gap-8 text-sm font-bold text-text-secondary">
-                        <div className="relative group">
-                            <button className="flex items-center gap-1 hover:text-primary transition-colors py-2">
+                        {/* Solutions Dropdown - Click/tap controlled */}
+                        <div className="relative" ref={solutionsRef}>
+                            <button
+                                onClick={() => setIsSolutionsOpen(prev => !prev)}
+                                className="flex items-center gap-1 hover:text-primary transition-colors py-2"
+                            >
                                 Solutions
-                                <span className="material-icons-round text-lg transition-transform group-hover:rotate-180">expand_more</span>
+                                <span
+                                    className={`material-icons-round text-lg transition-transform duration-200 ${isSolutionsOpen ? 'rotate-180' : ''}`}
+                                >
+                                    expand_more
+                                </span>
                             </button>
-                            <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                                <Link href="/solutions/hardware" className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors">
-                                    <div className="size-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center">
-                                        <span className="material-icons-round">nfc</span>
-                                    </div>
-                                    <div>
-                                        <p className="text-text-main text-xs font-black uppercase tracking-wider">Hardware</p>
-                                        <p className="text-[10px] text-text-secondary font-medium">NFC Plates & Cards</p>
-                                    </div>
-                                </Link>
-                                <Link href="/solutions/software" className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors">
-                                    <div className="size-10 bg-primary/10 text-primary rounded-lg flex items-center justify-center">
-                                        <span className="material-icons-round">terminal</span>
-                                    </div>
-                                    <div>
-                                        <p className="text-text-main text-xs font-black uppercase tracking-wider">Software</p>
-                                        <p className="text-[10px] text-text-secondary font-medium">Management Dashboard</p>
-                                    </div>
-                                </Link>
-                                <Link href="/pricing" className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors">
-                                    <div className="size-10 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center">
-                                        <span className="material-icons-round">workspace_premium</span>
-                                    </div>
-                                    <div>
-                                        <p className="text-text-main text-xs font-black uppercase tracking-wider">White Label</p>
-                                        <p className="text-[10px] text-text-secondary font-medium">Reseller Infrastructure</p>
-                                    </div>
-                                </Link>
-                            </div>
+                            {isSolutionsOpen && (
+                                <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                                    <Link
+                                        href="/solutions/hardware"
+                                        onClick={() => setIsSolutionsOpen(false)}
+                                        className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors"
+                                    >
+                                        <div className="size-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center">
+                                            <span className="material-icons-round">nfc</span>
+                                        </div>
+                                        <div>
+                                            <p className="text-text-main text-xs font-black uppercase tracking-wider">Hardware</p>
+                                            <p className="text-[10px] text-text-secondary font-medium">NFC Plates & Cards</p>
+                                        </div>
+                                    </Link>
+                                    <Link
+                                        href="/solutions/software"
+                                        onClick={() => setIsSolutionsOpen(false)}
+                                        className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors"
+                                    >
+                                        <div className="size-10 bg-primary/10 text-primary rounded-lg flex items-center justify-center">
+                                            <span className="material-icons-round">terminal</span>
+                                        </div>
+                                        <div>
+                                            <p className="text-text-main text-xs font-black uppercase tracking-wider">Software</p>
+                                            <p className="text-[10px] text-text-secondary font-medium">Management Dashboard</p>
+                                        </div>
+                                    </Link>
+                                    <Link
+                                        href="/pricing"
+                                        onClick={() => setIsSolutionsOpen(false)}
+                                        className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors"
+                                    >
+                                        <div className="size-10 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center">
+                                            <span className="material-icons-round">workspace_premium</span>
+                                        </div>
+                                        <div>
+                                            <p className="text-text-main text-xs font-black uppercase tracking-wider">White Label</p>
+                                            <p className="text-[10px] text-text-secondary font-medium">Reseller Infrastructure</p>
+                                        </div>
+                                    </Link>
+                                </div>
+                            )}
                         </div>
                         <Link className="hover:text-primary transition-colors" href="/marketplace">Marketplace</Link>
                         <Link className="hover:text-primary transition-colors" href="/features">Features</Link>

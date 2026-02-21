@@ -17,6 +17,7 @@ import VisitorDetailsModal from '@/components/dashboard/VisitorDetailsModal';
 import PreviewRewardModal from '@/components/dashboard/PreviewRewardModal';
 import { useSubscriptionStore } from '@/store/subscriptionStore';
 import { useBusinessStore } from '@/store/useBusinessStore';
+import { useAuthStore } from '@/store/useAuthStore';
 
 
 export default function DashboardPage() {
@@ -26,6 +27,18 @@ export default function DashboardPage() {
     const [selectedVisitorForMsg, setSelectedVisitorForMsg] = useState<{ visitor: Visitor, type: 'welcome' | 'reward' } | null>(null);
     const [selectedVisitorForDetails, setSelectedVisitorForDetails] = useState<Visitor | null>(null);
     const [rewardPreviewVisitor, setRewardPreviewVisitor] = useState<Visitor | null>(null);
+
+    const { user } = useAuthStore();
+
+    // Redirect to pricing if user is new and hasn't selected a plan
+    React.useEffect(() => {
+        const hasSelectedPlan = localStorage.getItem('has_selected_plan') === 'true';
+        const isNewUser = user && !user.planId; // Mock check: if no planId, they are "new"
+
+        if (isNewUser && !hasSelectedPlan) {
+            router.push('/dashboard/settings/pricing');
+        }
+    }, [user, router]);
 
     // Fetch Dashboard Data
     const { data, isLoading } = useQuery({

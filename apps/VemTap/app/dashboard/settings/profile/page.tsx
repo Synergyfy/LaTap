@@ -11,6 +11,13 @@ export default function BusinessProfilePage() {
     const [name, setName] = useState(storeName);
     const [logo, setLogo] = useState(logoUrl || '');
     const [profileSlug, setProfileSlug] = useState('');
+    const [origin, setOrigin] = useState('https://vemtap.com');
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setOrigin(window.location.origin);
+        }
+    }, []);
 
     // Config for Dynamic QR
     const qrId = 'biz-profile-main';
@@ -22,9 +29,9 @@ export default function BusinessProfilePage() {
             const slug = storeName.toLowerCase().replace(/\s+/g, '-');
             setProfileSlug(slug);
             // Initialize redirect
-            setRedirect(qrId, `https://vemtap.com/${slug}`);
+            setRedirect(qrId, `${origin}/${slug}`);
         }
-    }, [storeName, logoUrl]);
+    }, [storeName, logoUrl, origin]);
 
     const handleSave = () => {
         updateCustomSettings({
@@ -32,7 +39,7 @@ export default function BusinessProfilePage() {
         });
         useCustomerFlowStore.setState({ storeName: name });
         // Update the dynamic redirect destination
-        const fullProfileUrl = `https://vemtap.com/${profileSlug}`;
+        const fullProfileUrl = `${origin}/${profileSlug}`;
         setRedirect(qrId, fullProfileUrl);
 
         toast.success('Business profile and QR Link updated!');
@@ -115,10 +122,9 @@ export default function BusinessProfilePage() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Profile URL / Handle</label>
                                     <div className="flex items-center">
                                         <div className="h-12 px-4 bg-gray-100 border border-r-0 border-gray-200 rounded-l-xl flex items-center text-xs font-bold text-gray-400 select-none tracking-tight">
-                                            vemtap.com/
+                                            {origin.replace(/^https?:\/\//, '')}/
                                         </div>
                                         <input
                                             type="text"
@@ -166,7 +172,7 @@ export default function BusinessProfilePage() {
                         <DynamicQRCode
                             redirectId={qrId}
                             label="Scan to Visit Profile"
-                            subLabel="vemtap.com"
+                            subLabel={origin.replace(/^https?:\/\//, '')}
                             color="#000000"
                         />
                         <div className="space-y-4 flex-1">
@@ -182,7 +188,7 @@ export default function BusinessProfilePage() {
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Current Destination</label>
                                 <div className="h-12 bg-gray-50 border border-gray-200 rounded-xl px-4 flex items-center text-sm font-bold text-gray-600">
-                                    {`https://vemtap.com/${profileSlug}`}
+                                    {`${origin}/${profileSlug}`}
                                 </div>
                             </div>
                         </div>

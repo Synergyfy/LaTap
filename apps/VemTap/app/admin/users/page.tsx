@@ -2,37 +2,46 @@
 
 import React, { useState } from 'react';
 import { notify } from '@/lib/notify';
+import { useAuthStore, UserRole } from '@/store/useAuthStore';
 
 export default function AdminUsersPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [filterRole, setFilterRole] = useState('all');
     const [filterStatus, setFilterStatus] = useState('all');
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-    const [selectedUser, setSelectedUser] = useState<any>(null);
+    const [selectedUser, setSelectedUser] = useState<any | null>(null);
+    const { registeredUsers, adminCreateUser, adminUpdateUser, adminDeleteUser } = useAuthStore();
 
-    const [users, setUsers] = useState([
-        { id: 1, name: 'Daniel Admin', email: 'daniel@VemTap.com', role: 'Admin', status: 'active', lastLogin: '2 mins ago', joined: '2023-11-01' },
-        { id: 2, name: 'John Smith', email: 'john@greenterrace.com', role: 'Business Owner', status: 'active', lastLogin: '1 hour ago', joined: '2024-01-15' },
-        { id: 3, name: 'Sarah Johnson', email: 'sarah@techhub.ng', role: 'Business Owner', status: 'active', lastLogin: '3 hours ago', joined: '2024-01-10' },
-        { id: 4, name: 'Mike Williams', email: 'mike@fashion.com', role: 'Business Owner', status: 'pending', lastLogin: '1 day ago', joined: '2024-02-01' },
-        { id: 5, name: 'Emily Davis', email: 'emily@fitness.ng', role: 'Staff', status: 'active', lastLogin: '5 mins ago', joined: '2024-01-20' },
-        { id: 6, name: 'David Brown', email: 'david@restaurant360.com', role: 'Business Owner', status: 'suspended', lastLogin: '2 weeks ago', joined: '2023-12-05' },
-        { id: 7, name: 'Lisa Anderson', email: 'lisa@beautyspa.ng', role: 'Business Owner', status: 'active', lastLogin: '10 mins ago', joined: '2024-01-28' },
-        { id: 8, name: 'Tom Wilson', email: 'tom@customer.com', role: 'Customer', status: 'active', lastLogin: 'Just now', joined: '2024-02-02' },
-    ]);
+    // Combine mock users with registered users from store
+    const MOCK_DATA = [
+        { id: '1', name: 'Daniel Admin', email: 'daniel@VemTap.com', role: 'Admin', status: 'active', lastLogin: '2 mins ago', joined: '2023-11-01' },
+        { id: '2', name: 'John Smith', email: 'john@greenterrace.com', role: 'Business Owner', status: 'active', lastLogin: '1 hour ago', joined: '2024-01-15' },
+        { id: '3', name: 'Sarah Johnson', email: 'sarah@techhub.ng', role: 'Business Owner', status: 'active', lastLogin: '3 hours ago', joined: '2024-01-10' },
+        { id: '4', name: 'Mike Williams', email: 'mike@fashion.com', role: 'Business Owner', status: 'pending', lastLogin: '1 day ago', joined: '2024-02-01' },
+        { id: '5', name: 'Emily Davis', email: 'emily@fitness.ng', role: 'Staff', status: 'active', lastLogin: '5 mins ago', joined: '2024-01-20' },
+        { id: '6', name: 'David Brown', email: 'david@restaurant360.com', role: 'Business Owner', status: 'suspended', lastLogin: '2 weeks ago', joined: '2023-12-05' },
+        { id: '7', name: 'Lisa Anderson', email: 'lisa@beautyspa.ng', role: 'Business Owner', status: 'active', lastLogin: '10 mins ago', joined: '2024-01-28' },
+        { id: '8', name: 'Tom Wilson', email: 'tom@customer.com', role: 'Customer', status: 'active', lastLogin: 'Just now', joined: '2024-02-02' },
+    ];
+
+    const users = [...MOCK_DATA, ...registeredUsers];
 
     const stats = [
         { label: 'Total Users', value: users.length.toString(), icon: 'people', color: 'blue' },
-        { label: 'Business Owners', value: users.filter(u => u.role === 'Business Owner').length.toString(), icon: 'store', color: 'purple' },
-        { label: 'Customers', value: users.filter(u => u.role === 'Customer').length.toString(), icon: 'person', color: 'green' },
-        { label: 'Staff Members', value: users.filter(u => u.role === 'Staff').length.toString(), icon: 'badge', color: 'orange' },
+        { label: 'Business Owners', value: users.filter((u: any) => u.role === 'Business Owner' || u.role === 'owner').length.toString(), icon: 'store', color: 'purple' },
+        { label: 'Customers', value: users.filter((u: any) => u.role === 'Customer' || u.role === 'customer').length.toString(), icon: 'person', color: 'green' },
+        { label: 'Staff Members', value: users.filter((u: any) => u.role === 'Staff' || u.role === 'staff' || u.role === 'manager').length.toString(), icon: 'badge', color: 'orange' },
     ];
 
-    const handleDelete = (id: number) => {
+    const handleDelete = (id: string) => {
         const user = users.find(u => u.id === id);
         if (window.confirm(`Are you sure you want to disable the account for ${user?.name}?`)) {
-            setUsers(users.map(u => u.id === id ? { ...u, status: 'suspended' } : u));
-            notify.success(`Account for ${user?.name} has been suspended.`);
+            if (MOCK_DATA.find(u => u.id === id)) {
+                notify.error("Cannot delete mock admin users in demo mode.");
+                return;
+            }
+            adminDeleteUser(id);
+            notify.success(`Account for ${user?.name} has been removed.`);
         }
     };
 
@@ -43,21 +52,34 @@ export default function AdminUsersPage() {
     const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
+
+        // Map UI roles to store roles
+        const uiRole = formData.get('role') as string;
+        let mappedRole: UserRole = 'staff';
+        if (uiRole === 'Admin') mappedRole = 'admin';
+        else if (uiRole === 'Business Owner') mappedRole = 'owner';
+        else if (uiRole === 'Customer') mappedRole = 'customer';
+        else if (uiRole === 'Staff') mappedRole = 'staff';
+
         const userData = {
             name: formData.get('name') as string,
             email: formData.get('email') as string,
-            role: formData.get('role') as string,
+            role: mappedRole,
             status: formData.get('status') as string,
+            password: formData.get('password') as string || 'default123',
             lastLogin: selectedUser?.lastLogin || 'Never',
             joined: selectedUser?.joined || new Date().toISOString().split('T')[0]
         };
 
         if (selectedUser) {
-            setUsers(users.map(u => u.id === selectedUser.id ? { ...u, ...userData } : u));
-            notify.success('User updated successfully');
+            if (MOCK_DATA.find(u => u.id === selectedUser.id)) {
+                notify.error("Cannot modify mock admin users in demo mode.");
+            } else if (selectedUser.id) {
+                adminUpdateUser(selectedUser.id, userData);
+                notify.success('User updated successfully');
+            }
         } else {
-            const newId = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
-            setUsers([{ id: newId, ...userData }, ...users]);
+            adminCreateUser(userData);
             notify.success('New user created successfully');
         }
         setIsAddModalOpen(false);
@@ -67,7 +89,7 @@ export default function AdminUsersPage() {
     const filteredUsers = users.filter(u => {
         const matchesSearch = u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             u.email.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesRole = filterRole === 'all' || u.role.toLowerCase().replace(' ', '_') === filterRole;
+        const matchesRole = filterRole === 'all' || (u.role?.toLowerCase().replace(' ', '_') ?? '') === filterRole;
         const matchesStatus = filterStatus === 'all' || u.status === filterStatus;
         return matchesSearch && matchesRole && matchesStatus;
     });
@@ -238,7 +260,7 @@ export default function AdminUsersPage() {
                                                     <span className="material-icons-round text-lg">lock_reset</span>
                                                 </button>
                                                 <button
-                                                    onClick={() => handleDelete(user.id)}
+                                                    onClick={() => user.id && handleDelete(user.id)}
                                                     className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
                                                     title="Disable Account"
                                                 >
@@ -317,6 +339,23 @@ export default function AdminUsersPage() {
                                     />
                                 </div>
                             </div>
+
+                            {!selectedUser && (
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary ml-1">Password</label>
+                                    <div className="relative">
+                                        <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">lock</span>
+                                        <input
+                                            name="password"
+                                            type="password"
+                                            required
+                                            className="w-full h-12 pl-12 pr-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/30 focus:bg-white transition-all font-bold text-sm"
+                                            placeholder="••••••••"
+                                        />
+                                    </div>
+                                    <p className="text-[10px] text-gray-400 ml-1">The user will use this password to log in.</p>
+                                </div>
+                            )}
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">

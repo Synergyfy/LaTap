@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Modal from '@/components/ui/Modal';
-import { CreditCard, ShieldCheck, Zap, ArrowRight, Loader2 } from 'lucide-react';
+import { CreditCard, ShieldCheck, Zap, ArrowRight, Loader2, Info } from 'lucide-react';
 import { useAuthStore, SubscriptionPlan } from '@/store/useAuthStore';
 import toast from 'react-hot-toast';
 
@@ -15,22 +15,19 @@ interface Props {
         price: string;
         period: string;
     };
+    billingCycle?: 'monthly' | 'quarterly' | 'yearly';
 }
 
-export default function SubscriptionCheckout({ isOpen, onClose, plan }: Props) {
+export default function SubscriptionCheckout({ isOpen, onClose, plan, billingCycle = 'monthly' }: Props) {
     const { subscribe } = useAuthStore();
     const [isProcessing, setIsProcessing] = useState(false);
 
     const handlePayment = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsProcessing(true);
-
-        // Simulate payment processing
         await new Promise(resolve => setTimeout(resolve, 2000));
-
         const res = await subscribe(plan.id as SubscriptionPlan);
         setIsProcessing(false);
-
         if (res.success) {
             toast.success(`Welcome to the ${plan.name} plan!`);
             onClose();
@@ -38,6 +35,42 @@ export default function SubscriptionCheckout({ isOpen, onClose, plan }: Props) {
             toast.error(res.error || 'Payment failed');
         }
     };
+
+    const getBasePrice = () => {
+        const basePrice = parseInt(plan.price.replace(/[^0-9]/g, ''));
+        return isNaN(basePrice) ? null : basePrice;
+    };
+
+    const getChargeBreakdown = () => {
+        const base = getBasePrice();
+        if (!base) return null;
+
+        if (billingCycle === 'quarterly') {
+            const perMonth = Math.floor(base * 0.9);
+            const total = perMonth * 3;
+            return {
+                perMonth,
+                total,
+                label: 'Charged every 3 months',
+                savings: base * 3 - total,
+                months: 3,
+            };
+        }
+        if (billingCycle === 'yearly') {
+            const perMonth = Math.floor(base * 0.8);
+            const total = perMonth * 12;
+            return {
+                perMonth,
+                total,
+                label: 'Charged annually',
+                savings: base * 12 - total,
+                months: 12,
+            };
+        }
+        return { perMonth: base, total: base, label: 'Charged monthly', savings: 0, months: 1 };
+    };
+
+    const breakdown = getChargeBreakdown();
 
     return (
         <Modal
@@ -48,15 +81,40 @@ export default function SubscriptionCheckout({ isOpen, onClose, plan }: Props) {
         >
             <form onSubmit={handlePayment} className="space-y-6 py-4">
                 {/* Plan Summary */}
-                <div className="bg-primary/5 border border-primary/20 rounded-2xl p-4 flex items-center justify-between">
-                    <div>
-                        <p className="text-xs font-bold text-primary uppercase tracking-wider mb-1">Selected Plan</p>
-                        <h4 className="text-lg font-bold text-text-main">{plan.name}</h4>
+                <div className="bg-primary/5 border border-primary/20 rounded-2xl p-4">
+                    <div className="flex items-center justify-between mb-3">
+                        <div>
+                            <p className="text-xs font-bold text-primary uppercase tracking-wider mb-1">Selected Plan</p>
+                            <h4 className="text-lg font-bold text-text-main">{plan.name}</h4>
+                            <p className="text-xs text-text-secondary font-medium capitalize">{billingCycle} billing</p>
+                        </div>
+                        <div className="text-right">
+                            {breakdown ? (
+                                <>
+                                    <p className="text-2xl font-bold text-primary">₦{breakdown.total.toLocaleString()}</p>
+                                    <p className="text-xs text-text-secondary font-medium">{breakdown.label}</p>
+                                    {billingCycle !== 'monthly' && (
+                                        <p className="text-[10px] text-text-secondary font-medium">
+                                            (₦{breakdown.perMonth.toLocaleString()}/mo)
+                                        </p>
+                                    )}
+                                </>
+                            ) : (
+                                <>
+                                    <p className="text-2xl font-bold text-primary">{plan.price}</p>
+                                    <p className="text-xs text-text-secondary font-medium">{plan.period}</p>
+                                </>
+                            )}
+                        </div>
                     </div>
-                    <div className="text-right">
-                        <p className="text-2xl font-bold text-primary">{plan.price}</p>
-                        <p className="text-xs text-text-secondary font-medium">{plan.period}</p>
-                    </div>
+                    {breakdown && breakdown.savings > 0 && (
+                        <div className="flex items-center gap-2 bg-green-50 border border-green-100 rounded-xl px-3 py-2 mt-2">
+                            <Info size={12} className="text-green-600 shrink-0" />
+                            <p className="text-[10px] font-bold text-green-700">
+                                You save ₦{breakdown.savings.toLocaleString()} compared to monthly billing
+                            </p>
+                        </div>
+                    )}
                 </div>
 
                 {/* Card details */}
@@ -114,7 +172,7 @@ export default function SubscriptionCheckout({ isOpen, onClose, plan }: Props) {
                         </>
                     ) : (
                         <>
-                            Pay & Activate Plan
+                            Pay {breakdown ? `₦${breakdown.total.toLocaleString()}` : plan.price} & Activate
                             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                         </>
                     )}

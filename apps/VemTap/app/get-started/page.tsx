@@ -27,7 +27,8 @@ export default function GetStarted() {
         businessName: '',
         businessLogo: null as string | null,
         category: '',
-        role: 'Owner' as 'Owner' | 'Manager',
+        roles: ['Owner'] as ('Owner' | 'Manager')[],
+        branchCount: '',
         visitors: '',
         whatsappNumber: '',
         officialEmail: '',
@@ -44,9 +45,9 @@ export default function GetStarted() {
     const goals = ['Capture Leads', 'Automated Rewards', 'Customer Feedback', 'Digital Loyalty'];
 
     const nextStep = () => {
-        if (step === 3 && subStep < 9) {
+        if (step === 3 && subStep < 10) {
             setSubStep(prev => prev + 1);
-        } else if (step === 3 && subStep === 9) {
+        } else if (step === 3 && subStep === 10) {
             setStep(5); // Skip Step 4 (Objectives)
             setSubStep(1);
         } else {
@@ -57,12 +58,12 @@ export default function GetStarted() {
     const prevStep = () => {
         if (step === 5) {
             setStep(3);
-            setSubStep(9);
+            setSubStep(10);
         } else if (step === 3 && subStep > 1) {
             setSubStep(prev => prev - 1);
         } else {
             setStep(prev => prev - 1);
-            if (step === 4) setSubStep(9);
+            if (step === 4) setSubStep(10);
         }
     };
 
@@ -74,10 +75,11 @@ export default function GetStarted() {
             const userData = {
                 email: cleanData.email,
                 name: `${cleanData.firstName} ${cleanData.lastName}`,
-                role: cleanData.role.toLowerCase() as any,
+                role: cleanData.roles.join(', ').toLowerCase() as any,
                 businessName: cleanData.businessName,
                 businessLogo: cleanData.businessLogo || undefined,
                 businessGoals: cleanData.goals,
+                branchCount: cleanData.branchCount,
                 businessId: 'new_' + Math.random().toString(36).substr(2, 6)
             };
 
@@ -109,7 +111,7 @@ export default function GetStarted() {
                                 let progress = 0;
                                 if (step > s) progress = 100;
                                 else if (step === s) {
-                                    if (step === 3) progress = (subStep / 9) * 100;
+                                    if (step === 3) progress = (subStep / 10) * 100;
                                     else progress = 100;
                                 }
                                 return (
@@ -117,7 +119,7 @@ export default function GetStarted() {
                                         <div
                                             className="h-full bg-primary transition-all duration-500 ease-out"
                                             style={{ width: `${progress}%` }}
-                                        ></div>
+                                        />
                                     </div>
                                 );
                             })}
@@ -265,19 +267,20 @@ export default function GetStarted() {
                                 >
                                     <div>
                                         <h1 className="text-2xl font-display font-bold text-text-main mb-2 leading-tight tracking-tight">
-                                            {subStep === 8 && "What are your goals?"}
-                                            {subStep === 9 && "Vital Business Info"}
+                                            {subStep === 9 && "What are your goals?"}
+                                            {subStep === 10 && "Vital Business Info"}
                                         </h1>
                                         <p className="text-[13px] text-text-secondary font-medium leading-relaxed">
                                             {subStep === 1 && "Start with the name customers know you by."}
                                             {subStep === 2 && "Upload your logo to personalize your dashboard and customer tags."}
                                             {subStep === 3 && "This helps us tailor the dashboard features for you."}
-                                            {subStep === 4 && "Select the category that best fits your business."}
-                                            {subStep === 5 && "Important for campaign communications and support."}
-                                            {subStep === 6 && "The primary number for your business operations."}
-                                            {subStep === 7 && "This helps us optimize your experience for your footfall volume."}
-                                            {subStep === 8 && "Tell us what you want to achieve with VemTap."}
-                                            {subStep === 9 && "Adding your address and website helps us localize your profile."}
+                                            {subStep === 4 && "How many branches does your business have?"}
+                                            {subStep === 5 && "Select the category that best fits your business."}
+                                            {subStep === 6 && "Important for campaign communications and support."}
+                                            {subStep === 7 && "The primary number for your business operations."}
+                                            {subStep === 8 && "This helps us optimize your experience for your footfall volume."}
+                                            {subStep === 9 && "Tell us what you want to achieve with VemTap."}
+                                            {subStep === 10 && "Adding your address and website helps us localize your profile."}
                                         </p>
                                     </div>
 
@@ -299,7 +302,7 @@ export default function GetStarted() {
                                         {subStep === 2 && (
                                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
                                                 <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Business Logo</label>
-                                                <div className="flex flex-col items-center gap-6 p-8 border-2 border-dashed border-gray-100 rounded-[2rem] bg-gray-50/50">
+                                                <div className="flex flex-col items-center gap-6 p-8 border-2 border-dashed border-gray-100 rounded-4xl bg-gray-50/50">
                                                     <div className="size-24 rounded-3xl bg-white border border-gray-100 flex items-center justify-center overflow-hidden shadow-sm">
                                                         {formData.businessLogo ? (
                                                             <img src={formData.businessLogo} alt="Logo Preview" className="w-full h-full object-contain p-2" />
@@ -335,19 +338,27 @@ export default function GetStarted() {
 
                                         {subStep === 3 && (
                                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
-                                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Your Role</label>
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Your Role (Select all that apply)</label>
                                                 <div className="grid grid-cols-1 gap-3">
                                                     {['Owner', 'Manager'].map((r) => (
                                                         <button
                                                             key={r}
-                                                            onClick={() => setFormData({ ...formData, role: r as any })}
-                                                            className={`h-16 rounded-2xl text-xs font-bold transition-all border flex items-center justify-between px-6 ${formData.role === r ? 'bg-primary/5 border-primary/20 text-primary' : 'bg-gray-50 border-gray-100 text-text-secondary hover:bg-gray-100'}`}
+                                                            onClick={() => {
+                                                                const newRoles = formData.roles.includes(r as any)
+                                                                    ? formData.roles.filter(role => role !== r)
+                                                                    : [...formData.roles, r as any];
+                                                                // Ensure at least one role is selected
+                                                                if (newRoles.length > 0) {
+                                                                    setFormData({ ...formData, roles: newRoles });
+                                                                }
+                                                            }}
+                                                            className={`h-16 rounded-2xl text-xs font-bold transition-all border flex items-center justify-between px-6 ${formData.roles.includes(r as any) ? 'bg-primary/5 border-primary/20 text-primary' : 'bg-gray-50 border-gray-100 text-text-secondary hover:bg-gray-100'}`}
                                                         >
                                                             <div className="flex items-center gap-3">
                                                                 <span className="material-icons-round text-xl">{r === 'Owner' ? 'grade' : 'badge'}</span>
                                                                 Business {r}
                                                             </div>
-                                                            {formData.role === r && <span className="material-icons-round text-primary text-sm">check_circle</span>}
+                                                            {formData.roles.includes(r as any) && <span className="material-icons-round text-primary text-sm">check_circle</span>}
                                                         </button>
                                                     ))}
                                                 </div>
@@ -355,6 +366,24 @@ export default function GetStarted() {
                                         )}
 
                                         {subStep === 4 && (
+                                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Number of Branches</label>
+                                                <div className="grid grid-cols-1 gap-2">
+                                                    {['1', '2-5', '6-10', '11-50', '50+'].map(range => (
+                                                        <button
+                                                            key={range}
+                                                            onClick={() => setFormData({ ...formData, branchCount: range })}
+                                                            className={`w-full h-14 rounded-xl px-6 text-sm font-bold transition-all border flex items-center justify-between ${formData.branchCount === range ? 'bg-primary/5 border-primary/20 text-primary' : 'bg-gray-50 border-gray-100 text-text-secondary hover:bg-gray-100'}`}
+                                                        >
+                                                            <span>{range} {range === '1' ? 'Branch' : 'Branches'}</span>
+                                                            {formData.branchCount === range && <span className="material-icons-round text-primary text-sm">check_circle</span>}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </motion.div>
+                                        )}
+
+                                        {subStep === 5 && (
                                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
                                                 <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Business Type</label>
                                                 <div className="grid grid-cols-2 gap-2">
@@ -371,7 +400,7 @@ export default function GetStarted() {
                                             </motion.div>
                                         )}
 
-                                        {subStep === 5 && (
+                                        {subStep === 6 && (
                                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
                                                 <SanitizedInput
                                                     label="WhatsApp Number"
@@ -396,7 +425,7 @@ export default function GetStarted() {
                                             </motion.div>
                                         )}
 
-                                        {subStep === 6 && (
+                                        {subStep === 7 && (
                                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
                                                 <SanitizedInput
                                                     label="Business Phone Number"
@@ -411,7 +440,7 @@ export default function GetStarted() {
                                             </motion.div>
                                         )}
 
-                                        {subStep === 7 && (
+                                        {subStep === 8 && (
                                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
                                                 <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Monthly Visitors</label>
                                                 <div className="grid grid-cols-1 gap-2">
@@ -429,7 +458,7 @@ export default function GetStarted() {
                                             </motion.div>
                                         )}
 
-                                        {subStep === 8 && (
+                                        {subStep === 9 && (
                                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
                                                 <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Select Goals</label>
                                                 <div className="grid grid-cols-1 gap-2">
@@ -453,7 +482,7 @@ export default function GetStarted() {
                                             </motion.div>
                                         )}
 
-                                        {subStep === 9 && (
+                                        {subStep === 10 && (
                                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
                                                 <SanitizedInput
                                                     label="Business Address"
@@ -483,17 +512,18 @@ export default function GetStarted() {
                                                 onClick={nextStep}
                                                 disabled={
                                                     (subStep === 1 && !formData.businessName) ||
-                                                    (subStep === 3 && !formData.role) ||
-                                                    (subStep === 4 && !formData.category) ||
-                                                    (subStep === 5 && (!formData.whatsappNumber || !formData.officialEmail)) ||
-                                                    (subStep === 6 && !formData.businessNumber) ||
-                                                    (subStep === 7 && !formData.visitors) ||
-                                                    (subStep === 8 && formData.goals.length === 0) ||
-                                                    (subStep === 9 && (!formData.businessAddress || !formData.businessWebsite))
+                                                    (subStep === 3 && formData.roles.length === 0) ||
+                                                    (subStep === 4 && !formData.branchCount) ||
+                                                    (subStep === 5 && !formData.category) ||
+                                                    (subStep === 6 && (!formData.whatsappNumber || !formData.officialEmail)) ||
+                                                    (subStep === 7 && !formData.businessNumber) ||
+                                                    (subStep === 8 && !formData.visitors) ||
+                                                    (subStep === 9 && formData.goals.length === 0) ||
+                                                    (subStep === 10 && (!formData.businessAddress || !formData.businessWebsite))
                                                 }
                                                 className="flex-1 h-12 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all text-sm disabled:opacity-50"
                                             >
-                                                {subStep === 9 ? "Review Your Application" : "Next Question"}
+                                                {subStep === 10 ? "Review Your Application" : "Next Question"}
                                             </button>
                                         </div>
                                     </div>
@@ -559,7 +589,11 @@ export default function GetStarted() {
                                                 </div>
                                                 <div>
                                                     <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mb-1">Role</p>
-                                                    <p className="text-xs font-bold text-text-main">{formData.role}</p>
+                                                    <p className="text-xs font-bold text-text-main">{formData.roles.join(', ')}</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mb-1">Branches</p>
+                                                    <p className="text-xs font-bold text-text-main">{formData.branchCount}</p>
                                                 </div>
                                                 <div>
                                                     <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mb-1">WhatsApp</p>
@@ -602,7 +636,6 @@ export default function GetStarted() {
                                     key="final"
                                     initial={{ opacity: 0, scale: 0.95 }}
                                     animate={{ opacity: 1, scale: 1 }}
-                                    className="space-y-8 text-center"
                                 >
                                     <div className="size-20 bg-primary/10 rounded-full flex items-center justify-center text-primary mx-auto mb-8">
                                         <span className="material-icons-round text-4xl">celebration</span>
@@ -679,6 +712,6 @@ export default function GetStarted() {
                     }
                 />
             </div>
-        </div>
+        </div >
     );
 }

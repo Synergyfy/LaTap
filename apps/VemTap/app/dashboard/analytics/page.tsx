@@ -86,7 +86,7 @@ export default function AnalyticsDashboardPage() {
                             </div>
                         </div>
                         <p className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary mb-1">{stat.label}</p>
-                        <h3 className="text-3xl font-black italic tracking-tight text-text-main">{stat.value}</h3>
+                        <h3 className="text-3xl font-black tracking-tight text-text-main">{stat.value}</h3>
                     </motion.div>
                 ))}
             </div>
@@ -119,7 +119,7 @@ export default function AnalyticsDashboardPage() {
                 {/* Hourly Traffic Chart */}
                 <div className="lg:col-span-2 bg-white p-8 rounded-lg border border-gray-100 shadow-sm relative overflow-hidden">
                     <div className="relative z-10">
-                        <h4 className="text-xl font-black italic mb-2 tracking-tight text-text-main">Peak Traffic Times</h4>
+                        <h4 className="text-xl font-black mb-2 tracking-tight text-text-main">Peak Traffic Times</h4>
                         <p className="text-sm text-text-secondary font-medium mb-12">Identify your busiest hours to optimize staffing</p>
 
                         <div className="flex items-end justify-between gap-4 h-64">
@@ -148,7 +148,7 @@ export default function AnalyticsDashboardPage() {
                 <div className="space-y-6">
                     <div className="bg-text-main p-8 rounded-lg text-white relative overflow-hidden">
                         <Star className="absolute -right-6 -top-6 size-40 text-white/5 rotate-12" />
-                        <h4 className="text-xl font-black italic mb-6 tracking-tight relative z-10">Engagement Quality</h4>
+                        <h4 className="text-xl font-black mb-6 tracking-tight relative z-10">Engagement Quality</h4>
                         <div className="space-y-6 relative z-10">
                             <div>
                                 <div className="flex items-center justify-between mb-2">

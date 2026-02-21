@@ -60,7 +60,7 @@ export default function TermsOfService() {
 
                         <section>
                             <h2 className="text-2xl font-bold text-text-main mb-4 font-display">6. Limitation of Liability</h2>
-                            <p className="text-text-secondary leading-relaxed font-medium italic">
+                            <p className="text-text-secondary leading-relaxed font-medium">
                                 To the maximum extent permitted by law, VemTap shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly.
                             </p>
                         </section>

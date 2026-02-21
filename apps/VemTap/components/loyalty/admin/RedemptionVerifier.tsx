@@ -74,7 +74,7 @@ export const RedemptionVerifier: React.FC<{ className?: string }> = ({ className
                             <ShieldCheck className="w-6 h-6 text-white" />
                         </div>
                         <div>
-                            <h3 className="text-xl font-display font-black uppercase italic tracking-tighter">Terminal Verifier v1.0</h3>
+                            <h3 className="text-xl font-display font-black uppercase tracking-tighter">Terminal Verifier v1.0</h3>
                             <p className="text-xs text-white/40 font-bold uppercase tracking-widest">Secure Redemption Checkpoint</p>
                         </div>
                     </div>
@@ -111,7 +111,7 @@ export const RedemptionVerifier: React.FC<{ className?: string }> = ({ className
                                 <Scan className="w-4 h-4" />
                                 Launch Camera Scanner
                             </button>
-                            <span className="text-[10px] text-white/20 font-black italic">OR ENTER MANUALLY ABOVE</span>
+                            <span className="text-[10px] text-white/20 font-black">OR ENTER MANUALLY ABOVE</span>
                         </div>
                     </form>
                 </div>
@@ -156,7 +156,7 @@ export const RedemptionVerifier: React.FC<{ className?: string }> = ({ className
                                                 <Gift className="w-4 h-4 text-emerald-600" />
                                                 <span className="text-[10px] font-black uppercase tracking-widest text-emerald-900/40">Reward Package</span>
                                             </div>
-                                            <p className="font-display font-black text-slate-900 text-lg uppercase italic">{result.reward.name}</p>
+                                            <p className="font-display font-black text-slate-900 text-lg uppercase">{result.reward.name}</p>
                                             <p className="text-xs text-emerald-900/60 font-medium">{result.reward.description}</p>
                                         </div>
                                         <div className="space-y-3 p-4 bg-emerald-500/5 border border-emerald-500/10">

@@ -127,7 +127,7 @@ export default function DeviceSettingsPage() {
                                 </div>
                                 <label className="relative inline-flex items-center cursor-pointer">
                                     <input type="checkbox" checked={rewardEnabled} onChange={(e) => setRewardEnabled(e.target.checked)} className="sr-only peer" />
-                                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:inset-s-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                                 </label>
                             </div>
                             <input type="text" value={reward} onChange={(e) => setReward(e.target.value)} placeholder="Reward Message (e.g. Free Coffee)" className="w-full h-11 bg-white border border-primary/10 rounded-xl px-4 text-sm font-bold text-primary focus:ring-2 focus:ring-primary/20 outline-none" />
@@ -148,7 +148,7 @@ export default function DeviceSettingsPage() {
                                     <span className="material-icons-round text-sm">content_copy</span>
                                 </button>
                             </div>
-                            <p className="text-[10px] text-text-secondary mt-2 italic">* This is the URL programmed into your NFC plates.</p>
+                            <p className="text-[10px] text-text-secondary mt-2">* This is the URL programmed into your NFC plates.</p>
                         </div>
                     </div>
                 </div>

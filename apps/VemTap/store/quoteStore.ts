@@ -16,6 +16,7 @@ export interface Quote {
     estimatedValue: number | 'quote';
     status: 'Pending' | 'Approved' | 'Rejected' | 'Expired';
     createdAt: Date;
+    nfcLinksGenerated?: number; // tracks how many NFC links have been generated against this quote
 }
 
 interface QuoteStore {
@@ -25,6 +26,8 @@ interface QuoteStore {
     deleteQuote: (id: string) => void;
     getQuotesByProduct: (productId: string) => Quote[];
     getQuotesByStatus: (status: Quote['status']) => Quote[];
+    consumeNfcQuota: (quoteId: string, amount: number) => void;
+    getRemainingNfcQuota: (quoteId: string) => number;
 }
 
 export const useQuoteStore = create<QuoteStore>()(
@@ -64,6 +67,22 @@ export const useQuoteStore = create<QuoteStore>()(
 
             getQuotesByStatus: (status) => {
                 return get().quotes.filter((quote) => quote.status === status);
+            },
+
+            consumeNfcQuota: (quoteId, amount) => {
+                set((state) => ({
+                    quotes: state.quotes.map((q) =>
+                        q.id === quoteId
+                            ? { ...q, nfcLinksGenerated: (q.nfcLinksGenerated || 0) + amount }
+                            : q
+                    ),
+                }));
+            },
+
+            getRemainingNfcQuota: (quoteId) => {
+                const quote = get().quotes.find((q) => q.id === quoteId);
+                if (!quote) return 0;
+                return Math.max(0, quote.quantity - (quote.nfcLinksGenerated || 0));
             },
         }),
         {

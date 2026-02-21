@@ -21,7 +21,7 @@ export default function AdminLoyaltyPage() {
     return (
         <div className="p-8 space-y-10">
             <div className="mb-8">
-                <h1 className="text-3xl font-display font-bold text-text-main mb-2 uppercase italic tracking-tighter">System Loyalty Control</h1>
+                <h1 className="text-3xl font-display font-bold text-text-main mb-2 uppercase tracking-tighter">System Loyalty Control</h1>
                 <p className="text-text-secondary uppercase text-[10px] tracking-widest font-black">Platform-Wide Reward Ecosystem Monitoring</p>
             </div>
 
@@ -60,7 +60,7 @@ export default function AdminLoyaltyPage() {
                 <div className="lg:col-span-8 bg-white border border-slate-200 p-8 shadow-sm">
                     <div className="flex items-center justify-between mb-10">
                         <div>
-                            <h3 className="text-lg font-bold text-slate-900 uppercase tracking-tight italic">Platform Trajectory</h3>
+                            <h3 className="text-lg font-bold text-slate-900 uppercase tracking-tight">Platform Trajectory</h3>
                             <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Aggregate point issuance vs redemptions (Last 90 days)</p>
                         </div>
                         <div className="flex items-center gap-6">
@@ -88,7 +88,7 @@ export default function AdminLoyaltyPage() {
                         <div className="relative z-10">
                             <div className="flex items-center gap-3 mb-8">
                                 <ShieldAlert className="w-5 h-5 text-rose-500" />
-                                <h3 className="text-lg font-bold italic tracking-tight uppercase">Security Pulse</h3>
+                                <h3 className="text-lg font-bold tracking-tight uppercase">Security Pulse</h3>
                             </div>
 
                             <div className="space-y-4">
@@ -118,7 +118,7 @@ export default function AdminLoyaltyPage() {
                     <div className="bg-white border border-slate-200 p-8 shadow-sm">
                         <div className="flex items-center gap-3 mb-8">
                             <PieChart className="w-5 h-5 text-primary" />
-                            <h3 className="text-lg font-bold text-slate-900 tracking-tight uppercase italic">Sector Split</h3>
+                            <h3 className="text-lg font-bold text-slate-900 tracking-tight uppercase">Sector Split</h3>
                         </div>
 
                         <div className="space-y-4">

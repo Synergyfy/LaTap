@@ -174,7 +174,7 @@ export default function AutomationsPage() {
                 <div className="space-y-6">
                     <div className="bg-text-main rounded-lg p-8 text-white relative overflow-hidden">
                         <Zap className="absolute -right-4 -top-4 size-32 text-white/5 rotate-12" />
-                        <h4 className="text-lg font-black italic mb-4">Automation Success</h4>
+                        <h4 className="text-lg font-black mb-4">Automation Success</h4>
                         <div className="space-y-4 relative z-10">
                             <div className="flex items-center justify-between">
                                 <span className="text-xs text-white/60 font-medium">Messages Sent</span>

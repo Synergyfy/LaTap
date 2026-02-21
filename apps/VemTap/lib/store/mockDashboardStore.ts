@@ -149,6 +149,7 @@ export interface DashboardState {
   approveRedemption: (id: string) => void;
   declineRedemption: (id: string) => void;
   recordExternalTap: (visitorData: { name: string; email?: string; phone: string; uniqueId?: string; branchId?: string; location?: string }) => void;
+  getFilteredVisitors: (branchId: string) => Visitor[];
   reset: () => void;
 }
 
@@ -330,7 +331,7 @@ const initialStats = {
 
 export const useMockDashboardStore = create<DashboardState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       visitors: initialVisitors,
       activityData: initialActivityData,
       rewards: initialRewards,
@@ -567,6 +568,12 @@ export const useMockDashboardStore = create<DashboardState>()(
           notifications: [notification, ...state.notifications]
         };
       }),
+
+      getFilteredVisitors: (branchId) => {
+        const { visitors } = get();
+        if (!branchId || branchId === 'all') return visitors;
+        return visitors.filter(v => v.branchId === branchId);
+      },
 
       reset: () =>
         set({

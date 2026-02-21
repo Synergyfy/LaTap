@@ -58,14 +58,14 @@ export default function WhatsAppOverviewPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-4">
-                        <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 italic text-sm text-text-secondary">
+                        <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 text-sm text-text-secondary">
                             "Perfect for sending automated confirmation messages and marketing broadcasts to your WhatsApp audience."
                         </div>
                         <div className="flex gap-4">
                             <Link href="/dashboard/messaging/whatsapp/send" className="flex-1 h-12 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all flex items-center justify-center">
                                 Send Broadcast
                             </Link>
-                            <button 
+                            <button
                                 onClick={() => setIsTopUpOpen(true)}
                                 className="flex-1 h-12 bg-blue-50 text-blue-600 border border-blue-100 font-bold rounded-xl hover:bg-blue-100 transition-all flex items-center justify-center gap-2"
                             >
@@ -86,10 +86,10 @@ export default function WhatsAppOverviewPage() {
                     </div>
                 </div>
             </div>
-            <TopUpModal 
-                isOpen={isTopUpOpen} 
-                onClose={() => setIsTopUpOpen(false)} 
-                targetChannel="WhatsApp" 
+            <TopUpModal
+                isOpen={isTopUpOpen}
+                onClose={() => setIsTopUpOpen(false)}
+                targetChannel="WhatsApp"
             />
         </div>
     );

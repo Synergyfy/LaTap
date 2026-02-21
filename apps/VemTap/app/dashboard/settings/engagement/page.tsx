@@ -82,7 +82,7 @@ export default function EngagementSettingsPage() {
                                 />
                             </div>
                         </div>
-                        <p className="text-[10px] text-text-secondary font-medium leading-relaxed italic px-1">
+                        <p className="text-[10px] text-text-secondary font-medium leading-relaxed px-1">
                             Tip: A direct link to your "Write a review" modal increases conversion by 40%.
                         </p>
                     </div>

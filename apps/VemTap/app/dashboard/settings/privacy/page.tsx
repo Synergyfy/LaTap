@@ -31,7 +31,7 @@ export default function PrivacySettingsPage() {
                                 <option>1 Year of inactivity</option>
                                 <option>2 Years of inactivity</option>
                             </select>
-                            <p className="text-[10px] text-text-secondary mt-2 px-1 italic">Note: Loyalty members are excluded from automatic deletion to preserve their points.</p>
+                            <p className="text-[10px] text-text-secondary mt-2 px-1">Note: Loyalty members are excluded from automatic deletion to preserve their points.</p>
                         </div>
                     </div>
                 </div>
@@ -49,7 +49,7 @@ export default function PrivacySettingsPage() {
                             </div>
                             <label className="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" defaultChecked className="sr-only peer" />
-                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:inset-s-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                             </label>
                         </div>
 

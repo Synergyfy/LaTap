@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { dashboardApi } from '@/lib/api/dashboard';
 import { notify } from '@/lib/notify';
-import { Plus, Search, Filter, Download, MoreVertical, Trash2, Cpu, Battery, Activity, Link as LinkIcon, Edit3 } from 'lucide-react';
+import { Plus, Search, Filter, Download, MoreVertical, Trash2, Cpu, Battery, Activity, Link as LinkIcon, Edit3, Copy } from 'lucide-react';
 import { Device } from '@/lib/store/mockDashboardStore';
 import EditDeviceModal from '@/components/dashboard/EditDeviceModal';
 
@@ -14,6 +14,13 @@ export default function AdminDevicesPage() {
     const [filterStatus, setFilterStatus] = useState('all');
     const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
     const [editingDevice, setEditingDevice] = useState<Device | null>(null);
+    const [origin, setOrigin] = useState('https://vemtap.com');
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setOrigin(window.location.origin);
+        }
+    }, []);
 
     // Fetch Devices from store
     const { data: storeData, isLoading } = useQuery({
@@ -177,6 +184,7 @@ export default function AdminDevicesPage() {
                                     <th className="text-left py-4 px-6 text-xs font-black uppercase tracking-wider text-text-secondary">Device Serial</th>
                                     <th className="text-left py-4 px-6 text-xs font-black uppercase tracking-wider text-text-secondary">Form Factor</th>
                                     <th className="text-left py-4 px-6 text-xs font-black uppercase tracking-wider text-text-secondary">Linked Venue</th>
+                                    <th className="text-left py-4 px-6 text-xs font-black uppercase tracking-wider text-text-secondary">Tap Link</th>
                                     <th className="text-left py-4 px-6 text-xs font-black uppercase tracking-wider text-text-secondary">Health</th>
                                     <th className="text-left py-4 px-6 text-xs font-black uppercase tracking-wider text-text-secondary">Activity</th>
                                     <th className="text-right py-4 px-6 text-xs font-black uppercase tracking-wider text-text-secondary">Actions</th>
@@ -223,6 +231,22 @@ export default function AdminDevicesPage() {
                                                         <span className="text-sm font-bold text-text-main">{device.assignedTo}</span>
                                                     </div>
                                                 )}
+                                            </td>
+                                            <td className="py-4 px-6">
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-[10px] font-mono text-text-secondary truncate max-w-[120px]">
+                                                        {origin.replace(/^https?:\/\//, '')}/tap/{device.id}
+                                                    </span>
+                                                    <button
+                                                        onClick={() => {
+                                                            navigator.clipboard.writeText(`${origin}/tap/${device.id}`);
+                                                            notify.success('Link copied');
+                                                        }}
+                                                        className="p-1 hover:bg-gray-100 rounded transition-colors text-gray-400 hover:text-primary"
+                                                    >
+                                                        <Copy size={12} />
+                                                    </button>
+                                                </div>
                                             </td>
                                             <td className="py-4 px-6">
                                                 <div className="flex items-center gap-2">
@@ -328,7 +352,7 @@ export default function AdminDevicesPage() {
                                             className="w-full h-12 pl-12 pr-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/30 focus:bg-white transition-all font-bold text-sm"
                                         />
                                     </div>
-                                    <p className="text-[10px] text-text-secondary font-medium italic ml-1">Leave blank to keep in global inventory</p>
+                                    <p className="text-[10px] text-text-secondary font-medium ml-1">Leave blank to keep in global inventory</p>
                                 </div>
 
                                 <button
